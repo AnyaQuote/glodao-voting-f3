@@ -1,0 +1,29 @@
+@import "./breakpoint-custom.scss";
+@import "./button-custom.scss";
+
+@font-face {
+  font-family: "refrigerator-deluxe";
+  src: url("~@/assets/fonts/Refrigerator-Deluxe-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "refrigerator-deluxe";
+  src: url("~@/assets/fonts/Refrigerator-Deluxe-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "refrigerator-deluxe";
+  src: url("~@/assets/fonts/Refrigerator-Deluxe-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "helvetica-neue";
+  src: local("Helvetica-Neue"),
+    url("~@/assets/fonts/HelveticaNeue-Light.ttf") format("truetype");
+}
