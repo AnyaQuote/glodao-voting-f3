@@ -1,4 +1,4 @@
-import { BigNumber, FixedNumber } from "@ethersproject/bignumber"
+import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 
 class BigNumberHelper {
   /**
@@ -28,7 +28,7 @@ class BigNumberHelper {
 
   getDecimals(decimals = 18) {
     return FixedNumber.from(
-      BigNumber.from("10")
+      BigNumber.from('10')
         .pow(decimals)
         .toString()
     )
@@ -42,7 +42,7 @@ class BigNumberHelper {
     fx = FixedNumber.from(fx.toString())
     const num = fx.mulUnsafe(this.getDecimals(+decimals))
     // xxx.0 => take xxx
-    return num.toString().split(".")[0]
+    return num.toString().split('.')[0]
   }
 
   getSolDecimals(decimals = 9) {
@@ -50,7 +50,7 @@ class BigNumberHelper {
   }
 
   fromSolDecimals(amount, decimals = 9) {
-    return this.fromDecimals(amount || "0", decimals)
+    return this.fromDecimals(amount || '0', decimals)
   }
 }
 

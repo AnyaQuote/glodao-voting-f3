@@ -1,5 +1,5 @@
-import { action, observable } from "mobx"
-import _ from "lodash"
+import { action, observable } from 'mobx'
+import _ from 'lodash'
 
 export interface SnakBarConfig {
   icon?: string
@@ -15,9 +15,9 @@ export class SnackBarController {
   @observable show = false
 
   @action commonError(err: any) {
-    let message = "Please try again"
+    let message = 'Please try again'
     // strapi error
-    const apiError = _.get(err, "response.data.message")
+    const apiError = _.get(err, 'response.data.message')
     console.error(apiError, err)
     if (apiError) {
       if (apiError instanceof Array) {
@@ -35,31 +35,31 @@ export class SnackBarController {
 
   @action success(message: string) {
     this.config = {
-      icon: "mdi-check-circle",
+      icon: 'mdi-check-circle',
       message,
-      color: "success",
+      color: 'success',
       timeout: 4000
     }
     this.show = true
   }
 
   @action addSuccess() {
-    this.success("Insert successed")
+    this.success('Insert successed')
   }
 
   @action updateSuccess() {
-    this.success("Update successed")
+    this.success('Update successed')
   }
 
   @action deleteSuccess() {
-    this.success("Delete successed")
+    this.success('Delete successed')
   }
 
   @action error(message: string) {
     this.config = {
-      icon: "mdi-alert-circle-outline",
+      icon: 'mdi-alert-circle-outline',
       message,
-      color: "error",
+      color: 'error',
       timeout: 5000
     }
     this.show = true
