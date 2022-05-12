@@ -1,27 +1,41 @@
 // import { walletStore } from "@/stores/wallet-store"
 // import { when } from "mobx"
-import Vue from "vue"
-import VueRouter, { RouteConfig } from "vue-router"
+import Vue from 'vue'
+import VueRouter, { RouteConfig } from 'vue-router'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
-    redirect: "/stake"
+    path: '*',
+    redirect: '/voting'
   },
   {
-    path: "/stake",
-    name: "Staking",
-    component: () => import("@/modules/staking/pages/staking.vue"),
-    meta: {
-      title: "Staking"
-    }
+    path: '/',
+    component: () => import('@/modules/voting/container/container.vue'),
+    children: [
+      {
+        path: 'voting',
+        component: () => import('@/modules/voting/pages/voting-home.vue'),
+        meta: {
+          auth: true,
+          title: 'Voting Home'
+        }
+      },
+      {
+        path: 'voting/:id',
+        component: () => import('@/modules/voting/pages/voting-detail.vue'),
+        meta: {
+          auth: true,
+          title: 'Voting detail'
+        }
+      }
+    ]
   }
 ]
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   routes,
   scrollBehavior() {
@@ -35,7 +49,7 @@ const router = new VueRouter({
 //   else next()
 // })
 
-function _setDocumentTitle(title = "Title") {
+function _setDocumentTitle(title = 'Title') {
   document.title = title
 }
 
