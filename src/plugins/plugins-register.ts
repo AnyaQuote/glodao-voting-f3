@@ -1,6 +1,6 @@
-import _ from "lodash"
-import Vue from "vue"
-import { appRules, rules } from "./rules"
+import _ from 'lodash'
+import Vue from 'vue'
+import { appRules, rules } from './rules'
 
 export const pluginsRegister = () => {
   Vue.use({
@@ -13,7 +13,7 @@ export const pluginsRegister = () => {
         return !_.isNumber(any) && (!any || _.isEmpty(any))
       }
       // eslint-disable-next-line @typescript-eslint/camelcase
-      Vue.prototype.$_get = (any: any, path: string, defaultValue = "") => {
+      Vue.prototype.$_get = (any: any, path: string, defaultValue = '') => {
         return _.get(any, path, defaultValue)
       }
     }

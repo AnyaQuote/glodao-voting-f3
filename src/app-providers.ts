@@ -1,6 +1,6 @@
-import { action } from "mobx"
-import VueRouter from "vue-router"
-import { walletStore } from "./stores/wallet-store"
+import { action } from 'mobx'
+import VueRouter from 'vue-router'
+import { walletStore } from './stores/wallet-store'
 
 export class AppProvider {
   router!: VueRouter
