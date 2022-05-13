@@ -1,39 +1,62 @@
 <template>
-  <div class="card-wrapper d-flex fill-height" :class="className">
-    <v-sheet class="card d-flex flex-column">
-      <img :src="cover" class="rounded-lg rounded-b-0 card-img" />
-      <div class="card-content d-flex flex-column">
-        <!-- CARD TOP START -->
-        <div class="card-content-top d-flex flex-column pa-6 pt-1">
-          <div class="card-title font-weight-bold ">{{ projectName }}</div>
-          <div class="card-subtitle font-weight-bold mb-4 ">
-            {{ shortDescription }}
-          </div>
-          <div class="text-uppercase ma-n1 ">
-            <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
-          </div>
-        </div>
-        <!-- CARD TOP END -->
+  <v-hover v-slot="{ hover }">
+    <div class="card-wrapper d-flex fill-height" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
+      <v-sheet class="card d-flex flex-column">
+        <!-- ------------------------------------------------------------------------------------------------- -->
+        <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
+          <v-img :src="cover" contain class="img-back" />
+          <!-- HOVER SHOW SECTION START -->
+          <div class="img-front d-flex flex-column" :class="{ blur: hover }">
+            <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
+              🔥Trending
+            </v-sheet>
 
-        <!-- CARD BOTTOM START -->
-        <v-spacer />
-        <div class="card-content-bottom">
-          <v-divider />
-          <countdown class=" text-h5" :to="endTime"> </countdown>
-          <v-divider />
-          <div class="d-flex mb-4 mx-6 mt-3">
-            <v-icon class="mr-2">mdi-star-outline</v-icon>
-            <div class="font-weight-bold mr-1">{{ upvote }}</div>
-            <div>votes for launching</div>
+            <div class="fill-height d-flex justify-center align-center mt-n6">
+              <v-fade-transition>
+                <v-btn v-show="hover" class="rounded pa-2">
+                  <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
+                  <span class="font-weight-medium">VOTE NOW</span>
+                </v-btn>
+              </v-fade-transition>
+            </div>
           </div>
-          <div class="flag text-center py-2" :class="className">
-            <span class="text-uppercase">{{ isBounty ? 'Bounty Project' : 'Launchpad Project' }}</span>
-          </div>
+          <!-- HOVER SHOW SECTION END -->
         </div>
-      </div>
-      <!-- CARD BOTTOM END -->
-    </v-sheet>
-  </div>
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <div class="card-content flex-grow-1 d-flex flex-column">
+          <!-- CARD TOP START -->
+          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
+            <div class="card-title font-weight-bold ">{{ projectName }}</div>
+            <div class="card-subtitle font-weight-bold mb-4 ">
+              {{ shortDescription }}
+            </div>
+            <div class="text-uppercase ma-n1 ">
+              <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
+            </div>
+          </div>
+          <!-- CARD TOP END -->
+
+          <!-- CARD BOTTOM START -->
+          <v-spacer />
+          <div class="card-content-bottom">
+            <v-divider />
+            <countdown class=" text-h5" :to="endTime"> </countdown>
+            <v-divider />
+            <div class="d-flex mb-4 mx-6 mt-3">
+              <v-icon class="mr-2">mdi-star-outline</v-icon>
+              <div class="font-weight-bold mr-1">{{ upvote }}</div>
+              <div>votes for launching</div>
+            </div>
+            <div class="flag text-center py-2" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
+              <span class="text-uppercase">{{ type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            </div>
+          </div>
+          <!-- CARD BOTTOM END -->
+        </div>
+        <!-- --------------------------------------------------------------------------------------------------- -->
+      </v-sheet>
+    </div>
+  </v-hover>
 </template>
 
 <script lang="ts">
@@ -73,8 +96,8 @@ export default class LiveVotingCard extends Vue {
     return this.props.endTime
   }
 
-  get className() {
-    return this.props.type === 'bounty' ? 'bounty' : 'launchpad'
+  get type() {
+    return this.props.type
   }
 
   get cover() {
@@ -106,13 +129,28 @@ export default class LiveVotingCard extends Vue {
       background: linear-gradient(180deg, $launchpad-light-1 0%, #fff9f3 80%);
     }
   }
-  .card-img {
+  .card-image {
+    position: relative;
     flex-shrink: 0;
+    .img-back {
+      position: relative;
+    }
+    .img-front {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      &.blur {
+        background: rgba($color: #000000, $alpha: 0.5);
+      }
+      .label {
+        align-self: start;
+      }
+    }
   }
   .card-content {
-    flex: 1;
     .card-content-top {
-      flex: 1;
       .clip-text {
         word-break: break-word;
         text-overflow: hidden;
