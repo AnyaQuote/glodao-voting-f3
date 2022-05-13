@@ -51,8 +51,8 @@
               <span class="text-uppercase">{{ type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
             </div>
           </div>
+          <!-- CARD BOTTOM END -->
         </div>
-        <!-- CARD BOTTOM END -->
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-sheet>
     </div>
