@@ -1,5 +1,5 @@
-import { action, observable } from "mobx"
-import _ from "lodash"
+import { action, observable } from 'mobx'
+import _ from 'lodash'
 
 export interface ConfirmDialogConfig {
   content?: string
@@ -16,8 +16,8 @@ export class ConfirmDialogController {
   @observable config: ConfirmDialogConfig = {
     hideCancel: false,
     hideDone: false,
-    doneText: "Done",
-    cancelText: "Cancel"
+    doneText: 'Done',
+    cancelText: 'Cancel'
   }
   @observable dialog = false
 
