@@ -94,3 +94,24 @@ $typoOptions: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6, text-subtitl
   }
   font-family: $body-font-family, sans-serif !important;
 }
+// ---------------------------------------------------------------------------------------------------------------------------------------
+
+$blue-gradient: linear-gradient(to right, #0276f0, #0096ff, #00b3ff, #00cdff, #00e5ff);
+
+.theme--dark {
+  .v-sheet--outlined {
+    border: thin solid var(--v-neutral20-base) !important;
+  }
+}
+
+.container {
+  max-width: 1092px !important;
+}
+
+.neutral100--bg {
+  background: var(--v-neutral100-base);
+}
+
+.btnA {
+  background-image: $blue-gradient;
+}
