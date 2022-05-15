@@ -34,7 +34,7 @@
             <div><span class="error--text font-weight-bold">NO</span> votes</div>
           </div>
           <div class="flag text-center py-2" :class="className">
-            <span class="text-uppercase">{{ isBounty ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            <span class="text-uppercase">{{ props.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
           </div>
         </div>
       </div>
