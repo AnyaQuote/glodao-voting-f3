@@ -4,14 +4,12 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import { pluginsRegister } from './plugins/plugins-register'
 import { vueFilterRegister } from './plugins/vue-filter-register'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faGitBook } from '@/assets/icons'
-
-library.add(faGitBook)
+import { componentRegister } from './plugins/component-register'
 
 Vue.config.productionTip = false
 
 // app configs
+componentRegister()
 pluginsRegister()
 vueFilterRegister()
 new Vue({
