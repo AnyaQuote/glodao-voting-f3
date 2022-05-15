@@ -2,6 +2,7 @@ import moment from 'moment'
 import Vue from 'vue'
 import { get, isNumber, isEmpty, round } from 'lodash-es'
 import { FixedNumber } from '@ethersproject/bignumber'
+import { numberHelper } from '@/helpers/number.hepler'
 
 export const vueFilterRegister = () => {
   Vue.filter('date', (isoStr: string, format: string) => (isoStr ? moment(isoStr).format(format) : ''))
@@ -20,7 +21,6 @@ export const vueFilterRegister = () => {
     if (!address) return ''
     return address.substr(0, start) + '...' + address.substr(address.length - end, end)
   })
-
   Vue.filter('_get', (any: any, path: string, defaultValue = '') => {
     return get(any, path, defaultValue)
   })
@@ -68,5 +68,16 @@ export const vueFilterRegister = () => {
       default:
         return value
     }
+  })
+  Vue.filter('usdCustom', (number: any, min = 2, max = 8) => {
+    return numberHelper.usdFormat(number, min, max)
+  })
+  Vue.filter('formatNumber', (number: any, maximumFractionDigits = 5, minimumFractionDigits = 2) => {
+    const nf = new Intl.NumberFormat('en-US', {
+      maximumFractionDigits,
+      minimumFractionDigits:
+        minimumFractionDigits > maximumFractionDigits ? maximumFractionDigits : minimumFractionDigits
+    })
+    return nf.format(number)
   })
 }
