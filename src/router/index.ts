@@ -1,15 +1,11 @@
-// import { walletStore } from "@/stores/wallet-store"
-// import { when } from "mobx"
+import { authStore } from '@/stores/auth-store'
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  {
-    path: '/',
-    redirect: '/voting'
-  },
+  { path: '/', redirect: '/NotFound' },
   {
     path: '/',
     component: () => import('@/modules/voting/container/container.vue'),
@@ -31,7 +27,12 @@ const routes: Array<RouteConfig> = [
         }
       }
     ]
-  }
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: () => import('@/modules/error/pages/coming-soon.vue'),
+  },
 ]
 
 const router = new VueRouter({
@@ -40,21 +41,11 @@ const router = new VueRouter({
   routes,
   scrollBehavior() {
     return { x: 0, y: 0 }
-  }
+  },
 })
 
-// router.beforeEach(async (to, from, next) => {
-//   await when(() => walletStore.loaded)
-//   if (!to.name || !to) next("/stake")
-//   else next()
-// })
-
-function _setDocumentTitle(title = 'Title') {
-  document.title = title
-}
-
-router.afterEach(to => {
-  _setDocumentTitle(to?.meta?.title)
+router.beforeEach(async (to, from, next) => {
+  next()
 })
 
 export default router

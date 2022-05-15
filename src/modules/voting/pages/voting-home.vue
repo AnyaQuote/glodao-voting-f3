@@ -18,7 +18,7 @@
         <div class="box-subtitle neutral10--text font-weight-medium mb-5">
           Voting does not decrease your xGLD, it merely shows the weight of your vote.
         </div>
-        <v-btn class="box-button text-none" height="40" depressed>
+        <v-btn class="btnA text-none" height="40" depressed>
           <span class="white--text mx-4">Learn more</span>
         </v-btn>
       </v-sheet>
@@ -52,8 +52,8 @@
 
       <!-- CARDS SECTION START -->
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-for="(props, i) in cards" :key="i">
-          <live-voting-card :props="props" />
+        <v-col cols="12" sm="6" md="4" v-for="(props, i) in [1, 2, 3, 4, 5, 6]" :key="i">
+          <live-voting-card />
         </v-col>
       </v-row>
       <!-- CARDS SECTION END -->
@@ -65,7 +65,7 @@
         <div class="box-subtitle neutral10--text font-weight-medium mb-5">
           Voting does not decrease your xGLD, it merely shows the weight of your vote.
         </div>
-        <v-btn class="box-button text-none" height="40" depressed>
+        <v-btn class="btnA text-none" height="40" depressed>
           <span class="white--text mx-4">Submit your project</span>
         </v-btn>
       </v-sheet>
@@ -81,8 +81,8 @@
         </div>
       </div>
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-for="(props, i) in cards" :key="i">
-          <ended-voting-card :props="props" />
+        <v-col cols="12" sm="6" md="4" v-for="(props, i) in [1, 2, 3]" :key="i">
+          <ended-voting-card />
         </v-col>
         <v-col cols="12">
           <div class="text-center mb-72">
@@ -105,74 +105,7 @@ import { Component, Vue } from 'vue-property-decorator'
     'ended-voting-card': () => import('@/modules/voting/components/common/ended-voting-card.vue')
   }
 })
-export default class VotingHome extends Vue {
-  cards = [
-    {
-      projectName: 'Hydro Wind Energy',
-      shortDescription:
-        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      upvote: '90',
-      downvote: '90',
-      type: 'bounty',
-      cover: 'https://i.pinimg.com/originals/14/f1/55/14f15590d4723f4826076d0620979cfa.jpg',
-      endTime: '2022-08-11T17:00:00.000Z',
-      labels: ['finance', 'gaming']
-    },
-    {
-      projectName: 'Hydro Wind Energy',
-      shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      upvote: '92',
-      downvote: '90',
-      type: 'launchpad',
-      endTime: '2022-08-11T17:00:00.000Z',
-      cover:
-        'https://img.freepik.com/free-photo/cool-geometric-triangular-figure-neon-laser-light-great-backgrounds-wallpapers_181624-9331.jpg?w=2000',
-      labels: ['finance', 'gaming']
-    },
-    {
-      projectName: 'Hydro Wind Energy',
-      shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      upvote: '90',
-      downvote: '90',
-      type: 'bounty',
-      endTime: '2022-08-11T17:00:00.000Z',
-      cover:
-        'https://img.freepik.com/free-photo/cool-geometric-triangular-figure-neon-laser-light-great-backgrounds-wallpapers_181624-9331.jpg?w=2000',
-      labels: ['finance', 'gaming', 'NFT', 'gaming', 'gaming']
-    },
-    {
-      projectName: 'Hydro Wind Energy',
-      shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      upvote: '90',
-      downvote: '90',
-      type: 'launchpad',
-      endTime: '2022-08-11T17:00:00.000Z',
-      cover: 'https://i.pinimg.com/originals/14/f1/55/14f15590d4723f4826076d0620979cfa.jpg',
-      labels: ['finance', 'gaming']
-    },
-    {
-      projectName: 'Hydro Wind Energy',
-      shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      upvote: '90',
-      downvote: '90',
-      type: 'bounty',
-      endTime: '2022-08-11T17:00:00.000Z',
-      cover:
-        'https://img.freepik.com/free-photo/cool-geometric-triangular-figure-neon-laser-light-great-backgrounds-wallpapers_181624-9331.jpg?w=2000',
-      labels: ['finance', 'gaming']
-    },
-    {
-      projectName: 'Hydro Wind Energy',
-      shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      upvote: '90',
-      downvote: '90',
-      type: 'bounty',
-      endTime: '2022-08-11T17:00:00.000Z',
-      cover: 'https://i.pinimg.com/originals/14/f1/55/14f15590d4723f4826076d0620979cfa.jpg',
-      labels: ['finance', 'gaming']
-    }
-  ]
-}
+export default class VotingHome extends Vue {}
 </script>
 
 <style lang="scss" scoped>
@@ -190,9 +123,6 @@ export default class VotingHome extends Vue {
     font-size: em(16);
     line-height: em(24);
   }
-  .box-button {
-    background-image: linear-gradient(to right, #0276f0, #0096ff, #00b3ff, #00cdff, #00e5ff);
-  }
 }
 
 .nominated-section {
@@ -202,6 +132,41 @@ export default class VotingHome extends Vue {
     .header-title {
     }
     .header-subtitle {
+    }
+  }
+}
+
+.glodao-slider {
+  &.v-slide-group {
+    position: relative;
+    z-index: 0;
+    .active {
+      background-color: white;
+      border-radius: em(8);
+      padding: em(28) em(8);
+      border: em(1) solid var(--v-bluePrimary-base);
+    }
+    .v-slide-group__prev {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: -20px;
+      z-index: 1;
+      margin-top: em(-60);
+      :not(.v-slide-group__prev--disabled) {
+        @extend .active;
+      }
+    }
+    .v-slide-group__next {
+      display: block;
+      top: 50%;
+      right: -20px;
+      z-index: 1;
+      position: absolute;
+      margin-top: em(-60);
+      :not(.v-slide-group__next--disabled) {
+        @extend .active;
+      }
     }
   }
 }

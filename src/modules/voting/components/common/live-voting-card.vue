@@ -4,6 +4,7 @@
       <v-sheet class="card d-flex flex-column">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
+          <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
           <v-img :src="cover" contain class="img-back" />
           <!-- HOVER SHOW SECTION START -->
           <div class="img-front d-flex flex-column" :class="{ blur: hover }">
@@ -72,13 +73,25 @@ interface Props {
   cover?: string
 }
 
+const defaultProps = (): Props => ({
+  projectName: 'Hydro Wind Energy',
+  shortDescription:
+    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+  upvote: '90',
+  type: 'bounty',
+  cover:
+    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+  endTime: '2022-08-11T17:00:00.000Z',
+  labels: ['finance', 'gaming']
+})
+
 @Component({
   components: {
     countdown: () => import('./countdown.vue')
   }
 })
 export default class LiveVotingCard extends Vue {
-  @Prop() props!: Props
+  @Prop({ default: defaultProps }) props!: Props
 
   get projectName() {
     return this.props.projectName

@@ -4,16 +4,13 @@
     @input="controller.close()"
     :color="controller.config.color"
     :timeout="controller.config.timeout"
-    min-width="375px"
-    top
+    bottom
     class="plugin__alert"
   >
-    <div class="message-text d-flex align-center">
-      <v-icon class="mr-3">{{ controller.config.icon }}</v-icon>
-      <div v-html="controller.config.message"></div>
-    </div>
+    <v-icon class="mr-3">{{ controller.config.icon }}</v-icon>
+    {{ controller.config.message }}
     <template v-slot:action="{ attrs }">
-      <v-btn icon text v-bind="attrs" @click="controller.close()"><v-icon>mdi-close</v-icon></v-btn>
+      <v-btn icon text v-bind="attrs" @click="controller.close()"><v-icon>close</v-icon></v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -27,11 +24,4 @@ export default class SnackBar extends Vue {
 }
 </script>
 
-<style scoped>
-.message-text {
-  font-style: normal;
-  font-weight: 700 !important;
-  font-size: 18px !important;
-  line-height: 130%;
-}
-</style>
+<style scoped></style>

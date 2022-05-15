@@ -26,21 +26,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
-import { walletStore } from "@/stores/wallet-store"
-import { Observer } from "mobx-vue"
+import { Component, Vue } from 'vue-property-decorator'
+import { walletStore } from '@/stores/wallet-store'
+import { Observer } from 'mobx-vue'
 
 @Observer
 @Component({
   components: {
-    ConnectMetamask: () => import("@/components/wallet/ConnectMetamask.vue"),
-    WalletDialog: () => import("@/components/wallet/WalletDialog.vue")
+    ConnectMetamask: () => import('@/components/wallet/ConnectMetamask.vue'),
+    WalletDialog: () => import('@/components/wallet/WalletDialog.vue')
   }
 })
 export default class Staking extends Vue {
   wallet = walletStore
   openLink(url) {
-    window.open(url, "_blank")
+    window.open(url, '_blank')
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <v-hover v-slot="{ hover }">
     <div class="card-wrapper d-flex fill-height" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-      <v-sheet class="card d-flex flex-column">
+      <v-sheet v-bind="$attrs" class="card d-flex flex-column">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
           <v-img :src="cover" contain class="img-back" />
@@ -71,7 +71,8 @@ const propsValue = (): Props => ({
   endTime: '',
   upvote: '',
   type: 'bounty',
-  cover: 'https://i.pinimg.com/originals/14/f1/55/14f15590d4723f4826076d0620979cfa.jpg'
+  cover:
+    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
 })
 
 @Component

@@ -52,11 +52,11 @@
           <span class="header-title mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</span>
         </div>
       </div>
-      <v-row>
-        <v-col cols="4" v-for="i in [1, 2, 3]" :key="i">
-          <live-compact-card />
-        </v-col>
-      </v-row>
+      <v-slide-group class="glodao-slider ma-n1 px-1">
+        <v-slide-item v-for="i in [1, 2, 3, 4, 5]" :key="i" class="ma-1 debug">
+          <live-compact-card width="348" />
+        </v-slide-item>
+      </v-slide-group>
     </v-col>
   </v-row>
 </template>

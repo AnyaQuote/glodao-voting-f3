@@ -1,10 +1,10 @@
-import Web3 from "web3"
-import { isNumber } from "lodash-es"
+import Web3 from 'web3'
+import { isNumber } from 'lodash-es'
 
 const getChainConfig = (chainId: any) => {
   chainId = isNumber(+chainId) ? +chainId : chainId
-  let rpc = ""
-  let name = ""
+  let rpc = ''
+  let name = ''
   // let explorer = "";
   switch (chainId) {
     // case 1:
@@ -17,13 +17,13 @@ const getChainConfig = (chainId: any) => {
     //   rpc = 'https://speedy-nodes-nyc.moralis.io/1cbc67e7252c9ef1e7e63dc8/eth/ropsten'
     //   break
     case 56:
-    case "bsc":
-      name = "BSC MainNET"
-      rpc = "https://bsc-dataseed.binance.org/"
+    case 'bsc':
+      name = 'BSC MainNET'
+      rpc = 'https://bsc-dataseed.binance.org/'
       break
     case 97:
-      name = "BSC TestNET"
-      rpc = "https://data-seed-prebsc-2-s2.binance.org:8545/"
+      name = 'BSC TestNET'
+      rpc = 'https://data-seed-prebsc-2-s2.binance.org:8545/'
       break
     // case 137:
     //   name = 'Matic Mainnet'
@@ -58,7 +58,7 @@ function etherBatchRequest(web3: Web3, methods: any[]) {
           batch.add(
             method.call.request({}, function(error, result) {
               if (error) {
-                console.error("Errror=", method, error)
+                console.error('Errror=', method, error)
                 reject(error)
               } else {
                 resolve(result)

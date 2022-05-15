@@ -8,10 +8,10 @@
         <div class="banner-content  rounded-lg py-10">
           <div class="text-h5 text-center font-weight-bold mb-10 white--text">Current result</div>
           <!-- CENTER CONTENT BOX START -->
-          <v-sheet width="600" class="d-flex justify-center transparent white--text">
+          <v-sheet max-width="600" class="d-flex justify-center transparent white--text mx-16">
             <div class="d-flex">
               <voting-progress-circle class="flex-shrink-0" value="90" color="green" />
-              <div class="d-flex flex-column justify-space-around flex-grow-1 mr-4">
+              <div class="d-flex flex-column justify-space-around flex-grow-1 ml-4">
                 <span class="text-h6">👍YES</span>
                 <span class="font-weight-bold font-14">1000 votes</span>
               </div>

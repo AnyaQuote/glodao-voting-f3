@@ -1,5 +1,5 @@
 <template>
-  <glodao-dialog ref="dialog">
+  <app-dialog ref="dialog">
     <v-sheet class="dialog-container d-flex flex-column pa-6">
       <div class="d-flex justify-space-between align-center">
         <div class="text-h6">Confirm your vote</div>
@@ -41,7 +41,7 @@
         <v-btn class="text-none" color="blue" @click="close" outlined depressed>Cancel</v-btn>
       </div>
     </v-sheet>
-  </glodao-dialog>
+  </app-dialog>
 </template>
 
 <script lang="ts">

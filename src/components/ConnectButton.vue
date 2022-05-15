@@ -32,10 +32,10 @@
 </template>
 
 <script lang="ts">
-import { Observer } from "mobx-vue"
-import { Component, Vue, Provide, Ref, Inject } from "vue-property-decorator"
-import { walletStore } from "@/stores/wallet-store"
-import { blockchainHandler } from "@/blockchain"
+import { Observer } from 'mobx-vue'
+import { Component, Vue, Provide, Ref, Inject } from 'vue-property-decorator'
+import { walletStore } from '@/stores/wallet-store'
+import { blockchainHandler } from '@/blockchain'
 
 @Observer
 @Component({

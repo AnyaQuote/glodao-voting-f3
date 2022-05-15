@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator"
-import { Observer } from "mobx-vue"
+import { Vue, Component } from 'vue-property-decorator'
+import { Observer } from 'mobx-vue'
 
 @Observer
 @Component({

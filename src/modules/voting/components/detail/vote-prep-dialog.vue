@@ -1,5 +1,5 @@
 <template>
-  <glodao-dialog ref="dialog">
+  <app-dialog ref="dialog">
     <v-sheet class="dialog-container d-flex flex-column pa-6">
       <div class="d-flex align-center justify-space-between">
         <span class="font-weight-bold text-h6">Cast your vote</span>
@@ -55,7 +55,7 @@
         </v-btn>
       </div>
     </v-sheet>
-  </glodao-dialog>
+  </app-dialog>
 </template>
 
 <script lang="ts">

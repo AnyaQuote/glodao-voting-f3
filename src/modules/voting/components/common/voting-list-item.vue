@@ -6,7 +6,7 @@
     </div>
     <div class="col-12 col-md-4 d-flex align-center justify-space-around">
       <v-chip color="green">{{ props.hasVoted === 'yes' ? '👍YES' : '👎NO' }}</v-chip>
-      <span class="font-weight-medium ">
+      <span class="font-weight-medium">
         {{ props.hasVoted === 'yes' ? 'We want to join in this project' : "We don't want to join this project" }}</span
       >
     </div>
@@ -14,7 +14,7 @@
       <span class="neutral10--text">Time voted</span>
       <span class="font-weight-bold">{{ props.votedAt }}</span>
     </div>
-    <div class="col-12 col-md-2 d-flex justify-end ">
+    <div class="col-12 col-md-2 d-flex justify-end">
       <v-sheet width="120" class="pa-4 rounded d-flex align-center justify-space-around" outlined>
         <span>{{ props.tribe }}</span>
         <v-icon large>mdi-fingerprint</v-icon>
@@ -39,7 +39,7 @@ const propsValue = (): Props => ({
   badge: 'GLD Staker',
   hasVoted: 'yes',
   votedAt: '10/03/2022, 10:00 PM',
-  tribe: 'PRO'
+  tribe: 'PRO',
 })
 
 @Component

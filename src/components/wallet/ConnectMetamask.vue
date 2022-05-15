@@ -38,9 +38,9 @@
 </template>
 
 <script lang="ts">
-import { blockchainHandler } from "@/blockchain"
-import { walletStore } from "@/stores/wallet-store"
-import { Component, Prop, Vue } from "vue-property-decorator"
+import { blockchainHandler } from '@/blockchain'
+import { walletStore } from '@/stores/wallet-store'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class ConnectMetamask extends Vue {
