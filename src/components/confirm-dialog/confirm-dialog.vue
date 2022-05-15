@@ -17,7 +17,7 @@
           class="border-radius-8 text-none btn-text py-5 px-3 mr-4"
           depressed
           outlined
-          >{{ controller.config.cancelText || "Cancel" }}</v-btn
+          >{{ controller.config.cancelText || 'Cancel' }}</v-btn
         >
         <v-btn
           v-show="!controller.config.hideDone"
@@ -25,7 +25,7 @@
           class="border-radius-8 text-none btn-text py-5 px-3"
           depressed
           color="accent"
-          >{{ controller.config.doneText || "Yes" }}</v-btn
+          >{{ controller.config.doneText || 'Yes' }}</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -33,8 +33,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
-import { confirmDialogController } from "./confirm-dialog-controller"
+import { Component, Vue } from 'vue-property-decorator'
+import { confirmDialogController } from './confirm-dialog-controller'
 @Component({})
 export default class ConfirmDialog extends Vue {
   controller = confirmDialogController
@@ -43,7 +43,7 @@ export default class ConfirmDialog extends Vue {
 
 <style>
 .dialog-title {
-  font-family: "Proxima Nova";
+  font-family: 'Proxima Nova';
   font-style: normal;
   font-weight: 600 !important;
   font-size: 20px !important;
