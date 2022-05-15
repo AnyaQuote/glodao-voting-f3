@@ -27,41 +27,41 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   components: {
-    "voting-launch-item": () => import("../components/launch-section/voting-launch-item.vue")
+    'voting-launch-item': () => import('../components/home/voting-launch-item.vue')
   }
 })
 export default class VotingLaunchSection extends Vue {
   data = [
     {
-      projectName: "Hydro Wind Enery",
+      projectName: 'Hydro Wind Enery',
       shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      upvote: "90",
-      downvote: "90",
-      detailLink: "",
-      readmoreLink: "",
-      launchDate: "JAN 21ST, 2022 AT 10:00 PM ONLY"
+      upvote: '90',
+      downvote: '90',
+      detailLink: '',
+      readmoreLink: '',
+      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY'
     },
     {
-      projectName: "Hydro Wind Enery",
+      projectName: 'Hydro Wind Enery',
       shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      upvote: "90",
-      downvote: "90",
-      detailLink: "",
-      readmoreLink: "",
-      launchDate: "JAN 21ST, 2022 AT 10:00 PM ONLY"
+      upvote: '90',
+      downvote: '90',
+      detailLink: '',
+      readmoreLink: '',
+      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY'
     },
     {
-      projectName: "Hydro Wind Enery",
+      projectName: 'Hydro Wind Enery',
       shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      upvote: "90",
-      downvote: "90",
-      detailLink: "",
-      readmoreLink: "",
-      launchDate: "JAN 21ST, 2022 AT 10:00 PM ONLY"
+      upvote: '90',
+      downvote: '90',
+      detailLink: '',
+      readmoreLink: '',
+      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY'
     }
   ]
 }
