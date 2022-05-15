@@ -6,7 +6,7 @@ class Account {
 
   async getBalance() {
     const wei = await this.web3.eth.getBalance(this.getAddress())
-    return this.web3.utils.fromWei(wei, "ether")
+    return this.web3.utils.fromWei(wei, 'ether')
   }
 
   getAddress() {

@@ -1,9 +1,9 @@
 class NumberHelper {
   usdFormat = (number: any, minimumFractionDigits: any = 2, maximumFractionDigits: any = 6) => {
     if (!isNaN(+number) && +number !== 0) {
-      const formatter = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
         minimumFractionDigits,
         maximumFractionDigits
       })
@@ -12,7 +12,7 @@ class NumberHelper {
     return number
   }
   formatNumber = (number: any, maximumFractionDigits = 5) => {
-    const nf = new Intl.NumberFormat("en-US", {
+    const nf = new Intl.NumberFormat('en-US', {
       maximumFractionDigits: maximumFractionDigits
     })
     return nf.format(number)
