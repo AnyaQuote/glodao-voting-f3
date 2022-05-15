@@ -13,7 +13,6 @@
     "@ethersproject/bignumber": "^5.1.1",
     "@ethersproject/experimental": "^5.0.10",
     "@ethersproject/providers": "^5.5.0",
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@mdi/font": "^5.9.55",
     "@metamask/detect-provider": "^1.2.0",
     "@overage69/pancake-sdk-v2": "^3.0.0",
