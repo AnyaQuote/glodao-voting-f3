@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <glodao-app-bar app class="neutral100" />
-    <v-main app class="neutral15">
+    <glodao-app-bar app />
+    <v-main app class="neutral100--background">
       <router-view></router-view>
     </v-main>
     <glodao-footer app />
@@ -34,9 +34,5 @@ export default class App extends Vue {
 
 .debug {
   border: 1px solid red !important;
-}
-
-.container {
-  max-width: 1092px !important;
 }
 </style>
