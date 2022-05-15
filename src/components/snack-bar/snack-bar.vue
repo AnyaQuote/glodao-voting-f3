@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
-import { snackController } from "./snack-bar-controller"
+import { Component, Vue } from 'vue-property-decorator'
+import { snackController } from './snack-bar-controller'
 @Component
 export default class SnackBar extends Vue {
   controller = snackController
