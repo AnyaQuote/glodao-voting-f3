@@ -15,18 +15,40 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/modules/voting/pages/voting-home.vue'),
         meta: {
           auth: true,
-          title: 'Voting Home'
-        }
+          title: 'Voting Home',
+        },
       },
       {
         path: 'voting/:id',
         component: () => import('@/modules/voting/pages/voting-detail.vue'),
         meta: {
           auth: true,
-          title: 'Voting detail'
-        }
-      }
-    ]
+          title: 'Voting detail',
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/modules/regist/container/container.vue'),
+    children: [
+      {
+        path: 'regist',
+        component: () => import('@/modules/regist/pages/regist-home.vue'),
+        meta: {
+          auth: true,
+          title: 'Application',
+        },
+      },
+      {
+        path: ' ',
+        component: () => import('@/modules/regist/pages/regist-home.vue'),
+        meta: {
+          auth: true,
+          title: 'Application ',
+        },
+      },
+    ],
   },
   {
     path: '*',
