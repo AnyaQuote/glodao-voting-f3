@@ -102,8 +102,8 @@ import { Component, Vue } from 'vue-property-decorator'
     'voting-launch-section': () => import('@/modules/voting/components/voting-launch-section.vue'),
     'voting-trending-section': () => import('@/modules/voting/components/voting-trending-section.vue'),
     'live-voting-card': () => import('@/modules/voting/components/common/live-voting-card.vue'),
-    'ended-voting-card': () => import('@/modules/voting/components/common/ended-voting-card.vue')
-  }
+    'ended-voting-card': () => import('@/modules/voting/components/common/ended-voting-card.vue'),
+  },
 })
 export default class VotingHome extends Vue {}
 </script>
@@ -132,41 +132,6 @@ export default class VotingHome extends Vue {}
     .header-title {
     }
     .header-subtitle {
-    }
-  }
-}
-
-.glodao-slider {
-  &.v-slide-group {
-    position: relative;
-    z-index: 0;
-    .active {
-      background-color: white;
-      border-radius: em(8);
-      padding: em(28) em(8);
-      border: em(1) solid var(--v-bluePrimary-base);
-    }
-    .v-slide-group__prev {
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: -20px;
-      z-index: 1;
-      margin-top: em(-60);
-      :not(.v-slide-group__prev--disabled) {
-        @extend .active;
-      }
-    }
-    .v-slide-group__next {
-      display: block;
-      top: 50%;
-      right: -20px;
-      z-index: 1;
-      position: absolute;
-      margin-top: em(-60);
-      :not(.v-slide-group__next--disabled) {
-        @extend .active;
-      }
     }
   }
 }
