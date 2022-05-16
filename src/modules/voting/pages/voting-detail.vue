@@ -52,11 +52,13 @@
           <span class="header-title mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</span>
         </div>
       </div>
-      <v-slide-group class="glodao-slider ma-n1 px-1">
-        <v-slide-item v-for="i in [1, 2, 3, 4, 5]" :key="i" class="ma-1 debug">
-          <live-compact-card width="348" />
-        </v-slide-item>
-      </v-slide-group>
+      <div class="app-slide-group">
+        <v-slide-group class="ma-n1 px-1">
+          <v-slide-item v-for="i in [1, 2, 3, 4, 5]" :key="i" class="ma-1 debug">
+            <live-compact-card width="348" />
+          </v-slide-item>
+        </v-slide-group>
+      </div>
     </v-col>
   </v-row>
 </template>
@@ -69,8 +71,8 @@ import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
   components: {
     'voting-detail-overview': () => import('../components/voting-detail-overview.vue'),
     'voting-list-item': () => import('../components/common/voting-list-item.vue'),
-    'live-compact-card': () => import('../components/common/live-compact-card.vue')
-  }
+    'live-compact-card': () => import('../components/common/live-compact-card.vue'),
+  },
 })
 export default class VotingDetail extends Vue {
   @Provide() vm = new VotingDetailViewModel()
@@ -78,13 +80,13 @@ export default class VotingDetail extends Vue {
     {
       text: 'DAO Voting',
       disabled: false,
-      href: '/voting'
+      href: '/voting',
     },
     {
       text: 'Hydro Wind Energy',
       disabled: true,
-      href: '/voting/123'
-    }
+      href: '/voting/123',
+    },
   ]
 }
 </script>
