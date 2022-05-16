@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" style="min-width: 320px" class="fill-height neutral100" app temporary fixed>
+  <v-navigation-drawer style="min-width: 320px" class="fill-height neutral100" app temporary fixed>
     <div class="px-4 py-1"></div>
     <v-divider></v-divider>
     <v-btn

@@ -3,7 +3,7 @@
     <navigation-drawer />
     <navigation-bar v-if="$vuetify.breakpoint.mdAndUp" />
     <mobile-navigation-bar v-if="$vuetify.breakpoint.smAndDown" />
-    <v-main class="neutral15 overflow-hidden pb-6">
+    <v-main class="neutral15">
       <router-view></router-view>
     </v-main>
     <v-divider></v-divider>
@@ -11,7 +11,6 @@
     <snack-bar />
     <alert />
     <global-loading />
-    <attach-wallet-dialog />
   </v-app>
 </template>
 
@@ -201,9 +200,17 @@ export default class App extends Vue {
       z-index: 1;
       position: absolute;
       margin-top: em(-60);
-      // :not(.v-slide-group__next--disabled) {
-      //   @extend .active;
-      // }
+      :not(.v-slide-group__next--disabled) {
+        @extend .active;
+      }
+    }
+  }
+}
+
+.v-input {
+  .v-input__control {
+    .v-input__slot {
+      background: transparent !important;
     }
   }
 }

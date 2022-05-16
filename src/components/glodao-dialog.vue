@@ -9,8 +9,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
 export default class GlodaoDialog extends Vue {
-  private show = false
-  private request = 0
+  show = false
+  request = 0
 
   increaseRequest() {
     this.request++

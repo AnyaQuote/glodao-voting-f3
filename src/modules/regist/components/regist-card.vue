@@ -3,7 +3,7 @@
     <v-sheet height="8" class="rounded-lg rounded-b-0" :class="flagColor"></v-sheet>
     <div class="d-flex align-center pa-6 blue lighten-1 flex-shrink-0">
       <v-sheet width="76" height="76" class="mr-4">
-        <v-img contain aspect-ratio="1" src="@/assets/icons/voting-trending--logo.svg" />
+        <v-img contain aspect-ratio="1" src="@/assets/icons/voting-trending--logo.png" />
       </v-sheet>
       <div class="d-flex flex-column justify-space-between flex-grow-1">
         <span class="text-h6 font-color-black">{{ props.projectName }}</span>

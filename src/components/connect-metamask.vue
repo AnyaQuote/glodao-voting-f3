@@ -1,36 +1,5 @@
 <template>
-  <v-btn
-    v-if="!walletStore.account"
-    class="text-none btn-text linear-background-blue-main rounded white--text"
-    :disabled="disabled"
-    depressed
-    rounded
-    @click="walletStore.switchNetwork(chainType, +requiredChainId)"
-    :block="block"
-    :large="large"
-    :small="small"
-    :class="applyClass"
-  >
-    <span>{{ connectText || 'Connect Wallet' }}</span>
-  </v-btn>
-  <v-btn
-    class="text-none btn-text rounded"
-    :class="applyClass"
-    :disabled="disabled"
-    depressed
-    rounded
-    color="primary"
-    v-else-if="walletStore.chainType !== chainType || walletStore.chainId !== +requiredChainId"
-    @click="walletStore.switchNetwork(chainType, +requiredChainId)"
-    :block="block"
-    :large="large"
-    :small="small"
-  >
-    <span :class="{ 'small-text font-weight-bold': smallText }">{{ switchText || 'Switch to ' + networkName }}</span>
-  </v-btn>
-  <div v-else>
-    <slot />
-  </div>
+<div></div>
 </template>
 
 <script lang="ts">

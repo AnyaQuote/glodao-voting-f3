@@ -33,7 +33,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/regist/container/container.vue'),
     children: [
       {
-        path: 'regist',
+        path: 'projects',
         component: () => import('@/modules/regist/pages/regist-home.vue'),
         meta: {
           auth: true,
@@ -41,11 +41,35 @@ const routes: Array<RouteConfig> = [
         },
       },
       {
-        path: ' ',
+        path: 'projects/:id',
         component: () => import('@/modules/regist/pages/regist-home.vue'),
         meta: {
           auth: true,
-          title: 'Application ',
+          title: 'Application',
+        },
+      },
+      {
+        path: 'new-project',
+        component: () => import('@/modules/regist/pages/new-project.vue'),
+        meta: {
+          auth: true,
+          title: 'Application',
+        },
+      },
+      {
+        path: 'new-project/launchpad',
+        component: () => import('@/modules/regist/pages/launchpad-form.vue'),
+        meta: {
+          auth: true,
+          title: 'Application',
+        },
+      },
+      {
+        path: 'new-project/bounty',
+        component: () => import('@/modules/regist/pages/bounty-form.vue'),
+        meta: {
+          auth: true,
+          title: 'Application',
         },
       },
     ],

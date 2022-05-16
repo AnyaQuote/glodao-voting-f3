@@ -1,5 +1,4 @@
 <template>
-  <div>
     <v-tabs>
       <v-tab>All</v-tab>
       <v-tab>Bounty project</v-tab>
@@ -77,7 +76,6 @@
         </div>
       </v-tab-item>
     </v-tabs>
-  </div>
 </template>
 
 <script lang="ts">

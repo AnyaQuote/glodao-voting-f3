@@ -152,7 +152,7 @@
         <!-- <v-col cols="12" sm="12" md="2" class="d-flex justify-end">
         </v-col> -->
         <v-col class="d-flex justify-end align-center col-auto">
-          <connect-wallet class="fill-width" />
+          <!-- <connect-wallet class="fill-width" /> -->
           <div class="ml-6 d-flex align-center justify-end pr-6">
             <v-btn
               depressed
