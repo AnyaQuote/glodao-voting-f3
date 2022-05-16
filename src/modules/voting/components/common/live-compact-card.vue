@@ -26,11 +26,11 @@
         <div class="card-content flex-grow-1 d-flex flex-column">
           <!-- CARD TOP START -->
           <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
-            <div class="card-title font-weight-bold ">{{ projectName }}</div>
-            <div class="card-subtitle font-weight-bold mb-4 ">
+            <div class="card-title font-weight-bold">{{ projectName }}</div>
+            <div class="card-subtitle font-weight-bold mb-4">
               {{ shortDescription }}
             </div>
-            <div class="text-uppercase ma-n1 ">
+            <div class="text-uppercase ma-n1">
               <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
             </div>
           </div>
@@ -72,7 +72,7 @@ const propsValue = (): Props => ({
   upvote: '',
   type: 'bounty',
   cover:
-    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
 })
 
 @Component
