@@ -98,6 +98,7 @@ export default class App extends Vue {
 .v-sheet--outlined {
   border: thin solid var(--v-neutral20-base);
 }
+
 .theme--dark {
   .v-sheet--outlined {
     border: thin solid var(--v-neutral20-base) !important;
@@ -125,12 +126,12 @@ export default class App extends Vue {
   font-size: em(20) !important;
 }
 
-.v-application {
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-}
+// .v-application {
+//   a {
+//     text-decoration: none;
+//     color: inherit;
+//   }
+// }
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -163,27 +164,31 @@ export default class App extends Vue {
 .p-relative {
   position: relative !important;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
 }
 
-.glodao-slider {
-  &.v-slide-group {
+.app-slide-group {
+  .active {
+    border-radius: em(8);
+    padding: em(28) em(8);
+    border: em(1) solid var(--v-bluePrimary-base);
+    background-color: var(--v-neutral100-base) !important;
+  }
+  .v-slide-group {
     position: relative;
     z-index: 0;
-    .active {
-      background-color: white;
-      border-radius: em(8);
-      padding: em(28) em(8);
-      border: em(1) solid var(--v-bluePrimary-base);
-    }
     .v-slide-group__prev {
       display: block;
       position: absolute;
       top: 50%;
       left: -20px;
-      z-index: 1;
+      z-index: 1 !important;
       margin-top: em(-60);
       :not(.v-slide-group__prev--disabled) {
         @extend .active;
@@ -196,9 +201,9 @@ export default class App extends Vue {
       z-index: 1;
       position: absolute;
       margin-top: em(-60);
-      :not(.v-slide-group__next--disabled) {
-        @extend .active;
-      }
+      // :not(.v-slide-group__next--disabled) {
+      //   @extend .active;
+      // }
     }
   }
 }
