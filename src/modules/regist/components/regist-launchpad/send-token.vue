@@ -4,7 +4,7 @@
       >Send token</v-chip
     >
 
-    <div class="pa-6">
+    <v-form ref="send-token-form" class="pa-6">
       <div class="d-flex align-center">
         <img src="@/assets/icons/mock-crypto.svg" alt="currency" width="36" height="36" />
         <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">hydro wind</div>
@@ -20,7 +20,12 @@
         <span class="font-weight-bold ml-1">765,680,000 HWD</span>
       </div>
       <div class="neutral10--text label font-weight-bold mt-6">Lock token</div>
-      <app-text-field class="blue-border" placeholder="Enter amount">
+      <app-text-field
+        :value="$_get(vm.sendToken, 'lockToken')"
+        @input="vm.changeSendTokenInfo('lockToken', $event)"
+        class="blue-border"
+        placeholder="Enter amount"
+      >
         <template #append>
           <div class="label mt-2 neutral10--text font-weight-bold">HWD</div>
         </template>
@@ -34,21 +39,24 @@
         width="100%"
         height="40"
         depressed
-        @click="onClickSendToken"
+        @click="submit"
       >
         Send
       </v-btn>
-    </div>
+    </v-form>
   </v-sheet>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Inject, Vue, Ref } from 'vue-property-decorator'
+import { LaunchpadFormViewModel } from '../../viewmodels/launchpad-form-viewmodel'
 
 @Component
 export default class SendToken extends Vue {
-  onClickSendToken() {
-    // this.$emit('setCurrentStep', NEXT_STEP)
+  @Inject() vm!: LaunchpadFormViewModel
+  @Ref('send-token-form') form
+  submit() {
+    this.form.validate() && this.vm.submit()
   }
 }
 </script>

@@ -47,7 +47,10 @@
       </app-text-field>
       <div class="blue--text label font-weight-bold mt-6">Vesting Schedule</div>
       <div class="label font-weight-bold mt-6">How long does the token distribute?</div>
-      <duration-selector @change="vm.changeFundInfo('distibuteDuration', $event)" />
+      <duration-selector
+        :value="$_get(vm.fundInfo, 'distibuteDuration')"
+        @change="vm.changeFundInfo('distibuteDuration', $event)"
+      />
       <div class="label font-weight-bold mt-6">First distribute time</div>
       <div class="d-flex flex-column flex-sm-row">
         <app-text-field
@@ -67,16 +70,16 @@
         <div class="mt-6 flex-grow-1">
           <div class="label font-weight-bold">Start date</div>
           <app-text-field
-            :value="$_get(vm.fundInfo, 'startDate.date')"
-            @input="vm.changeFundInfo('startDate.date', $event)"
+            :value="$_get(vm.fundInfo, 'launchDate.date')"
+            @input="vm.changeFundInfo('launchDate.date', $event)"
             placeholder="DD/MM/YYYY"
           ></app-text-field>
         </div>
         <div class="pl-0 pl-sm-6 mt-6 flex-grow-1">
           <div class="label font-weight-bold">Start time</div>
           <app-text-field
-            :value="$_get(vm.fundInfo, 'startDate.time')"
-            @input="vm.changeFundInfo('startDate.time', $event)"
+            :value="$_get(vm.fundInfo, 'launchDate.time')"
+            @input="vm.changeFundInfo('launchDate.time', $event)"
             placeholder="00:00"
           ></app-text-field>
         </div>

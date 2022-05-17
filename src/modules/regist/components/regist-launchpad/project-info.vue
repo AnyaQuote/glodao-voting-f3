@@ -84,6 +84,7 @@
             <v-avatar size="24" class="ml-3">
               <v-img src="@/assets/icons/twitter.svg" />
             </v-avatar>
+            <!-- <icon-wrapper class="ml-3" src="../../../../assets/icons/twitter.svg" /> -->
             <span class="neutral10--text text-subtitle-2 font-weight-600 ml-3">Twitter</span>
           </div>
           <v-divider vertical></v-divider>

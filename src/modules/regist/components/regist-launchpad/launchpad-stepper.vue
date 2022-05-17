@@ -53,7 +53,7 @@
         >
           2
         </v-sheet>
-        Send token
+        Confirm
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
@@ -65,7 +65,7 @@
             :class="vm.step === 2.1 ? 'blue--text' : 'neutral10--text'"
             @click="vm.changeStep(2.1)"
           >
-            Send sale amount
+            Confirm payment and fee
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@
         >
           3
         </v-sheet>
-        Confirm
+        Send token
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
@@ -91,7 +91,7 @@
             :class="vm.step === 3.1 ? 'blue--text' : 'neutral10--text'"
             @click="vm.changeStep(3.1)"
           >
-            Confirm and pay fee
+            Send sale amount
           </div>
         </div>
       </div>
