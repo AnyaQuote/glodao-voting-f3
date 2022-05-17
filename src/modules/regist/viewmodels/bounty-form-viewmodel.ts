@@ -20,20 +20,20 @@ const tokenInfoDefault = {
   additionLink: '',
 }
 
-const fundInfoDefault = {
-  totalRaise: '',
-  totalSale: '',
-  priceRatio: '',
-  distributeDuration: '',
-  distributeTime: {
-    date: '',
-    time: '',
-  },
-  launchDate: {
-    date: '',
-    time: '',
-  },
-}
+// const fundInfoDefault = {
+//   totalRaise: '',
+//   totalSale: '',
+//   priceRatio: '',
+//   distributeDuration: '',
+//   distributeTime: {
+//     date: '',
+//     time: '',
+//   },
+//   launchDate: {
+//     date: '',
+//     time: '',
+//   },
+// }
 
 const paymentInfoDefault = {
   immediate: false,
@@ -47,7 +47,7 @@ export class BountyFormViewModel {
   @observable unlockedStep = 3.1
   @observable projectInfo = projectInfoDefault
   @observable tokenInfo = tokenInfoDefault
-  @observable fundInfo = fundInfoDefault
+  // @observable fundInfo = fundInfoDefault
   @observable paymentInfo = paymentInfoDefault
   @action.bound changeStep(value: number) {
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
@@ -67,13 +67,13 @@ export class BountyFormViewModel {
     } else this.tokenInfo[property] = value
   }
 
-  @action.bound changeFundInfo(property: string, value: string) {
-    if (property.includes('launchDate') || property.includes('distributeTime')) {
-      const prop = property.split('.')[0]
-      const nestedProp = property.split('.')[1]
-      this.fundInfo[prop][nestedProp] = value
-    } else this.fundInfo[property] = value
-  }
+  // @action.bound changeFundInfo(property: string, value: string) {
+  //   if (property.includes('launchDate') || property.includes('distributeTime')) {
+  //     const prop = property.split('.')[0]
+  //     const nestedProp = property.split('.')[1]
+  //     this.fundInfo[prop][nestedProp] = value
+  //   } else this.fundInfo[property] = value
+  // }
 
   @action.bound changePaymentInfo(property: string, value: string) {
     if (property.includes('openDate')) {
@@ -92,11 +92,11 @@ export class BountyFormViewModel {
       const data = {
         projectInfo: { ...this.projectInfo },
         tokenInfo: { ...this.tokenInfo, chain: { ...this.tokenInfo.chain } },
-        fundInfo: {
-          ...this.fundInfo,
-          distributeTime: toISO(this.fundInfo.distributeTime),
-          launchDate: toISO(this.fundInfo.launchDate),
-        },
+        // fundInfo: {
+        //   ...this.fundInfo,
+        //   distributeTime: toISO(this.fundInfo.distributeTime),
+        //   launchDate: toISO(this.fundInfo.launchDate),
+        // },
         paymentInfo: { ...this.paymentInfo, openDate: toISO(this.paymentInfo.openDate) },
       }
       console.log('final data:::', data)
