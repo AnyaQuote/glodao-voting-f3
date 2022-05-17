@@ -1,15 +1,6 @@
 <template>
   <v-btn
-    class="
-      d-flex
-      align-center
-      nav-btn-text
-      border-radius-8
-      text-none
-      py-2
-      px-3
-      transparent-bg
-    "
+    class="d-flex align-center nav-btn-text border-radius-8 text-none py-2 px-3 transparent-bg"
     v-if="!walletStore.connected"
     @click="walletStore.connect()"
     :large="large"

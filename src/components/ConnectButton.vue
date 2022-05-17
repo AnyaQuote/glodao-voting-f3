@@ -1,16 +1,7 @@
 <template>
   <div>
     <v-btn
-      class="
-        d-flex
-        align-center
-        connect-wallet
-        border-radius-8
-        text-none
-        btn-text
-        pa-5
-        elevation-0
-      "
+      class="d-flex align-center connect-wallet border-radius-8 text-none btn-text pa-5 elevation-0"
       v-if="!walletStore.connected"
       @click="walletStore.connect()"
       color="primary"
@@ -39,7 +30,7 @@ import { blockchainHandler } from '@/blockchain'
 
 @Observer
 @Component({
-  components: {}
+  components: {},
 })
 export default class ConnectButton extends Vue {
   walletStore = walletStore

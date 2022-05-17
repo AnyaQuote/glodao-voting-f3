@@ -36,8 +36,6 @@
 // 				contract: new Contract(web3, fixedswapv4, contractAddress),
 // 			};
 
-
-
 // 			if (tokenAddress && decimals) {
 // 				this.params.erc20TokenContract = new ERC20TokenContract({
 // 					web3: web3,
@@ -173,7 +171,6 @@
 // 			this.params.contract.getContract().methods.pause()
 // 		);
 // 	}
-
 
 // 	/**
 // 	 * @function erc20
@@ -373,8 +370,8 @@
 
 // 	/**
 // 	 * @function hasMinimumRaise
-// 	 * @description See if hasMinimumRaise 
-// 	 * @returns {Boolea} 
+// 	 * @description See if hasMinimumRaise
+// 	 * @returns {Boolea}
 // 	 */
 // 	async hasMinimumRaise () {
 // 		return await this.params.contract
@@ -474,7 +471,6 @@
 // 			.methods.isTokenSwapAtomic()
 // 			.call();
 // 	}
-
 
 // 	/**
 // 	 * @function hasWhitelisting
@@ -867,7 +863,6 @@
 // 		);
 // 	};
 
-
 // 	/**
 // 	 * @function safePull
 // 	 * @description Safe Pull all tokens & ETH
@@ -1024,7 +1019,7 @@
 // 		for (var i = 0; i < vestingScheduleLength; i++){
 // 			promises.push(this.getRedeemConfigAt({index: i}))
 // 		}
-		
+
 // 		return await Promise.all(promises)
 // 	}
 // 	getRedeemConfigAt = async ({index}) =>{

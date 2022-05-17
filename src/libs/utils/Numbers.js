@@ -1,7 +1,7 @@
-import { FixedNumber } from '@ethersproject/bignumber';
-import accounting from 'accounting';
-import dayjs from 'dayjs';
-import moment from 'moment';
+import { FixedNumber } from '@ethersproject/bignumber'
+import accounting from 'accounting'
+import dayjs from 'dayjs'
+import moment from 'moment'
 
 Number.prototype.noExponents = function () {
   var data = String(this).split(/[eE]/)
@@ -36,15 +36,15 @@ class numbers {
   }
 
   fromSmartContractTimeToMinutes(time) {
-    return dayjs.unix(time).toDate();
+    return dayjs.unix(time).toDate()
   }
 
   fromMinutesToSmartContracTime(time) {
     return time
   }
 
-  fromHex(hex){
-    return hex.toString();
+  fromHex(hex) {
+    return hex.toString()
   }
 
   toFloat(number) {
@@ -75,7 +75,10 @@ class numbers {
   }
 
   toSmartContractDecimals(value, decimals = 18) {
-    return FixedNumber.from(`${value}`).mulUnsafe(FixedNumber.from(`${10 ** decimals}`)).toString().split(".")[0]
+    return FixedNumber.from(`${value}`)
+      .mulUnsafe(FixedNumber.from(`${10 ** decimals}`))
+      .toString()
+      .split('.')[0]
   }
 
   fromBigNumberToInteger(value, decimals = 18) {
@@ -83,19 +86,21 @@ class numbers {
   }
 
   fromDecimals(value, decimals = 18) {
-    return FixedNumber.from(`${value}`).divUnsafe(FixedNumber.from(`${10 ** decimals}`)).toString();
+    return FixedNumber.from(`${value}`)
+      .divUnsafe(FixedNumber.from(`${10 ** decimals}`))
+      .toString()
   }
 
   fromExponential(x) {
     let e
     if (Math.abs(x) < 1.0) {
-       e = parseInt(x.toString().split('e-')[1])
+      e = parseInt(x.toString().split('e-')[1])
       if (e) {
         x *= Math.pow(10, e - 1)
         x = '0.' + new Array(e).join('0') + x.toString().substring(2)
       }
     } else {
-       e = parseInt(x.toString().split('+')[1])
+      e = parseInt(x.toString().split('+')[1])
       if (e > 20) {
         e -= 20
         x /= Math.pow(10, e)

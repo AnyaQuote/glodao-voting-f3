@@ -53,10 +53,10 @@ function etherBatchRequest(web3: Web3, methods: any[]) {
   const batch = new web3.BatchRequest()
   const tasks = Promise.all(
     methods.map(
-      method =>
+      (method) =>
         new Promise((resolve, reject) => {
           batch.add(
-            method.call.request({}, function(error, result) {
+            method.call.request({}, function (error, result) {
               if (error) {
                 console.error('Errror=', method, error)
                 reject(error)
@@ -75,5 +75,5 @@ function etherBatchRequest(web3: Web3, methods: any[]) {
 export const blockchainHandler = {
   getChainConfig,
   getWeb3,
-  etherBatchRequest
+  etherBatchRequest,
 }

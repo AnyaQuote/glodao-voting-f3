@@ -17,7 +17,7 @@ export class ConfirmDialogController {
     hideCancel: false,
     hideDone: false,
     doneText: 'Done',
-    cancelText: 'Cancel'
+    cancelText: 'Cancel',
   }
   @observable dialog = false
 

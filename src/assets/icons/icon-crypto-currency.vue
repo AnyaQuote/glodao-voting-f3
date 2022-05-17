@@ -19,7 +19,7 @@ interface Props {
 }
 
 const propsValue = (): Props => ({
-  color: '#B95567'
+  color: '#B95567',
 })
 
 @Component

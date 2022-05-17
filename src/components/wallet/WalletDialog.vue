@@ -34,8 +34,8 @@ import { Observer } from 'mobx-vue'
 @Component({
   components: {
     ConnectMetamask: () => import('@/components/wallet/ConnectMetamask.vue'),
-    WalletDialog: () => import('@/components/wallet/WalletDialog.vue')
-  }
+    WalletDialog: () => import('@/components/wallet/WalletDialog.vue'),
+  },
 })
 export default class Staking extends Vue {
   wallet = walletStore
