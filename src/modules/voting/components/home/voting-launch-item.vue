@@ -64,8 +64,8 @@ interface Props {
 @Component({
   components: {
     'voting-out-btn': () => import('../common/voting-out-btn.vue'),
-    'voting-progress-circle': () => import('../common/voting-progress-circle.vue')
-  }
+    'voting-progress-circle': () => import('../common/voting-progress-circle.vue'),
+  },
 })
 export default class VotingLaunchItem extends Vue {
   @Prop() props!: Props

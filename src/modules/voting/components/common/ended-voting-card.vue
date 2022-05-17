@@ -6,7 +6,7 @@
       <div class="card-content d-flex flex-column">
         <!-- CARD TOP START -->
         <div class="card-content-top d-flex flex-column pa-6 pb-0 pt-1">
-          <div class="card-title font-weight-bold ">{{ projectName }}</div>
+          <div class="card-title font-weight-bold">{{ projectName }}</div>
           <div class="card-subtitle font-weight-bold">
             {{ shortDescription }}
           </div>
@@ -68,7 +68,7 @@ const defaultProps = (): Props => ({
   cover:
     'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
   endTime: '2022-08-11T17:00:00.000Z',
-  labels: ['finance', 'gaming']
+  labels: ['finance', 'gaming'],
 })
 
 @Component

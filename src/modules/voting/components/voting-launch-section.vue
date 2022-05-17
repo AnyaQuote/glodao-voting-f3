@@ -31,8 +31,8 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   components: {
-    'voting-launch-item': () => import('../components/home/voting-launch-item.vue')
-  }
+    'voting-launch-item': () => import('../components/home/voting-launch-item.vue'),
+  },
 })
 export default class VotingLaunchSection extends Vue {
   data = [
@@ -43,7 +43,7 @@ export default class VotingLaunchSection extends Vue {
       downvote: '90',
       detailLink: '',
       readmoreLink: '',
-      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY'
+      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY',
     },
     {
       projectName: 'Hydro Wind Enery',
@@ -52,7 +52,7 @@ export default class VotingLaunchSection extends Vue {
       downvote: '90',
       detailLink: '',
       readmoreLink: '',
-      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY'
+      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY',
     },
     {
       projectName: 'Hydro Wind Enery',
@@ -61,8 +61,8 @@ export default class VotingLaunchSection extends Vue {
       downvote: '90',
       detailLink: '',
       readmoreLink: '',
-      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY'
-    }
+      launchDate: 'JAN 21ST, 2022 AT 10:00 PM ONLY',
+    },
   ]
 }
 </script>

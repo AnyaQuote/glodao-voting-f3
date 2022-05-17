@@ -43,8 +43,8 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   components: {
-    'icon-chain': () => import('@/assets/icons/icon-chain.vue')
-  }
+    'icon-chain': () => import('@/assets/icons/icon-chain.vue'),
+  },
 })
 export default class VotingDetailButton extends Vue {
   connected = false

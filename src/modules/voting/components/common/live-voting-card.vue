@@ -27,11 +27,11 @@
         <div class="card-content flex-grow-1 d-flex flex-column">
           <!-- CARD TOP START -->
           <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
-            <div class="card-title font-weight-bold ">{{ projectName }}</div>
-            <div class="card-subtitle font-weight-bold mb-4 ">
+            <div class="card-title font-weight-bold">{{ projectName }}</div>
+            <div class="card-subtitle font-weight-bold mb-4">
               {{ shortDescription }}
             </div>
-            <div class="text-uppercase ma-n1 ">
+            <div class="text-uppercase ma-n1">
               <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
             </div>
           </div>
@@ -41,7 +41,7 @@
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class=" text-h5" :to="endTime"> </countdown>
+            <countdown class="text-h5" :to="endTime"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
@@ -82,13 +82,13 @@ const defaultProps = (): Props => ({
   cover:
     'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
   endTime: '2022-08-11T17:00:00.000Z',
-  labels: ['finance', 'gaming']
+  labels: ['finance', 'gaming'],
 })
 
 @Component({
   components: {
-    countdown: () => import('./countdown.vue')
-  }
+    countdown: () => import('./countdown.vue'),
+  },
 })
 export default class LiveVotingCard extends Vue {
   @Prop({ default: defaultProps }) props!: Props

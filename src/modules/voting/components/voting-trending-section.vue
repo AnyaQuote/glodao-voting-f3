@@ -71,8 +71,8 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   components: {
-    'voting-out-btn': () => import('../components/common/voting-out-btn.vue')
-  }
+    'voting-out-btn': () => import('../components/common/voting-out-btn.vue'),
+  },
 })
 export default class VotingTrendingSection extends Vue {
   n = [0, 1, 2, 3, 4, 5]

@@ -5,7 +5,7 @@
       <div class="banner-top rounded-lg">
         <v-img class="banner-img rounded-lg rounded-b-0" src="@/assets/images/voting-home--background.png" />
         <voting-out-btn class="banner-link-btn" width="51" height="51" />
-        <div class="banner-content  rounded-lg py-10">
+        <div class="banner-content rounded-lg py-10">
           <div class="text-h5 text-center font-weight-bold mb-10 white--text">Current result</div>
           <!-- CENTER CONTENT BOX START -->
           <v-sheet max-width="600" class="d-flex justify-center transparent white--text mx-16">
@@ -111,8 +111,8 @@ import { Component, Vue, Ref } from 'vue-property-decorator'
     'reward-card': () => import('../components/common/reward-card.vue'),
     'voting-detail-button': () => import('../components/detail/voting-detail-button.vue'),
     'vote-prep-dialog': () => import('../components/detail/vote-prep-dialog.vue'),
-    'vote-confirm-dialog': () => import('../components/detail/vote-confirm-dialog.vue')
-  }
+    'vote-confirm-dialog': () => import('../components/detail/vote-confirm-dialog.vue'),
+  },
 })
 export default class VotingDetailOverview extends Vue {
   @Ref('vote-prep-dialog') votePrepDialog
