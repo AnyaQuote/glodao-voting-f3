@@ -1,10 +1,8 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip label outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6"
-      >Send token</v-chip
-    >
+    <v-chip label outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6">Confirm</v-chip>
 
-    <div class="pa-6">
+    <v-form ref="payment-form" class="pa-6">
       <div class="d-flex align-center">
         <img src="@/assets/icons/mock-crypto.svg" alt="currency" width="36" height="36" />
         <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">hydro wind</div>
@@ -32,15 +30,27 @@
 
         <div class="label font-weight-bold">
           <span class="bluePrimary--text">Time for launch on DAO Voting</span>
-          <v-checkbox label="Publish project immediately after creating pool"></v-checkbox>
+          <v-checkbox
+            :value="$_get(vm.paymentInfo, 'immediate')"
+            @change="vm.changePaymentInfo('immediate', $event)"
+            label="Publish project immediately after creating pool"
+          ></v-checkbox>
           <div class="d-flex">
             <div class="mr-6 flex-grow-1">
               <span>Start date</span>
-              <app-text-field placeholder="DD/MM/YYYY"></app-text-field>
+              <app-text-field
+                :value="$_get(vm.paymentInfo, 'openDate.date')"
+                @input="vm.changePaymentInfo('openDate.date', $event)"
+                placeholder="DD/MM/YYYY"
+              ></app-text-field>
             </div>
             <div class="flex-grow-1">
               <span>Start time</span>
-              <app-text-field placeholder="00:00"></app-text-field>
+              <app-text-field
+                :value="$_get(vm.paymentInfo, 'openDate.time')"
+                @input="vm.changePaymentInfo('openDate.time', $event)"
+                placeholder="00:00"
+              ></app-text-field>
             </div>
           </div>
         </div>
@@ -49,22 +59,26 @@
           width="100%"
           height="40"
           depressed
-          @click="onClickSendToken"
+          @click="submit"
         >
-          Send
+          Confirm and pay fee
         </v-btn>
       </div>
-    </div>
+    </v-form>
   </v-sheet>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
+import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
 
 @Component
 export default class ConfirmPayment extends Vue {
-  onClickSendToken() {
-    // this.$emit('setCurrentStep', NEXT_STEP)
+  @Inject() vm!: BountyFormViewModel
+  @Ref('payment-form') form
+
+  submit() {
+    this.form.validate() && this.vm.submit()
   }
 }
 </script>

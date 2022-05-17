@@ -12,14 +12,14 @@
       </v-sheet>
     </v-col>
     <v-col cols="3">
-      <bounty-stepper :step="step" @change="changeStep" />
+      <bounty-stepper />
     </v-col>
-    <v-col cols="9" style="min-height: 500px">
-      <v-slide-y-transition>
-        <project-info v-if="step === 1.1" />
-        <token-info v-if="step === 1.2" />
-        <raising-info v-if="step === 1.3" />
-        <confirm-payment v-if="step === 2.1" />
+    <v-col cols="9">
+      <v-slide-y-transition fixed>
+        <project-info v-if="vm.step === 1.1" />
+        <token-info v-if="vm.step === 1.2" />
+        <raising-info v-if="vm.step === 1.3" />
+        <confirm-payment v-if="vm.step === 2.1" />
       </v-slide-y-transition>
     </v-col>
   </v-row>
@@ -40,12 +40,6 @@ import { BountyFormViewModel } from '../viewmodels/bounty-form-viewmodel'
 })
 export default class ProjectRegistDetail extends Vue {
   @Provide() vm = new BountyFormViewModel()
-
-  step = 1.1
-
-  changeStep(index: number) {
-    this.step = index
-  }
 }
 </script>
 

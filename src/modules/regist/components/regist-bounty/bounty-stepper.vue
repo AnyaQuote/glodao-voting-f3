@@ -20,20 +20,24 @@
           <v-divider vertical></v-divider>
         </v-sheet>
         <div class="pl-6 pb-6">
-          <div class="cursor-pointer" :class="step === 1.1 ? 'blue--text' : 'neutral10--text'" @click="selectStep(1.1)">
+          <div
+            class="cursor-pointer"
+            :class="vm.step === 1.1 ? 'blue--text' : 'neutral10--text'"
+            @click="vm.changeStep(1.1)"
+          >
             Project information
           </div>
           <div
             class="cursor-pointer mt-3"
-            :class="step === 1.2 ? 'blue--text' : 'neutral10--text'"
-            @click="selectStep(1.2)"
+            :class="vm.step === 1.2 ? 'blue--text' : 'neutral10--text'"
+            @click="vm.changeStep(1.2)"
           >
             Token information
           </div>
           <div
             class="cursor-pointer mt-3"
-            :class="step === 1.3 ? 'blue--text' : 'neutral10--text'"
-            @click="selectStep(1.3)"
+            :class="vm.step === 1.3 ? 'blue--text' : 'neutral10--text'"
+            @click="vm.changeStep(1.3)"
           >
             Raising fund information
           </div>
@@ -49,15 +53,19 @@
         >
           2
         </v-sheet>
-        Send token
+        Confirm
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
           <v-divider vertical></v-divider>
         </v-sheet>
         <div class="pl-6 pb-6">
-          <div class="cursor-pointer" :class="step === 2.1 ? 'blue--text' : 'neutral10--text'" @click="selectStep(2.1)">
-            Send sale amount
+          <div
+            class="cursor-pointer"
+            :class="vm.step === 2.1 ? 'blue--text' : 'neutral10--text'"
+            @click="vm.changeStep(2.1)"
+          >
+            Confirm and pay fee
           </div>
         </div>
       </div>
@@ -68,19 +76,16 @@
 <script lang="ts">
 import { floor } from 'lodash'
 import { Observer } from 'mobx-vue'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Inject, Vue } from 'vue-property-decorator'
+import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
 
 @Observer
 @Component
 export default class ApplicationTimeline extends Vue {
-  @Prop(Number) step!: number
+  @Inject() vm!: BountyFormViewModel
 
   get section() {
-    return floor(this.step)
-  }
-
-  selectStep(val: number): void {
-    this.$emit('change', val)
+    return floor(this.vm.step)
   }
 }
 </script>
