@@ -81,7 +81,7 @@ export default class TokenInfo extends Vue {
   ]
 
   submit() {
-    this.form.validate() && this.vm.nextStep(1.3)
+    this.form.validate() && this.vm.nextStep(2.1)
   }
 }
 </script>
