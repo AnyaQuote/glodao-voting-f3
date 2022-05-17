@@ -126,8 +126,8 @@
         )
       </div>
       <app-text-field
-        :value="vm.projectInfo.researchProject"
-        @input="vm.changeProjectInfo('researchProject', $event)"
+        :value="$_get(vm.projectInfo, 'tokenAddress')"
+        @input="vm.changeProjectInfo('tokenAddress', $event)"
         placeholder="Enter link"
       ></app-text-field>
       <v-btn
