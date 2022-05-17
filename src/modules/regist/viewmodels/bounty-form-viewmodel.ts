@@ -1,10 +1,9 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, observable } from 'mobx'
-import { get } from 'lodash'
+import { get, set } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toISO } from '@/helpers/date-helper'
 import { apiService } from '@/services/api-service'
-import { appProvider } from '@/app-providers'
 
 const projectInfoDefault = {
   projectName: '',
@@ -12,7 +11,7 @@ const projectInfoDefault = {
   projectCover: '',
   keywords: [],
   socials: {},
-  researchProject: '',
+  tokenAddress: '',
 }
 
 const tokenInfoDefault = {
@@ -22,7 +21,7 @@ const tokenInfoDefault = {
   additionLink: '',
 }
 
-const paymentInfoDefault = {
+const confirmInfoDefault = {
   immediate: false,
   openDate: {
     date: '',
@@ -34,32 +33,22 @@ export class BountyFormViewModel {
   @observable unlockedStep = 3.1
   @observable projectInfo = projectInfoDefault
   @observable tokenInfo = tokenInfoDefault
-  // @observable fundInfo = fundInfoDefault
-  @observable paymentInfo = paymentInfoDefault
+  @observable confirmInfo = confirmInfoDefault
   @action.bound changeStep(value: number) {
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
     else this.step = value
   }
 
   @action.bound changeProjectInfo(property: string, value: string) {
-    if (property.includes('socials')) {
-      const nestedProp = property.split('.')[1]
-      this.projectInfo.socials[nestedProp] = value
-    } else this.projectInfo[property] = value
+    set(this.projectInfo, property, value)
   }
 
   @action.bound changeTokenInfo(property: string, value: string) {
-    if (property === 'chain') {
-      this.tokenInfo[property] = { name: get(value, 'name'), icon: get(value, 'icon') }
-    } else this.tokenInfo[property] = value
+    set(this.tokenInfo, property, value)
   }
 
   @action.bound changePaymentInfo(property: string, value: string) {
-    if (property.includes('openDate')) {
-      const prop = property.split('.')[0]
-      const nestedProp = property.split('.')[1]
-      this.paymentInfo[prop][nestedProp] = value
-    } else this.paymentInfo[property] = value
+    set(this.confirmInfo, property, value)
   }
 
   @action nextStep(value: number) {
@@ -69,7 +58,7 @@ export class BountyFormViewModel {
   @asyncAction *submit() {
     try {
       const { projectName, ...projectInfo } = this.projectInfo
-      const { immediate, openDate } = this.paymentInfo
+      const { immediate, openDate } = this.confirmInfo
       const data = {
         projectName,
         type: 'bounty',
