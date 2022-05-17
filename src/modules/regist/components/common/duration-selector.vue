@@ -28,29 +28,42 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { parseInt, isNaN } from 'lodash'
 @Component
 export default class DurationField extends Vue {
+  @Prop({ default: '1 week' }) value!: string
   tokenDistributeTimeOptions = ['week', 'month', 'year']
   selectedTokenDistributeTimeOption = this.tokenDistributeTimeOptions[0]
-  selectedTokenDistributeTime = this.tokenDistributeTime[0] ?? 1
+  selectedTokenDistributeTime = 1
 
-  get tokenDistributeTime() {
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  mounted() {
+    const time = parseInt(this.value.split(' ')[0])
+    const timeOption = this.value.split(' ')[1]
+    this.selectedTokenDistributeTimeOption = timeOption ?? this.tokenDistributeTimeOptions[0]
+    this.selectedTokenDistributeTime = !isNaN(time) ? time : this.tokenDistributeTime[0] ?? 1
   }
 
   onSelectDistributeTime(val: any): void {
     this.selectedTokenDistributeTime = val
   }
+
   onSelectTokenDistributeTimeOption(val: string): void {
     this.selectedTokenDistributeTimeOption =
       this.tokenDistributeTimeOptions.find((option) => option === val) ?? this.selectedTokenDistributeTimeOption
   }
 
-  @Watch('selectedTokenDistributeTime')
+  @Watch('completeDistributeTime')
   onDistributeTimeChange(value: number) {
-    this.$emit('change', value + ' ' + this.selectedTokenDistributeTimeOption)
+    this.$emit('change', value)
+  }
+
+  get completeDistributeTime() {
+    return this.selectedTokenDistributeTime + ' ' + this.selectedTokenDistributeTimeOption
+  }
+
+  get tokenDistributeTime() {
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   }
 }
 </script>
