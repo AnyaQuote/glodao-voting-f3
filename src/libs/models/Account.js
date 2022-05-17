@@ -5,8 +5,8 @@ class Account {
   }
 
   async getBalance() {
-    const wei = await this.web3.eth.getBalance(this.getAddress())
-    return this.web3.utils.fromWei(wei, "ether")
+    let wei = await this.web3.eth.getBalance(this.getAddress())
+    return this.web3.utils.fromWei(wei, 'ether')
   }
 
   getAddress() {
@@ -22,15 +22,15 @@ class Account {
   }
 
   async sendEther(amount, address, data = null) {
-    const tx = {
+    let tx = {
       data: data,
       from: this.getAddress(),
       to: address,
       gas: 443000,
-      value: amount
+      value: amount,
     }
-    const result = await this.account.signTransaction(tx)
-    const transaction = await this.web3.eth.sendSignedTransaction(result.rawTransaction)
+    let result = await this.account.signTransaction(tx)
+    let transaction = await this.web3.eth.sendSignedTransaction(result.rawTransaction)
     return transaction
   }
 }

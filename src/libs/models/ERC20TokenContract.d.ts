@@ -22,7 +22,15 @@ declare class ERC20TokenContract {
   getABI(): any
   getName(): any
   getDecimals(): any
-  isApproved({ address, amount, spenderAddress }: { address: any; amount?: string; spenderAddress: any }): Promise<boolean>
+  isApproved({
+    address,
+    amount,
+    spenderAddress,
+  }: {
+    address: any
+    amount?: string
+    spenderAddress: any
+  }): Promise<boolean>
   approve({ address, amount, callback }: { address: any; callback?: any }): Promise<any>
 }
-import contract from "./Contract"
+import contract from './Contract'

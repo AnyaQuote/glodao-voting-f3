@@ -1,3 +1,4 @@
+export default Account
 declare class Account {
   constructor(web3: any, account: any)
   web3: any
@@ -8,5 +9,3 @@ declare class Account {
   getAccount(): any
   sendEther(amount: any, address: any, data?: any): Promise<any>
 }
-
-export default Account

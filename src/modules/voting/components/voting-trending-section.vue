@@ -30,7 +30,7 @@
             <div class="trending-left-bottom d-flex align-end px-4 pb-4">
               <div class="trending-left-bottom__content text-h4 py-6 font-weight-bold">Hydro Wind Energy</div>
               <v-sheet class="trending-left-bottom__logo rounded-lg pa-3" width="160" height="160">
-                <v-img contain aspect-ratio="1" src="../../../assets/icons/voting-trending--logo.svg" />
+                <v-img contain aspect-ratio="1" src="../../../assets/icons/voting-trending--logo.png" />
               </v-sheet>
             </div>
           </v-sheet>
@@ -71,8 +71,8 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   components: {
-    'voting-out-btn': () => import('../components/common/voting-out-btn.vue')
-  }
+    'voting-out-btn': () => import('../components/common/voting-out-btn.vue'),
+  },
 })
 export default class VotingTrendingSection extends Vue {
   n = [0, 1, 2, 3, 4, 5]

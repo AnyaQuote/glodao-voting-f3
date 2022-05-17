@@ -1,11 +1,12 @@
 <template>
   <div class="card-wrapper d-flex fill-height" :class="className">
     <v-sheet class="card d-flex flex-column">
+      <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
       <img :src="cover" class="rounded-lg rounded-b-0 card-img" />
       <div class="card-content d-flex flex-column">
         <!-- CARD TOP START -->
         <div class="card-content-top d-flex flex-column pa-6 pb-0 pt-1">
-          <div class="card-title font-weight-bold ">{{ projectName }}</div>
+          <div class="card-title font-weight-bold">{{ projectName }}</div>
           <div class="card-subtitle font-weight-bold">
             {{ shortDescription }}
           </div>
@@ -34,7 +35,7 @@
             <div><span class="error--text font-weight-bold">NO</span> votes</div>
           </div>
           <div class="flag text-center py-2" :class="className">
-            <span class="text-uppercase">{{ isBounty ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            <span class="text-uppercase">{{ props.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
           </div>
         </div>
       </div>
@@ -57,9 +58,22 @@ interface Props {
   cover?: string
 }
 
+const defaultProps = (): Props => ({
+  projectName: 'Hydro Wind Energy',
+  shortDescription:
+    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+  upvote: '90',
+  downvote: '90',
+  type: 'bounty',
+  cover:
+    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+  endTime: '2022-08-11T17:00:00.000Z',
+  labels: ['finance', 'gaming'],
+})
+
 @Component
 export default class EndedVotingCard extends Vue {
-  @Prop() props!: Props
+  @Prop({ default: defaultProps }) props!: Props
 
   get projectName() {
     return this.props.projectName

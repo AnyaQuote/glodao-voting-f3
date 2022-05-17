@@ -1,4 +1,6 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
+import { BN } from '@project-serum/anchor'
+import moment from 'moment'
 
 class BigNumberHelper {
   /**
@@ -27,11 +29,7 @@ class BigNumberHelper {
   }
 
   getDecimals(decimals = 18) {
-    return FixedNumber.from(
-      BigNumber.from('10')
-        .pow(decimals)
-        .toString()
-    )
+    return FixedNumber.from(BigNumber.from('10').pow(decimals).toString())
   }
 
   fromDecimals(amount, decimals: any = 18) {
@@ -52,6 +50,29 @@ class BigNumberHelper {
   fromSolDecimals(amount, decimals = 9) {
     return this.fromDecimals(amount || '0', decimals)
   }
+
+  toSolDecimal(fx: FixedNumber | string, decimals = 9) {
+    return new BN(this.toDecimalString(fx, decimals))
+  }
+
+  toDate(num: BN | string | FixedNumber) {
+    const parsedNum = +num.toString()
+    // if (num instanceof BN) parsedNum = num.toNumber()
+    // else if (num instanceof FixedNumber) parsedNum = num.toUnsafeFloat()
+    // else if (typeof num === 'string') parsedNum = +num
+    // else {
+    //   console.log(num, num instanceof BN)
+    // }
+    return new Date(parsedNum * 1000)
+  }
+
+  toMoment(num: BN | string | FixedNumber) {
+    return moment(this.toDate(num))
+  }
+
+  // toSolBN(num) {
+  //   return new BN(`${num}`)
+  // }
 }
 
 export const bigNumberHelper = new BigNumberHelper()

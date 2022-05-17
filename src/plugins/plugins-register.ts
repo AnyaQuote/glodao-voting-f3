@@ -7,15 +7,12 @@ export const pluginsRegister = () => {
     install: (Vue: any) => {
       Vue.prototype.$rules = rules
       Vue.prototype.$appRules = appRules
-
-      // eslint-disable-next-line @typescript-eslint/camelcase
       Vue.prototype.$_empty = (any: any) => {
         return !_.isNumber(any) && (!any || _.isEmpty(any))
       }
-      // eslint-disable-next-line @typescript-eslint/camelcase
       Vue.prototype.$_get = (any: any, path: string, defaultValue = '') => {
         return _.get(any, path, defaultValue)
       }
-    }
+    },
   })
 }
