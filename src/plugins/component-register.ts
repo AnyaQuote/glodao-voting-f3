@@ -15,4 +15,5 @@ export const componentRegister = () => {
   Vue.component('app-text-field', () => import('@/components/form/app-text-field.vue'))
   Vue.component('app-textarea', () => import('@/components/form/app-textarea.vue'))
   Vue.component('app-select', () => import('@/components/form/app-select.vue'))
+  Vue.component('icon-wrapper', () => import('@/components/icon-wrapper.vue'))
 }
