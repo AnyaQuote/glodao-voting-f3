@@ -19,12 +19,16 @@
         placeholder="Enter project's short description"
       ></app-textarea>
 
+      <div class="label font-weight-bold mt-6">Project logo</div>
+      <image-upload-field />
+
       <div class="label font-weight-bold mt-6">Project cover</div>
-      <app-text-field
+      <image-upload-field />
+      <!-- <app-text-field
         :value="vm.projectInfo.projectCover"
         @input="vm.changeProjectInfo('projectCover', $event)"
         placeholder="Enter image link"
-      ></app-text-field>
+      ></app-text-field> -->
 
       <div class="label font-weight-bold mt-6">Field of project</div>
       <div class="neutral10--text font-weight-light mb-1">Select some keyword about your project</div>
@@ -147,7 +151,11 @@
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
 
-@Component
+@Component({
+  components: {
+    'image-upload-field': () => import('../common/image-upload-field.vue'),
+  },
+})
 export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyFormViewModel
   @Ref('project-info-form') form
@@ -163,7 +171,6 @@ export default class ProjectInfo extends Vue {
 .form {
   .label {
     font-size: em(18);
-    margin-bottom: em(16);
   }
   .thin-border {
     border: thin solid var(--v-neutral20-base);
