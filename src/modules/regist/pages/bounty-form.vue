@@ -18,7 +18,6 @@
       <v-slide-y-transition fixed>
         <project-info v-if="vm.step === 1.1" />
         <token-info v-if="vm.step === 1.2" />
-        <!-- <raising-info v-if="vm.step === 1.3" /> -->
         <confirm-payment v-if="vm.step === 2.1" />
       </v-slide-y-transition>
     </v-col>
@@ -34,7 +33,6 @@ import { BountyFormViewModel } from '../viewmodels/bounty-form-viewmodel'
     'bounty-stepper': () => import('../components/regist-bounty/bounty-stepper.vue'),
     'project-info': () => import('../components/regist-bounty/project-info.vue'),
     'token-info': () => import('../components/regist-bounty/token-info.vue'),
-    'raising-info': () => import('../components/regist-bounty/raising-info.vue'),
     'confirm-payment': () => import('../components/regist-bounty/confirm.vue'),
   },
 })
