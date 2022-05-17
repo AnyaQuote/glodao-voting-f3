@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class DurationField extends Vue {
@@ -46,6 +46,11 @@ export default class DurationField extends Vue {
   onSelectTokenDistributeTimeOption(val: string): void {
     this.selectedTokenDistributeTimeOption =
       this.tokenDistributeTimeOptions.find((option) => option === val) ?? this.selectedTokenDistributeTimeOption
+  }
+
+  @Watch('selectedTokenDistributeTime')
+  onDistributeTimeChange(value: number) {
+    this.$emit('change', value + ' ' + this.selectedTokenDistributeTimeOption)
   }
 }
 </script>
