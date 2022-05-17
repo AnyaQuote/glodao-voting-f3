@@ -3,6 +3,8 @@ import { action, computed, observable } from 'mobx'
 import { get } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toISO } from '@/helpers/date-helper'
+import { apiService } from '@/services/api-service'
+import { appProvider } from '@/app-providers'
 
 const projectInfoDefault = {
   projectName: '',
@@ -19,21 +21,6 @@ const tokenInfoDefault = {
   tokenContract: '',
   additionLink: '',
 }
-
-// const fundInfoDefault = {
-//   totalRaise: '',
-//   totalSale: '',
-//   priceRatio: '',
-//   distributeDuration: '',
-//   distributeTime: {
-//     date: '',
-//     time: '',
-//   },
-//   launchDate: {
-//     date: '',
-//     time: '',
-//   },
-// }
 
 const paymentInfoDefault = {
   immediate: false,
@@ -67,14 +54,6 @@ export class BountyFormViewModel {
     } else this.tokenInfo[property] = value
   }
 
-  // @action.bound changeFundInfo(property: string, value: string) {
-  //   if (property.includes('launchDate') || property.includes('distributeTime')) {
-  //     const prop = property.split('.')[0]
-  //     const nestedProp = property.split('.')[1]
-  //     this.fundInfo[prop][nestedProp] = value
-  //   } else this.fundInfo[property] = value
-  // }
-
   @action.bound changePaymentInfo(property: string, value: string) {
     if (property.includes('openDate')) {
       const prop = property.split('.')[0]
@@ -87,19 +66,24 @@ export class BountyFormViewModel {
     this.unlockedStep = this.step = value
   }
 
-  @action submit() {
+  @asyncAction *submit() {
     try {
+      const { projectName, ...projectInfo } = this.projectInfo
+      const { immediate, openDate } = this.paymentInfo
       const data = {
-        projectInfo: { ...this.projectInfo },
-        tokenInfo: { ...this.tokenInfo, chain: { ...this.tokenInfo.chain } },
-        // fundInfo: {
-        //   ...this.fundInfo,
-        //   distributeTime: toISO(this.fundInfo.distributeTime),
-        //   launchDate: toISO(this.fundInfo.launchDate),
-        // },
-        paymentInfo: { ...this.paymentInfo, openDate: toISO(this.paymentInfo.openDate) },
+        projectName,
+        type: 'bounty',
+        status: immediate ? 'voting' : 'pending',
+        startTime: toISO(openDate),
+        metadata: {
+          ...projectInfo,
+          ...this.tokenInfo,
+          chain: { ...(this.tokenInfo.chain && this.tokenInfo.chain) },
+        },
       }
-      console.log('final data:::', data)
+
+      const res = yield apiService.voting.create(data)
+      console.log('bounty.submit:::', res)
     } catch (error) {
       snackController.commonError(error)
     }
