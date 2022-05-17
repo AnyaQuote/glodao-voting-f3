@@ -41,11 +41,9 @@
       </v-chip-group>
       <div class="label font-weight-bold mt-6">Website and social link</div>
       <app-text-field
-        v-for="(key, index) in vm.getAllKeys"
-        :key="index"
         class="thin-border"
-        :value="$_get(vm.projectInfo, `socials.${key}`)"
-        @input="vm.changeProjectInfo(key, $event)"
+        :value="$_get(vm.projectInfo, 'socials.website')"
+        @input="vm.changeProjectInfo('socials.website', $event)"
         :outlined="false"
         append-icon="mdi-link"
       >
@@ -61,7 +59,7 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="vm.projectInfo.socials.medium"
+        :value="$_get(vm.projectInfo, 'socials.medium')"
         @input="vm.changeProjectInfo('socials.medium', $event)"
         append-icon="mdi-link"
       >
@@ -77,7 +75,7 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="vm.projectInfo.socials.twitter"
+        :value="$_get(vm.projectInfo, 'socials.twitter')"
         @input="vm.changeProjectInfo('socials.twitter', $event)"
         append-icon="mdi-link"
       >
@@ -95,7 +93,7 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="vm.projectInfo.socials.telegram"
+        :value="$_get(vm.projectInfo, 'socials.telegram')"
         @input="vm.changeProjectInfo('socials.telegram', $event)"
         append-icon="mdi-link"
       >
@@ -117,9 +115,7 @@
         v-ripple
       >
         <v-icon>mdi-plus-circle</v-icon>
-        <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3" height="fit-content">
-          Add more link
-        </div>
+        <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3">Add more link</div>
       </v-sheet>
 
       <div class="label neutral10--text mt-6">
