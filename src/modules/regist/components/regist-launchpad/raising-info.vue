@@ -48,8 +48,8 @@
       <div class="blue--text label font-weight-bold mt-6">Vesting Schedule</div>
       <div class="label font-weight-bold mt-6">How long does the token distribute?</div>
       <duration-selector
-        :value="$_get(vm.fundInfo, 'distibuteDuration')"
-        @change="vm.changeFundInfo('distibuteDuration', $event)"
+        :value="$_get(vm.fundInfo, 'distributeDuration')"
+        @change="vm.changeFundInfo('distributeDuration', $event)"
       />
       <div class="label font-weight-bold mt-6">First distribute time</div>
       <div class="d-flex flex-column flex-sm-row">
