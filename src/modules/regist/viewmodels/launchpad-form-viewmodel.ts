@@ -1,7 +1,6 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { keys } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
-
+import { get } from 'lodash'
 // type Propety = 'projectName' | 'shortDescription' | 'projectCover' | 'keywords' | 'researchProject' | 'socials'
 
 const projectInfoDefault = {
@@ -9,19 +8,24 @@ const projectInfoDefault = {
   shortDescription: '',
   projectCover: '',
   keywords: [],
-  socials: {
-    website: '',
-    telegram: '',
-    twitter: '',
-    medium: '',
-  },
+  socials: {},
   researchProject: '',
 }
 
+const tokenInfoDefault = {
+  tokenName: '',
+  chain: {},
+  tokenContract: '',
+  additionLink: '',
+}
+
+const fundInfoDefault = {}
 export class LaunchpadFormViewModel {
-  @observable step = 1.1
-  @observable unlockedStep = 1.1
+  @observable step = 1.3
+  @observable unlockedStep = 1.3
   @observable projectInfo = projectInfoDefault
+  @observable tokenInfo = tokenInfoDefault
+  @observable fundInfo = fundInfoDefault
 
   @action.bound changeStep(value: number) {
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
@@ -29,16 +33,26 @@ export class LaunchpadFormViewModel {
   }
 
   @action.bound changeProjectInfo(property: string, value: string) {
-    const nestedProp = property.split('.').at(1)
-    this.projectInfo.socials[nestedProp] = value
+    if (property.includes('socials')) {
+      const nestedProp = property.split('.')[1]
+      this.projectInfo.socials[nestedProp] = value
+    } else this.projectInfo[property] = value
   }
 
-  nextStep(value: number) {
-    console.log('launchpad.projectInfo:::', { ...this.projectInfo })
+  @action.bound changeTokenInfo(property: string, value: string) {
+    if (property === 'chain') {
+      this.tokenInfo[property] = { name: get(value, 'name'), icon: get(value, 'icon') }
+    } else this.tokenInfo[property] = value
+  }
+
+  @action.bound changeFundInfo(property: string, value: string) {
+    if (property === 'startDate' || property === 'distributeTime') {
+      const nestedProp = property.split('.')[1]
+      this.projectInfo.socials[nestedProp] = value
+    } else this.fundInfo[property] = value
+  }
+
+  @action nextStep(value: number) {
     this.unlockedStep = this.step = value
-  }
-
-  @computed get getAllKeys(): string[] {
-    return Object.keys(this.projectInfo)
   }
 }
