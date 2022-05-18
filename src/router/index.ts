@@ -83,6 +83,14 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/dao-voting',
+    component: () => import('@/modules/dao-voting/pages/dao-voting-page.vue'),
+    meta: {
+      auth: true,
+      title: 'Application',
+    },
+  },
+  {
     path: '*',
     name: 'NotFound',
     component: () => import('@/modules/error/pages/coming-soon.vue'),
