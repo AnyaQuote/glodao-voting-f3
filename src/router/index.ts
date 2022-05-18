@@ -123,7 +123,7 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (!get(to, 'name', '')) {
     next('/comming-soon')
   } else {
