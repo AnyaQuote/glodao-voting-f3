@@ -16,13 +16,6 @@ const projectInfoDefault = {
   tokenAddress: '',
 }
 
-// const tokenInfoDefault = {
-//   tokenName: '1',
-//   chain: {},
-//   tokenContract: '1',
-//   additionLink: '1',
-// }
-
 const confirmInfoDefault = {
   immediate: false,
   openDate: {
@@ -34,7 +27,6 @@ export class BountyFormViewModel {
   @observable step = 1.1
   @observable unlockedStep = 2.1
   @observable projectInfo = projectInfoDefault
-  // @observable tokenInfo = tokenInfoDefault
   @observable confirmInfo = confirmInfoDefault
   @action.bound changeStep(value: number) {
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
@@ -42,13 +34,8 @@ export class BountyFormViewModel {
   }
 
   @action.bound changeProjectInfo(property: string, value: any) {
-    // console.log(property, value)
     set(this.projectInfo, property, value)
   }
-
-  // @action.bound changeTokenInfo(property: string, value: string) {
-  //   set(this.tokenInfo, property, value)
-  // }
 
   @action.bound changePaymentInfo(property: string, value: string) {
     set(this.confirmInfo, property, value)
@@ -70,8 +57,6 @@ export class BountyFormViewModel {
       media.append('files', projectCover!)
       res = yield apiService.uploadFile(media)
 
-      // console.log('form data:::', media)
-
       const data = {
         projectName,
         type: 'bounty',
@@ -85,7 +70,6 @@ export class BountyFormViewModel {
       }
 
       res = yield apiService.voting.create(data)
-      console.log('bounty.submit:::', res)
     } catch (error) {
       snackController.commonError(error)
     }

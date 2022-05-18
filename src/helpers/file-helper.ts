@@ -2,7 +2,6 @@ import { get } from 'lodash'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
 export const getApiFileUrl = (model: any) => {
-  console.log('model::', model)
   if (typeof model === 'string') {
     if (model.length && model[0] === '/') model = model.substring(1)
     return API_ENDPOINT + model

@@ -17,7 +17,6 @@
     <v-col cols="12" md="9">
       <v-slide-y-transition fixed>
         <project-info v-if="vm.step === 1.1" />
-        <!-- <token-info v-if="vm.step === 1.2" /> -->
         <confirm-payment v-if="vm.step === 2.1" />
       </v-slide-y-transition>
     </v-col>

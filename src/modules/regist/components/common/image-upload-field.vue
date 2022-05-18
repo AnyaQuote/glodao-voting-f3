@@ -25,12 +25,7 @@ import { get, isNil } from 'lodash'
 export default class ImageUploadField extends Vue {
   @Prop({ default: null }) value!: File
   @Ref('file-dialog') dialog
-
   image: File | null = null
-
-  created() {
-    console.log('mounted:::', this.value)
-  }
 
   open() {
     this.dialog.click()

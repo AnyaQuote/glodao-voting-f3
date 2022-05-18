@@ -27,20 +27,6 @@
           >
             Project information
           </div>
-          <!-- <div
-            class="cursor-pointer mt-3"
-            :class="vm.step === 1.2 ? 'blue--text' : 'neutral10--text'"
-            @click="vm.changeStep(1.2)"
-          >
-            Token information
-          </div> -->
-          <!-- <div
-            class="cursor-pointer mt-3"
-            :class="vm.step === 1.3 ? 'blue--text' : 'neutral10--text'"
-            @click="vm.changeStep(1.3)"
-          >
-            Raising fund information
-          </div> -->
         </div>
       </div>
       <div class="d-flex align-center text-h6 font-weight-bold mt-3" :class="{ 'neutral10--text': section !== 2 }">
