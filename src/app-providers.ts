@@ -3,18 +3,26 @@ import { action, computed, observable, reaction, runInAction } from 'mobx'
 import moment from 'moment'
 import { timer } from 'rxjs'
 import VueRouter from 'vue-router'
+import { snackController } from './components/snack-bar/snack-bar-controller'
+import { authStore } from './stores/auth-store'
 import { localData } from './stores/local-data'
 // import { walletStore } from './stores/wallet-store'
 
+export let appProvider: AppProvider
 export class AppProvider {
   router!: VueRouter
   api = apiService
   // wallet = walletStore
+  snackbar = snackController
+  localData = localData
+  authStore = authStore
 
   @observable lightmode = localData.lightmode
   @observable currentTime = moment()
 
-  constructor() {
+  constructor(router: VueRouter) {
+    this.router = router
+    appProvider = this
     reaction(
       () => this.lightmode,
       (mode) => (localData.lightmode = mode),
@@ -36,5 +44,3 @@ export class AppProvider {
     return this.lightmode ? 'light' : 'dark'
   }
 }
-
-export const appProvider = new AppProvider()
