@@ -2,6 +2,7 @@ import { observable, action } from 'mobx'
 
 export class Applications {
   @observable hideProjectFilter = false
+
   @observable bountyProjects = [
     {
       logo: 'voting-trending--logo.png',
@@ -30,6 +31,6 @@ export class Applications {
   ]
 
   @action.bound hideProject() {
-    //
+    this.hideProjectFilter = !this.hideProjectFilter
   }
 }
