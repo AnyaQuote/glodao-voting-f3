@@ -53,9 +53,13 @@ export default class App extends Vue {
 </script>
 <style lang="scss">
 .container {
-  padding: 0 16px !important;
-  max-width: 1130px;
+  max-width: em(1090) !important;
 }
+
+// .container {
+//   padding: 0 16px !important;
+//   max-width: 1130px;
+// }
 .font-weight-400 {
   font-weight: 400 !important;
 }
@@ -125,9 +129,7 @@ export default class App extends Vue {
 .fill-height {
   height: 100% !important;
 }
-.container {
-  max-width: 1090px !important;
-}
+
 .v-pagination .v-icon.v-icon {
   font-size: em(16);
 }
@@ -169,6 +171,12 @@ export default class App extends Vue {
 }
 .p-absolute {
   position: absolute !important;
+}
+.absolute-space {
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 .p-relative {
   position: relative !important;
@@ -223,9 +231,5 @@ export default class App extends Vue {
       background: transparent !important;
     }
   }
-}
-
-.v-sheet {
-  background: transparent !important;
 }
 </style>
