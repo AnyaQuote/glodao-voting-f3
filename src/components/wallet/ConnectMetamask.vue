@@ -1,50 +1,85 @@
 <template>
-  <!-- <v-btn
-    class="d-flex align-center nav-btn-text border-radius-8 text-none py-2 px-3 transparent-bg"
-    v-if="!walletStore.connected"
-    @click="walletStore.connect()"
-    :large="large"
-    :block="block"
-    :small="small"
+  <v-btn
+    v-if="!walletStore.account"
+    class="text-none btn-text linear-background-blue-main rounded white--text"
+    :disabled="disabled"
     depressed
-    outlined
+    rounded
+    @click="walletStore.switchNetwork(chainType, +requiredChainId)"
+    :block="block"
+    :large="large"
+    :small="small"
+    :class="applyClass"
   >
-    Connect Wallet
-  </v-btn> -->
-  <!-- <v-btn
+    <span>{{ connectText || 'Connect Wallet' }}</span>
+  </v-btn>
+  <v-btn
+    class="text-none btn-text rounded"
+    :class="applyClass"
+    :disabled="disabled"
     depressed
     rounded
     color="primary"
-    :large="large"
+    v-else-if="walletStore.chainType !== chainType || walletStore.chainId !== +requiredChainId"
+    @click="walletStore.switchNetwork(chainType, +requiredChainId)"
     :block="block"
+    :large="large"
     :small="small"
-    v-else-if="walletStore.chainId + '' !== Number(this.requiredChainId).toString()"
-    @click="walletStore.switchNetwork(+requiredChainId)"
   >
-    Switch to {{ networkName }}
-  </v-btn> -->
+    <span :class="{ 'small-text font-weight-bold': smallText }">{{ switchText || 'Switch to ' + networkName }}</span>
+  </v-btn>
   <div v-else>
     <slot />
   </div>
 </template>
 
 <script lang="ts">
-import { blockchainHandler } from '@/blockchain'
-// import { walletStore } from '@/stores/wallet-store'
+import { blockchainHandler, ChainType } from '@/blockchainHandlers'
+import { walletStore } from '@/stores/wallet-store'
+import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
+@Observer
 @Component
 export default class ConnectMetamask extends Vue {
-  // @Prop() requiredChainId!: string
-  // @Prop({ default: false }) block!: boolean
-  // @Prop({ default: false }) large!: boolean
-  // @Prop({ default: false }) small!: boolean
-  // walletStore = walletStore
-  // get networkName() {
-  //   const { name } = blockchainHandler.getChainConfig(this.requiredChainId)
-  //   return name
-  // }
+  @Prop() requiredChain!: ChainType
+  @Prop() requiredChainId!: number
+  @Prop({ default: '' }) connectText!: string
+  @Prop({ default: '' }) switchText!: string
+  @Prop({ default: false }) block!: boolean
+  @Prop({ default: false }) large!: boolean
+  @Prop({ default: false }) small!: boolean
+  @Prop({ default: false }) smallText!: boolean
+  @Prop({ default: '' }) applyClass!: string
+  @Prop({ default: false }) disabled!: boolean
+
+  walletStore = walletStore
+
+  get networkName() {
+    const { name } = blockchainHandler.getChainConfig(this.requiredChainId)
+    return name
+  }
+
+  get chainType() {
+    switch (+this.requiredChainId) {
+      case 1:
+      case 3:
+        return 'eth'
+      case 56:
+      case 97:
+        return 'bsc'
+      case 101:
+      case 103:
+        return 'sol'
+      default:
+        return 'sol'
+    }
+  }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.small-text {
+  font-size: 13px !important;
+}
+</style>

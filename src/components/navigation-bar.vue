@@ -152,8 +152,8 @@
         <!-- <v-col cols="12" sm="12" md="2" class="d-flex justify-end">
         </v-col> -->
         <v-col class="d-flex justify-end align-center col-auto">
-          <!-- <connect-wallet class="fill-width" /> -->
-          <div class="ml-6 d-flex align-center justify-end pr-6">
+          <connect-wallet class="fill-width" />
+          <!-- <div class="ml-6 d-flex align-center justify-end pr-6">
             <v-btn
               depressed
               outlined
@@ -191,7 +191,6 @@
                     <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
                   </v-btn>
                   <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen()">
-                    <!-- <v-icon class="mr-2">mdi-wallet-outline</v-icon> -->
                     <v-img
                       :src="require('@/assets/icons/crown-mini.svg')"
                       max-height="22"
@@ -207,8 +206,8 @@
                 </v-sheet>
               </v-sheet>
             </v-menu>
-          </div>
-          <div>
+          </div> -->
+          <div class="ml-4">
             <v-btn icon @click="changeTheme" class="rounded-circle change-theme-btn" width="40" height="40" outlined>
               <v-icon color="bluePrimary">
                 {{ !$vuetify.theme.dark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
