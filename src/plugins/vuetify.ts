@@ -70,6 +70,7 @@ export default new Vuetify({
         violet: '#252D72',
         green: {
           base: '#6CE08D',
+          lighten1: '#1EB965',
         },
         red: {
           base: '#E35E55',
@@ -78,10 +79,12 @@ export default new Vuetify({
           base: '#0276F0',
           lighten1: '#E6F1FE',
           lighten2: '#55ACE3',
+          lighten3: '#F0F7FF',
         },
         grey: {
           base: '#F9F9F9',
           lighten1: '#E5E5E5',
+          lighten2: '#C4C4C4',
         },
         mint: {
           base: '#00E5FF',
