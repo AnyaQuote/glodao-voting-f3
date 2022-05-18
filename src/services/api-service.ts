@@ -211,10 +211,10 @@ export class ApiService {
     return res.data
   }
 
-  // async uploadFile(formData: FormData) {
-  //   const res = await axios.post('upload/files', formData)
-  //   return res.data
-  // }
+  async uploadFile(model: any) {
+    const res = await axios.post('upload', model)
+    return res.data
+  }
 
   async fetchUser(access_token: string, access_secret: string, referrerCode?) {
     const res = await axios.get('auth/twitter/callback', {
