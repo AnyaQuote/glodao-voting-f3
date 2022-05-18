@@ -4,9 +4,9 @@ import moment from 'moment'
 import { timer } from 'rxjs'
 import VueRouter from 'vue-router'
 import { snackController } from './components/snack-bar/snack-bar-controller'
-import { authStore } from './stores/auth-store'
-import { localData } from './stores/local-data'
-import { walletStore } from './stores/wallet-store'
+import { authStore } from '@/stores/auth-store'
+import { localData } from '@/stores/local-data'
+import { walletStore } from '@/stores/wallet-store'
 
 export let appProvider: AppProvider
 export class AppProvider {
