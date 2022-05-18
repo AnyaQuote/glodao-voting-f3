@@ -36,9 +36,11 @@
 </template>
 
 <script lang="ts">
+import { Observer } from 'mobx-vue'
 import { Component, Provide, Vue, Inject } from 'vue-property-decorator'
 import { Applications } from '../viewmodels/applications-viewmodel'
 
+@Observer
 @Component({
   components: {
     'project-card': () => import('./project-card.vue'),
