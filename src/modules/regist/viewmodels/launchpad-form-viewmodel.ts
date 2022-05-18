@@ -118,7 +118,6 @@ export class LaunchpadFormViewModel {
       }
 
       const res = yield apiService.voting.create(data)
-      console.log('launchpad:::', res)
     } catch (error) {
       snackController.commonError(error)
     }
