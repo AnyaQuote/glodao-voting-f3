@@ -29,6 +29,7 @@ import { get } from 'lodash'
 })
 export default class App extends Vue {
   @Provide() providers = new AppProvider(this.$router)
+  wallet = this.providers.wallet
 
   @Watch('$route.query', { immediate: true }) onRefChanged(val: string) {
     if (val) {
@@ -39,7 +40,7 @@ export default class App extends Vue {
 
   mounted() {
     this.providers.router = this.$router
-    // walletStore.start()
+    this.providers.wallet.start()
   }
 
   drawer = false
