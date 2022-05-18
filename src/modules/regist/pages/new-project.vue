@@ -4,7 +4,7 @@
       <v-img src="@/assets/images/new-project--banner.png" />
     </v-col>
     <!-- --------------------------------------------------------------------------------------------------- -->
-    <v-col cols="6" v-if="!signed">
+    <v-col cols="8" v-if="!vm.isLogin">
       <v-sheet class="d-flex flex-column pa-8 rounded-lg" outlined>
         <div class="text-h6 font-weight-bold text-center mb-6">
           Please sign in with your wallet for applying project on DAO Voting
@@ -15,18 +15,22 @@
           <span class="font-weight-600">update pool information</span> and will
           <span class="font-weight-600">send the token and pay the fee</span> when creating the pool.
         </div>
-        <v-btn class="linear-blue--bg white--text text-none" depressed @click="signMessage">Sign message</v-btn>
+        <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
+          <span class="bluePrimary--text font-weight-bold mr-2 text-center fill-width">{{ walletStore.account }}</span>
+        </v-sheet>
+        <v-btn class="linear-blue--bg white--text text-none" depressed @click="signMessage" :loading="vm.loading"
+          >Sign message</v-btn
+        >
       </v-sheet>
     </v-col>
     <!-- ---------------------------------------------------------------------------------------------------  -->
-    <v-col cols="12" v-if="signed && !save">
+    <!-- <v-col cols="12" v-if="signed && !save">
       <v-sheet elevation="3" class="d-flex flex-column align-center py-9 rounded neutral100--bg">
         <div class="text-h6 font-weight-bold mb-6">Are you applying your project using connected wallet address?</div>
         <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
-          <span class="bluePrimary--text font-weight-bold mr-2 text-h6"
-            >0xcA41405fB875753371D0FAf6e18891d87A7139Ce</span
-          >
-          <v-icon large>mdi-cached</v-icon>
+          <span class="bluePrimary--text font-weight-bold mr-2 text-h6 text-center fill-width">{{
+            walletStore.account
+          }}</span>
         </v-sheet>
         <v-btn class="linear-blue--bg text-none white--text mb-6 px-13" height="48" @click="saveWallet">
           Confirm
@@ -44,9 +48,9 @@
           <v-icon>mdi-chevron-right</v-icon>
         </div>
       </div>
-    </v-col>
+    </v-col> -->
     <!-- --------------------------------------------------------------------------------------------------- -->
-    <v-col cols="12" v-if="signed && save">
+    <v-col cols="12" v-else>
       <div class="text-h6 text-center mb-9">What type of project do you want to launch on GLoDAO?</div>
       <v-col class="row">
         <div class="col-6">
@@ -91,17 +95,21 @@
 
 <script lang="ts">
 import { AppProvider } from '@/app-providers'
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { walletStore } from '@/stores/wallet-store'
+import { Component, Vue, Inject, Provide } from 'vue-property-decorator'
+import { NewProjectViewModel } from '../viewmodels/new-project-viewmodel'
 
 @Component
 export default class ProjectRegist extends Vue {
   @Inject() providers!: AppProvider
+  @Provide() vm = new NewProjectViewModel()
 
+  walletStore = walletStore
   signed = false
   save = false
 
-  signMessage() {
-    this.signed = true
+  async signMessage() {
+    await this.vm.login()
   }
 
   saveWallet() {

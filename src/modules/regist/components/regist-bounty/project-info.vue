@@ -145,7 +145,7 @@
 
 <script lang="ts">
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
-import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
+import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
 @Component({
   components: {
@@ -153,7 +153,7 @@ import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
   },
 })
 export default class ProjectInfo extends Vue {
-  @Inject() vm!: BountyFormViewModel
+  @Inject() vm!: BountyApplyViewModel
   @Ref('project-info-form') form
   valid = false
   keywords = ['gaming', 'NFT', 'finance']

@@ -63,11 +63,11 @@
 
 <script lang="ts">
 import { Component, Vue, Inject, Ref } from 'vue-property-decorator'
-import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
+import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
 @Component
 export default class TokenInfo extends Vue {
-  @Inject() vm!: BountyFormViewModel
+  @Inject() vm!: BountyApplyViewModel
   @Ref('token-info-form') form
   tokens = [
     {

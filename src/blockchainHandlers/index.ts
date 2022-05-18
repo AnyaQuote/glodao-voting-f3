@@ -19,7 +19,7 @@ export interface MarketplaceOrder {
 }
 
 const getChainConfig = (chainId: any) => {
-  chainId = isNumber(chainId) ? +chainId : chainId
+  chainId = isNumber(chainId) ? chainId : +chainId
   let rpc = ''
   let name = ''
   let explorer = ''
@@ -164,6 +164,7 @@ function fixAnchorAccounts(accounts) {
     result
   )
 }
+
 export const blockchainHandler = {
   getChainConfig,
   getWeb3,
