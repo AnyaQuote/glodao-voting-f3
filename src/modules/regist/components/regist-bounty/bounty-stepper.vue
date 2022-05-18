@@ -27,13 +27,13 @@
           >
             Project information
           </div>
-          <div
+          <!-- <div
             class="cursor-pointer mt-3"
             :class="vm.step === 1.2 ? 'blue--text' : 'neutral10--text'"
             @click="vm.changeStep(1.2)"
           >
             Token information
-          </div>
+          </div> -->
           <!-- <div
             class="cursor-pointer mt-3"
             :class="vm.step === 1.3 ? 'blue--text' : 'neutral10--text'"

@@ -31,7 +31,7 @@
         <div class="label font-weight-bold">
           <span class="bluePrimary--text">Time for launch on DAO Voting</span>
           <v-checkbox
-            :value="$_get(vm.paymentInfo, 'immediate')"
+            :value="$_get(vm.confirmInfo, 'immediate')"
             @change="vm.changePaymentInfo('immediate', $event)"
             label="Publish project immediately after creating pool"
           ></v-checkbox>
@@ -39,7 +39,7 @@
             <div class="mr-6 flex-grow-1">
               <span>Start date</span>
               <app-text-field
-                :value="$_get(vm.paymentInfo, 'openDate.date')"
+                :value="$_get(vm.confirmInfo, 'openDate.date')"
                 @input="vm.changePaymentInfo('openDate.date', $event)"
                 placeholder="DD/MM/YYYY"
               ></app-text-field>
@@ -47,7 +47,7 @@
             <div class="flex-grow-1">
               <span>Start time</span>
               <app-text-field
-                :value="$_get(vm.paymentInfo, 'openDate.time')"
+                :value="$_get(vm.confirmInfo, 'openDate.time')"
                 @input="vm.changePaymentInfo('openDate.time', $event)"
                 placeholder="00:00"
               ></app-text-field>

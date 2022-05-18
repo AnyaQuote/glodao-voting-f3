@@ -2,7 +2,16 @@ import { authStore } from '@/stores/auth-store'
 import Axios from 'axios'
 import qs from 'qs'
 
-export type ApiRouteType = 'applies' | 'hunters' | 'logs' | 'pool-regists' | 'pools' | 'tasks' | 'users' | 'campaigns'
+export type ApiRouteType =
+  | 'applies'
+  | 'hunters'
+  | 'logs'
+  | 'pool-regists'
+  | 'pools'
+  | 'tasks'
+  | 'users'
+  | 'campaigns'
+  | 'voting-pools'
 
 const axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
 axios.interceptors.request.use((config) => {
@@ -35,15 +44,15 @@ export class ApiHandler<T> {
     params = { ...settingDefault, ...settings, ...(params ?? {}) }
     const res = await this.axios.get(this.route, { params })
     const lst = res.data
-    if (this.route === 'pools') {
-      lst.forEach((element) => {
-        if (element.data?.chainId) {
-          element.chainId = element.data.chainId
-        } else if (isNaN(+element.chainId)) {
-          element.chainId = +element.chainId
-        }
-      })
-    }
+    // if (this.route === 'pools') {
+    //   lst.forEach((element) => {
+    //     if (element.data?.chainId) {
+    //       element.chainId = element.data.chainId
+    //     } else if (isNaN(+element.chainId)) {
+    //       element.chainId = +element.chainId
+    //     }
+    //   })
+    // }
     return lst
   }
 
@@ -55,13 +64,13 @@ export class ApiHandler<T> {
       res = await this.axios.get(`${this.route}`)
     }
     const result = res.data
-    if (this.route === 'pools') {
-      if (result.data?.chainId) {
-        result.chainId = result.data.chainId
-      } else if (isNaN(+result.chainId)) {
-        result.chainId = +result.chainId
-      }
-    }
+    // if (this.route === 'pools') {
+    //   if (result.data?.chainId) {
+    //     result.chainId = result.data.chainId
+    //   } else if (isNaN(+result.chainId)) {
+    //     result.chainId = +result.chainId
+    //   }
+    // }
     return result
   }
 
@@ -195,9 +204,15 @@ export class ApiService {
   hunters = new ApiHandlerJWT<any>(axios, 'hunters', { count: false })
   tasks = new ApiHandlerJWT<any>(axios, 'tasks', { find: false, count: false, findOne: false })
   campaigns = new ApiHandlerJWT<any>(axios, 'campaigns')
+  voting = new ApiHandler<any>(axios, 'voting-pools')
 
   async getFile(id: any) {
     const res = await axios.get(`upload/files/${id}`)
+    return res.data
+  }
+
+  async uploadFile(model: any) {
+    const res = await axios.post('upload', model)
     return res.data
   }
 
@@ -208,68 +223,68 @@ export class ApiService {
     return res.data
   }
 
-  async verifySignMessage(walletAddress: string, signature: string, chain: string, id: string) {
-    const res = await axios.post(
-      'hunters/verifySignMessage',
-      {
-        walletAddress,
-        signature,
-        chain,
-        id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${authStore.jwt}`,
-        },
-      }
-    )
-    return res.data
-  }
+  // async verifySignMessage(walletAddress: string, signature: string, chain: string, id: string) {
+  //   const res = await axios.post(
+  //     'hunters/verifySignMessage',
+  //     {
+  //       walletAddress,
+  //       signature,
+  //       chain,
+  //       id,
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${authStore.jwt}`,
+  //       },
+  //     }
+  //   )
+  //   return res.data
+  // }
 
-  async updateWalletAddress(walletAddress: string, signature: string, chain: string, id: string) {
-    const res = await axios.patch(
-      'hunters/updateWalletAddress',
-      {
-        walletAddress,
-        signature,
-        chain,
-        id,
-        hunterId: id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${authStore.jwt}`,
-        },
-      }
-    )
-    return res.data
-  }
+  // async updateWalletAddress(walletAddress: string, signature: string, chain: string, id: string) {
+  //   const res = await axios.patch(
+  //     'hunters/updateWalletAddress',
+  //     {
+  //       walletAddress,
+  //       signature,
+  //       chain,
+  //       id,
+  //       hunterId: id,
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${authStore.jwt}`,
+  //       },
+  //     }
+  //   )
+  //   return res.data
+  // }
 
-  async checkStakeStatus(walletAddress: string, hunterId: string, poolId = 0) {
-    const res = await axios.get('checkUserStaked', {
-      params: {
-        address: walletAddress,
-        poolId,
-        id: hunterId,
-      },
-      headers: {
-        Authorization: `Bearer ${authStore.jwt}`,
-      },
-    })
-    return res.data
-  }
+  // async checkStakeStatus(walletAddress: string, hunterId: string, poolId = 0) {
+  //   const res = await axios.get('checkUserStaked', {
+  //     params: {
+  //       address: walletAddress,
+  //       poolId,
+  //       id: hunterId,
+  //     },
+  //     headers: {
+  //       Authorization: `Bearer ${authStore.jwt}`,
+  //     },
+  //   })
+  //   return res.data
+  // }
 
-  async getReferrals(hunterId: string) {
-    const res = await axios.get('hunters/referrals', {
-      params: {
-        id: hunterId,
-      },
-      headers: {
-        Authorization: `Bearer ${authStore.jwt}`,
-      },
-    })
-    return res.data
-  }
+  // async getReferrals(hunterId: string) {
+  //   const res = await axios.get('hunters/referrals', {
+  //     params: {
+  //       id: hunterId,
+  //     },
+  //     headers: {
+  //       Authorization: `Bearer ${authStore.jwt}`,
+  //     },
+  //   })
+  //   return res.data
+  // }
 
   async applyForPriorityPool(
     walletAddress: string,

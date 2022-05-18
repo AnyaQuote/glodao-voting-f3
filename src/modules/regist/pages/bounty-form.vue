@@ -11,14 +11,13 @@
         <span class="text-h5 text-uppercase">Bounty Project</span>
       </v-sheet>
     </v-col>
-    <v-col cols="3">
+    <v-col cols="12" md="3">
       <bounty-stepper />
     </v-col>
-    <v-col cols="9">
+    <v-col cols="12" md="9">
       <v-slide-y-transition fixed>
         <project-info v-if="vm.step === 1.1" />
-        <token-info v-if="vm.step === 1.2" />
-        <!-- <raising-info v-if="vm.step === 1.3" /> -->
+        <!-- <token-info v-if="vm.step === 1.2" /> -->
         <confirm-payment v-if="vm.step === 2.1" />
       </v-slide-y-transition>
     </v-col>
@@ -33,8 +32,6 @@ import { BountyFormViewModel } from '../viewmodels/bounty-form-viewmodel'
   components: {
     'bounty-stepper': () => import('../components/regist-bounty/bounty-stepper.vue'),
     'project-info': () => import('../components/regist-bounty/project-info.vue'),
-    'token-info': () => import('../components/regist-bounty/token-info.vue'),
-    'raising-info': () => import('../components/regist-bounty/raising-info.vue'),
     'confirm-payment': () => import('../components/regist-bounty/confirm.vue'),
   },
 })

@@ -19,12 +19,17 @@
         placeholder="Enter project's short description"
       ></app-textarea>
 
+      <div class="label font-weight-bold mt-6">Project logo</div>
+      <image-upload-field
+        :value="$_get(vm.projectInfo, 'projectLogo')"
+        @change="vm.changeProjectInfo('projectLogo', $event)"
+      />
+
       <div class="label font-weight-bold mt-6">Project cover</div>
-      <app-text-field
-        :value="vm.projectInfo.projectCover"
-        @input="vm.changeProjectInfo('projectCover', $event)"
-        placeholder="Enter image link"
-      ></app-text-field>
+      <image-upload-field
+        :value="$_get(vm.projectInfo, 'projectCover')"
+        @change="vm.changeProjectInfo('projectCover', $event)"
+      />
 
       <div class="label font-weight-bold mt-6">Field of project</div>
       <div class="neutral10--text font-weight-light mb-1">Select some keyword about your project</div>
@@ -119,15 +124,10 @@
         <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3">Add more link</div>
       </v-sheet>
 
-      <div class="label neutral10--text mt-6">
-        <span class="bluePrimary--text font-weight-bold"> Research project </span>
-        (Please refer to
-        <a class="blue--text" href="#" target="_blank">our sample file</a>
-        )
-      </div>
+      <div class="label neutral10--text mt-6bluePrimary--text font-weight-bold">Token address</div>
       <app-text-field
-        :value="vm.projectInfo.researchProject"
-        @input="vm.changeProjectInfo('researchProject', $event)"
+        :value="$_get(vm.projectInfo, 'tokenAddress')"
+        @input="vm.changeProjectInfo('tokenAddress', $event)"
         placeholder="Enter link"
       ></app-text-field>
       <v-btn
@@ -147,14 +147,18 @@
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
 
-@Component
+@Component({
+  components: {
+    'image-upload-field': () => import('../common/image-upload-field.vue'),
+  },
+})
 export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyFormViewModel
   @Ref('project-info-form') form
   valid = false
   keywords = ['gaming', 'NFT', 'finance']
   submit() {
-    this.form.validate() && this.vm.nextStep(1.2)
+    this.form.validate() && this.vm.nextStep(2.1)
   }
 }
 </script>
@@ -163,7 +167,6 @@ export default class ProjectInfo extends Vue {
 .form {
   .label {
     font-size: em(18);
-    margin-bottom: em(16);
   }
   .thin-border {
     border: thin solid var(--v-neutral20-base);

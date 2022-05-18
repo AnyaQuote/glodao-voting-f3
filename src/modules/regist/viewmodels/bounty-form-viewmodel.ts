@@ -1,41 +1,29 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, observable } from 'mobx'
-import { get } from 'lodash'
+import { get, set } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toISO } from '@/helpers/date-helper'
+import { apiService } from '@/services/api-service'
+import { getApiFileUrl } from '@/helpers/file-helper'
 
 const projectInfoDefault = {
   projectName: '',
   shortDescription: '',
-  projectCover: '',
+  projectCover: null,
+  projectLogo: null,
   keywords: [],
   socials: {},
-  researchProject: '',
+  tokenAddress: '',
 }
 
-const tokenInfoDefault = {
-  tokenName: '',
-  chain: {},
-  tokenContract: '',
-  additionLink: '',
-}
-
-// const fundInfoDefault = {
-//   totalRaise: '',
-//   totalSale: '',
-//   priceRatio: '',
-//   distributeDuration: '',
-//   distributeTime: {
-//     date: '',
-//     time: '',
-//   },
-//   launchDate: {
-//     date: '',
-//     time: '',
-//   },
+// const tokenInfoDefault = {
+//   tokenName: '1',
+//   chain: {},
+//   tokenContract: '1',
+//   additionLink: '1',
 // }
 
-const paymentInfoDefault = {
+const confirmInfoDefault = {
   immediate: false,
   openDate: {
     date: '',
@@ -43,63 +31,61 @@ const paymentInfoDefault = {
   },
 }
 export class BountyFormViewModel {
-  @observable step = 1.2
-  @observable unlockedStep = 3.1
+  @observable step = 1.1
+  @observable unlockedStep = 2.1
   @observable projectInfo = projectInfoDefault
-  @observable tokenInfo = tokenInfoDefault
-  // @observable fundInfo = fundInfoDefault
-  @observable paymentInfo = paymentInfoDefault
+  // @observable tokenInfo = tokenInfoDefault
+  @observable confirmInfo = confirmInfoDefault
   @action.bound changeStep(value: number) {
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
     else this.step = value
   }
 
-  @action.bound changeProjectInfo(property: string, value: string) {
-    if (property.includes('socials')) {
-      const nestedProp = property.split('.')[1]
-      this.projectInfo.socials[nestedProp] = value
-    } else this.projectInfo[property] = value
+  @action.bound changeProjectInfo(property: string, value: any) {
+    // console.log(property, value)
+    set(this.projectInfo, property, value)
   }
 
-  @action.bound changeTokenInfo(property: string, value: string) {
-    if (property === 'chain') {
-      this.tokenInfo[property] = { name: get(value, 'name'), icon: get(value, 'icon') }
-    } else this.tokenInfo[property] = value
-  }
-
-  // @action.bound changeFundInfo(property: string, value: string) {
-  //   if (property.includes('launchDate') || property.includes('distributeTime')) {
-  //     const prop = property.split('.')[0]
-  //     const nestedProp = property.split('.')[1]
-  //     this.fundInfo[prop][nestedProp] = value
-  //   } else this.fundInfo[property] = value
+  // @action.bound changeTokenInfo(property: string, value: string) {
+  //   set(this.tokenInfo, property, value)
   // }
 
   @action.bound changePaymentInfo(property: string, value: string) {
-    if (property.includes('openDate')) {
-      const prop = property.split('.')[0]
-      const nestedProp = property.split('.')[1]
-      this.paymentInfo[prop][nestedProp] = value
-    } else this.paymentInfo[property] = value
+    set(this.confirmInfo, property, value)
   }
 
   @action nextStep(value: number) {
     this.unlockedStep = this.step = value
   }
 
-  @action submit() {
+  @asyncAction *submit() {
     try {
+      const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
+      const { immediate, openDate } = this.confirmInfo
+
+      let res
+
+      const media = new FormData()
+      media.append('files', projectLogo!)
+      media.append('files', projectCover!)
+      res = yield apiService.uploadFile(media)
+
+      // console.log('form data:::', media)
+
       const data = {
-        projectInfo: { ...this.projectInfo },
-        tokenInfo: { ...this.tokenInfo, chain: { ...this.tokenInfo.chain } },
-        // fundInfo: {
-        //   ...this.fundInfo,
-        //   distributeTime: toISO(this.fundInfo.distributeTime),
-        //   launchDate: toISO(this.fundInfo.launchDate),
-        // },
-        paymentInfo: { ...this.paymentInfo, openDate: toISO(this.paymentInfo.openDate) },
+        projectName,
+        type: 'bounty',
+        status: immediate ? 'voting' : 'pending',
+        startTime: toISO(openDate),
+        metadata: {
+          ...projectInfo,
+          projectLogo: getApiFileUrl(res[0]),
+          projectCover: getApiFileUrl(res[1]),
+        },
       }
-      console.log('final data:::', data)
+
+      res = yield apiService.voting.create(data)
+      console.log('bounty.submit:::', res)
     } catch (error) {
       snackController.commonError(error)
     }
