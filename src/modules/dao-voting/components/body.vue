@@ -23,7 +23,7 @@
             <div>
               <img :src="require('@/assets/icons/mission-icon.svg')" width="48" />
             </div>
-            <div class="font-weight-bold text-h5">Bounty hunter</div>
+            <div class="font-weight-bold text-h5">LaunchPad</div>
             <div class="text-subtitle-1 font-weight-regular">
               Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
               enim velit mollit.
