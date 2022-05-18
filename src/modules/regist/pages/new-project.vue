@@ -1,9 +1,25 @@
 <template>
-  <v-row class="mb-120">
+  <v-row justify="center">
     <v-col cols="12">
       <v-img src="@/assets/images/new-project--banner.png" />
     </v-col>
-    <v-col cols="12">
+    <!-- --------------------------------------------------------------------------------------------------- -->
+    <v-col cols="6" v-if="!signed">
+      <v-sheet class="d-flex flex-column pa-8 rounded-lg" outlined>
+        <div class="text-h6 font-weight-bold text-center mb-6">
+          Please sign in with your wallet for applying project on DAO Voting
+        </div>
+        <div class="text-subtitle-1 font-weight-400 mb-6 text-center">
+          Remember that this wallet will be the pool owner's address.
+          <span class="font-weight-600">Only the pool</span> owner can
+          <span class="font-weight-600">update pool information</span> and will
+          <span class="font-weight-600">send the token and pay the fee</span> when creating the pool.
+        </div>
+        <v-btn class="linear-blue--bg white--text text-none" depressed @click="signMessage">Sign message</v-btn>
+      </v-sheet>
+    </v-col>
+    <!-- ---------------------------------------------------------------------------------------------------  -->
+    <v-col cols="12" v-if="signed && !save">
       <v-sheet elevation="3" class="d-flex flex-column align-center py-9 rounded neutral100--bg">
         <div class="text-h6 font-weight-bold mb-6">Are you applying your project using connected wallet address?</div>
         <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
@@ -12,7 +28,9 @@
           >
           <v-icon large>mdi-cached</v-icon>
         </v-sheet>
-        <v-btn class="linear-blue--bg text-none white--text mb-6 px-13" height="48">Confirm</v-btn>
+        <v-btn class="linear-blue--bg text-none white--text mb-6 px-13" height="48" @click="saveWallet">
+          Confirm
+        </v-btn>
         <div class="neutral10--text">If not, change your connected wallet you want to apply!</div>
       </v-sheet>
       <div class="mt-14">
@@ -27,11 +45,17 @@
         </div>
       </div>
     </v-col>
-    <v-col cols="12">
+    <!-- --------------------------------------------------------------------------------------------------- -->
+    <v-col cols="12" v-if="signed && save">
       <div class="text-h6 text-center mb-9">What type of project do you want to launch on GLoDAO?</div>
-      <div class="row">
+      <v-col class="row">
         <div class="col-6">
-          <v-sheet class="d-flex flex-column px-6 pb-6 rounded-lg pt-72" elevation="3">
+          <v-sheet
+            class="d-flex flex-column px-6 pb-6 rounded-lg pt-72"
+            v-ripple
+            elevation="3"
+            @click.stop="openBountyForm"
+          >
             <v-avatar>
               <v-img src="@/assets/icons/bulleyes.svg" />
             </v-avatar>
@@ -43,27 +67,55 @@
           </v-sheet>
         </div>
         <div class="col-6">
-          <v-sheet class="d-flex flex-column px-6 pb-6 rounded-lg pt-72" elevation="3">
+          <v-sheet
+            class="d-flex flex-column px-6 pb-6 rounded-lg pt-72"
+            v-ripple
+            elevation="3"
+            @click.stop="openLaunchpadForm"
+          >
             <v-avatar>
               <v-img src="@/assets/icons/bulleyes.svg" />
             </v-avatar>
-            <div class="text-h6">Bounty Hunter</div>
+            <div class="text-h6">Launchpad Hunter</div>
             <div class="text-subtitle-1 font-weight-thin">
               Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
               enim velit mollit.
             </div>
           </v-sheet>
         </div>
-      </div>
+      </v-col>
     </v-col>
+    <!-- --------------------------------------------------------------------------------------------------- -->
   </v-row>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { AppProvider } from '@/app-providers'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 
 @Component
-export default class ProjectRegist extends Vue {}
+export default class ProjectRegist extends Vue {
+  @Inject() providers!: AppProvider
+
+  signed = false
+  save = false
+
+  signMessage() {
+    this.signed = true
+  }
+
+  saveWallet() {
+    this.save = true
+  }
+
+  openBountyForm() {
+    this.providers.router.push({ name: 'bounty-apply' })
+  }
+
+  openLaunchpadForm() {
+    this.providers.router.push({ name: 'launchpad-apply' })
+  }
+}
 </script>
 
 <style lang="scss" scoped>

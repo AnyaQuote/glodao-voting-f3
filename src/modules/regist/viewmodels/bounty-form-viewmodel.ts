@@ -1,10 +1,11 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { action, computed, observable } from 'mobx'
+import { action, observable } from 'mobx'
 import { set } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toMoment } from '@/helpers/date-helper'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
+import { appProvider } from '@/app-providers'
 
 const projectInfoDefault = {
   projectName: '',
@@ -71,10 +72,10 @@ export class BountyFormViewModel {
           projectCover: getApiFileUrl(res[1]),
         },
       }
-
       res = yield apiService.voting.create(data)
+      appProvider.router.push({ name: 'project-list' })
     } catch (error) {
-      snackController.commonError(error)
+      appProvider.snackbar.commonError(error)
     }
   }
 }

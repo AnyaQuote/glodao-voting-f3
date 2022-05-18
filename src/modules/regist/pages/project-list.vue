@@ -16,6 +16,7 @@
             <v-col cols="6">
               <v-sheet
                 class="neutral100--bg rounded-lg fill-height d-flex justify-center align-center cursor-pointer"
+                @click.stop="openNewProject"
                 v-ripple
                 outlined
               >
@@ -40,6 +41,7 @@
             <v-col cols="6">
               <v-sheet
                 class="neutral100--bg rounded-lg fill-height d-flex justify-center align-center cursor-pointer"
+                @click.stop="openNewProject"
                 v-ripple
                 outlined
               >
@@ -61,9 +63,11 @@
             <v-col cols="6" v-for="i in [1, 2, 3, 4, 5]" :key="i">
               <regist-card />
             </v-col>
+            1231232
             <v-col cols="6">
               <v-sheet
                 class="neutral100--bg rounded-lg fill-height d-flex justify-center align-center cursor-pointer"
+                @click.stop="openNewProject"
                 v-ripple
                 outlined
               >
@@ -79,14 +83,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { AppProvider } from '@/app-providers'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 
 @Component({
   components: {
     'regist-card': () => import('../components/regist-card.vue'),
   },
 })
-export default class RegistHome extends Vue {}
+export default class ProjectList extends Vue {
+  @Inject() providers!: AppProvider
+
+  openNewProject() {
+    this.providers.router.push({ name: 'new-project' })
+  }
+}
 </script>
 
 <style scoped></style>
