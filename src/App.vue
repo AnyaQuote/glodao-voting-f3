@@ -52,6 +52,16 @@ export default class App extends Vue {
 }
 </script>
 <style lang="scss">
+.container {
+  padding: 0 16px !important;
+  max-width: 1130px;
+}
+.font-weight-400 {
+  font-weight: 400 !important;
+}
+.font-weight-600 {
+  font-weight: 600 !important;
+}
 .theme--dark {
   .date-picker-dialog-custom {
     .v-date-picker-header {
@@ -213,5 +223,9 @@ export default class App extends Vue {
       background: transparent !important;
     }
   }
+}
+
+.v-sheet {
+  background: transparent !important;
 }
 </style>

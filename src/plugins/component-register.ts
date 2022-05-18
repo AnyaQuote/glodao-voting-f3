@@ -16,4 +16,5 @@ export const componentRegister = () => {
   Vue.component('app-textarea', () => import('@/components/form/app-textarea.vue'))
   Vue.component('app-select', () => import('@/components/form/app-select.vue'))
   Vue.component('icon-wrapper', () => import('@/components/icon-wrapper.vue'))
+  Vue.component('progress-bar', () => import('@/components/progress/progress.vue'))
 }

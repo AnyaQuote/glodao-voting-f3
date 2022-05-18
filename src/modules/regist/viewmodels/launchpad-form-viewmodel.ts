@@ -1,9 +1,23 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, observable } from 'mobx'
-import { get } from 'lodash'
+import { set, get } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toISO } from '@/helpers/date-helper'
+import { apiService } from '@/services/api-service'
 
+// type ProjectInfo = 'projectName' | 'shortDescription' | 'projectCover' | 'keywords' | 'socials' | 'researchProject'
+type TokenInfo = 'tokenName' | 'chain' | 'tokenContract' | 'additionLink'
+type FundInfo =
+  | 'totalRaise'
+  | 'totalSale'
+  | 'distributeDuration'
+  | 'distributeTime.time'
+  | 'distributeTime.date'
+  | 'launchDate.date'
+  | 'launchDate.time'
+  | 'priceRatio'
+type ConfirmInfo = 'immediate' | 'openDate'
+type SendTokenInfo = 'lockToken'
 const projectInfoDefault = {
   projectName: '',
   shortDescription: '',
@@ -12,14 +26,12 @@ const projectInfoDefault = {
   socials: {},
   researchProject: '',
 }
-
 const tokenInfoDefault = {
   tokenName: '',
   chain: {},
   tokenContract: '',
   additionLink: '',
 }
-
 const fundInfoDefault = {
   totalRaise: '',
   totalSale: '',
@@ -34,25 +46,24 @@ const fundInfoDefault = {
     time: '',
   },
 }
-
-const paymentInfoDefault = {
+const confirmInfoDefault = {
   immediate: false,
   openDate: {
     date: '',
     time: '',
   },
 }
-
 const sendTokenInfoDefault = {
   lockToken: '',
 }
+
 export class LaunchpadFormViewModel {
   @observable step = 3.1
   @observable unlockedStep = 3.1
   @observable projectInfo = projectInfoDefault
   @observable tokenInfo = tokenInfoDefault
   @observable fundInfo = fundInfoDefault
-  @observable paymentInfo = paymentInfoDefault
+  @observable confirmInfo = confirmInfoDefault
   @observable sendToken = sendTokenInfoDefault
   @action.bound changeStep(value: number) {
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
@@ -60,56 +71,53 @@ export class LaunchpadFormViewModel {
   }
 
   @action.bound changeProjectInfo(property: string, value: string) {
-    if (property.includes('socials')) {
-      const nestedProp = property.split('.')[1]
-      this.projectInfo.socials[nestedProp] = value
-    } else this.projectInfo[property] = value
+    set(this.projectInfo, property, value)
   }
 
-  @action.bound changeTokenInfo(property: string, value: string) {
-    if (property === 'chain') {
-      this.tokenInfo[property] = { name: get(value, 'name'), icon: get(value, 'icon') }
-    } else this.tokenInfo[property] = value
+  @action.bound changeTokenInfo(property: TokenInfo, value: string) {
+    set(this.tokenInfo, property, value)
   }
 
-  @action.bound changeFundInfo(property: string, value: string) {
-    if (property.includes('launchDate') || property.includes('distributeTime')) {
-      const prop = property.split('.')[0]
-      const nestedProp = property.split('.')[1]
-      this.fundInfo[prop][nestedProp] = value
-    } else this.fundInfo[property] = value
+  @action.bound changeFundInfo(property: FundInfo, value: string) {
+    set(this.fundInfo, property, value)
   }
 
-  @action.bound changePaymentInfo(property: string, value: string) {
-    if (property.includes('openDate')) {
-      const prop = property.split('.')[0]
-      const nestedProp = property.split('.')[1]
-      this.paymentInfo[prop][nestedProp] = value
-    } else this.paymentInfo[property] = value
+  @action.bound changeconfirmInfo(property: ConfirmInfo, value: string) {
+    set(this.confirmInfo, property, value)
   }
 
-  @action.bound changeSendTokenInfo(property: string, value: string) {
-    this.sendToken[property] = value
+  @action.bound changeSendTokenInfo(property: SendTokenInfo, value: string) {
+    set(this.tokenInfo, property, value)
   }
 
   @action nextStep(value: number) {
     this.unlockedStep = this.step = value
   }
 
-  @action submit() {
+  @asyncAction *submit() {
     try {
+      const { projectName, ...projectInfo } = this.projectInfo
+      const { chain, ...tokenInfo } = this.tokenInfo
+      const { distributeTime, launchDate, ...fundInfo } = this.fundInfo
+      const { openDate, immediate } = this.confirmInfo
+
       const data = {
-        projectInfo: { ...this.projectInfo },
-        tokenInfo: { ...this.tokenInfo, chain: { ...this.tokenInfo.chain } },
-        fundInfo: {
-          ...this.fundInfo,
-          distributeTime: toISO(this.fundInfo.distributeTime),
-          launchDate: toISO(this.fundInfo.launchDate),
+        projectName,
+        type: 'launchpad',
+        status: immediate ? 'voting' : 'pending',
+        startTime: toISO(openDate),
+        metadata: {
+          ...projectInfo,
+          ...tokenInfo,
+          vesting: {
+            ...fundInfo,
+            distributeTime: toISO(distributeTime),
+            launchDate: toISO(launchDate),
+          },
         },
-        paymentInfo: { ...this.paymentInfo, openDate: toISO(this.paymentInfo.openDate) },
-        sendToken: { ...this.sendToken },
       }
-      console.log('final data:::', data)
+
+      const res = yield apiService.voting.create(data)
     } catch (error) {
       snackController.commonError(error)
     }

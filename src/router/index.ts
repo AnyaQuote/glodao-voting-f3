@@ -75,6 +75,14 @@ const routes: Array<RouteConfig> = [
     ],
   },
   {
+    path: '/applications',
+    component: () => import('@/modules/applications/pages/applications-project-page.vue'),
+    meta: {
+      auth: true,
+      title: 'Application',
+    },
+  },
+  {
     path: '*',
     name: 'NotFound',
     component: () => import('@/modules/error/pages/coming-soon.vue'),
