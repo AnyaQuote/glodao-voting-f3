@@ -163,6 +163,9 @@ export class AuthStore {
   @computed get hunterId() {
     return get(this.user, 'hunter.id', '')
   }
-}
 
+  @computed get isAuthenticated() {
+    return !!this.jwt
+  }
+}
 export const authStore = new AuthStore()
