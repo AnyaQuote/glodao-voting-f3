@@ -39,7 +39,7 @@ export default class ProjectRegistDetail extends Vue {
   @Provide() vm = new BountyApplyViewModel()
 
   created() {
-    if (!authStore.jwt) this.$router.push('/new-project')
+    // if (!authStore.jwt) this.$router.push('/new-project')
   }
 }
 </script>
