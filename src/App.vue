@@ -18,7 +18,7 @@
 import { Observer } from 'mobx-vue'
 import { Component, Provide, Vue, Watch } from 'vue-property-decorator'
 import { AppProvider, appProvider } from './app-providers'
-// import { walletStore } from './stores/wallet-store'
+import { walletStore } from './stores/wallet-store'
 import { localdata } from '@/helpers/local-data'
 import { get } from 'lodash'
 
@@ -30,7 +30,7 @@ import { get } from 'lodash'
 })
 export default class App extends Vue {
   @Provide() providers: AppProvider = appProvider
-  // wallet = this.providers.wallet
+  wallet = this.providers.wallet
 
   @Watch('$route.query', { immediate: true }) onRefChanged(val: string) {
     if (val) {
@@ -41,7 +41,7 @@ export default class App extends Vue {
 
   mounted() {
     this.providers.router = this.$router
-    // walletStore.start()
+    walletStore.start()
   }
 
   drawer = false

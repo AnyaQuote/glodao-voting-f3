@@ -4,12 +4,12 @@ import moment from 'moment'
 import { timer } from 'rxjs'
 import VueRouter from 'vue-router'
 import { localData } from './stores/local-data'
-// import { walletStore } from './stores/wallet-store'
+import { walletStore } from './stores/wallet-store'
 
 export class AppProvider {
   router!: VueRouter
   api = apiService
-  // wallet = walletStore
+  wallet = walletStore
 
   @observable lightmode = localData.lightmode
   @observable currentTime = moment()

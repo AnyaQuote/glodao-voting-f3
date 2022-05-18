@@ -111,7 +111,7 @@ export class AuthStore {
 
   @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
     if (!wallet) return ''
-    const message = `https://glodao.io/bounty wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
+    const message = `GloDAO wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
     // const data = new TextEncoder().encode(message)
     if (chainType === 'sol') {
       //solana sign message

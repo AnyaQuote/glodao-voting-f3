@@ -13,12 +13,12 @@
       <v-icon class="mr-2">mdi-twitter</v-icon> Log in
     </v-btn>
     <v-sheet class="fill-width neutral100" v-else>
-      <v-sheet class="d-flex align-center pa-4 neutral100">
+      <!-- <v-sheet class="d-flex align-center pa-4 neutral100">
         <v-avatar size="32">
           <img :src="authStore.user.avatar" alt="Avatar" />
         </v-avatar>
         <div class="ml-3 font-weight-600">{{ authStore.user.hunter.name }}</div>
-      </v-sheet>
+      </v-sheet> -->
       <v-divider></v-divider>
       <v-sheet class="neutral100">
         <v-btn
