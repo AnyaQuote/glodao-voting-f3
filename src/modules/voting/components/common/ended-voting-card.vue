@@ -2,7 +2,7 @@
   <div class="card-wrapper d-flex fill-height" :class="type">
     <v-sheet class="card neutral100--bg d-flex flex-column">
       <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
-      <v-img :src="projectCover" class="rounded-lg rounded-b-0 flex-shrink-0"> </v-img>
+      <img :src="projectCover" class="rounded-lg rounded-b-0 flex-shrink-0" />
       <div class="card-content d-flex flex-column">
         <!-- CARD TOP START -->
         <div class="card-content-top d-flex flex-column pa-6 pb-0">
