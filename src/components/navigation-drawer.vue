@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer style="min-width: 320px" class="fill-height neutral100" app temporary fixed>
+  <v-navigation-drawer class="fill-height neutral100 m-w-320" fixed :value="value" @input="handleChange">
     <div class="px-4 py-1"></div>
     <v-divider></v-divider>
     <v-btn
@@ -31,7 +31,7 @@
         >
           <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
         </v-btn>
-        <v-btn plain block class="menu-btn neutral10--text" height="40" depressed @click="goToHuntingHistoryScreen()">
+        <v-btn plain block class="menu-btn neutral10--text" height="40" depressed>
           <v-img
             :src="require('@/assets/icons/crown-mini.svg')"
             max-height="22"
@@ -124,7 +124,8 @@
             </v-list-item-title>
           </v-list-item>
         </v-list-group>
-        <v-list-item class="my-2">
+        <!-- ---------------------- -->
+        <!-- <v-list-item class="my-2">
           <v-list-item-title
             class="nav-btn-text neutral10--text"
             block
@@ -136,7 +137,34 @@
           >
             DAO voting (Coming soon)
           </v-list-item-title>
-        </v-list-item>
+        </v-list-item> -->
+        <v-list-group no-action class="">
+          <template v-slot:activator>
+            <v-list-item class="ml-0 pl-0">
+              <v-list-item-title class="nav-btn-text text-none neutral10--text">DAO Voting</v-list-item-title>
+            </v-list-item>
+          </template>
+          <template v-slot:appendIcon>
+            <v-icon color="neutral10">mdi-chevron-down</v-icon>
+          </template>
+          <v-list-item active-class="filter-bluePrimary">
+            <v-list-item-icon> <v-icon>mdi-vote</v-icon> </v-list-item-icon>
+            <v-list-item-title>
+              <router-link tag="div" to="/voting">
+                <div class="neutral10--text">Voting</div>
+              </router-link>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item active-class="filter-bluePrimary">
+            <v-list-item-icon> <v-icon>mdi-application-edit-outline</v-icon> </v-list-item-icon>
+            <v-list-item-title>
+              <router-link tag="div" to="voting-list">
+                <div class="neutral10--text">Apply project</div>
+              </router-link>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list-group>
+        <!-- ---------------------- -->
         <v-list-group no-action>
           <template v-slot:activator>
             <v-list-item class="ml-0 pl-0">
@@ -193,8 +221,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator'
-import { authStore } from '@/stores/auth-store'
+import { Component, Inject, Vue, Prop } from 'vue-property-decorator'
 import { Observer } from 'mobx-vue'
 import { AppProvider } from '@/app-providers'
 
@@ -206,22 +233,17 @@ import { AppProvider } from '@/app-providers'
 })
 export default class NavigationDrawer extends Vue {
   @Inject() providers!: AppProvider
-  authStore = authStore
-  chainId = process.env.VUE_APP_CHAIN_ID
+  @Prop(Boolean) value!: boolean
+  authStore = this.providers.authStore
 
   openLink(url) {
     window.open(url, '_blank')
   }
-  backToHome() {
-    this.$router.push('/')
-  }
   changeTheme() {
     this.providers.toggleLightMode(this.$vuetify)
   }
-  goToHuntingHistoryScreen() {
-    this.$router.push('/hunting-history').catch(() => {
-      //
-    })
+  handleChange(state: boolean) {
+    this.$emit('input', state)
   }
 }
 </script>
@@ -252,5 +274,8 @@ export default class NavigationDrawer extends Vue {
 }
 .nav-btn-text {
   font-size: 14px !important;
+}
+.m-w-320 {
+  min-width: 320px !important;
 }
 </style>
