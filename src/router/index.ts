@@ -124,14 +124,23 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('to:::', to)
   if (!get(to, 'name', '')) {
     next('/comming-soon')
   } else {
     const isAuthenticated = authStore.isAuthenticated
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    if (requiredAuth && isAuthenticated) {
-      next('/new-project')
-    } else next()
+    const isFormPage = to.name === 'bounty-apply' || to.name === 'launchpad-apply'
+    // If is in bounty form or launchpad form without isAuth => back to new-project
+    if ((requiredAuth && isAuthenticated) || !requiredAuth) {
+      next()
+    } else if (requiredAuth && !isAuthenticated) {
+      if (isFormPage) {
+        next(from.fullPath)
+      } else {
+        next('/voting')
+      }
+    }
   }
 })
 
