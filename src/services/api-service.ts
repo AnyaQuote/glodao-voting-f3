@@ -1,7 +1,7 @@
 import { authStore } from '@/stores/auth-store'
-import { walletStore } from '@/stores/wallet-store'
 import Axios from 'axios'
 import qs from 'qs'
+import { get } from 'lodash-es'
 
 export type ApiRouteType =
   | 'applies'
@@ -14,14 +14,6 @@ export type ApiRouteType =
   | 'campaigns'
   | 'voting-pools'
 
-const axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
-axios.interceptors.request.use((config) => {
-  config.paramsSerializer = (params) => {
-    if ('_where' in params) return qs.stringify(params)
-    else return qs.stringify(params, { arrayFormat: 'repeat' })
-  }
-  return config
-})
 export class ApiHandler<T> {
   constructor(private axios, private route: ApiRouteType) {}
 
@@ -131,18 +123,19 @@ export class ApiHandlerJWT<T> {
   }
 
   async create(model: T, jwt?: string): Promise<T> {
+    let headers = this.headers
+    if (this.jwtOptions.create) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.post(this.route, model, {
-      headers: {
-        ...axios.defaults.headers,
-        Authorization: `Bearer ${jwt ?? authStore.jwt}`,
-      },
+      headers,
     })
     return res.data
   }
 
   async delete(id: any): Promise<T> {
+    let headers = this.headers
+    if (this.jwtOptions.delete) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.delete(`${this.route}/${id}`, {
-      headers: { Authorization: `Bearer ${authStore.jwt}` },
+      headers,
     })
     return res.data
   }
@@ -200,18 +193,48 @@ export class ApiHandlerJWT<T> {
 }
 
 export class ApiService {
+  axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
+
   // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
-  users = new ApiHandlerJWT<any>(axios, 'users')
-  tasks = new ApiHandlerJWT<any>(axios, 'tasks', { find: false, count: false, findOne: false })
-  voting = new ApiHandlerJWT<any>(axios, 'voting-pools', { find: false, count: false, findOne: false })
+  users = new ApiHandlerJWT<any>(this.axios, 'users')
+  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
+  voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
+
+  constructor() {
+    this.setupAuthInjection()
+  }
+
+  setupAuthInjection() {
+    this.axios.interceptors.request.use((config) => {
+      // ---- Stringify params in headers ----
+      config.paramsSerializer = (params) => {
+        if ('_where' in params) return qs.stringify(params)
+        else return qs.stringify(params, { arrayFormat: 'repeat' })
+      }
+      return config
+    })
+
+    this.axios.interceptors.response.use(
+      (response) => {
+        return response
+      },
+      (error) => {
+        if (get(error, 'response.status') === 401) {
+          // ---- Check expire token when sending request to api ----
+          authStore.checkJwtExpiration()
+        }
+        return Promise.reject(error)
+      }
+    )
+  }
 
   async getFile(id: any) {
-    const res = await axios.get(`upload/files/${id}`)
+    const res = await this.axios.get(`upload/files/${id}`)
     return res.data
   }
 
   async uploadFile(model: any) {
-    const res = await axios.post('upload', model)
+    const res = await this.axios.post('upload', model)
     return res.data
   }
 }
