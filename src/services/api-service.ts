@@ -179,24 +179,13 @@ export class ApiHandlerJWT<T> {
     }
     return res.data
   }
-
-  async signUp(publicAddress: string) {
-    const res = await this.axios.post(`auth/local/register`, { publicAddress })
-    return res.data
-  }
-
-  async signIn(model) {
-    const { publicAddress, signature } = model
-    const res = await this.axios.post(`auth/signin`, { publicAddress, signature })
-    return res.data
-  }
 }
 
 export class ApiService {
   axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
 
   // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
-  users = new ApiHandlerJWT<any>(this.axios, 'users')
+  users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
   tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
 
@@ -220,6 +209,7 @@ export class ApiService {
       },
       (error) => {
         if (get(error, 'response.status') === 401) {
+          console.log('i got 401')
           // ---- Check expire token when sending request to api ----
           authStore.checkJwtExpiration()
         }
@@ -235,6 +225,17 @@ export class ApiService {
 
   async uploadFile(model: any) {
     const res = await this.axios.post('upload', model)
+    return res.data
+  }
+
+  async signUp(publicAddress: string) {
+    const res = await this.axios.post(`auth/local/register`, { publicAddress })
+    return res.data
+  }
+
+  async signIn(model) {
+    const { publicAddress, signature } = model
+    const res = await this.axios.post(`auth/signin`, { publicAddress, signature })
     return res.data
   }
 }
