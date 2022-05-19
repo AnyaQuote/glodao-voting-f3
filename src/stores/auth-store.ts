@@ -8,6 +8,7 @@ import { action, computed, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
 import { walletStore } from './wallet-store'
+import { promiseHelper } from '@/helpers/promise-helper'
 
 export class AuthStore {
   @observable attachWalletDialog = false
@@ -32,11 +33,7 @@ export class AuthStore {
     // }
     reaction(
       () => walletStore.account,
-      () => {
-        this.resetJwt()
-        this.resetUser()
-        localdata.resetUser()
-      }
+      () => this.logout
     )
   }
 
@@ -83,32 +80,8 @@ export class AuthStore {
     this.user = {}
   }
 
-  @asyncAction *fetchUser(access_token: string, access_secret: string) {
+  @action logout() {
     try {
-      const res = yield apiService.fetchUser(access_token, access_secret, localdata.referralCode)
-      let user = res.user
-      const jwt = res.jwt
-      if (!user.hunter) {
-        user = yield apiService.users.findOne(user.id, jwt)
-      }
-      this.changeJwt(jwt)
-      this.changeUser(user)
-      this.changeTwitterLoginDialog(false)
-      localdata.referralCode = ''
-    } catch (error) {
-      snackController.error(get(error, 'response.data.message', '') || (error as string))
-    } finally {
-      router.push('/bounty').catch(() => {
-        //
-      })
-    }
-  }
-
-  @asyncAction *logout() {
-    try {
-      yield router.push('/bounty').catch(() => {
-        //
-      })
       this.resetJwt()
       this.resetUser()
       localdata.resetUser()
@@ -117,50 +90,70 @@ export class AuthStore {
     }
   }
 
-  @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
-    if (!wallet) return ''
-    const message = `GloDAO wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
-    // const data = new TextEncoder().encode(message)
+  @asyncAction *login() {
+    if (!this.isAuthenticated && walletStore.account) {
+      walletStore.resetJwt()
+      let error = undefined,
+        result = undefined,
+        user
+
+        // ---- Check if an user existed ----
+      ;[error, result] = yield promiseHelper.handle(
+        apiService.users.find({ username: walletStore.account }, { _limit: 1 })
+      )
+
+      // ---- If no user found, sign up for new user ----
+      if (error) {
+        ;[error, result] = yield promiseHelper.handle(apiService.users.signUp(walletStore.account))
+        if (result) user = result
+      }
+
+      // ---- Generate a signature for the new user ----
+      let signature
+      ;[error, result] = yield promiseHelper.handle(
+        this.signMessage(walletStore.account, walletStore.chainType, user.nonce, walletStore.selectedAdapter)
+      )
+      if (result) {
+        signature = result
+      } else {
+        throw error
+      }
+
+      // ---- With given signature renew, perform login the user ----
+      ;[error, result] = promiseHelper.handle(
+        yield apiService.users.signIn({
+          publicAddress: walletStore.account,
+          signature,
+        })
+      )
+      if (result) {
+        this.jwt = get(result, 'jwt')
+        authStore.changeJwt(get(result, 'jwt'))
+      } else {
+        throw error
+      }
+    }
+  }
+
+  @asyncAction *signMessage(account, chainType, nonce, selectedAdapter: any = null) {
+    if (!account) return ''
+    const message = `GloDAO wants to: \n Sign message with account \n ${account} - One time nonce: ${nonce}`
+    const data = new TextEncoder().encode(message)
     if (chainType === 'sol') {
       //solana sign message
-      // const a = (selectedAdapter || this.selectedAdapter) as any
-      // let res
-      // if (a.signMessage) {
-      //   res = yield a.signMessage(data)
-      // } else {
-      //   res = yield a._wallet.signMessage(data)
-      // }
-      // return Object.values(res?.signature || res)
     } else {
       //bsc sign message
       if (typeof window === 'undefined') {
         return ''
       }
       if (window.ethereum) {
-        const request = { method: 'personal_sign', params: [message, wallet] }
+        const request = { method: 'personal_sign', params: [message, account] }
         return yield window.ethereum.request(request)
       } else {
         throw new Error('Plugin Metamask is not installed!')
       }
     }
   }
-
-  // @computed get accountAge() {
-  //   if (!this.user?.twitterCreatedTime) return 0
-  //   else return moment().diff(moment(this.user.twitterCreatedTime), 'days')
-  // }
-
-  // @computed get registeredWallet() {
-  //   return get(this.user, 'hunter.address', '')
-  // }
-
-  // @computed get userRole() {
-  //   return get(this.user, 'role.type', 'public')
-  // }
-
-  // @computed get hunterId() {
-  //   return get(this.user, 'hunter.id', '')
-  // }
 
   @computed get isAuthenticated() {
     return !!this.jwt
