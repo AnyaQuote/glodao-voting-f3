@@ -3,7 +3,7 @@ import { localdata } from '@/helpers/local-data'
 import router from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
-import { get } from 'lodash-es'
+import { get, isEmpty, isArray } from 'lodash-es'
 import { action, computed, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
@@ -75,49 +75,49 @@ export class AuthStore {
     try {
       this.resetJwt()
       this.resetUser()
-      localdata.resetUser()
+      localdata.resetAuth()
     } catch (error) {
-      snackController.error(error as string)
+      snackController.commonError(error)
     }
   }
 
   @asyncAction *login() {
     if (!this.isAuthenticated && walletStore.account) {
       walletStore.resetJwt()
-      let error = undefined,
-        result = undefined,
-        user
-
+      let error,
+        result
         // ---- Check if an user existed ----
-      ;[error, result] = yield promiseHelper.handle(
-        apiService.users.find({ username: walletStore.account }, { _limit: 1 })
-      )
+      ;[error, result] = yield promiseHelper.handle(apiService.users.find({ username: walletStore.account }))
 
       // ---- If no user found, sign up for new user ----
-      if (error) {
-        ;[error, result] = yield promiseHelper.handle(apiService.users.signUp(walletStore.account))
-        if (result) user = result
+      if (!error && isEmpty(result)) {
+        ;[error, result] = yield promiseHelper.handle(apiService.signUp(walletStore.account))
+      } else if (error) {
+        throw error
       }
+
+      const user = isArray(result) ? get(result, '[0]') : result
 
       // ---- Generate a signature for the new user ----
       let signature
       ;[error, result] = yield promiseHelper.handle(
-        this.signMessage(walletStore.account, walletStore.chainType, user.nonce, walletStore.selectedAdapter)
+        this.signMessage(walletStore.account, walletStore.chainType, user?.nonce, walletStore.selectedAdapter)
       )
       if (result) {
         signature = result
       } else {
         throw error
       }
-
-      // ---- With given signature renew, perform login the user ----
-      ;[error, result] = promiseHelper.handle(
-        yield apiService.users.signIn({
+      // ---- With given signature, perform login the user ----
+      ;[error, result] = yield promiseHelper.handle(
+        apiService.signIn({
           publicAddress: walletStore.account,
           signature,
         })
       )
+
       if (result) {
+        this.changeUser(get(result, 'user'))
         this.changeJwt(get(result, 'jwt'))
       } else {
         throw error
@@ -149,8 +149,9 @@ export class AuthStore {
     const { exp } = jwtDecode(this.jwt) as any
     const isExpired = Date.now() >= exp * 1000
     if (isExpired) {
-      authStore.logout()
+      this.logout()
       snackController.commonError('Your session has expired! Please log in')
+      this.login()
     }
   }
 
