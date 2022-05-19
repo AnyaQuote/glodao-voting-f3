@@ -19,19 +19,17 @@ export class AuthStore {
   @observable user: any = {}
 
   constructor() {
-    //
     if (localdata.jwt) this.changeJwt(localdata.jwt)
     if (localdata.user) this.changeUser(localdata.user)
-    if (this.jwt) {
-      const { exp } = jwtDecode(this.jwt) as any
-      const isExpire = Date.now() >= exp * 1000
-      // If the token has expired
-      if (isExpire) {
-        this.logout()
-        snackController.error('Your session has expired! Please log in')
-      }
-    }
-
+    // if (this.jwt) {
+    //   const { exp } = jwtDecode(this.jwt) as any
+    //   const isExpire = Date.now() >= exp * 1000
+    //   // If the token has expired
+    //   if (isExpire) {
+    //     this.logout()
+    //     snackController.error('Your session has expired! Please log in')
+    //   }
+    // }
     reaction(
       () => walletStore.account,
       () => {
@@ -55,17 +53,17 @@ export class AuthStore {
   @asyncAction *saveAttachWallet() {
     //
   }
-  @asyncAction *getUserData() {
-    try {
-      const res = yield apiService.users.findOne(this.user.id, this.jwt)
-      this.changeUser(res)
-    } catch (error) {
-      snackController.error('Fail to get user data')
-    }
-  }
-  @action.bound resetWalletDialogInput() {
-    this.walletDialogInput = ''
-  }
+  // @asyncAction *getUserData() {
+  //   try {
+  //     const res = yield apiService.users.findOne(this.user.id, this.jwt)
+  //     this.changeUser(res)
+  //   } catch (error) {
+  //     snackController.error('Fail to get user data')
+  //   }
+  // // }
+  // @action.bound resetWalletDialogInput() {
+  //   this.walletDialogInput = ''
+  // }
   @action.bound changeTwitterLoginDialog(value: boolean) {
     this.twitterLoginDialog = value
   }
@@ -147,25 +145,33 @@ export class AuthStore {
     }
   }
 
-  @computed get accountAge() {
-    if (!this.user?.twitterCreatedTime) return 0
-    else return moment().diff(moment(this.user.twitterCreatedTime), 'days')
-  }
+  // @computed get accountAge() {
+  //   if (!this.user?.twitterCreatedTime) return 0
+  //   else return moment().diff(moment(this.user.twitterCreatedTime), 'days')
+  // }
 
-  @computed get registeredWallet() {
-    return get(this.user, 'hunter.address', '')
-  }
+  // @computed get registeredWallet() {
+  //   return get(this.user, 'hunter.address', '')
+  // }
 
-  @computed get userRole() {
-    return get(this.user, 'role.type', 'public')
-  }
+  // @computed get userRole() {
+  //   return get(this.user, 'role.type', 'public')
+  // }
 
-  @computed get hunterId() {
-    return get(this.user, 'hunter.id', '')
-  }
+  // @computed get hunterId() {
+  //   return get(this.user, 'hunter.id', '')
+  // }
 
   @computed get isAuthenticated() {
     return !!this.jwt
+  }
+
+  @computed get jwtExpireDate() {
+    if (!this.jwt) return Infinity
+    else {
+      const { exp } = jwtDecode(this.jwt) as any
+      return exp * 1000
+    }
   }
 }
 export const authStore = new AuthStore()
