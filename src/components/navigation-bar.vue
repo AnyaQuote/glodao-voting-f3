@@ -110,9 +110,9 @@
                   <!-- ---------------------- -->
                   <v-list-item-content>
                     <v-list-item-title>
-                      <router-link tag="div" class="px-4 d-flex align-center cursor-pointer" to="/new-project">
+                      <router-link tag="div" class="px-4 d-flex align-center cursor-pointer" to="/projects">
                         <v-icon class="mr-2" size="20">mdi-application-edit-outline</v-icon>
-                        <div class="neutral10--text text-body-2">My Application</div>
+                        <div class="neutral10--text text-body-2">Your Project</div>
                       </router-link>
                     </v-list-item-title>
                   </v-list-item-content>
