@@ -9,13 +9,14 @@ import { walletStore } from '@/stores/wallet-store'
 import { authStore } from '@/stores/auth-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
+import { VotingPools } from '@/models/VotingModel'
 
 const projectInfoDefault = {
   projectName: '',
   shortDescription: '',
   projectCover: null,
   projectLogo: null,
-  keywords: [],
+  fields: [],
   socials: {},
   tokenAddress: '',
 }
@@ -30,9 +31,6 @@ const confirmInfoDefault = {
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
-
-  @observable jwt = ''
-  @observable userInfo: any = undefined
 
   @observable step = 1.1
   @observable unlockedStep = 2.1
@@ -74,77 +72,10 @@ export class BountyApplyViewModel {
     )
   }
 
-  @asyncAction *login() {
-    if (!this.isLogin && walletStore.account) {
-      walletStore.resetJwt()
-      let getUser: any = []
-      try {
-        getUser = yield apiService.users.find({ username: walletStore.account }, { _limit: 1 }) || []
-      } catch (e) {
-        //
-      }
-      let user = getUser[0]
-      if (!user) {
-        user = yield apiService.users.signUp(walletStore.account)
-      }
-
-      let signature
-      try {
-        signature = yield this.signMessage(
-          walletStore.account,
-          walletStore.chainType,
-          user?.nonce,
-          walletStore.selectedAdapter
-        )
-      } catch (e) {
-        yield walletStore.disconnectAccount()
-      }
-      if (!signature) return
-
-      try {
-        const res = yield apiService.users.signIn({
-          publicAddress: walletStore.account,
-          signature,
-        })
-        if (res) {
-          this.userInfo = res.user
-          this.jwt = res.jwt
-          authStore.changeJwt(res.jwt)
-        }
-      } catch (e) {
-        snackController.commonError(e)
-      }
-    }
-  }
-
-  @asyncAction *signMessage(account, chainType, nonce, selectedAdapter: any = null) {
-    if (!account) return ''
-    const message = `GloDAO wants to: \n Sign message with account \n ${account} - One time nonce: ${nonce}`
-    const data = new TextEncoder().encode(message)
-    if (chainType === 'sol') {
-      //solana sign message
-    } else {
-      //bsc sign message
-      if (typeof window === 'undefined') {
-        return ''
-      }
-      if (window.ethereum) {
-        const request = { method: 'personal_sign', params: [message, account] }
-        return yield window.ethereum.request(request)
-      } else {
-        throw new Error('Plugin Metamask is not installed!')
-      }
-    }
-  }
-
   @asyncAction *submit() {
-    // yield this.createPool()
-    // return
-
     try {
-      const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
+      const { projectName, projectLogo, projectCover, tokenAddress, ...projectInfo } = this.projectInfo
       const { immediate, openDate } = this.confirmInfo
-
       let res
 
       const media = new FormData()
@@ -152,11 +83,13 @@ export class BountyApplyViewModel {
       media.append('files', projectCover!)
       res = yield apiService.uploadFile(media)
 
-      const data = {
+      const data: VotingPools = {
         projectId: '',
-        name: projectName,
+        projectName: projectName,
+        unicode: projectName,
         type: 'bounty',
-        ownderAddress: '',
+        ownerAddress: walletStore.account,
+        rewardAddress: tokenAddress,
         status: immediate ? 'voting' : 'pending',
         startDate: toMoment(openDate).toISOString(),
         endDate: toMoment(openDate).add(3, 'days').toISOString(),
@@ -166,7 +99,6 @@ export class BountyApplyViewModel {
           projectCover: getApiFileUrl(res[1]),
         },
       }
-
       res = yield apiService.voting.create(data)
     } catch (error) {
       snackController.commonError(error)
@@ -196,9 +128,5 @@ export class BountyApplyViewModel {
 
   @action nextStep(value: number) {
     this.unlockedStep = this.step = value
-  }
-
-  @computed get isLogin() {
-    return !!this.jwt
   }
 }
