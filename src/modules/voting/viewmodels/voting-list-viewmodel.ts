@@ -1,12 +1,12 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { VotingPools } from '@/models/VotingModel'
 import { apiService } from '@/services/api-service'
-import { computed, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
 export class VotingListViewModel {
-  @observable voteList: VotingPools[] = [];
-
+  @observable voteList: VotingPools[] = []
+  @observable filterOption = 'bounty';
   @asyncAction *fetchVotingPools() {
     try {
       const res = yield apiService.voting.find()
@@ -15,13 +15,16 @@ export class VotingListViewModel {
       snackController.commonError(error)
     }
   }
-
   @computed get approvedList() {
     return this.voteList.filter((item) => item.status === 'approved')
   }
 
+  @computed get filteredVotingList() {
+    return this.voteList.filter((item) => item.type === this.filterOption)
+  }
+
   @computed get votingList() {
-    return this.voteList.filter((item) => item.status === 'voting')
+    return this.votingList.filter((item) => item.status === 'voting')
   }
 
   @computed get endedList() {

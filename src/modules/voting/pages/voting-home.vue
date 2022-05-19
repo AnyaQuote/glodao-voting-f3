@@ -36,23 +36,15 @@
       <!-- HEADER END -->
 
       <!-- RADIO GROUP SECTION START -->
-      <v-radio-group row>
-        <v-radio value="1">
-          <template v-slot:label>
-            <span class="text-subtitle-2 font-weight-bold">Bounty project</span>
-          </template>
-        </v-radio>
-        <v-radio value="2">
-          <template v-slot:label>
-            <span class="text-subtitle-2 font-weight-bold">Launching project</span>
-          </template>
-        </v-radio>
+      <v-radio-group row mandatory v-model="vm.filterOption">
+        <v-radio class="text-subtitle-2 font-weight-bold" value="bounty" label="Bounty Project"> </v-radio>
+        <v-radio class="text-subtitle-2 font-weight-bold" value="launchpad" label="Launching project"> </v-radio>
       </v-radio-group>
       <!-- RADIO GROUP SECTION END -->
 
       <!-- CARDS SECTION START -->
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-for="(item, i) in vm.votingList" :key="i">
+        <v-col cols="12" sm="6" md="4" v-for="(item, i) in vm.filteredVotingList" :key="i">
           <live-voting-card
             :projectName="item.projectName"
             :data="item.data"
