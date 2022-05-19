@@ -3,12 +3,14 @@ import { action, computed, observable, reaction, runInAction } from 'mobx'
 import moment from 'moment'
 import { timer } from 'rxjs'
 import VueRouter from 'vue-router'
+import { snackController } from './components/snack-bar/snack-bar-controller'
 import { localData } from './stores/local-data'
 // import { walletStore } from './stores/wallet-store'
 
 export class AppProvider {
   router!: VueRouter
   api = apiService
+  snackbar = snackController
   // wallet = walletStore
 
   @observable lightmode = localData.lightmode
