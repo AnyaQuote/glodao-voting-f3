@@ -148,17 +148,16 @@ export class ApiHandlerJWT<T> {
   }
 
   async find<T>(params?: any, settings: { _sort?: string; _limit?: number; _start?: number } = {}): Promise<T[]> {
+    let headers = this.headers
     const settingDefault = { _sort: 'createdAt:DESC', _limit: 25, _start: 0 }
     params = { ...settingDefault, ...settings, ...(params ?? {}) }
+    if (this.jwtOptions.find) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.get(this.route, {
       params,
-      headers: {
-        ...axios.defaults.headers,
-        // Authorization: `Bearer ${walletStore.jwt}`,
-      },
+      headers,
     })
-    const lst = res.data
-    return lst
+    // const lst = res.data
+    return res.data
   }
 
   async findOne<T>(id: any, jwt?: string): Promise<T> {
@@ -170,8 +169,8 @@ export class ApiHandlerJWT<T> {
     } else {
       res = await this.axios.get(`${this.route}`, { headers })
     }
-    const result = res.data
-    return result
+    // const result = res.data
+    return res.data
   }
 
   async update(id: any, model?: any): Promise<T> {
@@ -204,7 +203,7 @@ export class ApiService {
   // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
   users = new ApiHandlerJWT<any>(axios, 'users')
   tasks = new ApiHandlerJWT<any>(axios, 'tasks', { find: false, count: false, findOne: false })
-  voting = new ApiHandlerJWT<any>(axios, 'voting-pools')
+  voting = new ApiHandlerJWT<any>(axios, 'voting-pools', { find: false, count: false, findOne: false })
 
   async getFile(id: any) {
     const res = await axios.get(`upload/files/${id}`)
