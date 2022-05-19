@@ -158,8 +158,8 @@
           <v-list-item active-class="filter-bluePrimary">
             <v-list-item-icon> <v-icon>mdi-application-edit-outline</v-icon> </v-list-item-icon>
             <v-list-item-title>
-              <router-link tag="div" to="voting-list">
-                <div class="neutral10--text">Apply project</div>
+              <router-link tag="div" to="/projects">
+                <div class="neutral10--text">Your project</div>
               </router-link>
             </v-list-item-title>
           </v-list-item>
