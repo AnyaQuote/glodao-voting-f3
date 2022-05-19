@@ -18,7 +18,7 @@ export class AppProvider {
   wallet = walletStore
 
   @observable lightmode = localData.lightmode
-  @observable currentTime = moment()
+  // @observable currentTime = moment()
 
   constructor(router: VueRouter) {
     this.router = router
@@ -28,19 +28,11 @@ export class AppProvider {
       (mode) => (localData.lightmode = mode),
       { fireImmediately: true }
     )
-    timer(0, 1000).subscribe(() => {
-      runInAction(() => {
-        // console.log('appProvider.currentTime::', this.currentTime.valueOf())
-        // console.log('authStore.jwtExpireDate:::', this.authStore.jwtExpireDate)
-        this.currentTime = moment().milliseconds(0)
-      })
-    })
-    // reaction(
-    //   () => this.isExpired,
-    //   () => {
-    //     authStore.logout()
-    //   }
-    // )
+    // timer(0, 1000).subscribe(() => {
+    //   runInAction(() => {
+    //     this.currentTime = moment().milliseconds(0)
+    //   })
+    // })
   }
 
   @action toggleLightMode($vuetify) {
@@ -51,8 +43,4 @@ export class AppProvider {
   @computed get themeType() {
     return this.lightmode ? 'light' : 'dark'
   }
-
-  // @computed get isExpired() {
-  //   return this.currentTime.valueOf() > this.authStore.jwtExpiredDate
-  // }
 }
