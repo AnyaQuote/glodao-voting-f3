@@ -30,9 +30,17 @@ export class AppProvider {
     )
     timer(0, 1000).subscribe(() => {
       runInAction(() => {
+        // console.log('appProvider.currentTime::', this.currentTime.valueOf())
+        // console.log('authStore.jwtExpireDate:::', this.authStore.jwtExpireDate)
         this.currentTime = moment().milliseconds(0)
       })
     })
+    // reaction(
+    //   () => this.isExpired,
+    //   () => {
+    //     authStore.logout()
+    //   }
+    // )
   }
 
   @action toggleLightMode($vuetify) {
@@ -43,4 +51,8 @@ export class AppProvider {
   @computed get themeType() {
     return this.lightmode ? 'light' : 'dark'
   }
+
+  // @computed get isExpired() {
+  //   return this.currentTime.valueOf() > this.authStore.jwtExpiredDate
+  // }
 }
