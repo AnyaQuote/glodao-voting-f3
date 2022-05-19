@@ -14,15 +14,16 @@ const routes: Array<RouteConfig> = [
         path: 'voting',
         component: () => import('@/modules/voting/pages/voting-home.vue'),
         meta: {
-          auth: true,
-          title: 'Voting Home',
+          auth: false,
+          title: 'Voting List',
         },
       },
       {
         path: 'voting/:id',
         component: () => import('@/modules/voting/pages/voting-detail.vue'),
         meta: {
-          auth: true,
+          auth: false,
+          code: true,
           title: 'Voting detail',
         },
       },
