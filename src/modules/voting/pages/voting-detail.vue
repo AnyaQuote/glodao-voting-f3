@@ -65,8 +65,8 @@
 
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import VotingDetailOverview from '../components/voting-detail-overview.vue'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
+import { get } from 'lodash-es'
 @Component({
   components: {
     'voting-detail-overview': () => import('../components/voting-detail-overview.vue'),
@@ -88,6 +88,10 @@ export default class VotingDetail extends Vue {
       href: '/voting/123',
     },
   ]
+
+  mounted() {
+    this.vm.getUnicode(get(this.$route, 'query.id'))
+  }
 }
 </script>
 
