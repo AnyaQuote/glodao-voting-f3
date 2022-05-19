@@ -22,15 +22,6 @@ export class AuthStore {
   constructor() {
     if (localdata.jwt) this.changeJwt(localdata.jwt)
     if (localdata.user) this.changeUser(localdata.user)
-    // if (this.jwt) {
-    //   const { exp } = jwtDecode(this.jwt) as any
-    //   const isExpire = Date.now() >= exp * 1000
-    //   // If the token has expired
-    //   if (isExpire) {
-    //     this.logout()
-    //     snackController.error('Your session has expired! Please log in')
-    //   }
-    // }
     reaction(
       () => walletStore.account,
       () => this.logout
@@ -155,16 +146,17 @@ export class AuthStore {
     }
   }
 
-  @computed get isAuthenticated() {
-    return !!this.jwt
+  @action checkJwtExpiration() {
+    const { exp } = jwtDecode(this.jwt) as any
+    const isExpired = Date.now() >= exp * 1000
+    if (isExpired) {
+      authStore.logout()
+      snackController.commonError('Your session has expired! Please log in')
+    }
   }
 
-  @computed get jwtExpireDate() {
-    if (!this.jwt) return Infinity
-    else {
-      const { exp } = jwtDecode(this.jwt) as any
-      return exp * 1000
-    }
+  @computed get isAuthenticated() {
+    return !!this.jwt
   }
 }
 export const authStore = new AuthStore()
