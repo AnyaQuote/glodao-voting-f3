@@ -4,9 +4,7 @@
       <v-sheet class="card d-flex flex-column neutral100--bg">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <v-img :src="projectCover" contain class="p-relative">
-            <v-skeleton-loader v-if="projectCover" type="image" />
-          </v-img>
+          <v-img :src="projectCover" contain class="p-relative"> </v-img>
           <!-- HOVER SHOW SECTION START -->
           <div class="img-front d-flex flex-column" :class="{ blur: hover }">
             <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
@@ -30,9 +28,7 @@
           <div class="card-content-top d-flex flex-column flex-grow-1 pa-6">
             <div class="d-flex align-center">
               <v-avatar size="48" class="mr-4">
-                <v-img :src="projectLogo">
-                  <v-skeleton-loader v-if="projectLogo" type="avatar" />
-                </v-img>
+                <v-img :src="projectLogo"> </v-img>
               </v-avatar>
               <div class="text-h5 flex-grow-1 font-weight-bold">{{ projectName }}</div>
             </div>
