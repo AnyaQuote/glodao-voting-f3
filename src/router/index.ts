@@ -136,7 +136,7 @@ router.beforeEach((to, from, next) => {
       next()
     } else if (requiredAuth && !isAuthenticated) {
       if (isFormPage) {
-        next(from.fullPath)
+        next('/new-project')
       } else {
         next('/voting')
       }
