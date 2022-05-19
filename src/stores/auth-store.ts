@@ -118,8 +118,7 @@ export class AuthStore {
         })
       )
       if (result) {
-        this.jwt = get(result, 'jwt')
-        authStore.changeJwt(get(result, 'jwt'))
+        this.changeJwt(get(result, 'jwt'))
       } else {
         throw error
       }
