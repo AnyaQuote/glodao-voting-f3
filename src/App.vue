@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <navigation-drawer />
+    <navigation-drawer v-model="drawer" />
     <navigation-bar v-if="$vuetify.breakpoint.mdAndUp" />
-    <mobile-navigation-bar v-if="$vuetify.breakpoint.smAndDown" />
+    <mobile-navigation-bar v-if="$vuetify.breakpoint.smAndDown" v-model="drawer" />
     <v-main class="neutral15">
       <router-view></router-view>
     </v-main>
@@ -16,10 +16,8 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Provide, Vue, Watch } from 'vue-property-decorator'
+import { Component, Provide, Vue } from 'vue-property-decorator'
 import { AppProvider } from './app-providers'
-import { localdata } from '@/helpers/local-data'
-import { get } from 'lodash'
 
 @Observer
 @Component({
@@ -30,23 +28,18 @@ import { get } from 'lodash'
 export default class App extends Vue {
   @Provide() providers = new AppProvider(this.$router)
   wallet = this.providers.wallet
-
-  @Watch('$route.query', { immediate: true }) onRefChanged(val: string) {
-    if (val) {
-      const ref = get(val, 'ref', '')
-      if (ref && !localdata.referralCode) localdata.referralCode = ref
-    }
-  }
+  drawer = false
 
   mounted() {
-    this.providers.router = this.$router
     this.providers.wallet.start()
   }
 
-  drawer = false
-
   changeTheme() {
     this.providers.toggleLightMode(this.$vuetify)
+  }
+
+  toggleDrawer(state: boolean) {
+    this.drawer = state
   }
 }
 </script>
