@@ -99,6 +99,7 @@
 import { Metadata } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { get } from 'lodash'
+
 @Component
 export default class EndedVotingCard extends Vue {
   @Prop({ required: true }) projectName!: string
@@ -113,7 +114,6 @@ export default class EndedVotingCard extends Vue {
   typeName = this.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
   projectLogo = get(this.data, 'projectLogo', '')
   projectCover = get(this.data, 'projectCover', '')
-
 }
 </script>
 
