@@ -8,8 +8,7 @@
       <v-sheet class="card d-flex flex-column">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
-          <v-img :src="cover" contain class="img-back" />
+          <v-img :src="projectCover" contain class="p-relative"> </v-img>
           <!-- HOVER SHOW SECTION START -->
           <div class="img-front d-flex flex-column" :class="{ blur: hover }">
             <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
@@ -30,13 +29,19 @@
         <!-- -------------------------------------------------------------------------------------------------- -->
         <div class="card-content flex-grow-1 d-flex flex-column">
           <!-- CARD TOP START -->
-          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
-            <div class="card-title font-weight-bold">{{ projectName }}</div>
-            <div class="card-subtitle font-weight-bold mb-4">
-              {{ shortDescription }}
+          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6">
+            <div class="d-flex align-center">
+              <v-avatar size="48" class="mr-4">
+                <v-img :src="projectLogo"> </v-img>
+              </v-avatar>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ projectName }}</div>
+            </div>
+
+            <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4">
+              {{ data.shortDescription }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
+              <v-chip v-for="(field, i) in data.fields" :key="i" class="rounded-lg ma-1">{{ field }}</v-chip>
             </div>
           </div>
           <!-- CARD TOP END -->
@@ -45,15 +50,15 @@
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class="text-h5" :to="endTime"> </countdown>
+            <countdown class="text-h5 my-3" :to="endDate"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold mr-1">{{ upvote }}</div>
+              <div class="font-weight-bold mr-1">90</div>
               <div>votes for launching</div>
             </div>
-            <div class="flag text-center py-2" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-              <span class="text-uppercase">{{ type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            <div class="flag text-center py-2" :class="type">
+              <span class="text-uppercase">{{ typeName }}</span>
             </div>
           </div>
           <!-- CARD BOTTOM END -->
@@ -132,6 +137,7 @@
 </template>
 
 <script lang="ts">
+import { Metadata } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 interface Props {
@@ -161,35 +167,13 @@ const defaultProps = (): Props => ({
   },
 })
 export default class LiveVotingCard extends Vue {
-  @Prop({ default: defaultProps }) props!: Props
-
-  get projectName() {
-    return this.props.projectName
-  }
-
-  get shortDescription() {
-    return this.props.shortDescription
-  }
-
-  get labels() {
-    return this.props.labels
-  }
-
-  get endTime() {
-    return this.props.endTime
-  }
-
-  get type() {
-    return this.props.type
-  }
-
-  get cover() {
-    return this.props.cover
-  }
-
-  get upvote() {
-    return this.props.upvote
-  }
+  @Prop({ required: true }) projectName!: string
+  @Prop({ required: true }) data!: Metadata
+  @Prop({ required: true }) type!: string
+  @Prop({ required: true }) endDate!: string
+  typeName = this.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
+  projectLogo = get(this.data, 'projectLogo', '')
+  projectCover = get(this.data, 'projectCover', '')
 }
 </script>
 
@@ -252,11 +236,6 @@ export default class LiveVotingCard extends Vue {
         @extend .clip-text;
         font-size: em(28) !important;
         line-height: em(36.4) !important;
-      }
-      .card-subtitle {
-        @extend .clip-text;
-        font-size: em(14) !important;
-        line-height: em(21) !important;
       }
     }
     .card-content-bottom {

@@ -1,29 +1,37 @@
 <template>
+<<<<<<< HEAD
   <div v-if="!$vuetify.breakpoint.xs" class="card-wrapper d-flex fill-height" :class="className">
     <v-sheet class="card d-flex flex-column">
+=======
+  <div class="card-wrapper d-flex fill-height" :class="type">
+    <v-sheet class="card neutral100--bg d-flex flex-column">
+>>>>>>> dev
       <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
-      <img :src="cover" class="rounded-lg rounded-b-0 card-img" />
+      <img :src="projectCover" class="rounded-lg rounded-b-0 flex-shrink-0" />
       <div class="card-content d-flex flex-column">
         <!-- CARD TOP START -->
-        <div class="card-content-top d-flex flex-column pa-6 pb-0 pt-1">
-          <div class="card-title font-weight-bold">{{ projectName }}</div>
-          <div class="card-subtitle font-weight-bold">
-            {{ shortDescription }}
+        <div class="card-content-top d-flex flex-column pa-6 pb-0">
+          <div class="d-flex align-center">
+            <v-avatar size="48" class="mr-4">
+              <v-img :src="projectLogo"> </v-img>
+            </v-avatar>
+            <div class="text-h5 clip-text flex-grow-1 font-weight-bold">{{ projectName }}</div>
+          </div>
+          <div class="text-subtitle-2 clip-text font-weight-bold">
+            {{ data.shortDescription }}
           </div>
         </div>
 
         <!-- CARD TOP END -->
         <v-spacer />
         <v-sheet
-          :class="upvote > downvote ? 'blue lighten-5 blue--text' : 'error lighten-5 error--text'"
-          class="ma-4 rounded d-flex align-center justify-center"
+          :class="isApproved ? 'blue lighten-5 blue--text' : 'error lighten-5 error--text'"
+          class="ma-4 mb-6 rounded d-flex align-center justify-center"
           height="36"
         >
-          {{ upvote > downvote ? 'UNAPPROVE for launch' : 'APPROVE for launch' }}
+          {{ isApproved ? 'APPROVE for launch' : 'UNAPPROVE for launch' }}
         </v-sheet>
-
         <!-- CARD BOTTOM START -->
-
         <div class="card-content-bottom">
           <v-divider />
           <div class="d-flex align-center mb-4 mx-6 mt-3">
@@ -34,8 +42,8 @@
             <div class="font-weight-bold number-count mr-1">{{ downvote }}%</div>
             <div><span class="error--text font-weight-bold">NO</span> votes</div>
           </div>
-          <div class="flag text-center py-2" :class="className">
-            <span class="text-uppercase">{{ props.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
+          <div class="flag text-center py-2" :class="type">
+            <span class="text-uppercase">{{ typeName }}</span>
           </div>
         </div>
       </div>
@@ -91,7 +99,9 @@
 </template>
 
 <script lang="ts">
+import { Metadata } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
+<<<<<<< HEAD
 
 interface Props {
   projectName?: string
@@ -147,6 +157,23 @@ export default class EndedVotingCard extends Vue {
   get downvote() {
     return this.props.downvote
   }
+=======
+import { get } from 'lodash'
+@Component
+export default class EndedVotingCard extends Vue {
+  @Prop({ required: true }) projectName!: string
+  @Prop({ required: true }) data!: Metadata
+  @Prop({ required: true }) type!: string
+  @Prop({ required: true }) status!: string
+  isApproved = this.status === 'approved'
+  // HARD CODED-------
+  upvote = this.isApproved ? Math.floor(Math.random() * 100) + 1 : 10
+  downvote = 100 - this.upvote
+  // ------------------
+  typeName = this.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
+  projectLogo = get(this.data, 'projectLogo', '')
+  projectCover = get(this.data, 'projectCover', '')
+>>>>>>> dev
 }
 </script>
 
@@ -175,9 +202,6 @@ export default class EndedVotingCard extends Vue {
       background: linear-gradient(180deg, $launchpad-light-1 0%, #fff9f3 80%);
     }
   }
-  .card-img {
-    flex-shrink: 0;
-  }
   .card-content {
     flex: 1;
     .card-content-top {
@@ -189,16 +213,6 @@ export default class EndedVotingCard extends Vue {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
-      }
-      .card-title {
-        @extend .clip-text;
-        font-size: em(28) !important;
-        line-height: em(36.4) !important;
-      }
-      .card-subtitle {
-        @extend .clip-text;
-        font-size: em(14) !important;
-        line-height: em(21) !important;
       }
     }
     .card-content-bottom {

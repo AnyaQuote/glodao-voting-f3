@@ -4,7 +4,7 @@
       <v-img src="@/assets/images/new-project--banner.png" />
     </v-col>
     <!-- --------------------------------------------------------------------------------------------------- -->
-    <v-col cols="8" v-if="!vm.isLogin">
+    <v-col cols="8" v-if="!vm.isLoggedIn">
       <v-sheet class="d-flex flex-column pa-8 rounded-lg" outlined>
         <div class="text-h6 font-weight-bold text-center mb-6">
           Please sign in with your wallet for applying project on DAO Voting
@@ -108,8 +108,8 @@ export default class ProjectRegist extends Vue {
   signed = false
   save = false
 
-  async signMessage() {
-    await this.vm.login()
+  signMessage() {
+    this.vm.signAndLogin()
   }
 
   saveWallet() {

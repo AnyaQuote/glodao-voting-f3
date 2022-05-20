@@ -1,7 +1,7 @@
 import { authStore } from '@/stores/auth-store'
-import { walletStore } from '@/stores/wallet-store'
 import Axios from 'axios'
 import qs from 'qs'
+import { get } from 'lodash-es'
 
 export type ApiRouteType =
   | 'applies'
@@ -14,14 +14,6 @@ export type ApiRouteType =
   | 'campaigns'
   | 'voting-pools'
 
-const axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
-axios.interceptors.request.use((config) => {
-  config.paramsSerializer = (params) => {
-    if ('_where' in params) return qs.stringify(params)
-    else return qs.stringify(params, { arrayFormat: 'repeat' })
-  }
-  return config
-})
 export class ApiHandler<T> {
   constructor(private axios, private route: ApiRouteType) {}
 
@@ -131,34 +123,34 @@ export class ApiHandlerJWT<T> {
   }
 
   async create(model: T, jwt?: string): Promise<T> {
+    let headers = this.headers
+    if (this.jwtOptions.create) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.post(this.route, model, {
-      headers: {
-        ...axios.defaults.headers,
-        Authorization: `Bearer ${jwt ?? authStore.jwt}`,
-      },
+      headers,
     })
     return res.data
   }
 
   async delete(id: any): Promise<T> {
+    let headers = this.headers
+    if (this.jwtOptions.delete) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.delete(`${this.route}/${id}`, {
-      headers: { Authorization: `Bearer ${authStore.jwt}` },
+      headers,
     })
     return res.data
   }
 
   async find<T>(params?: any, settings: { _sort?: string; _limit?: number; _start?: number } = {}): Promise<T[]> {
+    let headers = this.headers
     const settingDefault = { _sort: 'createdAt:DESC', _limit: 25, _start: 0 }
     params = { ...settingDefault, ...settings, ...(params ?? {}) }
+    if (this.jwtOptions.find) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.get(this.route, {
       params,
-      headers: {
-        ...axios.defaults.headers,
-        // Authorization: `Bearer ${walletStore.jwt}`,
-      },
+      headers,
     })
-    const lst = res.data
-    return lst
+    // const lst = res.data
+    return res.data
   }
 
   async findOne<T>(id: any, jwt?: string): Promise<T> {
@@ -170,8 +162,8 @@ export class ApiHandlerJWT<T> {
     } else {
       res = await this.axios.get(`${this.route}`, { headers })
     }
-    const result = res.data
-    return result
+    // const result = res.data
+    return res.data
   }
 
   async update(id: any, model?: any): Promise<T> {
@@ -187,6 +179,54 @@ export class ApiHandlerJWT<T> {
     }
     return res.data
   }
+}
+
+export class ApiService {
+  axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
+
+  // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
+  users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
+  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
+  voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
+
+  constructor() {
+    this.setupAuthInjection()
+  }
+
+  setupAuthInjection() {
+    this.axios.interceptors.request.use((config) => {
+      // ---- Stringify params in headers ----
+      config.paramsSerializer = (params) => {
+        if ('_where' in params) return qs.stringify(params)
+        else return qs.stringify(params, { arrayFormat: 'repeat' })
+      }
+      return config
+    })
+
+    this.axios.interceptors.response.use(
+      (response) => {
+        return response
+      },
+      (error) => {
+        if (get(error, 'response.status') === 401) {
+          console.log('i got 401')
+          // ---- Check expire token when sending request to api ----
+          authStore.checkJwtExpiration()
+        }
+        return Promise.reject(error)
+      }
+    )
+  }
+
+  async getFile(id: any) {
+    const res = await this.axios.get(`upload/files/${id}`)
+    return res.data
+  }
+
+  async uploadFile(model: any) {
+    const res = await this.axios.post('upload', model)
+    return res.data
+  }
 
   async signUp(publicAddress: string) {
     const res = await this.axios.post(`auth/local/register`, { publicAddress })
@@ -199,139 +239,4 @@ export class ApiHandlerJWT<T> {
     return res.data
   }
 }
-
-export class ApiService {
-  // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
-  users = new ApiHandlerJWT<any>(axios, 'users')
-  tasks = new ApiHandlerJWT<any>(axios, 'tasks', { find: false, count: false, findOne: false })
-  voting = new ApiHandlerJWT<any>(axios, 'voting-pools')
-
-  async getFile(id: any) {
-    const res = await axios.get(`upload/files/${id}`)
-    return res.data
-  }
-
-  async uploadFile(model: any) {
-    const res = await axios.post('upload', model)
-    return res.data
-  }
-
-  async fetchUser(access_token: string, access_secret: string, referrerCode?) {
-    const res = await axios.get('auth/twitter/callback', {
-      params: { access_token: access_token, access_secret: access_secret, referrerCode },
-    })
-    return res.data
-  }
-
-  // async verifySignMessage(walletAddress: string, signature: string, chain: string, id: string) {
-  //   const res = await axios.post(
-  //     'hunters/verifySignMessage',
-  //     {
-  //       walletAddress,
-  //       signature,
-  //       chain,
-  //       id,
-  //     },
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${authStore.jwt}`,
-  //       },
-  //     }
-  //   )
-  //   return res.data
-  // }
-
-  // async updateWalletAddress(walletAddress: string, signature: string, chain: string, id: string) {
-  //   const res = await axios.patch(
-  //     'hunters/updateWalletAddress',
-  //     {
-  //       walletAddress,
-  //       signature,
-  //       chain,
-  //       id,
-  //       hunterId: id,
-  //     },
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${authStore.jwt}`,
-  //       },
-  //     }
-  //   )
-  //   return res.data
-  // }
-
-  // async checkStakeStatus(walletAddress: string, hunterId: string, poolId = 0) {
-  //   const res = await axios.get('checkUserStaked', {
-  //     params: {
-  //       address: walletAddress,
-  //       poolId,
-  //       id: hunterId,
-  //     },
-  //     headers: {
-  //       Authorization: `Bearer ${authStore.jwt}`,
-  //     },
-  //   })
-  //   return res.data
-  // }
-
-  // async getReferrals(hunterId: string) {
-  //   const res = await axios.get('hunters/referrals', {
-  //     params: {
-  //       id: hunterId,
-  //     },
-  //     headers: {
-  //       Authorization: `Bearer ${authStore.jwt}`,
-  //     },
-  //   })
-  //   return res.data
-  // }
-
-  async applyForPriorityPool(
-    walletAddress: string,
-    signature: string,
-    chain: string,
-    applyId: string,
-    hunterId: string,
-    taskId: string,
-    poolId: number
-  ) {
-    const res = await axios.patch(
-      'applies/applyForPriority',
-      {
-        walletAddress,
-        applyId,
-        hunterId,
-        taskId,
-        poolId,
-        id: applyId,
-        signature,
-        chain,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${authStore.jwt}`,
-        },
-      }
-    )
-    return res.data
-  }
-
-  async updateTaskProcess(id: string, type: string, taskData?, optional?) {
-    const res = await axios.put(
-      `applies/${id}/task`,
-      {
-        taskData,
-        type,
-        optional,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${authStore.jwt}`,
-        },
-      }
-    )
-    return res.data
-  }
-}
-
 export const apiService = new ApiService()
