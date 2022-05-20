@@ -7,13 +7,13 @@
           <v-img :src="projectCover" contain class="p-relative"> </v-img>
           <!-- HOVER SHOW SECTION START -->
           <div class="img-front d-flex flex-column" :class="{ blur: hover }">
-            <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
+            <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
               🔥Trending
             </v-sheet>
 
             <div class="fill-height d-flex justify-center align-center mt-n6">
               <v-fade-transition>
-                <v-btn v-show="hover" class="rounded pa-2">
+                <v-btn v-show="hover" class="rounded pa-2" @click="openDetail">
                   <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
                   <span class="font-weight-medium">VOTE NOW</span>
                 </v-btn>
@@ -68,6 +68,7 @@
 <script lang="ts">
 import { Metadata } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RoutePaths } from '@/router'
 import { get } from 'lodash'
 
 @Component({
@@ -80,9 +81,14 @@ export default class LiveVotingCard extends Vue {
   @Prop({ required: true }) data!: Metadata
   @Prop({ required: true }) type!: string
   @Prop({ required: true }) endDate!: string
+  @Prop({ required: true }) unicode!: string
   typeName = this.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
   projectLogo = get(this.data, 'projectLogo', '')
   projectCover = get(this.data, 'projectCover', '')
+
+  openDetail() {
+    this.$router.push(RoutePaths.voting_detail + this.unicode)
+  }
 }
 </script>
 
@@ -119,9 +125,6 @@ export default class LiveVotingCard extends Vue {
       left: 0;
       &.blur {
         background: rgba($color: #000000, $alpha: 0.5);
-      }
-      .label {
-        align-self: start;
       }
     }
   }
