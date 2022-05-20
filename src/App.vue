@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <navigation-drawer />
+    <navigation-drawer v-model="drawer" />
     <navigation-bar v-if="$vuetify.breakpoint.mdAndUp" />
-    <mobile-navigation-bar v-if="$vuetify.breakpoint.smAndDown" />
+    <mobile-navigation-bar v-if="$vuetify.breakpoint.smAndDown" v-model="drawer" />
     <v-main class="neutral15">
       <router-view></router-view>
     </v-main>
@@ -16,11 +16,8 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Provide, Vue, Watch } from 'vue-property-decorator'
-import { AppProvider, appProvider } from './app-providers'
-// import { walletStore } from './stores/wallet-store'
-import { localdata } from '@/helpers/local-data'
-import { get } from 'lodash'
+import { Component, Provide, Vue } from 'vue-property-decorator'
+import { AppProvider } from './app-providers'
 
 @Observer
 @Component({
@@ -29,29 +26,38 @@ import { get } from 'lodash'
   },
 })
 export default class App extends Vue {
-  @Provide() providers: AppProvider = appProvider
-  // wallet = this.providers.wallet
-
-  @Watch('$route.query', { immediate: true }) onRefChanged(val: string) {
-    if (val) {
-      const ref = get(val, 'ref', '')
-      if (ref && !localdata.referralCode) localdata.referralCode = ref
-    }
-  }
+  @Provide() providers = new AppProvider(this.$router)
+  wallet = this.providers.wallet
+  drawer = false
 
   mounted() {
-    this.providers.router = this.$router
-    // walletStore.start()
+    this.providers.wallet.start()
   }
-
-  drawer = false
 
   changeTheme() {
     this.providers.toggleLightMode(this.$vuetify)
   }
+
+  toggleDrawer(state: boolean) {
+    this.drawer = state
+  }
 }
 </script>
 <style lang="scss">
+.container {
+  max-width: em(1090) !important;
+}
+
+// .container {
+//   padding: 0 16px !important;
+//   max-width: 1130px;
+// }
+.font-weight-400 {
+  font-weight: 400 !important;
+}
+.font-weight-600 {
+  font-weight: 600 !important;
+}
 .theme--dark {
   .date-picker-dialog-custom {
     .v-date-picker-header {
@@ -115,9 +121,7 @@ export default class App extends Vue {
 .fill-height {
   height: 100% !important;
 }
-.container {
-  max-width: 1090px !important;
-}
+
 .v-pagination .v-icon.v-icon {
   font-size: em(16);
 }
@@ -159,6 +163,12 @@ export default class App extends Vue {
 }
 .p-absolute {
   position: absolute !important;
+}
+.absolute-space {
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 .p-relative {
   position: relative !important;

@@ -1,4 +1,5 @@
 import { authStore } from '@/stores/auth-store'
+import { walletStore } from '@/stores/wallet-store'
 import Axios from 'axios'
 import qs from 'qs'
 
@@ -149,11 +150,12 @@ export class ApiHandlerJWT<T> {
   async find<T>(params?: any, settings: { _sort?: string; _limit?: number; _start?: number } = {}): Promise<T[]> {
     const settingDefault = { _sort: 'createdAt:DESC', _limit: 25, _start: 0 }
     params = { ...settingDefault, ...settings, ...(params ?? {}) }
-    let headers = this.headers
-    if (this.jwtOptions.find) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.get(this.route, {
       params,
-      headers,
+      headers: {
+        ...axios.defaults.headers,
+        // Authorization: `Bearer ${walletStore.jwt}`,
+      },
     })
     const lst = res.data
     return lst
@@ -186,25 +188,23 @@ export class ApiHandlerJWT<T> {
     return res.data
   }
 
-  async register(publicAddress: string) {
+  async signUp(publicAddress: string) {
     const res = await this.axios.post(`auth/local/register`, { publicAddress })
     return res.data
   }
 
-  async login(username: string, password: string) {
-    const res = await this.axios.post(`auth/local`, { identifier: username, password })
+  async signIn(model) {
+    const { publicAddress, signature } = model
+    const res = await this.axios.post(`auth/signin`, { publicAddress, signature })
     return res.data
   }
 }
 
 export class ApiService {
   // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
-  applies = new ApiHandlerJWT<any>(axios, 'applies', { find: false, count: false })
   users = new ApiHandlerJWT<any>(axios, 'users')
-  hunters = new ApiHandlerJWT<any>(axios, 'hunters', { count: false })
   tasks = new ApiHandlerJWT<any>(axios, 'tasks', { find: false, count: false, findOne: false })
-  campaigns = new ApiHandlerJWT<any>(axios, 'campaigns')
-  voting = new ApiHandler<any>(axios, 'voting-pools')
+  voting = new ApiHandlerJWT<any>(axios, 'voting-pools')
 
   async getFile(id: any) {
     const res = await axios.get(`upload/files/${id}`)

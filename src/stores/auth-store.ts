@@ -4,9 +4,10 @@ import router from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
 import { get } from 'lodash-es'
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
+import { walletStore } from './wallet-store'
 
 export class AuthStore {
   @observable attachWalletDialog = false
@@ -30,6 +31,15 @@ export class AuthStore {
         snackController.error('Your session has expired! Please log in')
       }
     }
+
+    reaction(
+      () => walletStore.account,
+      () => {
+        this.resetJwt()
+        this.resetUser()
+        localdata.resetUser()
+      }
+    )
   }
 
   @action.bound changeAttachWalletDialog(value: boolean) {
@@ -111,7 +121,7 @@ export class AuthStore {
 
   @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
     if (!wallet) return ''
-    const message = `https://glodao.io/bounty wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
+    const message = `GloDAO wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
     // const data = new TextEncoder().encode(message)
     if (chainType === 'sol') {
       //solana sign message

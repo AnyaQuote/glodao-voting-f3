@@ -12,6 +12,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'voting',
+        name: 'voting-list',
         component: () => import('@/modules/voting/pages/voting-home.vue'),
         meta: {
           auth: true,
@@ -20,6 +21,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'voting/:id',
+        name: 'voting-detail',
         component: () => import('@/modules/voting/pages/voting-detail.vue'),
         meta: {
           auth: true,
@@ -34,42 +36,48 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'projects',
-        component: () => import('@/modules/regist/pages/regist-home.vue'),
+        name: 'project-list',
+        component: () => import('@/modules/regist/pages/project-list.vue'),
         meta: {
           auth: true,
-          title: 'Application',
+          title: 'Projects',
         },
       },
+      // change below to detail page, which have not implement yet
       {
         path: 'projects/:id',
-        component: () => import('@/modules/regist/pages/regist-home.vue'),
+        name: 'project-detail',
+        component: () => import('@/modules/regist/pages/project-list.vue'),
         meta: {
           auth: true,
-          title: 'Application',
+          title: 'Projects',
         },
       },
       {
         path: 'new-project',
+        name: 'new-project',
         component: () => import('@/modules/regist/pages/new-project.vue'),
         meta: {
           auth: true,
-          title: 'Application',
+          title: 'New Application',
         },
       },
       {
         path: 'new-project/launchpad',
+        name: 'launchpad-apply',
         component: () => import('@/modules/regist/pages/launchpad-form.vue'),
         meta: {
           auth: true,
-          title: 'Application',
+          title: 'Launchpad Application',
         },
       },
       {
         path: 'new-project/bounty',
+        name: 'bounty-apply',
         component: () => import('@/modules/regist/pages/bounty-form.vue'),
         meta: {
           auth: true,
-          title: 'Application',
+          title: 'Bounty Application',
         },
       },
       {
@@ -81,6 +89,30 @@ const routes: Array<RouteConfig> = [
         },
       },
     ],
+  },
+  {
+    path: '/applications',
+    component: () => import('@/modules/applications/pages/applications-project-page.vue'),
+    meta: {
+      auth: true,
+      title: 'Application',
+    },
+  },
+  {
+    path: '/dao-voting',
+    component: () => import('@/modules/dao-voting/pages/dao-voting-page.vue'),
+    meta: {
+      auth: true,
+      title: 'Application',
+    },
+  },
+  {
+    path: '/project-detail-bounty',
+    component: () => import('@/modules/project-detail-bounty/page/project-detail-bounty-page.vue'),
+    meta: {
+      auth: true,
+      title: 'Application',
+    },
   },
   {
     path: '*',

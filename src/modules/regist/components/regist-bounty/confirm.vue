@@ -70,11 +70,11 @@
 
 <script lang="ts">
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
-import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
+import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
 @Component
 export default class ConfirmPayment extends Vue {
-  @Inject() vm!: BountyFormViewModel
+  @Inject() vm!: BountyApplyViewModel
   @Ref('payment-form') form
 
   submit() {
