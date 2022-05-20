@@ -1,6 +1,10 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <div class="card-wrapper d-flex fill-height" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
+    <div
+      v-if="!$vuetify.breakpoint.xs"
+      class="card-wrapper d-flex fill-height"
+      :class="type === 'bounty' ? 'bounty' : 'launchpad'"
+    >
       <v-sheet class="card d-flex flex-column">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
@@ -57,6 +61,73 @@
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-sheet>
     </div>
+    <div v-else class="card-wrapper rounded-lg" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
+      <v-sheet class="rounded-lg" style="overflow: hidden">
+        <div class="p-relative">
+          <v-img :src="cover" contain class="rounded-t-lg" />
+          <div class="p-absolute absolute-space fill-height fill-width d-flex flex-column justify-space-between">
+            <div class="mt-1 ml-1">
+              <v-sheet
+                width="90"
+                height="30"
+                class="text-caption d-flex align-center justify-center white orange--text text--lighten-1 rounded font-weight-medium"
+              >
+                🔥TRENDING
+              </v-sheet>
+            </div>
+            <div class="pa-4 pr-8">
+              <div class="d-flex align-stretch mb-1">
+                <div class="d-flex align-center mr-2">
+                  <img :src="require('@/assets/icons/cryptocurrency.svg')" width="36" />
+                </div>
+                <div class="d-flex align-center neutral100--text font-weight-bold" style="font-size: 18px">
+                  {{ projectName }}
+                </div>
+              </div>
+              <v-sheet height="44" class="transparent line-clamp text-caption neutral100--text">
+                {{ shortDescription }}
+              </v-sheet>
+              <div class="d-flex">
+                <v-sheet
+                  width="45"
+                  height="20"
+                  class="neutral20 rounded-lg mr-2 d-flex align-center justify-center text-uppercase"
+                  style="font-size: 9px"
+                  v-for="(label, index) in labels"
+                  :key="index"
+                >
+                  {{ label }}
+                </v-sheet>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!---->
+        <div class="pa-4 font-weight-bold text-subtitle-1">10 : 12 : 23 : 24 left</div>
+        <v-divider></v-divider>
+        <div class="pa-4 d-flex">
+          <v-img
+            style="margin-top: 1px"
+            :src="require('@/assets/icons/start.svg')"
+            max-width="17"
+            max-height="17"
+            class="mr-2"
+          ></v-img>
+          <div class="text- center">
+            <span class="text-subtitle-2 mr-1 font-weight-600">{{ upvote }}</span>
+            <span>votes for launching</span>
+          </div>
+        </div>
+        <div class="rounded-lg rounded-t-">
+          <div
+            class="text-caption orange orange--text text--lighten-1 text-uppercase d-flex align-center justify-center"
+          >
+            Bounty Project
+          </div>
+          <div style="height: 4px" class="orange lighten-1 rounded-lg"></div>
+        </div>
+      </v-sheet>
+    </div>
   </v-hover>
 </template>
 
@@ -75,8 +146,7 @@ interface Props {
 
 const defaultProps = (): Props => ({
   projectName: 'Hydro Wind Energy',
-  shortDescription:
-    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+  shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, ",
   upvote: '90',
   type: 'bounty',
   cover:
@@ -124,6 +194,12 @@ export default class LiveVotingCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .card {
   $bounty-light-1: #ff7a00;
   $bounty-light-2: #ffe0c2;
