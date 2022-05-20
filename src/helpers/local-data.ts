@@ -1,3 +1,5 @@
+import { ChainType } from '@/blockchainHandlers'
+
 class LocalData {
   get user(): any {
     return JSON.parse(localStorage.getItem('gloDaoUser') || '{}')
@@ -24,13 +26,21 @@ class LocalData {
     else localStorage.removeItem('ref')
   }
 
-  resetUser() {
+  resetAuth() {
     localStorage.removeItem('gloDaoUser')
     localStorage.removeItem('gloDaoJwt')
   }
 
   reset() {
     localStorage.clear()
+  }
+
+  get lastChain(): ChainType | null {
+    return localStorage.getItem('lastChain') as ChainType
+  }
+  set lastChain(value: ChainType | null) {
+    if (value) localStorage.setItem('lastChain', value)
+    else localStorage.removeItem('lastChain')
   }
 }
 

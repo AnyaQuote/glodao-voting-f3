@@ -24,8 +24,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Provide } from 'vue-property-decorator'
-import { BountyFormViewModel } from '../viewmodels/bounty-form-viewmodel'
+import { authStore } from '@/stores/auth-store'
+import { Component, Vue, Provide, Inject } from 'vue-property-decorator'
+import { BountyApplyViewModel } from '../viewmodels/bounty-apply-viewmodel'
 
 @Component({
   components: {
@@ -35,7 +36,7 @@ import { BountyFormViewModel } from '../viewmodels/bounty-form-viewmodel'
   },
 })
 export default class ProjectRegistDetail extends Vue {
-  @Provide() vm = new BountyFormViewModel()
+  @Provide() vm = new BountyApplyViewModel()
 }
 </script>
 

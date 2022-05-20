@@ -3,10 +3,12 @@ import { localdata } from '@/helpers/local-data'
 import router from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
-import { get } from 'lodash-es'
-import { action, computed, observable } from 'mobx'
+import { get, isEmpty, isArray } from 'lodash-es'
+import { action, computed, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
+import { walletStore } from './wallet-store'
+import { promiseHelper } from '@/helpers/promise-helper'
 
 export class AuthStore {
   @observable attachWalletDialog = false
@@ -18,18 +20,12 @@ export class AuthStore {
   @observable user: any = {}
 
   constructor() {
-    //
     if (localdata.jwt) this.changeJwt(localdata.jwt)
     if (localdata.user) this.changeUser(localdata.user)
-    if (this.jwt) {
-      const { exp } = jwtDecode(this.jwt) as any
-      const isExpire = Date.now() >= exp * 1000
-      // If the token has expired
-      if (isExpire) {
-        this.logout()
-        snackController.error('Your session has expired! Please log in')
-      }
-    }
+    reaction(
+      () => walletStore.account,
+      () => this.logout
+    )
   }
 
   @action.bound changeAttachWalletDialog(value: boolean) {
@@ -45,17 +41,17 @@ export class AuthStore {
   @asyncAction *saveAttachWallet() {
     //
   }
-  @asyncAction *getUserData() {
-    try {
-      const res = yield apiService.users.findOne(this.user.id, this.jwt)
-      this.changeUser(res)
-    } catch (error) {
-      snackController.error('Fail to get user data')
-    }
-  }
-  @action.bound resetWalletDialogInput() {
-    this.walletDialogInput = ''
-  }
+  // @asyncAction *getUserData() {
+  //   try {
+  //     const res = yield apiService.users.findOne(this.user.id, this.jwt)
+  //     this.changeUser(res)
+  //   } catch (error) {
+  //     snackController.error('Fail to get user data')
+  //   }
+  // // }
+  // @action.bound resetWalletDialogInput() {
+  //   this.walletDialogInput = ''
+  // }
   @action.bound changeTwitterLoginDialog(value: boolean) {
     this.twitterLoginDialog = value
   }
@@ -75,61 +71,73 @@ export class AuthStore {
     this.user = {}
   }
 
-  @asyncAction *fetchUser(access_token: string, access_secret: string) {
+  @action logout() {
     try {
-      const res = yield apiService.fetchUser(access_token, access_secret, localdata.referralCode)
-      let user = res.user
-      const jwt = res.jwt
-      if (!user.hunter) {
-        user = yield apiService.users.findOne(user.id, jwt)
-      }
-      this.changeJwt(jwt)
-      this.changeUser(user)
-      this.changeTwitterLoginDialog(false)
-      localdata.referralCode = ''
-    } catch (error) {
-      snackController.error(get(error, 'response.data.message', '') || (error as string))
-    } finally {
-      router.push('/bounty').catch(() => {
-        //
-      })
-    }
-  }
-
-  @asyncAction *logout() {
-    try {
-      yield router.push('/bounty').catch(() => {
-        //
-      })
       this.resetJwt()
       this.resetUser()
-      localdata.resetUser()
+      localdata.resetAuth()
     } catch (error) {
-      snackController.error(error as string)
+      snackController.commonError(error)
     }
   }
 
-  @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
-    if (!wallet) return ''
-    const message = `https://glodao.io/bounty wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
-    // const data = new TextEncoder().encode(message)
+  @asyncAction *login() {
+    if (!this.isAuthenticated && walletStore.account) {
+      walletStore.resetJwt()
+      let error,
+        result
+        // ---- Check if an user existed ----
+      ;[error, result] = yield promiseHelper.handle(apiService.users.find({ username: walletStore.account }))
+
+      // ---- If no user found, sign up for new user ----
+      if (!error && isEmpty(result)) {
+        ;[error, result] = yield promiseHelper.handle(apiService.signUp(walletStore.account))
+      } else if (error) {
+        throw error
+      }
+
+      const user = isArray(result) ? get(result, '[0]') : result
+
+      // ---- Generate a signature for the new user ----
+      let signature
+      ;[error, result] = yield promiseHelper.handle(
+        this.signMessage(walletStore.account, walletStore.chainType, user?.nonce, walletStore.selectedAdapter)
+      )
+      if (result) {
+        signature = result
+      } else {
+        throw error
+      }
+      // ---- With given signature, perform login the user ----
+      ;[error, result] = yield promiseHelper.handle(
+        apiService.signIn({
+          publicAddress: walletStore.account,
+          signature,
+        })
+      )
+
+      if (result) {
+        this.changeUser(get(result, 'user'))
+        this.changeJwt(get(result, 'jwt'))
+      } else {
+        throw error
+      }
+    }
+  }
+
+  @asyncAction *signMessage(account, chainType, nonce, selectedAdapter: any = null) {
+    if (!account) return ''
+    const message = `GloDAO wants to: \n Sign message with account \n ${account} - One time nonce: ${nonce}`
+    const data = new TextEncoder().encode(message)
     if (chainType === 'sol') {
       //solana sign message
-      // const a = (selectedAdapter || this.selectedAdapter) as any
-      // let res
-      // if (a.signMessage) {
-      //   res = yield a.signMessage(data)
-      // } else {
-      //   res = yield a._wallet.signMessage(data)
-      // }
-      // return Object.values(res?.signature || res)
     } else {
       //bsc sign message
       if (typeof window === 'undefined') {
         return ''
       }
       if (window.ethereum) {
-        const request = { method: 'personal_sign', params: [message, wallet] }
+        const request = { method: 'personal_sign', params: [message, account] }
         return yield window.ethereum.request(request)
       } else {
         throw new Error('Plugin Metamask is not installed!')
@@ -137,22 +145,18 @@ export class AuthStore {
     }
   }
 
-  @computed get accountAge() {
-    if (!this.user?.twitterCreatedTime) return 0
-    else return moment().diff(moment(this.user.twitterCreatedTime), 'days')
+  @action checkJwtExpiration() {
+    const { exp } = jwtDecode(this.jwt) as any
+    const isExpired = Date.now() >= exp * 1000
+    if (isExpired) {
+      this.logout()
+      snackController.commonError('Your session has expired! Please log in')
+      this.login()
+    }
   }
 
-  @computed get registeredWallet() {
-    return get(this.user, 'hunter.address', '')
-  }
-
-  @computed get userRole() {
-    return get(this.user, 'role.type', 'public')
-  }
-
-  @computed get hunterId() {
-    return get(this.user, 'hunter.id', '')
+  @computed get isAuthenticated() {
+    return !!this.jwt
   }
 }
-
 export const authStore = new AuthStore()

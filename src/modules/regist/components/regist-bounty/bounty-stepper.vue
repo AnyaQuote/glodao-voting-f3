@@ -63,12 +63,12 @@
 import { floor } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { BountyFormViewModel } from '../../viewmodels/bounty-form-viewmodel'
+import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
 @Observer
 @Component
 export default class ApplicationTimeline extends Vue {
-  @Inject() vm!: BountyFormViewModel
+  @Inject() vm!: BountyApplyViewModel
 
   get section() {
     return floor(this.vm.step)

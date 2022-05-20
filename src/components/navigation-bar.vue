@@ -4,17 +4,10 @@
       <v-row class="d-flex align-center justify-space-between">
         <v-col col="12" sm="12" md="1">
           <div class="pl-4 cursor-pointer" @click="openLink('https://glodao.io/')">
-            <v-img
-              :src="
-                $vuetify.theme.dark
-                  ? require(`@/assets/images/glodao-logo-dark.svg`)
-                  : require(`@/assets/images/glodao-logo.svg`)
-              "
-              max-height="50"
-              max-width="75"
-            ></v-img>
+            <v-img :src="require('@/assets/images/' + logoImg + '.svg')" max-height="50" max-width="75"></v-img>
           </div>
         </v-col>
+        <!-- ----------------------------------------------------------------------------------------------- -->
         <v-col class="d-flex align-center justify-space-between pr-10">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
@@ -22,9 +15,7 @@
             </template>
             <span>Coming Soon!</span>
           </v-tooltip>
-          <!-- <router-link to="/bounty" class="text-decoration-none px-4" active-class="blue-diversity--text">
-            <div class="text-none nav-btn-text">Bounty Hunter</div>
-          </router-link> -->
+          <!-- ----------------------------------------------------------------------------------------------- -->
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <div class="text-none nav-btn-text d-flex align-center bluePrimary--text" v-on="on" v-bind="attrs">
@@ -70,6 +61,7 @@
               </v-list>
             </v-sheet>
           </v-menu>
+          <!-- ----------------------------------------------------------------------------------------------- -->
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <div class="text-none nav-btn-text d-flex align-center" v-on="on" v-bind="attrs">
@@ -97,12 +89,38 @@
               </v-list>
             </v-sheet>
           </v-menu>
-          <v-tooltip bottom>
+          <!-- ----------------------------------------------------------------------------------------------- -->
+          <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <div class="text-none nav-btn-text cursor-pointer px-4" v-bind="attrs" v-on="on">DAO Voting</div>
+              <div class="text-none nav-btn-text d-flex align-center" v-on="on" v-bind="attrs">
+                DAO Voting <v-icon>mdi-chevron-down</v-icon>
+              </div>
             </template>
-            <span>Coming Soon!</span>
-          </v-tooltip>
+            <v-sheet class="neutral100" width="250">
+              <v-list>
+                <v-list-item-group>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <router-link tag="button" class="px-4 d-flex align-center fill-width cursor-pointer" to="/voting">
+                        <v-icon class="mr-2" size="20">mdi-vote</v-icon>
+                        <div class="neutral10--text text-body-2">Voting</div>
+                      </router-link>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                  <!-- ---------------------- -->
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <router-link tag="div" class="px-4 d-flex align-center cursor-pointer" to="/projects">
+                        <v-icon class="mr-2" size="20">mdi-application-edit-outline</v-icon>
+                        <div class="neutral10--text text-body-2">Your Project</div>
+                      </router-link>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item-group>
+              </v-list>
+            </v-sheet>
+          </v-menu>
+          <!-- ----------------------------------------------------------------------------------------------- -->
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <div class="text-none nav-btn-text d-flex align-center" v-on="on" v-bind="attrs">
@@ -149,11 +167,10 @@
             </v-sheet>
           </v-menu>
         </v-col>
-        <!-- <v-col cols="12" sm="12" md="2" class="d-flex justify-end">
-        </v-col> -->
+
         <v-col class="d-flex justify-end align-center col-auto">
-          <!-- <connect-wallet class="fill-width" /> -->
-          <div class="ml-6 d-flex align-center justify-end pr-6">
+          <connect-wallet class="fill-width" />
+          <!-- <div class="ml-6 d-flex align-center justify-end pr-6">
             <v-btn
               depressed
               outlined
@@ -191,7 +208,6 @@
                     <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
                   </v-btn>
                   <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen()">
-                    <!-- <v-icon class="mr-2">mdi-wallet-outline</v-icon> -->
                     <v-img
                       :src="require('@/assets/icons/crown-mini.svg')"
                       max-height="22"
@@ -207,8 +223,8 @@
                 </v-sheet>
               </v-sheet>
             </v-menu>
-          </div>
-          <div>
+          </div> -->
+          <div class="ml-4">
             <v-btn icon @click="changeTheme" class="rounded-circle change-theme-btn" width="40" height="40" outlined>
               <v-icon color="bluePrimary">
                 {{ !$vuetify.theme.dark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
@@ -243,11 +259,8 @@ export default class NavigationBar extends Vue {
   changeTheme() {
     this.providers.toggleLightMode(this.$vuetify)
   }
-
-  goToHuntingHistoryScreen() {
-    this.$router.push('/hunting-history').catch(() => {
-      //
-    })
+  get logoImg() {
+    return this.$vuetify.theme.dark ? 'glodao-logo-dark' : 'glodao-logo'
   }
 }
 </script>
