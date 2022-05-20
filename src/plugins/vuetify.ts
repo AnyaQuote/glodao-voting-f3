@@ -89,6 +89,10 @@ export default new Vuetify({
         mint: {
           base: '#00E5FF',
         },
+        orange: {
+          base: '#FFE0C2',
+          lighten1: '#FF7A00',
+        },
       },
       dark: {
         primary: {
