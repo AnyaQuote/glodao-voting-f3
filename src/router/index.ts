@@ -18,6 +18,7 @@ export enum RoutePaths {
 
 const routes: Array<RouteConfig> = [
   { path: '/', redirect: '/NotFound' },
+  // -------------------- VOTING ROUTER SECTION ---------------------
   {
     path: '/',
     component: () => import('@/modules/voting/container/container.vue'),
@@ -43,29 +44,11 @@ const routes: Array<RouteConfig> = [
       },
     ],
   },
+  // ------------------- APPLICATION ROUTER SECTION -----------------------
   {
     path: '/',
     component: () => import('@/modules/regist/container/container.vue'),
     children: [
-      {
-        path: 'projects',
-        name: 'project-list',
-        component: () => import('@/modules/regist/pages/project-list.vue'),
-        meta: {
-          auth: true,
-          title: 'Projects',
-        },
-      },
-      // change below to detail page, which have not implement yet
-      {
-        path: 'projects/:id',
-        name: 'project-detail',
-        component: () => import('@/modules/regist/pages/project-list.vue'),
-        meta: {
-          auth: true,
-          title: 'Projects',
-        },
-      },
       {
         path: 'new-project',
         name: 'new-project',
@@ -91,6 +74,31 @@ const routes: Array<RouteConfig> = [
         meta: {
           auth: true,
           title: 'Bounty Application',
+        },
+      },
+    ],
+  },
+  // --------------- PROJECT ROUTER SECTION -------------------
+  {
+    path: '/',
+    component: () => import('@/modules/project/container/container.vue'),
+    children: [
+      {
+        path: 'projects',
+        name: 'project-list',
+        component: () => import('@/modules/project/pages/project-list.vue'),
+        meta: {
+          auth: false,
+          title: 'Projects',
+        },
+      },
+      {
+        path: 'projects/:code',
+        name: 'project-detail',
+        component: () => import('@/modules/project/pages/project-list.vue'),
+        meta: {
+          auth: false,
+          title: 'Project detail',
         },
       },
     ],
@@ -136,6 +144,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('to:::', to)
   if (!get(to, 'name', '')) {
     next('/comming-soon')
   } else {
@@ -143,11 +152,13 @@ router.beforeEach((to, from, next) => {
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
     // const isFormPage = to.name === 'bounty-apply' || to.name === 'launchpad-apply'
     // const requireParams = to.matched.some((m) => m.meta?.params === true)
-    // If is in bounty form or launchpad form without isAuth => back to new-project
     if ((requiredAuth && isAuthenticated) || !requiredAuth) {
+      console.log('TH1')
       next()
     } else if (requiredAuth && !isAuthenticated) {
+      console.log('TH2')
       //
+      next()
     } else {
       console.error(`VueRouter error ${to.name} requriedAuth=${requiredAuth} isAuthenticated=${isAuthenticated}`)
     }
