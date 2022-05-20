@@ -45,7 +45,26 @@ export default class App extends Vue {
 </script>
 <style lang="scss">
 .container {
+  padding: 0 16px !important;
   max-width: em(1090) !important;
+}
+
+.header-title {
+  line-height: 130%;
+  font-size: 20px;
+
+  @include breakpoint(tablet) {
+    font-size: 28px;
+  }
+}
+
+.header-subtitle {
+  line-height: 130%;
+  font-size: 16px;
+
+  @include breakpoint(tablet) {
+    font-size: 24px;
+  }
 }
 
 // .container {

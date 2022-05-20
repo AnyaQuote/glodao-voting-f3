@@ -1,6 +1,6 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <div class="card-wrapper d-flex fill-height" :class="type">
+    <div v-if="!$vuetify.breakpoint.xs" class="card-wrapper d-flex fill-height" :class="type">
       <v-sheet class="card d-flex flex-column neutral100--bg">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
@@ -62,6 +62,73 @@
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-sheet>
     </div>
+    <div v-else class="card-wrapper rounded-lg" :class="type">
+      <v-sheet class="rounded-lg" style="overflow: hidden">
+        <div class="p-relative">
+          <v-img :src="projectCover" height="221" class="rounded-t-lg">
+            <div class="fill-height fill-width d-flex flex-column justify-space-between">
+              <v-sheet
+                width="90"
+                height="30"
+                class="text-caption d-flex align-center justify-center white orange--text text--lighten-1 rounded font-weight-medium mt-1 ml-1"
+              >
+                🔥TRENDING
+              </v-sheet>
+              <div class="pa-4 pr-8">
+                <div class="d-flex align-stretch mb-1">
+                  <v-avatar size="36">
+                    <img :src="projectLogo" />
+                  </v-avatar>
+                  <div class="spacer white--text font-weight-bold d-flex align-center pl-3" style="font-size: 18px">
+                    {{ projectName }}
+                  </div>
+                </div>
+                <v-sheet height="40" class="transparent white--text text-caption line-clamp mb-1">
+                  {{ data.shortDescription }}
+                </v-sheet>
+                <div class="d-flex">
+                  <v-sheet
+                    v-for="(field, i) in data.fields.slice(0, 3)"
+                    :key="i"
+                    height="20"
+                    width="43"
+                    class="neutral20 neutral0--text rounded-lg d-flex align-center justify-center text-uppercase mr-1"
+                    style="font-size: 9px"
+                  >
+                    {{ field }}
+                  </v-sheet>
+                </div>
+              </div>
+            </div>
+          </v-img>
+        </div>
+        <!---->
+        <div class="pa-4 font-weight-bold text-subtitle-1">10 : 12 : 23 : 24 left</div>
+        <v-divider></v-divider>
+        <div class="pa-4 d-flex">
+          <v-img
+            style="margin-top: 1px"
+            :src="require('@/assets/icons/start.svg')"
+            max-width="17"
+            max-height="17"
+            class="mr-2"
+          >
+          </v-img>
+          <div class="text- center">
+            <span class="text-subtitle-2 mr-1 font-weight-600">{{ 90 }}</span>
+            <span>votes for launching</span>
+          </div>
+        </div>
+        <div class="rounded-lg rounded-t-">
+          <div
+            class="text-caption orange orange--text text--lighten-1 text-uppercase d-flex align-center justify-center"
+          >
+            Bounty Project
+          </div>
+          <div style="height: 4px" class="orange lighten-1 rounded-lg"></div>
+        </div>
+      </v-sheet>
+    </div>
   </v-hover>
 </template>
 
@@ -93,6 +160,12 @@ export default class LiveVotingCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .card {
   $bounty-light-1: #ff7a00;
   $bounty-light-2: #ffe0c2;

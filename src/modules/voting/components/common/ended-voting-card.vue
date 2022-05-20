@@ -1,5 +1,5 @@
 <template>
-  <div class="card-wrapper d-flex fill-height" :class="type">
+  <div v-if="!$vuetify.breakpoint.xs" class="card-wrapper d-flex fill-height" :class="type">
     <v-sheet class="card neutral100--bg d-flex flex-column">
       <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
       <img :src="projectCover" class="rounded-lg rounded-b-0 flex-shrink-0" />
@@ -45,12 +45,61 @@
       <!-- CARD BOTTOM END -->
     </v-sheet>
   </div>
+  <div v-else class="mb-6">
+    <div class="card-wrapper rounded-lg" :class="type">
+      <div class="white rounded-lg" style="overflow: hidden">
+        <div class="pa-6">
+          <div class="d-flex align-stretch mb-2">
+            <img :src="require('@/assets/icons/cryptocurrency.svg')" width="36" class="mr-2" />
+            <div class="d-flex align-center font-weight-bold" style="font-size: 18px">
+              {{ projectName }}
+            </div>
+          </div>
+          <div style="height: 40px" class="neutral0--text text-caption line-clamp mb-2">
+            {{ data.shortDescription }}
+          </div>
+          <v-btn
+            class="rounded-lg text-none blue lighten-1 blue--text text-caption font-weight-400"
+            elevation="0"
+            block
+          >
+            APPROVED for launch
+          </v-btn>
+        </div>
+        <v-divider></v-divider>
+        <div class="text-subtitle-2 rounded-lg pa-6 d-flex align-center" style="line-height: 150%">
+          <img :src="require('@/assets/icons/start.svg')" max-width="17" max-height="17" class="mr-2" />
+          <div class="font-weight-bold mt-1">
+            {{ upvote }}%
+            <span class="green--text text--lighten-1">YES </span>
+            <span class="font-weight-600"> votes</span>
+          </div>
+          <v-sheet height="4" width="4" class="blue mx-1 rounded-circle pa-0"></v-sheet>
+          <div class="font-weight-bold mt-1">
+            {{ downvote }}%
+            <span class="error--text">NO</span>
+            <span class="font-weight-600"> votes</span>
+          </div>
+        </div>
+        <div class="rounded-lg">
+          <div
+            class="orange--text text--lighten-1 text-caption d-flex align-center justify-center pt-1"
+            style="height: 24px; background: var(--v-orange-base)"
+          >
+            BOUNTY PROJECT
+          </div>
+          <div style="height: 4px; background: var(--v-orange-lighten1)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Metadata } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { get } from 'lodash'
+
 @Component
 export default class EndedVotingCard extends Vue {
   @Prop({ required: true }) projectName!: string
@@ -69,6 +118,12 @@ export default class EndedVotingCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .card {
   $bounty-light-1: #ff7a00;
   $bounty-light-2: #ffe0c2;

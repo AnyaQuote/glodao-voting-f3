@@ -13,13 +13,15 @@
 
     <v-col cols="12">
       <!-- HINT BOX START -->
-      <v-sheet class="box rounded-lg pa-8" elevation="3">
-        <div class="text-h5 font-weight-bold mb-2">Vote for new projects launching on GLODAO (1 xGLD = 1 vote)</div>
-        <div class="box-subtitle neutral10--text font-weight-medium mb-5">
+      <v-sheet class="box rounded-lg pa-4 pa-sm-8" elevation="3">
+        <div class="text-sm-h5 neutral0--text font-weight-bold mb-2" style="font-size: 18px">
+          Vote for new projects launching on GLODAO (1 xGLD = 1 vote)
+        </div>
+        <div class="neutral10--text text-subtitle-2 font-weight-medium mb-6 mb-sm-5">
           Voting does not decrease your xGLD, it merely shows the weight of your vote.
         </div>
-        <v-btn class="btnA text-none" height="40" depressed>
-          <span class="white--text mx-4">Learn more</span>
+        <v-btn width="105" height="40" class="text-none linear-blue--bg" depressed>
+          <span class="white--text mx-4 font-weight-bold">Learn more</span>
         </v-btn>
       </v-sheet>
       <!-- HINT BOX END -->
@@ -57,14 +59,16 @@
       <!-- CARDS SECTION END -->
     </v-col>
 
-    <v-col cols="12">
+    <v-col cols="12" class="mb-16">
       <v-sheet class="box rounded-lg pa-8" elevation="3">
-        <div class="text-h5 font-weight-bold mb-2">FREE APPLY YOUR PROJECT FOR LAUNCHING AND MARKETING</div>
-        <div class="box-subtitle neutral10--text font-weight-medium mb-5">
+        <div class="text-sm-h5 font-weight-bold mb-2" style="font-size: 18px">
+          FREE APPLY YOUR PROJECT FOR LAUNCHING AND MARKETING
+        </div>
+        <div class="box-subtitle text-subtitle-2 neutral10--text font-weight-medium mb-6">
           Voting does not decrease your xGLD, it merely shows the weight of your vote.
         </div>
-        <v-btn class="linear-blue--bg text-none" height="40" depressed>
-          <span class="white--text mx-4">Submit your project</span>
+        <v-btn width="155" height="40" class="linear-blue--bg text-none" depressed>
+          <span class="white--text mx-4 text-subtitle-2">Submit your project</span>
         </v-btn>
       </v-sheet>
     </v-col>
@@ -87,8 +91,8 @@
           />
         </v-col>
         <v-col cols="12">
-          <div class="text-center mb-72">
-            <v-btn class="text-none" depressed color="blue" outlined>View all pools</v-btn>
+          <div class="text-center mb-9">
+            <v-btn class="text-none font-weight-bold" depressed color="blue" outlined>View all pools</v-btn>
           </div>
         </v-col>
       </v-row>
@@ -118,6 +122,7 @@ export default class VotingHome extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/breakpoint-custom.scss';
 .mt-72 {
   margin-top: em(72);
 }
