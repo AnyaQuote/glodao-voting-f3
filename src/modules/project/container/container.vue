@@ -6,7 +6,7 @@
       </v-sheet>
     </v-img>
     <v-container>
-      <router-view></router-view>
+      <router-view class="mb-15"></router-view>
     </v-container>
   </div>
 </template>
