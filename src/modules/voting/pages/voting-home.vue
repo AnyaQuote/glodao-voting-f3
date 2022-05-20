@@ -54,8 +54,13 @@
 
       <!-- CARDS SECTION START -->
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-for="(props, i) in [1, 2, 3, 4, 5, 6]" :key="i">
-          <live-voting-card />
+        <v-col cols="12" sm="6" md="4" v-for="(item, i) in vm.votingList" :key="i">
+          <live-voting-card
+            :projectName="item.projectName"
+            :data="item.data"
+            :type="item.type"
+            :endDate="item.endDate"
+          />
         </v-col>
       </v-row>
       <!-- CARDS SECTION END -->
@@ -84,9 +89,14 @@
           </div>
         </div>
       </div>
-      <v-row no-gutters dense>
-        <v-col cols="12" sm="6" md="4" v-for="(props, i) in [1, 2, 3]" :key="i">
-          <ended-voting-card />
+      <v-row>
+        <v-col cols="12" sm="6" md="4" v-for="(item, i) in vm.endedList" :key="i">
+          <ended-voting-card
+            :projectName="item.projectName"
+            :data="item.data"
+            :type="item.type"
+            :status="item.status"
+          />
         </v-col>
         <v-col cols="12" class="mt-4">
           <div class="text-center mb-9">
@@ -99,7 +109,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
+import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 
 @Component({
   components: {
@@ -109,7 +120,13 @@ import { Component, Vue } from 'vue-property-decorator'
     'ended-voting-card': () => import('@/modules/voting/components/common/ended-voting-card.vue'),
   },
 })
-export default class VotingHome extends Vue {}
+export default class VotingHome extends Vue {
+  @Provide() vm = new VotingListViewModel()
+
+  mounted() {
+    this.vm.fetchVotingPools()
+  }
+}
 </script>
 
 <style lang="scss" scoped>

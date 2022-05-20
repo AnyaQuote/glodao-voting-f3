@@ -1,15 +1,10 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <div
-      v-if="!$vuetify.breakpoint.xs"
-      class="card-wrapper d-flex fill-height"
-      :class="type === 'bounty' ? 'bounty' : 'launchpad'"
-    >
-      <v-sheet class="card d-flex flex-column">
+    <div v-if="!$vuetify.breakpoint.xs" class="card-wrapper d-flex fill-height" :class="type">
+      <v-sheet class="card d-flex flex-column neutral100--bg">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
-          <v-img :src="cover" contain class="img-back" />
+          <v-img :src="projectCover" contain class="p-relative"> </v-img>
           <!-- HOVER SHOW SECTION START -->
           <div class="img-front d-flex flex-column" :class="{ blur: hover }">
             <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
@@ -30,13 +25,19 @@
         <!-- -------------------------------------------------------------------------------------------------- -->
         <div class="card-content flex-grow-1 d-flex flex-column">
           <!-- CARD TOP START -->
-          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
-            <div class="card-title font-weight-bold">{{ projectName }}</div>
-            <div class="card-subtitle font-weight-bold mb-4">
-              {{ shortDescription }}
+          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6">
+            <div class="d-flex align-center">
+              <v-avatar size="48" class="mr-4">
+                <v-img :src="projectLogo"> </v-img>
+              </v-avatar>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ projectName }}</div>
+            </div>
+
+            <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4">
+              {{ data.shortDescription }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
+              <v-chip v-for="(field, i) in data.fields" :key="i" class="rounded-lg ma-1">{{ field }}</v-chip>
             </div>
           </div>
           <!-- CARD TOP END -->
@@ -45,15 +46,15 @@
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class="text-h5" :to="endTime"> </countdown>
+            <countdown class="text-h5 my-3" :to="endDate"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold mr-1">{{ upvote }}</div>
+              <div class="font-weight-bold mr-1">90</div>
               <div>votes for launching</div>
             </div>
-            <div class="flag text-center py-2" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-              <span class="text-uppercase">{{ type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            <div class="flag text-center py-2" :class="type">
+              <span class="text-uppercase">{{ typeName }}</span>
             </div>
           </div>
           <!-- CARD BOTTOM END -->
@@ -61,46 +62,45 @@
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-sheet>
     </div>
-    <div v-else class="card-wrapper rounded-lg" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
+    <div v-else class="card-wrapper rounded-lg" :class="type">
       <v-sheet class="rounded-lg" style="overflow: hidden">
         <div class="p-relative">
-          <v-img :src="cover" contain class="rounded-t-lg" />
-          <div class="p-absolute absolute-space fill-height fill-width d-flex flex-column justify-space-between">
-            <div class="mt-1 ml-1">
+          <v-img :src="projectCover" height="221" class="rounded-t-lg">
+            <div class="fill-height fill-width d-flex flex-column justify-space-between">
               <v-sheet
                 width="90"
                 height="30"
-                class="text-caption d-flex align-center justify-center white orange--text text--lighten-1 rounded font-weight-medium"
+                class="text-caption d-flex align-center justify-center white orange--text text--lighten-1 rounded font-weight-medium mt-1 ml-1"
               >
                 🔥TRENDING
               </v-sheet>
-            </div>
-            <div class="pa-4 pr-8">
-              <div class="d-flex align-stretch mb-1">
-                <div class="d-flex align-center mr-2">
-                  <img :src="require('@/assets/icons/cryptocurrency.svg')" width="36" />
+              <div class="pa-4 pr-8">
+                <div class="d-flex align-stretch mb-1">
+                  <v-avatar size="32">
+                    <img :src="projectLogo" />
+                  </v-avatar>
+                  <div class="spacer white--text font-weight-bold d-flex align-center pl-3" style="font-size: 18px">
+                    {{ projectName }}
+                  </div>
                 </div>
-                <div class="d-flex align-center neutral100--text font-weight-bold" style="font-size: 18px">
-                  {{ projectName }}
-                </div>
-              </div>
-              <v-sheet height="44" class="transparent line-clamp text-caption neutral100--text">
-                {{ shortDescription }}
-              </v-sheet>
-              <div class="d-flex">
-                <v-sheet
-                  width="45"
-                  height="20"
-                  class="neutral20 rounded-lg mr-2 d-flex align-center justify-center text-uppercase"
-                  style="font-size: 9px"
-                  v-for="(label, index) in labels"
-                  :key="index"
-                >
-                  {{ label }}
+                <v-sheet height="40" class="transparent white--text text-caption line-clamp mb-1">
+                  {{ data.shortDescription }}
                 </v-sheet>
+                <div class="d-flex">
+                  <v-sheet
+                    v-for="(field, i) in data.fields.slice(0, 3)"
+                    :key="i"
+                    height="20"
+                    width="43"
+                    class="neutral20 neutral0--text rounded-lg d-flex align-center justify-center text-uppercase mr-1"
+                    style="font-size: 9px"
+                  >
+                    {{ field }}
+                  </v-sheet>
+                </div>
               </div>
             </div>
-          </div>
+          </v-img>
         </div>
         <!---->
         <div class="pa-4 font-weight-bold text-subtitle-1">10 : 12 : 23 : 24 left</div>
@@ -112,9 +112,10 @@
             max-width="17"
             max-height="17"
             class="mr-2"
-          ></v-img>
+          >
+          </v-img>
           <div class="text- center">
-            <span class="text-subtitle-2 mr-1 font-weight-600">{{ upvote }}</span>
+            <span class="text-subtitle-2 mr-1 font-weight-600">{{ 90 }}</span>
             <span>votes for launching</span>
           </div>
         </div>
@@ -132,28 +133,9 @@
 </template>
 
 <script lang="ts">
+import { Metadata } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-
-interface Props {
-  projectName?: string
-  shortDescription?: string
-  labels?: string[]
-  endTime?: string
-  upvote?: string
-  type?: string
-  cover?: string
-}
-
-const defaultProps = (): Props => ({
-  projectName: 'Hydro Wind Energy',
-  shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, ",
-  upvote: '90',
-  type: 'bounty',
-  cover:
-    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-  endTime: '2022-08-11T17:00:00.000Z',
-  labels: ['finance', 'gaming'],
-})
+import { get } from 'lodash'
 
 @Component({
   components: {
@@ -161,35 +143,13 @@ const defaultProps = (): Props => ({
   },
 })
 export default class LiveVotingCard extends Vue {
-  @Prop({ default: defaultProps }) props!: Props
-
-  get projectName() {
-    return this.props.projectName
-  }
-
-  get shortDescription() {
-    return this.props.shortDescription
-  }
-
-  get labels() {
-    return this.props.labels
-  }
-
-  get endTime() {
-    return this.props.endTime
-  }
-
-  get type() {
-    return this.props.type
-  }
-
-  get cover() {
-    return this.props.cover
-  }
-
-  get upvote() {
-    return this.props.upvote
-  }
+  @Prop({ required: true }) projectName!: string
+  @Prop({ required: true }) data!: Metadata
+  @Prop({ required: true }) type!: string
+  @Prop({ required: true }) endDate!: string
+  typeName = this.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
+  projectLogo = get(this.data, 'projectLogo', '')
+  projectCover = get(this.data, 'projectCover', '')
 }
 </script>
 
@@ -252,11 +212,6 @@ export default class LiveVotingCard extends Vue {
         @extend .clip-text;
         font-size: em(28) !important;
         line-height: em(36.4) !important;
-      }
-      .card-subtitle {
-        @extend .clip-text;
-        font-size: em(14) !important;
-        line-height: em(21) !important;
       }
     }
     .card-content-bottom {

@@ -26,7 +26,7 @@ class LocalData {
     else localStorage.removeItem('ref')
   }
 
-  resetUser() {
+  resetAuth() {
     localStorage.removeItem('gloDaoUser')
     localStorage.removeItem('gloDaoJwt')
   }
