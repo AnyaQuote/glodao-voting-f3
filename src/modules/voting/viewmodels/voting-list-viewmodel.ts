@@ -7,6 +7,7 @@ import { asyncAction } from 'mobx-utils'
 export class VotingListViewModel {
   @observable voteList: VotingPools[] = []
   @observable filterOption = 'bounty';
+
   @asyncAction *fetchVotingPools() {
     try {
       const res = yield apiService.voting.find()
@@ -20,11 +21,11 @@ export class VotingListViewModel {
   }
 
   @computed get filteredVotingList() {
-    return this.voteList.filter((item) => item.type === this.filterOption)
+    return this.votingList.filter((item) => item.type === this.filterOption)
   }
 
   @computed get votingList() {
-    return this.votingList.filter((item) => item.status === 'voting')
+    return this.voteList.filter((item) => item.status === 'voting')
   }
 
   @computed get endedList() {
