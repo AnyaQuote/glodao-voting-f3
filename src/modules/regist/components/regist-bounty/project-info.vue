@@ -36,12 +36,12 @@
       <v-chip-group
         multiple
         column
-        :value="vm.projectInfo.keywords"
-        @change="vm.changeProjectInfo('keywords', $event)"
+        :value="vm.projectInfo.fields"
+        @change="vm.changeProjectInfo('fields', $event)"
         active-class="active"
       >
-        <v-chip v-for="key in keywords" :key="key" :value="key" class="neutral10--text text-caption text-uppercase">
-          {{ key }}
+        <v-chip v-for="field in fields" :key="field" :value="field" class="neutral10--text text-caption text-uppercase">
+          {{ field }}
         </v-chip>
       </v-chip-group>
       <div class="label font-weight-bold mt-6">Website and social link</div>
@@ -156,7 +156,7 @@ export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('project-info-form') form
   valid = false
-  keywords = ['gaming', 'NFT', 'finance']
+  fields = ['gaming', 'NFT', 'finance']
   submit() {
     this.form.validate() && this.vm.nextStep(2.1)
   }
