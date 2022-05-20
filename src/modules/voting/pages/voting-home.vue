@@ -66,7 +66,7 @@
       <!-- CARDS SECTION END -->
     </v-col>
 
-    <v-col cols="12">
+    <v-col cols="12" class="mb-16">
       <v-sheet class="box rounded-lg pa-8" elevation="3">
         <div class="text-sm-h5 font-weight-bold mb-2" style="font-size: 18px">
           FREE APPLY YOUR PROJECT FOR LAUNCHING AND MARKETING
@@ -98,7 +98,7 @@
             :status="item.status"
           />
         </v-col>
-        <v-col cols="12" class="mt-4">
+        <v-col cols="12">
           <div class="text-center mb-9">
             <v-btn class="text-none font-weight-bold" depressed color="blue" outlined>View all pools</v-btn>
           </div>
