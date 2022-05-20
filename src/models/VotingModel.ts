@@ -6,6 +6,7 @@ export interface Metadata {
   tokenContract?: string
   additionLink?: string
   chainID?: string
+  socialLinks: any
 }
 
 export interface VotingPools {
