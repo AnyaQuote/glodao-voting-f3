@@ -1,110 +1,81 @@
 <template>
-  <v-hover v-slot="{ hover }">
-    <div class="card-wrapper d-flex fill-height" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-      <v-sheet v-bind="$attrs" class="card d-flex flex-column">
-        <!-- ------------------------------------------------------------------------------------------------- -->
-        <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <v-img :src="cover" contain class="img-back" />
-          <!-- HOVER SHOW SECTION START -->
-          <div class="img-front d-flex flex-column" :class="{ blur: hover }">
-            <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
-              🔥Trending
-            </v-sheet>
+  <v-slide-item>
+    <v-hover v-slot="{ hover }">
+      <div class="card-wrapper d-flex fill-height" :class="type">
+        <v-sheet v-bind="$attrs" class="card d-flex flex-column">
+          <!-- ------------------------------------------------------------------------------------------------- -->
+          <div class="card-image rounded-lg rounded-b-0 flex-shrink-0 p-relative">
+            <v-img :src="projectCover" contain class="p-relative" />
+            <!-- HOVER SHOW SECTION START -->
+            <div class="p-absolute absolute-space d-flex flex-column" :class="{ blur: hover }">
+              <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
+                🔥Trending
+              </v-sheet>
 
-            <div class="fill-height d-flex justify-center align-center mt-n6">
-              <v-fade-transition>
-                <v-btn v-show="hover" class="rounded pa-2">
-                  <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
-                  <span class="font-weight-medium">VOTE NOW</span>
-                </v-btn>
-              </v-fade-transition>
+              <div class="fill-height d-flex justify-center align-center mt-n6">
+                <v-fade-transition>
+                  <v-btn v-show="hover" class="rounded pa-2" @click="openDetail">
+                    <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
+                    <span class="font-weight-medium">VOTE NOW</span>
+                  </v-btn>
+                </v-fade-transition>
+              </div>
             </div>
+            <!-- HOVER SHOW SECTION END -->
           </div>
-          <!-- HOVER SHOW SECTION END -->
-        </div>
-        <!-- -------------------------------------------------------------------------------------------------- -->
-        <div class="card-content flex-grow-1 d-flex flex-column">
-          <!-- CARD TOP START -->
-          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
-            <div class="card-title font-weight-bold">{{ projectName }}</div>
-            <div class="card-subtitle font-weight-bold mb-4">
-              {{ shortDescription }}
+          <!-- -------------------------------------------------------------------------------------------------- -->
+          <div class="card-content flex-grow-1 d-flex flex-column">
+            <!-- CARD TOP START -->
+            <div class="d-flex flex-column flex-grow-1 pa-6 pt-1">
+              <div class="d-flex align-center">
+                <v-avatar size="48" class="mr-4">
+                  <v-img :src="projectLogo" />
+                </v-avatar>
+                <div class="text-h5 flex-grow-1 font-weight-bold">{{ projectName }}</div>
+              </div>
+              <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4">
+                {{ data.shortDescription }}
+              </div>
+              <div class="text-uppercase ma-n1">
+                <v-chip v-for="(field, i) in data.fields" :key="i" class="rounded-lg ma-1">{{ field }}</v-chip>
+              </div>
             </div>
-            <div class="text-uppercase ma-n1">
-              <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
-            </div>
-          </div>
-          <!-- CARD TOP END -->
+            <!-- CARD TOP END -->
 
-          <!-- CARD BOTTOM START -->
-          <v-spacer />
-          <div class="card-content-bottom">
-            <div class="flag text-center py-2" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-              <span class="text-uppercase">{{ type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            <!-- CARD BOTTOM START -->
+            <v-spacer />
+            <div class="card-content-bottom">
+              <div class="text-center py-2" :class="type">
+                <span class="text-uppercase">{{ typeName }}</span>
+              </div>
             </div>
+            <!-- CARD BOTTOM END -->
           </div>
-          <!-- CARD BOTTOM END -->
-        </div>
-        <!-- --------------------------------------------------------------------------------------------------- -->
-      </v-sheet>
-    </div>
-  </v-hover>
+          <!-- --------------------------------------------------------------------------------------------------- -->
+        </v-sheet>
+      </div>
+    </v-hover>
+  </v-slide-item>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-
-interface Props {
-  projectName?: string
-  shortDescription?: string
-  labels?: string[]
-  endTime?: string
-  upvote?: string
-  type?: string
-  cover?: string
-}
-
-const propsValue = (): Props => ({
-  projectName: 'Hydro Wind Energy',
-  shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-  labels: ['NFT', 'gaming', 'finance'],
-  endTime: '',
-  upvote: '',
-  type: 'bounty',
-  cover:
-    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-})
+import { Metadata } from '@/models/VotingModel'
+import { RoutePaths } from '@/router'
+import { get } from 'lodash'
 
 @Component
 export default class LiveCompactCard extends Vue {
-  @Prop({ default: propsValue }) props!: Props
+  @Prop({ required: true }) projectName!: string
+  @Prop({ required: true }) data!: Metadata
+  @Prop({ required: true }) type!: string
+  @Prop({ required: true }) unicode!: string
+  typeName = this.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
+  projectLogo = get(this.data, 'projectLogo', '')
+  projectCover = get(this.data, 'projectCover', '')
 
-  get projectName() {
-    return this.props.projectName
-  }
-
-  get shortDescription() {
-    return this.props.shortDescription
-  }
-
-  get labels() {
-    return this.props.labels
-  }
-
-  get endTime() {
-    return this.props.endTime
-  }
-
-  get type() {
-    return this.props.type
-  }
-
-  get cover() {
-    return this.props.cover
-  }
-
-  get upvote() {
-    return this.props.upvote
+  openDetail() {
+    this.$router.push(RoutePaths.voting_detail + this.unicode)
   }
 }
 </script>
@@ -128,61 +99,19 @@ export default class LiveCompactCard extends Vue {
       background: linear-gradient(180deg, $launchpad-light-1 0%, #fff9f3 80%);
     }
   }
-  .card-image {
-    position: relative;
-    flex-shrink: 0;
-    .img-back {
-      position: relative;
-    }
-    .img-front {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      &.blur {
-        background: rgba($color: #000000, $alpha: 0.5);
-      }
-      .label {
-        align-self: start;
-      }
-    }
+  .blur {
+    background: rgba($color: #000000, $alpha: 0.5);
   }
-  .card-content {
-    .card-content-top {
-      .clip-text {
-        word-break: break-word;
-        text-overflow: hidden;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-      .card-title {
-        @extend .clip-text;
-        font-size: em(28) !important;
-        line-height: em(36.4) !important;
-      }
-      .card-subtitle {
-        @extend .clip-text;
-        font-size: em(14) !important;
-        line-height: em(21) !important;
-      }
-    }
-    .card-content-bottom {
-      .flag {
-        &.bounty {
-          background: $bounty-light-2 !important;
-          border-bottom: 4px solid $bounty-light-1;
-          color: $bounty-light-1;
-        }
-        &.launchpad {
-          background: $launchpad-light-2 !important;
-          border-bottom: 4px solid $launchpad-light-1;
-          color: $launchpad-light-1;
-        }
-      }
-    }
+
+  .bounty {
+    background: $bounty-light-2 !important;
+    border-bottom: 4px solid $bounty-light-1;
+    color: $bounty-light-1;
+  }
+  .launchpad {
+    background: $launchpad-light-2 !important;
+    border-bottom: 4px solid $launchpad-light-1;
+    color: $launchpad-light-1;
   }
 }
 </style>
