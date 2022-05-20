@@ -65,7 +65,7 @@
     <div v-else class="card-wrapper rounded-lg" :class="type">
       <v-sheet class="rounded-lg" style="overflow: hidden">
         <div class="p-relative">
-          <v-img src="https://i.redd.it/tn0k20exrnb51.jpg" height="221" class="rounded-t-lg">
+          <v-img :src="projectCover" height="221" class="rounded-t-lg">
             <div class="fill-height fill-width d-flex flex-column justify-space-between">
               <v-sheet
                 width="90"
@@ -77,7 +77,7 @@
               <div class="pa-4 pr-8">
                 <div class="d-flex align-stretch mb-1">
                   <v-avatar size="36">
-                    <img src="https://i.redd.it/tn0k20exrnb51.jpg" />
+                    <img :src="projectLogo" />
                   </v-avatar>
                   <div class="spacer white--text font-weight-bold d-flex align-center pl-3" style="font-size: 18px">
                     {{ projectName }}
