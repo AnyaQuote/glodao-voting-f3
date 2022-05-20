@@ -1,9 +1,20 @@
 import { authStore } from '@/stores/auth-store'
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-import { get } from 'lodash'
+import VueRouter, { RouteConfig, Route } from 'vue-router'
+import { get, isEmpty } from 'lodash'
 
 Vue.use(VueRouter)
+
+export enum RoutePaths {
+  voting_list = '/voting',
+  voting_detail = '/voting/',
+  project_list = '/projects',
+  project_detail = '/projects/',
+  new_application = '/new-project',
+  new_bounty_application = '/new-project/bounty',
+  new_launchpad_application = '/new-project/launchpad',
+  comming_soon = '/comming-soon',
+}
 
 const routes: Array<RouteConfig> = [
   { path: '/', redirect: '/NotFound' },
@@ -21,12 +32,12 @@ const routes: Array<RouteConfig> = [
         },
       },
       {
-        path: 'voting/:id',
+        path: 'voting/:code',
         name: 'voting-detail',
         component: () => import('@/modules/voting/pages/voting-detail.vue'),
         meta: {
           auth: false,
-          code: true,
+          params: true,
           title: 'Voting detail',
         },
       },
@@ -125,22 +136,20 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('to:::', to)
   if (!get(to, 'name', '')) {
     next('/comming-soon')
   } else {
     const isAuthenticated = authStore.isAuthenticated
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    const isFormPage = to.name === 'bounty-apply' || to.name === 'launchpad-apply'
+    // const isFormPage = to.name === 'bounty-apply' || to.name === 'launchpad-apply'
+    // const requireParams = to.matched.some((m) => m.meta?.params === true)
     // If is in bounty form or launchpad form without isAuth => back to new-project
     if ((requiredAuth && isAuthenticated) || !requiredAuth) {
       next()
     } else if (requiredAuth && !isAuthenticated) {
-      if (isFormPage) {
-        next('/new-project')
-      } else {
-        next('/voting')
-      }
+      //
+    } else {
+      console.error(`VueRouter error ${to.name} requriedAuth=${requiredAuth} isAuthenticated=${isAuthenticated}`)
     }
   }
 })
