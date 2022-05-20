@@ -17,7 +17,7 @@ const projectInfoDefault = {
   projectCover: null,
   projectLogo: null,
   fields: [],
-  socials: {},
+  socialLinks: {},
   tokenAddress: '',
 }
 

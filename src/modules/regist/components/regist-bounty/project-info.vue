@@ -47,8 +47,8 @@
       <div class="label font-weight-bold mt-6">Website and social link</div>
       <app-text-field
         class="thin-border"
-        :value="$_get(vm.projectInfo, 'socials.website')"
-        @input="vm.changeProjectInfo('socials.website', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.website')"
+        @input="vm.changeProjectInfo('socialLinks.website', $event)"
         :outlined="false"
         append-icon="mdi-link"
       >
@@ -64,8 +64,8 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="$_get(vm.projectInfo, 'socials.medium')"
-        @input="vm.changeProjectInfo('socials.medium', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.medium')"
+        @input="vm.changeProjectInfo('socialLinks.medium', $event)"
         append-icon="mdi-link"
       >
         <template #prepend>
@@ -80,8 +80,8 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="$_get(vm.projectInfo, 'socials.twitter')"
-        @input="vm.changeProjectInfo('socials.twitter', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.twitter')"
+        @input="vm.changeProjectInfo('socialLinks.twitter', $event)"
         append-icon="mdi-link"
       >
         <template #prepend>
@@ -99,8 +99,8 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="$_get(vm.projectInfo, 'socials.telegram')"
-        @input="vm.changeProjectInfo('socials.telegram', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.telegram')"
+        @input="vm.changeProjectInfo('socialLinks.telegram', $event)"
         append-icon="mdi-link"
       >
         <template #prepend>
