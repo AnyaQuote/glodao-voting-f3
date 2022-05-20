@@ -48,15 +48,21 @@
 
     <v-col cols="12">
       <div class="nominated-section mt-72">
-        <div class="header">
-          <span class="header-title mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</span>
-        </div>
+        <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
       </div>
       <div class="app-slide-group">
         <v-slide-group class="ma-n1 px-1">
-          <v-slide-item v-for="i in [1, 2, 3, 4, 5]" :key="i" class="ma-1 debug">
-            <live-compact-card width="348" />
-          </v-slide-item>
+          <live-compact-card
+            v-for="(item, i) in vm.votingList"
+            :key="i"
+            class="ma-1"
+            width="348"
+            :projectName="item.projectName"
+            :data="item.data"
+            :status="item.status"
+            :type="item.type"
+            :unicode="item.unicode"
+          />
         </v-slide-group>
       </div>
     </v-col>
@@ -67,6 +73,7 @@
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
 import { get } from 'lodash-es'
+
 @Component({
   components: {
     'voting-detail-overview': () => import('../components/voting-detail-overview.vue'),
@@ -88,9 +95,8 @@ export default class VotingDetail extends Vue {
       href: '/voting/123',
     },
   ]
-
   mounted() {
-    this.vm.getUnicode(get(this.$route, 'query.id'))
+    this.vm.getUnicode(get(this.$route, 'params.code'))
   }
 }
 </script>
@@ -106,10 +112,6 @@ export default class VotingDetail extends Vue {
   .header {
     font-size: em(28);
     line-height: em(36.4);
-    .header-title {
-    }
-    .header-subtitle {
-    }
   }
 }
 </style>
