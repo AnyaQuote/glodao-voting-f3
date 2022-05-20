@@ -102,8 +102,8 @@
                   <v-list-item-content>
                     <v-list-item-title>
                       <router-link tag="button" class="px-4 d-flex align-center fill-width cursor-pointer" to="/voting">
-                        <v-icon class="mr-2" size="20">mdi-vote</v-icon>
-                        <div class="neutral10--text text-body-2">Voting</div>
+                        <v-icon class="mr-2" size="20" color="bluePrimary">mdi-fingerprint</v-icon>
+                        <div class="neutral10--text text-body-2">DAO Voting</div>
                       </router-link>
                     </v-list-item-title>
                   </v-list-item-content>
@@ -111,7 +111,6 @@
                   <v-list-item-content>
                     <v-list-item-title>
                       <router-link tag="div" class="px-4 d-flex align-center cursor-pointer" to="/projects">
-                        <v-icon class="mr-2" size="20">mdi-application-edit-outline</v-icon>
                         <div class="neutral10--text text-body-2">Your Project</div>
                       </router-link>
                     </v-list-item-title>

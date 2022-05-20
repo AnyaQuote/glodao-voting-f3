@@ -151,14 +151,17 @@
             <v-list-item-icon> <v-icon>mdi-vote</v-icon> </v-list-item-icon>
             <v-list-item-title>
               <router-link tag="div" to="/voting">
-                <div class="neutral10--text">Voting</div>
+                <div class="neutral10--text">
+                  <v-icon color="bluePrimary">mdi-fingerprint</v-icon>
+                  <span>DAO Voting</span>
+                </div>
               </router-link>
             </v-list-item-title>
           </v-list-item>
           <v-list-item active-class="filter-bluePrimary">
             <v-list-item-icon> <v-icon>mdi-application-edit-outline</v-icon> </v-list-item-icon>
             <v-list-item-title>
-              <router-link tag="div" to="/projects">
+              <router-link tag="div" to="/projects/hydro-wind-enegry-10">
                 <div class="neutral10--text">Your project</div>
               </router-link>
             </v-list-item-title>
