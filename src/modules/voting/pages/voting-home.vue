@@ -29,8 +29,8 @@
       <!-- HEADER START -->
       <div class="nominated-section mt-72">
         <div class="header d-flex align-center">
-          <span class="header-title mr-5 font-weight-bold text-uppercase">Nominatied project</span>
-          <span class="header-subtitle neutral10--text font-weight-medium">Vote for launch on GLODAO</span>
+          <span class="mr-5 font-weight-bold text-uppercase">Nominatied project</span>
+          <span class="neutral10--text font-weight-medium">Vote for launch on GLODAO</span>
         </div>
       </div>
       <!-- HEADER END -->
@@ -50,6 +50,7 @@
             :data="item.data"
             :type="item.type"
             :endDate="item.endDate"
+            :unicode="item.unicode"
           />
         </v-col>
       </v-row>
@@ -71,10 +72,8 @@
     <v-col cols="12">
       <div class="nominated-section mt-72">
         <div class="header d-flex align-center">
-          <span class="header-title mr-5 font-weight-bold text-uppercase">ENDED VOTING</span>
-          <span class="header-subtitle neutral10--text font-weight-medium"
-            >All potential projects are voted by Glodao user
-          </span>
+          <span class="mr-5 font-weight-bold text-uppercase">ENDED VOTING</span>
+          <span class="neutral10--text font-weight-medium">All potential projects are voted by Glodao user </span>
         </div>
       </div>
       <v-row>
@@ -84,6 +83,7 @@
             :data="item.data"
             :type="item.type"
             :status="item.status"
+            :unicode="item.unicode"
           />
         </v-col>
         <v-col cols="12">
@@ -138,10 +138,6 @@ export default class VotingHome extends Vue {
   .header {
     font-size: em(28);
     line-height: em(36.4);
-    .header-title {
-    }
-    .header-subtitle {
-    }
   }
 }
 </style>
