@@ -13,7 +13,7 @@
         <div class="text-subtitle-1">Your connected wallet:</div>
         <div class="text-subtitle-2 d-flex align-center">
           <icon-chain class="mr-1" />
-          <span>GxmhrPKccNjjfv898RSXXPZqrCM7LkdcMRfYNA65ywQT</span>
+          <span>{{ vm.walletAddress }}</span>
         </div>
       </div>
       <div class="col-2">
@@ -39,7 +39,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { walletStore } from '@/stores/wallet-store'
+import { Component, Vue, Inject } from 'vue-property-decorator'
+import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 
 @Component({
   components: {
@@ -47,6 +49,7 @@ import { Component, Vue } from 'vue-property-decorator'
   },
 })
 export default class VotingDetailButton extends Vue {
+  @Inject() vm!: VotingDetailViewModel
   connected = false
   voted = true
 }
