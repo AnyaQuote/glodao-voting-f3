@@ -149,7 +149,7 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
 @Component({
   components: {
-    'image-upload-field': () => import('../common/image-upload-field.vue'),
+    'image-upload-field': () => import('@/components/image-upload-field.vue'),
   },
 })
 export default class ProjectInfo extends Vue {
