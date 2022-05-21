@@ -77,14 +77,6 @@ const routes: Array<RouteConfig> = [
           title: 'Bounty Application',
         },
       },
-      {
-        path: 'new-mission',
-        component: () => import('@/modules/regist/pages/mission-form.vue'),
-        meta: {
-          auth: true,
-          title: 'Application',
-        },
-      },
     ],
   },
   // --------------- PROJECT ROUTER SECTION -------------------
