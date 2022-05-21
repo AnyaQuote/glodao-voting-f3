@@ -1,38 +1,56 @@
-import { observable, action } from 'mobx'
+import { appProvider } from '@/app-providers'
+import { loadingController } from '@/components/global-loading/global-loading-controller'
+import { VotingPools } from '@/models/VotingModel'
+import { isEmpty } from 'lodash-es'
+import { observable, action, computed, IReactionDisposer, reaction, autorun } from 'mobx'
+import { asyncAction } from 'mobx-utils'
 export class ProjectListViewModel {
-  @observable hideProjectFilter = false
+  @observable filterRejected = false
+  @observable filterType = 'bounty'
+  @observable projects: VotingPools[] = []
 
-  @observable bountyProjects = [
-    {
-      logo: 'voting-trending--logo.png',
-      name: 'Dragon Gaming',
-      token: 'SB',
-      description:
-        'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam Velit officia consequat duis enim velit mollit. Exercitation veniam ',
-      start: '24/02/2022 10:00 pm',
-      end: '24/02/2022 10:00 pm',
-      status: 'approved',
-      totalVote: 600,
-      yesVote: 100,
-    },
-    {
-      logo: 'voting-trending--logo.png',
-      name: 'Dragon Gaming',
-      token: 'SB',
-      description:
-        'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam Velit officia consequat duis enim velit mollit. Exercitation veniam ',
-      start: '24/02/2022 10:00 pm',
-      end: '24/02/2022 10:00 pm',
-      status: 'rejected',
-      totalVote: 600,
-      yesVote: 100,
-    },
-  ]
+  _disposer: IReactionDisposer
 
   constructor() {
-    //
+    console.log(this.projects)
+    this._disposer = autorun(() => {
+      // This requires to run 2 times before stopping when value not changing
+      if (!isEmpty(appProvider.wallet.account) && isEmpty(this.projects)) {
+        this.fetchMyProject()
+      }
+    })
   }
-  @action.bound hideProject() {
-    this.hideProjectFilter = !this.hideProjectFilter
+
+  @asyncAction *fetchMyProject() {
+    try {
+      loadingController.increaseRequest()
+      const res = yield appProvider.api.voting.find({
+        ownerAddress: appProvider.wallet.account,
+      })
+      this.projects = res
+    } catch (error) {
+      appProvider.snackbar.commonError(error)
+      appProvider.router.go(-1)
+    } finally {
+      loadingController.decreaseRequest()
+    }
+  }
+
+  @action.bound changeFilterdType(value: 'bounty' | 'launchpad') {
+    this.filterType = value
+  }
+
+  @computed get filteredTypeProjects() {
+    return this.projects.filter((item) => item.type === this.filterType)
+  }
+
+  @computed get filteredStatusProjects() {
+    return this.filterRejected
+      ? this.filteredTypeProjects.filter((item) => item.status !== 'rejected')
+      : this.filteredTypeProjects
+  }
+
+  dispose() {
+    this._disposer()
   }
 }
