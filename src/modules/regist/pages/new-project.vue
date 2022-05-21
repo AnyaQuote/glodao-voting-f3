@@ -1,8 +1,5 @@
 <template>
   <v-row justify="center">
-    <v-col cols="12">
-      <v-img src="@/assets/images/new-project--banner.png" />
-    </v-col>
     <!-- --------------------------------------------------------------------------------------------------- -->
     <v-col cols="8" v-if="!vm.isLoggedIn">
       <v-sheet class="d-flex flex-column pa-8 rounded-lg" outlined>
