@@ -8,6 +8,41 @@ export class ProjectDetailViewModel {
   @observable unicode = ''
   @observable project?: VotingPools
 
+  @observable missions = [
+    {
+      image: 'sao-hoa.png',
+      name: 'Dragon SB',
+      totalReward: 150,
+      priorityReward: 100,
+      start: '21/12/2022, 10:00 pm',
+      end: '21/12/2022, 10:00 pm',
+    },
+    {
+      image: 'sao-hoa.png',
+      name: 'Dragon SB',
+      totalReward: 150,
+      priorityReward: 100,
+      start: '21/12/2022, 10:00 pm',
+      end: '21/12/2022, 10:00 pm',
+    },
+    {
+      image: 'sao-hoa.png',
+      name: 'Dragon SB',
+      totalReward: 150,
+      priorityReward: 100,
+      start: '21/12/2022, 10:00 pm',
+      end: '21/12/2022, 10:00 pm',
+    },
+    {
+      image: 'sao-hoa.png',
+      name: 'Dragon SB',
+      totalReward: 150,
+      priorityReward: 100,
+      start: '21/12/2022, 10:00 pm',
+      end: '21/12/2022, 10:00 pm',
+    },
+  ]
+
   _disposer: IReactionDisposer
   constructor() {
     this._disposer = reaction(
