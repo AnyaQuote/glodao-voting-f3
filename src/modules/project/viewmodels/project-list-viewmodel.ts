@@ -12,9 +12,8 @@ export class ProjectListViewModel {
   _disposer: IReactionDisposer
 
   constructor() {
-    console.log(this.projects)
     this._disposer = autorun(() => {
-      // This requires to run 2 times before stopping when value not changing
+      // This requires to run 2 times before stopping when value not changing MUST FIX
       if (!isEmpty(appProvider.wallet.account) && isEmpty(this.projects)) {
         this.fetchMyProject()
       }

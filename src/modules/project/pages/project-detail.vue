@@ -84,7 +84,6 @@ export default class ProjectDetailPage extends Vue {
   }
 
   mounted() {
-    console.log(get(this.$route, 'params.code'))
     this.vm.getUnicode(get(this.$route, 'params.code'))
   }
 

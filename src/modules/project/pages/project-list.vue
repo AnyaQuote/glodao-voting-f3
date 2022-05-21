@@ -87,7 +87,6 @@
 
 <script lang="ts">
 import { RoutePaths } from '@/router'
-import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Inject } from 'vue-property-decorator'
 import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 
@@ -97,8 +96,7 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
   },
 })
 export default class ProjectListPage extends Vue {
-  //   @Inject('project-list-vm') vm!: ProjectListViewModel
-  vm = new ProjectListViewModel()
+  @Inject('project-list-vm') vm!: ProjectListViewModel
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)
   }
