@@ -10,6 +10,7 @@ export enum RoutePaths {
   voting_detail = '/voting/',
   project_list = '/projects',
   project_detail = '/projects/',
+  new_mission = '/new-mission',
   new_application = '/new-project',
   new_bounty_application = '/new-project/bounty',
   new_launchpad_application = '/new-project/launchpad',
@@ -95,37 +96,22 @@ const routes: Array<RouteConfig> = [
       {
         path: 'projects/:code',
         name: 'project-detail',
-        component: () => import('@/modules/project/pages/project-list.vue'),
+        component: () => import('@/modules/project/pages/project-detail.vue'),
         meta: {
           auth: false,
           title: 'Project detail',
         },
       },
+      {
+        path: 'new-mission',
+        name: 'mission-apply',
+        component: () => import('@/modules/project/pages/project-detail.vue'),
+        meta: {
+          auth: false,
+          title: 'Mission Form',
+        },
+      },
     ],
-  },
-  {
-    path: '/applications',
-    component: () => import('@/modules/applications/pages/applications-project-page.vue'),
-    meta: {
-      auth: true,
-      title: 'Application',
-    },
-  },
-  {
-    path: '/dao-voting',
-    component: () => import('@/modules/dao-voting/pages/dao-voting-page.vue'),
-    meta: {
-      auth: true,
-      title: 'Application',
-    },
-  },
-  {
-    path: '/project-detail-bounty',
-    component: () => import('@/modules/project-detail-bounty/page/project-detail-bounty-page.vue'),
-    meta: {
-      auth: true,
-      title: 'Application',
-    },
   },
   {
     path: '/comming-soon',
