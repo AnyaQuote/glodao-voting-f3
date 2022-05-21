@@ -1,7 +1,17 @@
 <template>
   <v-row>
+    <!-- ----------------------- LOADING SKELETON --------------------------- -->
+    <div v-if="vm.loading" class="row">
+      <div class="col-12 d-flex">
+        <v-skeleton-loader class="mr-3" type="chip" />
+        <v-skeleton-loader type="chip" />
+        <v-spacer />
+        <v-skeleton-loader type="chip" />
+      </div>
+      <v-skeleton-loader class="col-12" type="image" />
+    </div>
     <!-- ----------------------- EMPTY PROJECT --------------------------- -->
-    <v-col cols="12" v-if="!vm.projects.length">
+    <v-col cols="12" v-else-if="!vm.loading && !vm.projects.length">
       <div class="row mt-100">
         <div class="col-12 col-md-7">
           <div class="text-h3 mb-9 font-weight-bold">Create the first application</div>
@@ -53,6 +63,7 @@
         ></v-checkbox>
       </v-sheet>
       <!-- ==== CONTENT DISPLAY ==== -->
+      <!-- EMPTY DATA -->
       <v-scale-transition leave-absolute v-if="!vm.filteredStatusProjects.length">
         <v-sheet class="d-flex flex-column align-center justify-center" height="300">
           <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
@@ -63,7 +74,7 @@
           </v-btn>
         </v-sheet>
       </v-scale-transition>
-
+      <!-- HAS DATA -->
       <v-scale-transition leave-absolute v-else>
         <div class="padding-form">
           <project-card
@@ -97,16 +108,17 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 })
 export default class ProjectListPage extends Vue {
   @Inject('project-list-vm') vm!: ProjectListViewModel
+
+  mounted() {
+    this.vm.fetchMyProject()
+  }
+
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)
   }
 
   get activeClass() {
     return (activeValue: string) => (this.vm.filterType === activeValue ? 'blue white--text' : 'blue lighten-3')
-  }
-
-  beforeDestroy() {
-    this.vm.dispose()
   }
 }
 </script>
