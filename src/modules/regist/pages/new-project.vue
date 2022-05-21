@@ -109,6 +109,10 @@ export default class ProjectRegist extends Vue {
     this.vm.signAndLogin()
   }
 
+  mounted() {
+    console.log('this.wallet::', this.walletStore.account)
+  }
+
   saveWallet() {
     this.save = true
   }

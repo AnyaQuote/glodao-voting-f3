@@ -8,29 +8,20 @@ export class ProjectListViewModel {
   @observable filterRejected = false
   @observable filterType = 'bounty'
   @observable projects: VotingPools[] = []
-
-  _disposer: IReactionDisposer
-
-  constructor() {
-    this._disposer = autorun(() => {
-      // This requires to run 2 times before stopping when value not changing MUST FIX
-      if (!isEmpty(appProvider.wallet.account) && isEmpty(this.projects)) {
-        this.fetchMyProject()
-      }
-    })
-  }
-
+  @observable loading = false;
   @asyncAction *fetchMyProject() {
     try {
+      this.loading = true
       loadingController.increaseRequest()
       const res = yield appProvider.api.voting.find({
-        ownerAddress: appProvider.wallet.account,
+        ownerAddress: appProvider.authStore.username,
       })
       this.projects = res
     } catch (error) {
       appProvider.snackbar.commonError(error)
       appProvider.router.go(-1)
     } finally {
+      this.loading = false
       loadingController.decreaseRequest()
     }
   }
@@ -47,9 +38,5 @@ export class ProjectListViewModel {
     return this.filterRejected
       ? this.filteredTypeProjects.filter((item) => item.status !== 'rejected')
       : this.filteredTypeProjects
-  }
-
-  dispose() {
-    this._disposer()
   }
 }
