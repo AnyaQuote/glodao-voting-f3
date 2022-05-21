@@ -105,7 +105,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'new-mission',
         name: 'mission-apply',
-        component: () => import('@/modules/project/pages/project-detail.vue'),
+        component: () => import('@/modules/project/pages/new-mission.vue'),
         meta: {
           auth: false,
           title: 'Mission Form',
