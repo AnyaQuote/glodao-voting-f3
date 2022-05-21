@@ -1,48 +1,47 @@
 <template>
   <v-sheet class="rounded-lg" outlined>
     <v-row no-gutters dense align="stretch" style="border-bottom: thin solid var(--v-neutral20-base)">
-      <!-- RIGHT -->
+      <!------------------------------------------ CARD RIGHT -------------------------------------------------->
       <v-col cols="6" style="border-right: thin solid var(--v-neutral20-base)">
         <v-sheet height="124" class="pa-6 d-flex blue lighten-3 rounded-tl-lg">
-          <v-sheet width="76" height="78" class="d-flex justify-center align-center white rounded-lg pa-3 mr-4">
-            <img :src="require(`@/assets/icons/${project.logo}`)" width="100%" />
-          </v-sheet>
+          <v-img class="d-flex justify-center align-center mr-4" max-width="76" max-height="78" :src="projectLogo">
+            <v-skeleton-loader v-show="!projectLogo" type="image" />
+          </v-img>
+
           <v-spacer class="d-flex flex-column justify-center">
-            <div class="text-h5 font-weight-bold">{{ project.name }}</div>
-            <div class="text-h6 neutral10--text">${{ project.token }}</div>
+            <div class="text-h5 font-weight-bold">{{ projectName }}</div>
+            <div class="text-h6 neutral10--text">$SB</div>
           </v-spacer>
         </v-sheet>
 
         <v-divider></v-divider>
 
-        <v-sheet class="pa-6">
-          {{ project.description }}
-        </v-sheet>
+        <v-sheet class="pa-6"> {{ data.shortDescription }} </v-sheet>
 
         <v-divider></v-divider>
 
         <v-sheet class="pa-6">
           <v-sheet class="d-flex">
             <v-sheet class="mr-2">Voting start: </v-sheet>
-            <v-sheet class="font-weight-bold">{{ project.start }}</v-sheet>
+            <v-sheet class="font-weight-bold">{{ startDate | ddmmyyyyhhmma }}</v-sheet>
           </v-sheet>
           <v-sheet class="d-flex">
             <v-sheet class="mr-2">Voting start: </v-sheet>
-            <v-sheet class="font-weight-bold">{{ project.end }}</v-sheet>
+            <v-sheet class="font-weight-bold">{{ endDate | ddmmyyyyhhmma }}</v-sheet>
           </v-sheet>
         </v-sheet>
       </v-col>
 
-      <!-- LEFT -->
+      <!-------------------------------------------- CARD LEFT -------------------------------------------------->
       <v-col cols="6" class="d-flex flex-column">
         <v-sheet height="124" class="pa-6">
-          <v-sheet class="mb-3 font-weight-bold" style="font-size: 18px">Final result</v-sheet>
+          <v-sheet class="mb-3 font-weight-bold">Final result</v-sheet>
           <v-sheet
             height="40"
             class="d-flex justify-center align-center rounded white--text font-weight-600 text-subtitle-1"
-            :class="project.status === 'approved' ? 'green lighten-1' : 'redSenamatic'"
+            :class="statusClass"
           >
-            {{ project.status === 'approved' ? 'Your project is approved' : 'Your project is rejected' }}
+            {{ statusReport }}
           </v-sheet>
         </v-sheet>
 
@@ -60,10 +59,10 @@
               </v-sheet>
               <v-sheet class="text-subtitle-1">We want the project to launch </v-sheet>
             </v-sheet>
-            <progress-bar :value="(project.yesVote * 100) / project.totalVote" class="mb-2" />
+            <progress-bar :value="upvote" class="mb-2" />
             <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-400">
-              <v-sheet>{{ project.yesVote }} votes</v-sheet>
-              <v-sheet>{{ ((project.yesVote * 100) / project.totalVote) | formatNumber(2, 2) }}%</v-sheet>
+              <v-sheet>{{ upvoteCount }} votes</v-sheet>
+              <v-sheet>{{ upvote | formatNumber(2, 2) }}%</v-sheet>
             </v-sheet>
           </v-sheet>
           <v-sheet>
@@ -77,34 +76,59 @@
               </v-sheet>
               <v-sheet class="text-subtitle-1">We don’t want the project to launch </v-sheet>
             </v-sheet>
-            <progress-bar :value="((project.totalVote - project.yesVote) * 100) / project.totalVote" class="mb-2" />
+            <progress-bar :value="100 - upvote" class="mb-2" />
             <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-400">
-              <v-sheet>{{ project.totalVote - project.yesVote }} votes</v-sheet>
-              <v-sheet>
-                {{ (((project.totalVote - project.yesVote) * 100) / project.totalVote) | formatNumber(2, 2) }}%
-              </v-sheet>
+              <v-sheet>{{ downvoteCount }} votes</v-sheet>
+              <v-sheet> {{ (100 - upvote) | formatNumber(2, 2) }}% </v-sheet>
             </v-sheet>
           </v-sheet>
         </v-sheet>
       </v-col>
     </v-row>
-    <v-sheet
-      height="56"
-      class="blue lighten-3 blue--text font-weight-600 text-subtitle-1 d-flex align-center justify-center rounded-b-lg"
-    >
-      View detail
-    </v-sheet>
+    <v-btn class="blue lighten-3 d-flex rounded-b-lg" height="56" block depressed @click="goToDetail">
+      <span blue--text font-weight-600 text-subtitle-1>View detail</span>
+    </v-btn>
   </v-sheet>
 </template>
 
 <script lang="ts">
+import { Metadata } from '@/models/VotingModel'
+import { RoutePaths } from '@/router'
+import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Observer
 @Component
 export default class ProjectCard extends Vue {
-  @Prop() project: any
+  @Prop({ required: true }) projectName!: string
+  @Prop({ required: true }) startDate!: string
+  @Prop({ required: true }) endDate!: string
+  @Prop({ required: true }) status!: string
+  @Prop({ required: true }) type!: string
+  @Prop({ required: true }) unicode!: string
+  @Prop({ required: true }) data!: Metadata
+
+  projectLogo = get(this.data, 'projectLogo', '')
+  upvoteCount = Math.floor(Math.random() * 1000) + 500
+  downvoteCount = Math.floor(Math.random() * 500)
+  totalVoteCount = this.upvoteCount + this.downvoteCount
+
+  goToDetail() {
+    this.$router.push(RoutePaths.project_detail + this.unicode)
+  }
+
+  get upvote() {
+    return (this.upvoteCount / this.totalVoteCount) * 100
+  }
+
+  get statusClass() {
+    return this.status === 'approved' ? 'green lighten-1' : 'redSenamatic'
+  }
+
+  get statusReport() {
+    return this.status === 'approved' ? 'Your project is approved' : 'Your project is rejected'
+  }
 }
 </script>
 
