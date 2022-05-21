@@ -98,6 +98,10 @@ export default class VotingDetail extends Vue {
   mounted() {
     this.vm.getUnicode(get(this.$route, 'params.code'))
   }
+
+  beforeDestroy() {
+    this.vm.dispose()
+  }
 }
 </script>
 
