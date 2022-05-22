@@ -11,15 +11,15 @@ export interface Metadata {
 
 export interface VotingPools {
   projectName?: string
-  rewardAddress?: string
+  tokenAddress?: string
   ownerAddress?: string
-  data?: Metadata
   poolId?: string
   status?: string
   type?: string
   startDate?: string
   endDate?: string
   unicodeName?: string
+  data?: Metadata
 }
 
 export interface Mission {
