@@ -7,60 +7,46 @@ import { get, isEmpty } from 'lodash-es'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 
 export class VotingDetailViewModel {
-  @observable unicode = ''
   @observable poolDetail?: VotingPools
   @observable votingList?: VotingPools[] = []
 
-  _disposers: IReactionDisposer
-
-  constructor() {
-    this._disposers = reaction(
-      () => this.unicode,
-      () => {
-        this.fetchAll()
-      }
-    )
-  }
-
-  @action getUnicode(value: string) {
-    this.unicode = value
+  constructor(unicodeName: string) {
+    this.fetchAll(unicodeName)
   }
 
   /**
    * Fetch all data for pool detail and related voting pools
    * Go back to last page if api failed
    */
-  @asyncAction *fetchAll() {
+  @asyncAction *fetchAll(query: any) {
     try {
-      loadingController.increaseRequest()
-      const res = yield Promise.all([
-        appProvider.api.voting.find({ unicode: this.unicode }),
-        appProvider.api.voting.find({ status: 'voting' }),
+      const [poolDetail, votingList] = yield Promise.all([
+        appProvider.api.voting.find({ unicode: query }, { _limit: 1 }),
+        appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
       ])
-      this.poolDetail = get(res, '[0][0]')
-      this.votingList = get(res, '[1]')
+      this.poolDetail = get(poolDetail, '[0]')
+      this.votingList = votingList
     } catch (error) {
       snackController.commonError(error)
-      appProvider.router.go(-1)
     } finally {
-      loadingController.decreaseRequest()
+      //
     }
   }
 
   @computed get projectLogo() {
-    return this.poolDetail?.data.projectLogo
+    return get(this.poolDetail, 'data.projectLogo', '')
   }
 
   @computed get projectCover() {
-    return this.poolDetail?.data.projectCover
+    return get(this.poolDetail, 'data.projectCover', '')
   }
 
   @computed get endDate() {
-    return this.poolDetail?.endDate
+    return get(this.poolDetail, 'endDate', '')
   }
 
   @computed get projectName() {
-    return this.poolDetail?.projectName
+    return get(this.poolDetail, 'projectName', '')
   }
 
   @computed get fields() {
@@ -68,11 +54,11 @@ export class VotingDetailViewModel {
   }
 
   @computed get type() {
-    return this.poolDetail?.type
+    return get(this.poolDetail, 'type', '')
   }
 
   @computed get shortDescription() {
-    return this.poolDetail?.data.shortDescription
+    return get(this.poolDetail, 'data.shortDescription', '')
   }
 
   @computed get socialLinks() {
@@ -81,7 +67,7 @@ export class VotingDetailViewModel {
       .filter((x) => x !== 'website')
       .map((key) => ({
         icon: key,
-        link: this.poolDetail?.data.socialLinks[key],
+        link: get(this.poolDetail, `data.socialLinks[${key}]`, ''),
       }))
   }
 
