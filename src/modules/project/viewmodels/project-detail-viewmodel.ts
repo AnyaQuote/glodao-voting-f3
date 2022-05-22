@@ -1,7 +1,6 @@
 import { appProvider } from '@/app-providers'
-import { loadingController } from '@/components/global-loading/global-loading-controller'
 import { VotingPools } from '@/models/VotingModel'
-import { action, observable, computed, IReactionDisposer, reaction } from 'mobx'
+import { observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get } from 'lodash-es'
 export class ProjectDetailViewModel {
