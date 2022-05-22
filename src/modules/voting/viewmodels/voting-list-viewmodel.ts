@@ -6,11 +6,15 @@ import { asyncAction } from 'mobx-utils'
 
 export class VotingListViewModel {
   @observable voteList: VotingPools[] = []
-  @observable filterOption = 'bounty';
+  @observable filterOption = 'bounty'
+
+  constructor() {
+    this.fetchVotingPools()
+  }
 
   @asyncAction *fetchVotingPools() {
     try {
-      const res = yield apiService.voting.find()
+      const res = yield apiService.voting.find({}, { _limit: -1 })
       this.voteList = res
     } catch (error) {
       snackController.commonError(error)
