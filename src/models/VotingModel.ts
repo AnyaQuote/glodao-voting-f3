@@ -14,12 +14,12 @@ export interface VotingPools {
   rewardAddress?: string
   ownerAddress?: string
   data?: Metadata
-  projectId?: string
+  poolId?: string
   status?: string
   type?: string
   startDate?: string
   endDate?: string
-  unicode?: string
+  unicodeName?: string
 }
 
 export interface Mission {
