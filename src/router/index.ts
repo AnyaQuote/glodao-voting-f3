@@ -47,38 +47,33 @@ const routes: Array<RouteConfig> = [
   },
   // ------------------- APPLICATION ROUTER SECTION -----------------------
   {
-    path: '/',
-    component: () => import('@/modules/regist/container/container.vue'),
-    children: [
-      {
-        path: 'new-project',
-        name: 'new-project',
-        component: () => import('@/modules/regist/pages/new-project.vue'),
-        meta: {
-          auth: false,
-          title: 'New Application',
-        },
-      },
-      {
-        path: 'new-project/launchpad',
-        name: 'launchpad-apply',
-        component: () => import('@/modules/regist/pages/launchpad-form.vue'),
-        meta: {
-          auth: true,
-          title: 'Launchpad Application',
-        },
-      },
-      {
-        path: 'new-project/bounty',
-        name: 'bounty-apply',
-        component: () => import('@/modules/regist/pages/bounty-form.vue'),
-        meta: {
-          auth: true,
-          title: 'Bounty Application',
-        },
-      },
-    ],
+    path: '/new-project',
+    name: 'new-project',
+    component: () => import('@/modules/regist/pages/new-project.vue'),
+    meta: {
+      auth: false,
+      title: 'New Application',
+    },
   },
+  {
+    path: '/new-project/launchpad',
+    name: 'launchpad-apply',
+    component: () => import('@/modules/regist/pages/launchpad-form.vue'),
+    meta: {
+      auth: true,
+      title: 'Launchpad Application',
+    },
+  },
+  {
+    path: '/new-project/bounty',
+    name: 'bounty-apply',
+    component: () => import('@/modules/regist/pages/bounty-form.vue'),
+    meta: {
+      auth: true,
+      title: 'Bounty Application',
+    },
+  },
+
   // --------------- PROJECT ROUTER SECTION -------------------
   {
     path: '/',
