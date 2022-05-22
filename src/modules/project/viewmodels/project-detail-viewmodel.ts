@@ -4,7 +4,7 @@ import { observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get } from 'lodash-es'
 export class ProjectDetailViewModel {
-  @observable project?: VotingPools
+  @observable poolDetail?: VotingPools
   @observable missions = [
     {
       image: 'sao-hoa.png',
@@ -52,7 +52,7 @@ export class ProjectDetailViewModel {
         { unicodeName: query, ownerAddress: appProvider.authStore.username },
         { _limit: 1 }
       )
-      this.project = get(res, '[0]')
+      this.poolDetail = get(res, '[0]')
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -61,14 +61,14 @@ export class ProjectDetailViewModel {
   }
 
   @computed get projectLogo() {
-    return this.project?.data.projectLogo
+    return get(this.poolDetail, 'data.projectLogo', '')
   }
 
   @computed get projectName() {
-    return this.project?.projectName
+    return this.poolDetail?.projectName
   }
 
   @computed get status() {
-    return get(this.project, 'status', '')
+    return get(this.poolDetail, 'status', '')
   }
 }
