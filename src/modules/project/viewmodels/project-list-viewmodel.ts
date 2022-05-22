@@ -8,21 +8,26 @@ export class ProjectListViewModel {
   @observable filterRejected = false
   @observable filterType = 'bounty'
   @observable projects: VotingPools[] = []
-  @observable loading = false;
+  @observable loading = false
+
+  constructor() {
+    this.fetchMyProject()
+  }
+
   @asyncAction *fetchMyProject() {
     try {
       this.loading = true
-      loadingController.increaseRequest()
-      const res = yield appProvider.api.voting.find({
-        ownerAddress: appProvider.authStore.username,
-      })
+      const res = yield appProvider.api.voting.find(
+        {
+          ownerAddress: appProvider.authStore.username,
+        },
+        { _limit: -1 }
+      )
       this.projects = res
     } catch (error) {
       appProvider.snackbar.commonError(error)
-      appProvider.router.go(-1)
     } finally {
       this.loading = false
-      loadingController.decreaseRequest()
     }
   }
 

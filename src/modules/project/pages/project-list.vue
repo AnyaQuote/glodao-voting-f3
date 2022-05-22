@@ -77,18 +77,7 @@
       <!-- HAS DATA -->
       <v-scale-transition leave-absolute v-else>
         <div class="padding-form">
-          <project-card
-            v-for="(item, index) in vm.filteredStatusProjects"
-            :key="index"
-            :projectName="item.projectName"
-            :data="item.data"
-            :type="item.type"
-            :status="item.status"
-            :startDate="item.startDate"
-            :endDate="item.endDate"
-            :unicode="item.unicode"
-            class="mb-6"
-          />
+          <project-card v-for="(pool, index) in vm.filteredStatusProjects" :key="index" :pool="pool" class="mb-6" />
         </div>
       </v-scale-transition>
     </v-col>
@@ -98,7 +87,7 @@
 
 <script lang="ts">
 import { RoutePaths } from '@/router'
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 
 @Component({
@@ -107,11 +96,7 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
   },
 })
 export default class ProjectListPage extends Vue {
-  @Inject('project-list-vm') vm!: ProjectListViewModel
-
-  mounted() {
-    this.vm.fetchMyProject()
-  }
+  @Provide() vm = new ProjectListViewModel()
 
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)
