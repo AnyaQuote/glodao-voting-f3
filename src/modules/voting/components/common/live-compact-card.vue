@@ -2,7 +2,10 @@
   <!-- <v-slide-item> -->
   <v-hover v-slot="{ hover }">
     <div class="d-flex fill-height rounded-lg pa-1" :class="typeBorderColor">
-      <v-sheet class="d-flex flex-column rounded-lg overflow-hidden">
+      <v-sheet
+        :width="$vuetify.breakpoint.mdAndUp ? '348' : 'auto'"
+        class="d-flex flex-column rounded-lg overflow-hidden"
+      >
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
           <v-img :src="$_get(pool, 'data.projectCover')">
