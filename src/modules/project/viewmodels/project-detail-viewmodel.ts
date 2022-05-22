@@ -2,7 +2,8 @@ import { appProvider } from '@/app-providers'
 import { VotingPools } from '@/models/VotingModel'
 import { observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
+import { RoutePaths } from '@/router'
 export class ProjectDetailViewModel {
   @observable poolDetail?: VotingPools
   @observable missions = [
@@ -52,6 +53,10 @@ export class ProjectDetailViewModel {
         { unicodeName: query, ownerAddress: appProvider.authStore.username },
         { _limit: 1 }
       )
+      if (isEmpty(res)) {
+        appProvider.snackbar.commonError('Can not find this pool')
+        appProvider.router.push(RoutePaths.not_found)
+      }
       this.poolDetail = get(res, '[0]')
     } catch (error) {
       appProvider.snackbar.commonError(error)

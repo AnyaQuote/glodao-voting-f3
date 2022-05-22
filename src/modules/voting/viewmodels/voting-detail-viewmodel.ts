@@ -1,9 +1,9 @@
 import { appProvider } from '@/app-providers'
 import { VotingPools } from '@/models/VotingModel'
-import { observable, action, computed } from 'mobx'
+import { observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
-import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import { RoutePaths } from '@/router'
 
 export class VotingDetailViewModel {
   @observable poolDetail?: VotingPools
@@ -23,10 +23,14 @@ export class VotingDetailViewModel {
         appProvider.api.voting.find({ unicodeName: query }, { _limit: 1 }),
         appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
       ])
+      if (isEmpty(poolDetail)) {
+        appProvider.snackbar.commonError('Can not find this pool')
+        appProvider.router.push(RoutePaths.not_found)
+      }
       this.poolDetail = get(poolDetail, '[0]')
       this.votingList = votingList
     } catch (error) {
-      snackController.commonError(error)
+      appProvider.snackbar.commonError(error)
     } finally {
       //
     }
