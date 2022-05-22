@@ -47,7 +47,7 @@ export default class VotingLaunchSection extends Vue {
   @Inject() vm!: VotingListViewModel
 
   get carouselHeight() {
-    return this.$vuetify.breakpoint.mdAndUp ? '756' : this.$vuetify.breakpoint.xsOnly ? '686' : 'auto'
+    return this.$vuetify.breakpoint.mdAndUp ? '756' : this.$vuetify.breakpoint.xsOnly ? '700' : 'auto'
   }
 }
 </script>
