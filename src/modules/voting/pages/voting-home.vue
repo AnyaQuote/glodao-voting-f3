@@ -75,14 +75,8 @@
         </div>
       </div>
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-for="(item, i) in vm.endedList" :key="i">
-          <ended-voting-card
-            :projectName="item.projectName"
-            :data="item.data"
-            :type="item.type"
-            :status="item.status"
-            :unicode="item.unicodeName"
-          />
+        <v-col cols="12" sm="6" md="4" v-for="(pool, i) in vm.endedList" :key="i">
+          <ended-voting-card :pool="pool" />
         </v-col>
         <v-col cols="12">
           <div class="text-center mb-9">
