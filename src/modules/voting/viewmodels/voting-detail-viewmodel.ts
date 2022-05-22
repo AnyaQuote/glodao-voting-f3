@@ -78,8 +78,4 @@ export class VotingDetailViewModel {
   @computed get walletAddress() {
     return appProvider.wallet.account
   }
-
-  dispose() {
-    this._disposers()
-  }
 }
