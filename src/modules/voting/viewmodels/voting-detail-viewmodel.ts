@@ -24,7 +24,6 @@ export class VotingDetailViewModel {
         appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
       ])
       if (isEmpty(poolDetail)) {
-        appProvider.snackbar.commonError('Can not find this pool')
         appProvider.router.push(RoutePaths.not_found)
       }
       this.poolDetail = get(poolDetail, '[0]')

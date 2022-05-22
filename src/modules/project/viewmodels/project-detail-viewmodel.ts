@@ -54,7 +54,6 @@ export class ProjectDetailViewModel {
         { _limit: 1 }
       )
       if (isEmpty(res)) {
-        appProvider.snackbar.commonError('Can not find this pool')
         appProvider.router.push(RoutePaths.not_found)
       }
       this.poolDetail = get(res, '[0]')
