@@ -1,11 +1,17 @@
 <template>
-  <v-carousel height="auto" hide-delimiters>
+  <v-carousel
+    height="auto"
+    :hide-delimiters="$vuetify.breakpoint.smAndUp"
+    delimiter-icon="mdi-minus"
+    class="elevation-3 rounded-lg"
+  >
     <template v-slot:prev="{ on, attrs }">
       <v-sheet
         class="ml-n4 mt-n16 px-2 py-10 d-flex justify-center rounded-lg rounded-l-0 white--bg"
         v-ripple
         v-bind="attrs"
         v-on="on"
+        outlined
       >
         <v-icon color="black">mdi-chevron-left</v-icon>
       </v-sheet>
@@ -16,6 +22,7 @@
         v-ripple
         v-bind="attrs"
         v-on="on"
+        outlined
       >
         <v-icon color="black">mdi-chevron-right</v-icon>
       </v-sheet>
