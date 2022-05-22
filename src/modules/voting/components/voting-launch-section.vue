@@ -27,13 +27,8 @@
         <v-icon color="black">mdi-chevron-right</v-icon>
       </v-sheet>
     </template>
-    <v-carousel-item v-for="(item, i) in vm.approvedList" :key="i">
-      <voting-launch-item
-        :projectName="item.projectName"
-        :data="item.data"
-        :type="item.type"
-        :endDate="item.endDate"
-      ></voting-launch-item>
+    <v-carousel-item v-for="(pool, index) in vm.approvedList" :key="index">
+      <voting-launch-item :pool="pool"></voting-launch-item>
     </v-carousel-item>
   </v-carousel>
 </template>
