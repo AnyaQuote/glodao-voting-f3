@@ -75,7 +75,7 @@
           </div>
           <v-divider></v-divider>
           <div class="text-subtitle-2 rounded-lg pa-6 d-flex align-center" style="line-height: 150%">
-            <img :src="require('@/assets/icons/start.svg')" max-width="17" max-height="17" class="mr-2" />
+            <v-icon class="mr-2">mdi-star-outline</v-icon>
             <div class="font-weight-bold mt-1">
               {{ upvote }}%
               <span class="green--text text--lighten-1">YES </span>
