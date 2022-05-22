@@ -46,14 +46,8 @@
 
       <!-- CARDS SECTION START -->
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-for="(item, i) in vm.filteredVotingList" :key="i">
-          <live-voting-card
-            :projectName="item.projectName"
-            :data="item.data"
-            :type="item.type"
-            :endDate="item.endDate"
-            :unicode="item.unicode"
-          />
+        <v-col cols="12" sm="6" md="4" v-for="(pool, i) in vm.filteredVotingList" :key="i">
+          <live-voting-card :pool="pool" />
         </v-col>
       </v-row>
       <!-- CARDS SECTION END -->
@@ -87,7 +81,7 @@
             :data="item.data"
             :type="item.type"
             :status="item.status"
-            :unicode="item.unicode"
+            :unicode="item.unicodeName"
           />
         </v-col>
         <v-col cols="12">
@@ -114,10 +108,6 @@ import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 })
 export default class VotingHome extends Vue {
   @Provide() vm = new VotingListViewModel()
-
-  mounted() {
-    this.vm.fetchVotingPools()
-  }
 }
 </script>
 
