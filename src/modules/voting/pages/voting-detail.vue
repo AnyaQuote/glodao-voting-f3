@@ -1,21 +1,10 @@
 <template>
   <v-row class="mb-72">
-    <v-col cols="12">
-      <div class="d-flex align-center mt-5">
-        <v-breadcrumbs :items="items" divider=">" class="pa-0">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :disabled="item.disabled" :href="item.href">
-              <span
-                class="font-weight-bold"
-                :class="item.text === 'DAO Voting' ? 'bluePrimary--text' : 'neutral10--text'"
-                >{{ item.text }}</span
-              >
-            </v-breadcrumbs-item>
-          </template>
-          <template v-slot:divider>
-            <v-icon size="22"> mdi-chevron-right </v-icon>
-          </template>
-        </v-breadcrumbs>
+    <v-col cols="12" class="mb-10">
+      <div class="mt-5 d-flex align-center font-weight-medium">
+        <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
+        <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
+        <span class="neutral10--text">{{ vm.projectName }}</span>
       </div>
     </v-col>
 
@@ -50,21 +39,16 @@
       <div class="nominated-section mt-72">
         <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
       </div>
-      <div class="app-slide-group">
+      <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
         <v-slide-group class="ma-n1 px-1">
-          <live-compact-card
-            v-for="(item, i) in vm.votingList"
-            :key="i"
-            class="ma-1"
-            width="348"
-            :projectName="item.projectName"
-            :data="item.data"
-            :status="item.status"
-            :type="item.type"
-            :unicode="item.unicode"
-          />
+          <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" width="348" :pool="pool" />
         </v-slide-group>
       </div>
+      <v-row v-else class="row">
+        <v-col cols="12" v-for="(pool, i) in vm.votingList" :key="i">
+          <live-compact-card :pool="pool" />
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -73,6 +57,7 @@
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
 import { get } from 'lodash-es'
+import { RoutePaths } from '@/router'
 
 @Component({
   components: {
@@ -82,25 +67,10 @@ import { get } from 'lodash-es'
   },
 })
 export default class VotingDetail extends Vue {
-  @Provide() vm = new VotingDetailViewModel()
-  items = [
-    {
-      text: 'DAO Voting',
-      disabled: false,
-      href: '/voting',
-    },
-    {
-      text: 'Hydro Wind Energy',
-      disabled: true,
-      href: '/voting/123',
-    },
-  ]
-  mounted() {
-    this.vm.getUnicode(get(this.$route, 'params.code'))
-  }
+  @Provide() vm = new VotingDetailViewModel(get(this.$route, 'params.code'))
 
-  beforeDestroy() {
-    this.vm.dispose()
+  goToVotingList() {
+    this.$router.push(RoutePaths.voting_list)
   }
 }
 </script>
