@@ -15,10 +15,11 @@ export enum RoutePaths {
   new_bounty_application = '/new-project/bounty',
   new_launchpad_application = '/new-project/launchpad',
   comming_soon = '/comming-soon',
+  not_found = '/404',
 }
 
 const routes: Array<RouteConfig> = [
-  { path: '/', redirect: '/NotFound' },
+  { path: '/', redirect: '/voting' },
   // -------------------- VOTING ROUTER SECTION ---------------------
   {
     path: '/voting',
@@ -70,42 +71,42 @@ const routes: Array<RouteConfig> = [
 
   // --------------- PROJECT ROUTER SECTION -------------------
   {
-    path: '/',
-    component: () => import('@/modules/project/container/container.vue'),
-    children: [
-      {
-        path: 'projects',
-        name: 'project-list',
-        component: () => import('@/modules/project/pages/project-list.vue'),
-        meta: {
-          auth: false,
-          title: 'Projects',
-        },
-      },
-      {
-        path: 'projects/:code',
-        name: 'project-detail',
-        component: () => import('@/modules/project/pages/project-detail.vue'),
-        meta: {
-          auth: false,
-          title: 'Project detail',
-        },
-      },
-      {
-        path: 'new-mission',
-        name: 'mission-apply',
-        component: () => import('@/modules/project/pages/new-mission.vue'),
-        meta: {
-          auth: false,
-          title: 'Mission Form',
-        },
-      },
-    ],
+    path: '/projects',
+    name: 'project-list',
+    component: () => import('@/modules/project/pages/project-list.vue'),
+    meta: {
+      auth: false,
+      title: 'Projects',
+    },
+  },
+  {
+    path: '/projects/:code',
+    name: 'project-detail',
+    component: () => import('@/modules/project/pages/project-detail.vue'),
+    meta: {
+      auth: true,
+      params: true,
+      title: 'Project detail',
+    },
+  },
+  {
+    path: '/new-mission',
+    name: 'mission-apply',
+    component: () => import('@/modules/project/pages/new-mission.vue'),
+    meta: {
+      auth: true,
+      title: 'Mission Form',
+    },
   },
   {
     path: '/comming-soon',
-    name: 'NotFound',
+    name: 'comming-soon',
     component: () => import('@/modules/error/pages/coming-soon.vue'),
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: () => import('@/modules/error/pages/404.vue'),
   },
 ]
 
@@ -119,20 +120,19 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('to:::', to)
   if (!get(to, 'name', '')) {
-    next('/comming-soon')
+    next(RoutePaths.not_found)
   } else {
     const isAuthenticated = authStore.isAuthenticated
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    // const isFormPage = to.name === 'bounty-apply' || to.name === 'launchpad-apply'
-    // const requireParams = to.matched.some((m) => m.meta?.params === true)
+    const requiredParams = to.matched.some((m) => m.meta?.params === true)
     if ((requiredAuth && isAuthenticated) || !requiredAuth) {
-      console.log('TH1')
-      next()
+      if (requiredParams && isEmpty(get(to, 'params.code', ''))) {
+        next(RoutePaths.not_found)
+      } else next()
     } else if (requiredAuth && !isAuthenticated) {
-      console.log('TH2')
-      //
+      // login dialog will be check in here and will be open to new page
+      // If cancel dialog without login, go back to previous page (prevent from going to page)
       next()
     } else {
       console.error(`VueRouter error ${to.name} requriedAuth=${requiredAuth} isAuthenticated=${isAuthenticated}`)
