@@ -44,7 +44,7 @@
     </div>
     <!-- BANNER BOTTOM END -->
   </v-sheet>
-  <v-sheet v-else class="blue lighten-4 rounded-lg">
+  <div v-else class="rounded-lg">
     <v-img :src="$_get(pool, 'data.projectCover', '')">
       <div class="text-end ma-4">
         <voting-out-btn />
@@ -61,14 +61,14 @@
         <span>👎 NO votes</span>
       </div>
     </div>
-    <div class="d-flex flex-column align-center py-4 text-subtitle-1 font-weight-bold">
+    <div class="d-flex blue lighten-4 flex-column align-center py-4 text-subtitle-1 font-weight-bold">
       <div class="mb-2">Ended voting in: {{ $_get(pool, 'endDate') | ddmmyyyyhhmmss }}</div>
       <div class="mb-4">Launching soon on {{ platform }}</div>
       <v-btn class="rounded-lg" color="blue" height="50" outlined :to="'#'">
         <span class="text-h6">Read more</span>
       </v-btn>
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script lang="ts">
