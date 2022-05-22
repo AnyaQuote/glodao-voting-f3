@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-8">
+  <v-row>
+    <v-col cols="12" md="8">
       <v-carousel height="auto" hide-delimiter-background hide-delimiters v-model="tab">
         <template v-slot:prev="{ on, attrs }">
           <v-sheet
@@ -23,10 +23,9 @@
         <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
           <!-- CAROUSEL ITEM START -->
           <v-sheet class="trending-left blue lighten-5 rounded-lg">
-            <div class="trending-left-top">
-              <v-img class="img rounded-lg rounded-b-0" :src="$_get(item, 'data.projectCover')" contain />
-              <voting-out-btn class="btn mt-7 mr-7" width="51" height="51" />
-            </div>
+            <v-img class="rounded-lg rounded-b-0 text-end" :src="$_get(item, 'data.projectCover')">
+              <voting-out-btn class="mt-7 mr-7" width="51" height="51" />
+            </v-img>
             <div class="trending-left-bottom d-flex align-end px-4 pb-4">
               <div class="trending-left-bottom__content text-h4 py-6 font-weight-bold">{{ item.projectName }}</div>
               <v-sheet class="trending-left-bottom__logo rounded-lg pa-3" width="160" height="160">
@@ -37,35 +36,41 @@
           <!-- CAROUSEL ITEM END -->
         </v-carousel-item>
       </v-carousel>
-    </div>
-    <div class="col-4">
-      <div class="trending-right">
-        <div class="text-uppercase blue--text text-h6 mb-4">Trending now</div>
-        <div class="trending-right__content pa-5 pb-0">
-          <!-- PREVIEW SCROLL ITEM START -->
-          <v-sheet
-            v-for="(item, i) in vm.votingList"
-            :key="i"
-            class="d-flex mb-4"
-            :class="{ active: tab === i }"
-            v-ripple
-            @click="changeTab(i)"
-          >
-            <v-img class="rounded-lg" contain max-width="163" :src="$_get(item, 'data.projectCover')" />
+    </v-col>
+    <v-col cols="12" md="4">
+      <div class="text-uppercase blue--text text-h6 mb-4">Trending now</div>
+      <v-sheet
+        class="d-flex flex-row flex-md-column"
+        :height="$vuetify.breakpoint.mdAndUp ? '474' : 'auto'"
+        :class="$vuetify.breakpoint.mdAndUp ? 'overflow-y-auto' : 'overflow-x-auto'"
+      >
+        <!-- PREVIEW SCROLL ITEM START -->
+        <div
+          v-for="(item, index) in vm.votingList"
+          class="mb-md-4 mr-md-0 mr-2 cursor-pointer"
+          @click="changeTab(i)"
+          :key="index"
+          v-ripple
+        >
+          <div v-if="$vuetify.breakpoint.mdAndUp" class="d-flex">
+            <v-img class="rounded-lg" max-width="163" max-height="99" :src="$_get(item, 'data.projectCover')" />
             <div class="ml-4 d-flex flex-column justify-space-around align-start">
               <v-chip outlined :color="item.type === 'bounty' ? 'yellow' : 'green'">
                 <span class="black--text text-subtitle-2 mx-2 text-capitalize">{{ item.type }}</span>
               </v-chip>
-              <div class="font-weight-medium" style="">
+              <div class="font-weight-medium">
                 {{ item.projectName }}
               </div>
             </div>
-          </v-sheet>
-          <!-- PREVIEW SCROLL ITEM END -->
+          </div>
+          <div v-else>
+            <v-img class="rounded-lg" max-width="164" :src="$_get(item, 'data.projectCover')" />
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
+        <!-- PREVIEW SCROLL ITEM END -->
+      </v-sheet>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -79,7 +84,7 @@ import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 })
 export default class VotingTrendingSection extends Vue {
   @Inject() vm!: VotingListViewModel
-  n = [0, 1, 2, 3, 4, 5]
+
   tab = 1
   changeTab(index: number) {
     this.tab = index
@@ -95,17 +100,6 @@ export default class VotingTrendingSection extends Vue {
 }
 
 .trending-left {
-  .trending-left-top {
-    position: relative;
-    .img {
-      position: relative;
-    }
-    .btn {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-  }
   .trending-left-bottom {
     position: relative;
     .trending-left-bottom__content {
@@ -117,34 +111,11 @@ export default class VotingTrendingSection extends Vue {
   }
 }
 
-.trending-right {
-  .trending-right__content {
-    height: 480px;
-    overflow-y: auto;
-    &::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      background-color: #f5f5f5;
-    }
-    &::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-      background-color: #f5f5f5;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      background-color: var(--v-blue-lighten2);
-    }
-    .active {
-      border: 1px solid var(--v-blue-base) !important;
-      border-radius: em(8);
-    }
-  }
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
-.fill-height {
-  height: 100%;
+.overflow-x-auto {
+  overflow-x: auto;
 }
 </style>
