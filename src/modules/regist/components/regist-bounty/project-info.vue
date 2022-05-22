@@ -124,7 +124,16 @@
         <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3">Add more link</div>
       </v-sheet>
 
-      <div class="label neutral10--text mt-6bluePrimary--text font-weight-bold">Token address</div>
+      <div class="label neutral10--text mt-6 font-weight-bold">Token reward address symbol</div>
+      <app-text-field
+        :value="$_get(vm.projectInfo, 'tokenAddressSymbol')"
+        @input="vm.changeProjectInfo('tokenAddressSymbol', $event)"
+        placeholder="Enter link"
+      ></app-text-field>
+      <div class="label neutral10--text mt-6">
+        <span class="font-weight-bold">Token reward address</span>
+        <i class="text-subtitle-1 ml-2">Optional</i>
+      </div>
       <app-text-field
         :value="$_get(vm.projectInfo, 'tokenAddress')"
         @input="vm.changeProjectInfo('tokenAddress', $event)"
