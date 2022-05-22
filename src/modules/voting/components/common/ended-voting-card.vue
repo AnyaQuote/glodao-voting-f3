@@ -89,12 +89,12 @@
             </div>
           </div>
           <div class="rounded-lg">
-            <div
-              class="orange--text text--lighten-1 text-caption d-flex align-center justify-center pt-1"
-              style="height: 24px; background: var(--v-orange-base)"
+            <v-sheet
+              height="24"
+              class="orange orange--text text--lighten-1 text-caption d-flex align-center justify-center py-1"
             >
               BOUNTY PROJECT
-            </div>
+            </v-sheet>
           </div>
         </div>
       </div>
