@@ -47,8 +47,8 @@
           </v-sheet>
         </div>
       </v-sheet>
-      <voting-detail-button @buttonClick="openDialog" />
     </v-sheet>
+    <voting-detail-button @buttonClick="openDialog" />
     <!-- BANNER SECTION END -->
     <!-- --------------------------------------------------------------------------------------------------------------------- -->
     <!-- CONTENT SECTION START -->
