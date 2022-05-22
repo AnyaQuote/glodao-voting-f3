@@ -20,7 +20,7 @@ export class VotingDetailViewModel {
   @asyncAction *fetchAll(query: any) {
     try {
       const [poolDetail, votingList] = yield Promise.all([
-        appProvider.api.voting.find({ unicode: query }, { _limit: 1 }),
+        appProvider.api.voting.find({ unicodeName: query }, { _limit: 1 }),
         appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
       ])
       this.poolDetail = get(poolDetail, '[0]')
@@ -72,9 +72,5 @@ export class VotingDetailViewModel {
 
   @computed get website() {
     return get(this.poolDetail, 'data.socialLinks.website', '')
-  }
-
-  @computed get walletAddress() {
-    return appProvider.wallet.account
   }
 }
