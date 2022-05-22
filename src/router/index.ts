@@ -21,29 +21,23 @@ const routes: Array<RouteConfig> = [
   { path: '/', redirect: '/NotFound' },
   // -------------------- VOTING ROUTER SECTION ---------------------
   {
-    path: '/',
-    component: () => import('@/modules/voting/container/container.vue'),
-    children: [
-      {
-        path: 'voting',
-        name: 'voting-list',
-        component: () => import('@/modules/voting/pages/voting-home.vue'),
-        meta: {
-          auth: false,
-          title: 'Voting List',
-        },
-      },
-      {
-        path: 'voting/:code',
-        name: 'voting-detail',
-        component: () => import('@/modules/voting/pages/voting-detail.vue'),
-        meta: {
-          auth: false,
-          params: true,
-          title: 'Voting detail',
-        },
-      },
-    ],
+    path: '/voting',
+    name: 'voting-list',
+    component: () => import('@/modules/voting/pages/voting-home.vue'),
+    meta: {
+      auth: false,
+      title: 'Voting List',
+    },
+  },
+  {
+    path: '/voting/:code',
+    name: 'voting-detail',
+    component: () => import('@/modules/voting/pages/voting-detail.vue'),
+    meta: {
+      auth: false,
+      params: true,
+      title: 'Voting detail',
+    },
   },
   // ------------------- APPLICATION ROUTER SECTION -----------------------
   {

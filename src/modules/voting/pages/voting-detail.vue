@@ -1,56 +1,58 @@
 <template>
-  <v-row class="mb-72">
-    <v-col cols="12" class="mb-10">
-      <div class="mt-5 d-flex align-center font-weight-medium">
-        <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
-        <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-        <span class="neutral10--text">{{ vm.projectName }}</span>
-      </div>
-    </v-col>
-
-    <v-col cols="12">
-      <voting-detail-overview></voting-detail-overview>
-    </v-col>
-
-    <v-col cols="12">
-      <div class="row mt-72">
-        <!-- <div class=" debug mb-6"> -->
-        <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
-          <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE (800)</div>
-          <v-btn icon>
-            <v-icon large>mdi-information</v-icon>
-          </v-btn>
-        </v-sheet>
-        <!-- </div> -->
-
-        <!-- VOTED USER LIST START -->
-        <div class="col-12">
-          <voting-list-item class="mb-4 pa-2" elevation="3" v-for="i in Array(7)" :key="i" />
+  <v-container>
+    <v-row class="mb-72">
+      <v-col cols="12" class="mb-10">
+        <div class="mt-5 d-flex align-center font-weight-medium">
+          <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
+          <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
+          <span class="neutral10--text">{{ vm.projectName }}</span>
         </div>
+      </v-col>
 
-        <div class="col-12">
-          <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
+      <v-col cols="12">
+        <voting-detail-overview></voting-detail-overview>
+      </v-col>
+
+      <v-col cols="12">
+        <div class="row mt-72">
+          <!-- <div class=" debug mb-6"> -->
+          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
+            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE (800)</div>
+            <v-btn icon>
+              <v-icon large>mdi-information</v-icon>
+            </v-btn>
+          </v-sheet>
+          <!-- </div> -->
+
+          <!-- VOTED USER LIST START -->
+          <div class="col-12">
+            <voting-list-item class="mb-4 pa-2" elevation="3" v-for="i in Array(7)" :key="i" />
+          </div>
+
+          <div class="col-12">
+            <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
+          </div>
+          <!-- VOTED USER LIST END -->
         </div>
-        <!-- VOTED USER LIST END -->
-      </div>
-    </v-col>
+      </v-col>
 
-    <v-col cols="12">
-      <div class="nominated-section mt-72">
-        <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
-      </div>
-      <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
-        <v-slide-group class="ma-n1 px-1">
-          <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" width="348" :pool="pool" />
-        </v-slide-group>
-      </div>
-      <v-row v-else class="row">
-        <v-col cols="12" v-for="(pool, i) in vm.votingList" :key="i">
-          <live-compact-card :pool="pool" />
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+      <v-col cols="12">
+        <div class="nominated-section mt-72">
+          <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        </div>
+        <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
+          <v-slide-group class="ma-n1 px-1">
+            <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" width="348" :pool="pool" />
+          </v-slide-group>
+        </div>
+        <v-row v-else class="row">
+          <v-col cols="12" v-for="(pool, i) in vm.votingList" :key="i">
+            <live-compact-card :pool="pool" />
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
