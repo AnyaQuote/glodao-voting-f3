@@ -120,7 +120,7 @@ export default class ProjectCard extends Vue {
   }
 
   get statusClass() {
-    return this.pool.status === 'approved' ? 'green lighten-1' : 'redSenamatic'
+    return this.pool.status === 'approved' ? 'green lighten-1' : 'red lighten-1'
   }
 
   get statusReport() {
