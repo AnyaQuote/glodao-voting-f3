@@ -5,9 +5,7 @@ import { action, observable, computed, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get } from 'lodash-es'
 export class ProjectDetailViewModel {
-  @observable unicode = ''
   @observable project?: VotingPools
-
   @observable missions = [
     {
       image: 'sao-hoa.png',
@@ -42,33 +40,25 @@ export class ProjectDetailViewModel {
       end: '21/12/2022, 10:00 pm',
     },
   ]
+  @observable loading = false
 
-  _disposer: IReactionDisposer
-  constructor() {
-    this._disposer = reaction(
-      () => this.unicode,
-      () => {
-        this.fetchProjectDetail()
-      }
-    )
+  constructor(unicodeName: string) {
+    this.fetchProjectDetail(unicodeName)
   }
 
-  @asyncAction *fetchProjectDetail() {
+  @asyncAction *fetchProjectDetail(query: string) {
     try {
-      loadingController.increaseRequest()
-      const res = yield appProvider.api.voting.find({
-        unicode: this.unicode,
-      })
+      this.loading = true
+      const res = yield appProvider.api.voting.find(
+        { unicodeName: query, ownerAddress: appProvider.authStore.username },
+        { _limit: 1 }
+      )
       this.project = get(res, '[0]')
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
-      loadingController.decreaseRequest()
+      this.loading = false
     }
-  }
-
-  @action getUnicode(value: string) {
-    this.unicode = value
   }
 
   @computed get projectLogo() {
@@ -81,9 +71,5 @@ export class ProjectDetailViewModel {
 
   @computed get status() {
     return get(this.project, 'status', '')
-  }
-
-  dispose() {
-    this._disposer()
   }
 }

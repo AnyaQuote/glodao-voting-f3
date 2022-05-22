@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import { ProjectDetailViewModel } from '../viewmodels/project-detail-viewmodel'
 import { get } from 'lodash-es'
 import { RoutePaths } from '@/router'
@@ -73,7 +73,7 @@ import { Observer } from 'mobx-vue'
   },
 })
 export default class ProjectDetailPage extends Vue {
-  @Inject('project-detail-vm') vm!: ProjectDetailViewModel
+  @Provide() vm = new ProjectDetailViewModel(get(this.$route, 'params.code'))
 
   goToProjects() {
     this.$router.push(RoutePaths.project_list)
@@ -81,14 +81,6 @@ export default class ProjectDetailPage extends Vue {
 
   goToNewMission() {
     this.$router.push(RoutePaths.new_mission)
-  }
-
-  mounted() {
-    this.vm.getUnicode(get(this.$route, 'params.code'))
-  }
-
-  beforeDestroy() {
-    this.vm.dispose()
   }
 
   get statusColor() {

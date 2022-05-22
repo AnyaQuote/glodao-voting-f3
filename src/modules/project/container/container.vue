@@ -23,7 +23,6 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 @Component
 export default class Container extends Vue {
   @Provide('project-list-vm') projectListVM = new ProjectListViewModel()
-  @Provide('project-detail-vm') projectDetailVM = new ProjectDetailViewModel()
 
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)
