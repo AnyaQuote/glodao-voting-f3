@@ -1,6 +1,6 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, autorun, computed, IReactionDisposer, observable, reaction, when } from 'mobx'
-import { set } from 'lodash'
+import { set, kebabCase } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toMoment } from '@/helpers/date-helper'
 import { apiService } from '@/services/api-service'
@@ -17,7 +17,8 @@ const projectInfoDefault = {
   projectCover: null,
   projectLogo: null,
   fields: [],
-  socials: {},
+  socialLinks: {},
+  tokenAddressSymbol: '',
   tokenAddress: '',
 }
 
@@ -84,12 +85,12 @@ export class BountyApplyViewModel {
       res = yield apiService.uploadFile(media)
 
       const data: VotingPools = {
-        projectId: '',
+        poolId: '',
         projectName: projectName,
-        unicode: projectName,
+        unicodeName: kebabCase(projectName),
         type: 'bounty',
         ownerAddress: walletStore.account,
-        rewardAddress: tokenAddress,
+        tokenAddress: tokenAddress,
         status: immediate ? 'voting' : 'pending',
         startDate: toMoment(openDate).toISOString(),
         endDate: toMoment(openDate).add(3, 'days').toISOString(),

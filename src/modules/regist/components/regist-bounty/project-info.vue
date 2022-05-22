@@ -47,8 +47,8 @@
       <div class="label font-weight-bold mt-6">Website and social link</div>
       <app-text-field
         class="thin-border"
-        :value="$_get(vm.projectInfo, 'socials.website')"
-        @input="vm.changeProjectInfo('socials.website', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.website')"
+        @input="vm.changeProjectInfo('socialLinks.website', $event)"
         :outlined="false"
         append-icon="mdi-link"
       >
@@ -64,8 +64,8 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="$_get(vm.projectInfo, 'socials.medium')"
-        @input="vm.changeProjectInfo('socials.medium', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.medium')"
+        @input="vm.changeProjectInfo('socialLinks.medium', $event)"
         append-icon="mdi-link"
       >
         <template #prepend>
@@ -80,8 +80,8 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="$_get(vm.projectInfo, 'socials.twitter')"
-        @input="vm.changeProjectInfo('socials.twitter', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.twitter')"
+        @input="vm.changeProjectInfo('socialLinks.twitter', $event)"
         append-icon="mdi-link"
       >
         <template #prepend>
@@ -99,8 +99,8 @@
       <app-text-field
         class="mt-3 thin-border"
         :outlined="false"
-        :value="$_get(vm.projectInfo, 'socials.telegram')"
-        @input="vm.changeProjectInfo('socials.telegram', $event)"
+        :value="$_get(vm.projectInfo, 'socialLinks.telegram')"
+        @input="vm.changeProjectInfo('socialLinks.telegram', $event)"
         append-icon="mdi-link"
       >
         <template #prepend>
@@ -124,7 +124,16 @@
         <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3">Add more link</div>
       </v-sheet>
 
-      <div class="label neutral10--text mt-6bluePrimary--text font-weight-bold">Token address</div>
+      <div class="label neutral10--text mt-6 font-weight-bold">Token reward address symbol</div>
+      <app-text-field
+        :value="$_get(vm.projectInfo, 'tokenAddressSymbol')"
+        @input="vm.changeProjectInfo('tokenAddressSymbol', $event)"
+        placeholder="Enter link"
+      ></app-text-field>
+      <div class="label neutral10--text mt-6">
+        <span class="font-weight-bold">Token reward address</span>
+        <i class="text-subtitle-1 ml-2">Optional</i>
+      </div>
       <app-text-field
         :value="$_get(vm.projectInfo, 'tokenAddress')"
         @input="vm.changeProjectInfo('tokenAddress', $event)"
@@ -149,7 +158,7 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
 @Component({
   components: {
-    'image-upload-field': () => import('../common/image-upload-field.vue'),
+    'image-upload-field': () => import('@/components/image-upload-field.vue'),
   },
 })
 export default class ProjectInfo extends Vue {

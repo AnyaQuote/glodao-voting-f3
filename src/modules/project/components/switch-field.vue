@@ -36,8 +36,8 @@ export default class SwitchField extends Vue {
 
 <style lang="scss" scoped>
 .bullet {
-  display: list-item; /* This has to be "list-item"                                               */
-  list-style-type: disc; /* See https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type     */
+  display: list-item;
+  list-style-type: disc;
   list-style-position: inside;
 }
 .dotted-border {

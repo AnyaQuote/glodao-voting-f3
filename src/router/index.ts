@@ -1,124 +1,112 @@
 import { authStore } from '@/stores/auth-store'
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-import { get } from 'lodash'
+import VueRouter, { RouteConfig, Route } from 'vue-router'
+import { get, isEmpty } from 'lodash'
 
 Vue.use(VueRouter)
 
+export enum RoutePaths {
+  voting_list = '/voting',
+  voting_detail = '/voting/',
+  project_list = '/projects',
+  project_detail = '/projects/',
+  new_mission = '/new-mission',
+  new_application = '/new-project',
+  new_bounty_application = '/new-project/bounty',
+  new_launchpad_application = '/new-project/launchpad',
+  comming_soon = '/comming-soon',
+  not_found = '/404',
+}
+
 const routes: Array<RouteConfig> = [
-  { path: '/', redirect: '/NotFound' },
+  { path: '/', redirect: '/voting' },
+  // -------------------- VOTING ROUTER SECTION ---------------------
   {
-    path: '/',
-    component: () => import('@/modules/voting/container/container.vue'),
-    children: [
-      {
-        path: 'voting',
-        name: 'voting-list',
-        component: () => import('@/modules/voting/pages/voting-home.vue'),
-        meta: {
-          auth: false,
-          title: 'Voting Home',
-        },
-      },
-      {
-        path: 'voting/:id',
-        name: 'voting-detail',
-        component: () => import('@/modules/voting/pages/voting-detail.vue'),
-        meta: {
-          auth: false,
-          title: 'Voting detail',
-        },
-      },
-    ],
-  },
-  {
-    path: '/',
-    component: () => import('@/modules/regist/container/container.vue'),
-    children: [
-      {
-        path: 'projects',
-        name: 'project-list',
-        component: () => import('@/modules/regist/pages/project-list.vue'),
-        meta: {
-          auth: true,
-          title: 'Projects',
-        },
-      },
-      // change below to detail page, which have not implement yet
-      {
-        path: 'projects/:id',
-        name: 'project-detail',
-        component: () => import('@/modules/regist/pages/project-list.vue'),
-        meta: {
-          auth: true,
-          title: 'Projects',
-        },
-      },
-      {
-        path: 'new-project',
-        name: 'new-project',
-        component: () => import('@/modules/regist/pages/new-project.vue'),
-        meta: {
-          auth: false,
-          title: 'New Application',
-        },
-      },
-      {
-        path: 'new-project/launchpad',
-        name: 'launchpad-apply',
-        component: () => import('@/modules/regist/pages/launchpad-form.vue'),
-        meta: {
-          auth: true,
-          title: 'Launchpad Application',
-        },
-      },
-      {
-        path: 'new-project/bounty',
-        name: 'bounty-apply',
-        component: () => import('@/modules/regist/pages/bounty-form.vue'),
-        meta: {
-          auth: true,
-          title: 'Bounty Application',
-        },
-      },
-      {
-        path: 'new-mission',
-        component: () => import('@/modules/regist/pages/mission-form.vue'),
-        meta: {
-          auth: true,
-          title: 'Application',
-        },
-      },
-    ],
-  },
-  {
-    path: '/applications',
-    component: () => import('@/modules/applications/pages/applications-project-page.vue'),
+    path: '/voting',
+    name: 'voting-list',
+    component: () => import('@/modules/voting/pages/voting-home.vue'),
     meta: {
-      auth: true,
-      title: 'Application',
+      auth: false,
+      title: 'Voting List',
     },
   },
   {
-    path: '/dao-voting',
-    component: () => import('@/modules/dao-voting/pages/dao-voting-page.vue'),
+    path: '/voting/:code',
+    name: 'voting-detail',
+    component: () => import('@/modules/voting/pages/voting-detail.vue'),
     meta: {
-      auth: true,
-      title: 'Application',
+      auth: false,
+      params: true,
+      title: 'Voting detail',
+    },
+  },
+  // ------------------- APPLICATION ROUTER SECTION -----------------------
+  {
+    path: '/new-project',
+    name: 'new-project',
+    component: () => import('@/modules/regist/pages/new-project.vue'),
+    meta: {
+      auth: false,
+      title: 'New Application',
     },
   },
   {
-    path: '/project-detail-bounty',
-    component: () => import('@/modules/project-detail-bounty/page/project-detail-bounty-page.vue'),
+    path: '/new-project/launchpad',
+    name: 'launchpad-apply',
+    component: () => import('@/modules/regist/pages/launchpad-form.vue'),
     meta: {
       auth: true,
-      title: 'Application',
+      title: 'Launchpad Application',
+    },
+  },
+  {
+    path: '/new-project/bounty',
+    name: 'bounty-apply',
+    component: () => import('@/modules/regist/pages/bounty-form.vue'),
+    meta: {
+      auth: true,
+      title: 'Bounty Application',
+    },
+  },
+
+  // --------------- PROJECT ROUTER SECTION -------------------
+  {
+    path: '/projects',
+    name: 'project-list',
+    component: () => import('@/modules/project/pages/project-list.vue'),
+    meta: {
+      auth: false,
+      title: 'Projects',
+    },
+  },
+  {
+    path: '/projects/:code',
+    name: 'project-detail',
+    component: () => import('@/modules/project/pages/project-detail.vue'),
+    meta: {
+      auth: true,
+      params: true,
+      title: 'Project detail',
+    },
+  },
+  {
+    path: '/new-mission',
+    name: 'mission-apply',
+    component: () => import('@/modules/project/pages/new-mission.vue'),
+    meta: {
+      auth: true,
+      title: 'Mission Form',
     },
   },
   {
     path: '/comming-soon',
-    name: 'NotFound',
+    name: 'comming-soon',
     component: () => import('@/modules/error/pages/coming-soon.vue'),
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: () => import('@/modules/error/pages/404.vue'),
   },
 ]
 
@@ -132,22 +120,22 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('to:::', to)
   if (!get(to, 'name', '')) {
-    next('/comming-soon')
+    next(RoutePaths.not_found)
   } else {
     const isAuthenticated = authStore.isAuthenticated
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    const isFormPage = to.name === 'bounty-apply' || to.name === 'launchpad-apply'
-    // If is in bounty form or launchpad form without isAuth => back to new-project
+    const requiredParams = to.matched.some((m) => m.meta?.params === true)
     if ((requiredAuth && isAuthenticated) || !requiredAuth) {
-      next()
+      if (requiredParams && isEmpty(get(to, 'params.code', ''))) {
+        next(RoutePaths.not_found)
+      } else next()
     } else if (requiredAuth && !isAuthenticated) {
-      if (isFormPage) {
-        next('/new-project')
-      } else {
-        next('/voting')
-      }
+      // login dialog will be check in here and will be open to new page
+      // If cancel dialog without login, go back to previous page (prevent from going to page)
+      next()
+    } else {
+      console.error(`VueRouter error ${to.name} requriedAuth=${requiredAuth} isAuthenticated=${isAuthenticated}`)
     }
   }
 })

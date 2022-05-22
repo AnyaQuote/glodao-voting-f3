@@ -20,17 +20,17 @@
             <v-icon color="black">mdi-chevron-right</v-icon>
           </v-sheet>
         </template>
-        <v-carousel-item v-for="i in n" :key="i" eager>
+        <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
           <!-- CAROUSEL ITEM START -->
           <v-sheet class="trending-left blue lighten-5 rounded-lg">
             <div class="trending-left-top">
-              <v-img class="img rounded-lg rounded-b-0" src="@/assets/images/voting-trending--background.png" contain />
+              <v-img class="img rounded-lg rounded-b-0" :src="$_get(item, 'data.projectCover')" contain />
               <voting-out-btn class="btn mt-7 mr-7" width="51" height="51" />
             </div>
             <div class="trending-left-bottom d-flex align-end px-4 pb-4">
-              <div class="trending-left-bottom__content text-h4 py-6 font-weight-bold">Hydro Wind Energy</div>
+              <div class="trending-left-bottom__content text-h4 py-6 font-weight-bold">{{ item.projectName }}</div>
               <v-sheet class="trending-left-bottom__logo rounded-lg pa-3" width="160" height="160">
-                <v-img contain aspect-ratio="1" src="../../../assets/icons/voting-trending--logo.png" />
+                <v-img contain aspect-ratio="1" :src="$_get(item, 'data.projectLogo')" />
               </v-sheet>
             </div>
           </v-sheet>
@@ -44,19 +44,21 @@
         <div class="trending-right__content pa-5 pb-0">
           <!-- PREVIEW SCROLL ITEM START -->
           <v-sheet
-            v-for="i in n"
+            v-for="(item, i) in vm.votingList"
             :key="i"
             class="d-flex mb-4"
             :class="{ active: tab === i }"
             v-ripple
             @click="changeTab(i)"
           >
-            <v-img class="rounded-lg" contain max-width="163" src="@/assets/images/voting-trending--background.png" />
+            <v-img class="rounded-lg" contain max-width="163" :src="$_get(item, 'data.projectCover')" />
             <div class="ml-4 d-flex flex-column justify-space-around align-start">
-              <v-chip color="yellow" outlined>
-                <span class="black--text text-subtitle-2 mx-2">Bounty</span>
+              <v-chip outlined :color="item.type === 'bounty' ? 'yellow' : 'green'">
+                <span class="black--text text-subtitle-2 mx-2 text-capitalize">{{ item.type }}</span>
               </v-chip>
-              <div class="font-weight-medium" style="font-size: 1.125rem; line-height: 1.125rem">Hydro Wind Energy</div>
+              <div class="font-weight-medium" style="">
+                {{ item.projectName }}
+              </div>
             </div>
           </v-sheet>
           <!-- PREVIEW SCROLL ITEM END -->
@@ -67,7 +69,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Inject } from 'vue-property-decorator'
+import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 
 @Component({
   components: {
@@ -75,6 +78,7 @@ import { Component, Vue } from 'vue-property-decorator'
   },
 })
 export default class VotingTrendingSection extends Vue {
+  @Inject() vm!: VotingListViewModel
   n = [0, 1, 2, 3, 4, 5]
   tab = 1
   changeTab(index: number) {

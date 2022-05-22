@@ -1,37 +1,47 @@
 <template>
+  <!-- <v-slide-item> -->
   <v-hover v-slot="{ hover }">
-    <div class="card-wrapper d-flex fill-height" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-      <v-sheet v-bind="$attrs" class="card d-flex flex-column">
+    <div class="d-flex fill-height rounded-lg pa-1" :class="typeBorderColor">
+      <v-sheet class="d-flex flex-column rounded-lg overflow-hidden">
         <!-- ------------------------------------------------------------------------------------------------- -->
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <v-img :src="cover" contain class="img-back" />
-          <!-- HOVER SHOW SECTION START -->
-          <div class="img-front d-flex flex-column" :class="{ blur: hover }">
-            <v-sheet class="label white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
-              🔥Trending
-            </v-sheet>
+          <v-img :src="$_get(pool, 'data.projectCover')">
+            <div class="p-absolute absolute-space d-flex flex-column" :class="{ blur: hover }">
+              <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
+                🔥Trending
+              </v-sheet>
 
-            <div class="fill-height d-flex justify-center align-center mt-n6">
-              <v-fade-transition>
-                <v-btn v-show="hover" class="rounded pa-2">
-                  <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
-                  <span class="font-weight-medium">VOTE NOW</span>
-                </v-btn>
-              </v-fade-transition>
+              <div class="fill-height d-flex justify-center align-center mt-n6">
+                <v-fade-transition>
+                  <v-btn v-show="hover" class="rounded pa-2" @click="openDetail">
+                    <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
+                    <span class="font-weight-medium">VOTE NOW</span>
+                  </v-btn>
+                </v-fade-transition>
+              </div>
             </div>
-          </div>
+          </v-img>
+          <!-- HOVER SHOW SECTION START -->
+
           <!-- HOVER SHOW SECTION END -->
         </div>
         <!-- -------------------------------------------------------------------------------------------------- -->
         <div class="card-content flex-grow-1 d-flex flex-column">
           <!-- CARD TOP START -->
-          <div class="card-content-top d-flex flex-column flex-grow-1 pa-6 pt-1">
-            <div class="card-title font-weight-bold">{{ projectName }}</div>
-            <div class="card-subtitle font-weight-bold mb-4">
-              {{ shortDescription }}
+          <div class="d-flex flex-column flex-grow-1 pa-6">
+            <div class="d-flex align-center mb-4">
+              <v-avatar size="48" class="mr-4">
+                <v-img :src="$_get(pool, 'data.projectLogo')" />
+              </v-avatar>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
+            </div>
+            <div class="text-subtitle-2 text-truncate neutral10--text font-weight-bold mb-4">
+              {{ $_get(pool, 'data.shortDescription') }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(label, i) in labels" :key="i" class="rounded-lg ma-1">{{ label }}</v-chip>
+              <v-chip v-for="(field, i) in $_get(pool, 'data.fields')" :key="i" class="rounded-lg ma-1">{{
+                field
+              }}</v-chip>
             </div>
           </div>
           <!-- CARD TOP END -->
@@ -39,8 +49,8 @@
           <!-- CARD BOTTOM START -->
           <v-spacer />
           <div class="card-content-bottom">
-            <div class="flag text-center py-2" :class="type === 'bounty' ? 'bounty' : 'launchpad'">
-              <span class="text-uppercase">{{ type === 'bounty' ? 'Bounty Project' : 'Launchpad Project' }}</span>
+            <div class="text-center py-2" :class="typeBackgroundColor">
+              <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
             </div>
           </div>
           <!-- CARD BOTTOM END -->
@@ -49,140 +59,57 @@
       </v-sheet>
     </div>
   </v-hover>
+  <!-- </v-slide-item> -->
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-
-interface Props {
-  projectName?: string
-  shortDescription?: string
-  labels?: string[]
-  endTime?: string
-  upvote?: string
-  type?: string
-  cover?: string
-}
-
-const propsValue = (): Props => ({
-  projectName: 'Hydro Wind Energy',
-  shortDescription: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-  labels: ['NFT', 'gaming', 'finance'],
-  endTime: '',
-  upvote: '',
-  type: 'bounty',
-  cover:
-    'https://images.unsplash.com/photo-1484626753559-5fa3ea273ae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-})
+import { VotingPools } from '@/models/VotingModel'
+import { RoutePaths } from '@/router'
 
 @Component
 export default class LiveCompactCard extends Vue {
-  @Prop({ default: propsValue }) props!: Props
+  @Prop({ required: true }) pool!: VotingPools
 
-  get projectName() {
-    return this.props.projectName
+  get typeName() {
+    return this.pool.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'
   }
 
-  get shortDescription() {
-    return this.props.shortDescription
+  get isApproved() {
+    return this.pool.status === 'approved'
   }
 
-  get labels() {
-    return this.props.labels
+  get statusColor() {
+    return this.isApproved ? 'blue lighten-5 blue--text' : 'red lighten-5 red--text'
   }
 
-  get endTime() {
-    return this.props.endTime
+  get typeTextColor() {
+    return this.pool.type === 'bounty' ? 'orange--text' : 'green--text'
   }
 
-  get type() {
-    return this.props.type
+  get typeBackgroundColor() {
+    return this.pool.type === 'bounty' ? 'orange lighten-1' : 'green lighten-4'
   }
 
-  get cover() {
-    return this.props.cover
+  get typeBorderColor() {
+    return this.pool.type === 'bounty' ? 'bounty-border' : 'launchpad-border'
   }
 
-  get upvote() {
-    return this.props.upvote
+  openDetail() {
+    this.$router.push(RoutePaths.voting_detail + this.pool.unicodeName)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.card {
-  $bounty-light-1: #ff7a00;
-  $bounty-light-2: #ffe0c2;
-  $launchpad-light-1: #1e8c0b;
-  $launchpad-light-2: #dffada;
-  border-radius: em(8);
-  overflow: hidden;
-  flex: 1;
-  @at-root.card-wrapper {
-    padding: em(1.5);
-    border-radius: em(9);
-    &.bounty {
-      background: linear-gradient(180deg, $bounty-light-1 0%, #fff9f3 80%);
-    }
-    &.launchpad {
-      background: linear-gradient(180deg, $launchpad-light-1 0%, #fff9f3 80%);
-    }
-  }
-  .card-image {
-    position: relative;
-    flex-shrink: 0;
-    .img-back {
-      position: relative;
-    }
-    .img-front {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      &.blur {
-        background: rgba($color: #000000, $alpha: 0.5);
-      }
-      .label {
-        align-self: start;
-      }
-    }
-  }
-  .card-content {
-    .card-content-top {
-      .clip-text {
-        word-break: break-word;
-        text-overflow: hidden;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-      .card-title {
-        @extend .clip-text;
-        font-size: em(28) !important;
-        line-height: em(36.4) !important;
-      }
-      .card-subtitle {
-        @extend .clip-text;
-        font-size: em(14) !important;
-        line-height: em(21) !important;
-      }
-    }
-    .card-content-bottom {
-      .flag {
-        &.bounty {
-          background: $bounty-light-2 !important;
-          border-bottom: 4px solid $bounty-light-1;
-          color: $bounty-light-1;
-        }
-        &.launchpad {
-          background: $launchpad-light-2 !important;
-          border-bottom: 4px solid $launchpad-light-1;
-          color: $launchpad-light-1;
-        }
-      }
-    }
-  }
+.bounty-border {
+  background: linear-gradient(180deg, var(--v-orange-base) 0%, #fff9f3 80%);
+}
+.launchpad-border {
+  background: linear-gradient(180deg, (--v-green-base) 0%, #fff9f3 80%);
+}
+
+.blur {
+  background: rgba($color: #000000, $alpha: 0.5);
 }
 </style>

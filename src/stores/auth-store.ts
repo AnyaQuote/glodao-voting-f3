@@ -41,20 +41,7 @@ export class AuthStore {
   @asyncAction *saveAttachWallet() {
     //
   }
-  // @asyncAction *getUserData() {
-  //   try {
-  //     const res = yield apiService.users.findOne(this.user.id, this.jwt)
-  //     this.changeUser(res)
-  //   } catch (error) {
-  //     snackController.error('Fail to get user data')
-  //   }
-  // // }
-  // @action.bound resetWalletDialogInput() {
-  //   this.walletDialogInput = ''
-  // }
-  @action.bound changeTwitterLoginDialog(value: boolean) {
-    this.twitterLoginDialog = value
-  }
+
   @action.bound changeJwt(value: string) {
     this.jwt = value
     localdata.jwt = value
@@ -157,6 +144,10 @@ export class AuthStore {
 
   @computed get isAuthenticated() {
     return !!this.jwt
+  }
+
+  @computed get username() {
+    return this.user.username
   }
 }
 export const authStore = new AuthStore()

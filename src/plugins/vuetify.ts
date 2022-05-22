@@ -63,23 +63,18 @@ export default new Vuetify({
         neutral100: {
           base: '#FFFFFF',
         },
-        greenSenamatic: '#6CE08D',
-        redSenamatic: '#E35E55',
-        orangeSenamatic: '#F9AF40',
         purple: '#6955E3',
         violet: '#252D72',
         green: {
-          base: '#6CE08D',
-          lighten1: '#1EB965',
+          base: '#1e8c0b',
+          lighten1: '#6CE08D',
+          lighten2: '#1EB965',
         },
         red: {
           base: '#E35E55',
         },
         blue: {
           base: '#0276F0',
-          lighten1: '#E6F1FE',
-          lighten2: '#55ACE3',
-          lighten3: '#F0F7FF',
         },
         grey: {
           base: '#F9F9F9',
@@ -90,8 +85,8 @@ export default new Vuetify({
           base: '#00E5FF',
         },
         orange: {
-          base: '#FFE0C2',
-          lighten1: '#FF7A00',
+          base: '#FF7A00',
+          lighten1: '#ffe0c2',
         },
       },
       dark: {
@@ -122,10 +117,6 @@ export default new Vuetify({
           base: '#30415C',
           lighten1: '#F9F9F9',
         },
-        greenSenamatic: '#6CE08D',
-        redSenamatic: '#E35E55',
-        orangeSenamatic: '#F9AF40',
-        purple: '#6955E3',
         neutral10: {
           base: '#B6B9BE',
         },
@@ -135,19 +126,30 @@ export default new Vuetify({
         neutral100: {
           base: '#092249',
         },
+        purple: '#6955E3',
+        violet: '#252D72',
         green: {
-          base: '#6CE08D',
+          base: '#1e8c0b',
+          lighten1: '#6CE08D',
+          lighten2: '#1EB965',
         },
         red: {
           base: '#E35E55',
         },
         blue: {
           base: '#0276F0',
-          lighten1: '#E6F1FE',
-          lighten2: '#55ACE3',
+        },
+        grey: {
+          base: '#F9F9F9',
+          lighten1: '#E5E5E5',
+          lighten2: '#C4C4C4',
         },
         mint: {
           base: '#00E5FF',
+        },
+        orange: {
+          base: '#FF7A00',
+          lighten1: '#ffe0c2',
         },
       },
     },

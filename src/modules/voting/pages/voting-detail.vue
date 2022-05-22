@@ -1,72 +1,66 @@
 <template>
-  <v-row class="mb-72">
-    <v-col cols="12">
-      <div class="d-flex align-center mt-5">
-        <v-breadcrumbs :items="items" divider=">" class="pa-0">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :disabled="item.disabled" :href="item.href">
-              <span
-                class="font-weight-bold"
-                :class="item.text === 'DAO Voting' ? 'bluePrimary--text' : 'neutral10--text'"
-                >{{ item.text }}</span
-              >
-            </v-breadcrumbs-item>
-          </template>
-          <template v-slot:divider>
-            <v-icon size="22"> mdi-chevron-right </v-icon>
-          </template>
-        </v-breadcrumbs>
-      </div>
-    </v-col>
-
-    <v-col cols="12">
-      <voting-detail-overview></voting-detail-overview>
-    </v-col>
-
-    <v-col cols="12">
-      <div class="row mt-72">
-        <!-- <div class=" debug mb-6"> -->
-        <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
-          <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE (800)</div>
-          <v-btn icon>
-            <v-icon large>mdi-information</v-icon>
-          </v-btn>
-        </v-sheet>
-        <!-- </div> -->
-
-        <!-- VOTED USER LIST START -->
-        <div class="col-12">
-          <voting-list-item class="mb-4 pa-2" elevation="3" v-for="i in Array(7)" :key="i" />
+  <v-container>
+    <v-row class="mb-72">
+      <v-col cols="12" class="mb-10">
+        <div class="mt-5 d-flex align-center font-weight-medium">
+          <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
+          <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
+          <span class="neutral10--text">{{ vm.projectName }}</span>
         </div>
+      </v-col>
 
-        <div class="col-12">
-          <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
-        </div>
-        <!-- VOTED USER LIST END -->
-      </div>
-    </v-col>
+      <v-col cols="12">
+        <voting-detail-overview></voting-detail-overview>
+      </v-col>
 
-    <v-col cols="12">
-      <div class="nominated-section mt-72">
-        <div class="header">
-          <span class="header-title mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</span>
+      <v-col cols="12">
+        <div class="row mt-72">
+          <!-- <div class=" debug mb-6"> -->
+          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
+            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE (800)</div>
+            <v-btn icon>
+              <v-icon large>mdi-information</v-icon>
+            </v-btn>
+          </v-sheet>
+          <!-- </div> -->
+
+          <!-- VOTED USER LIST START -->
+          <div class="col-12">
+            <voting-list-item class="mb-4 pa-2" elevation="3" v-for="i in Array(7)" :key="i" />
+          </div>
+
+          <div class="col-12">
+            <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
+          </div>
+          <!-- VOTED USER LIST END -->
         </div>
-      </div>
-      <div class="app-slide-group">
-        <v-slide-group class="ma-n1 px-1">
-          <v-slide-item v-for="i in [1, 2, 3, 4, 5]" :key="i" class="ma-1 debug">
-            <live-compact-card width="348" />
-          </v-slide-item>
-        </v-slide-group>
-      </div>
-    </v-col>
-  </v-row>
+      </v-col>
+
+      <v-col cols="12">
+        <div class="nominated-section mt-72">
+          <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        </div>
+        <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
+          <v-slide-group class="ma-n1 px-1">
+            <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" width="348" :pool="pool" />
+          </v-slide-group>
+        </div>
+        <v-row v-else class="row">
+          <v-col cols="12" v-for="(pool, i) in vm.votingList" :key="i">
+            <live-compact-card :pool="pool" />
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import VotingDetailOverview from '../components/voting-detail-overview.vue'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
+import { get } from 'lodash-es'
+import { RoutePaths } from '@/router'
+
 @Component({
   components: {
     'voting-detail-overview': () => import('../components/voting-detail-overview.vue'),
@@ -75,19 +69,11 @@ import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
   },
 })
 export default class VotingDetail extends Vue {
-  @Provide() vm = new VotingDetailViewModel()
-  items = [
-    {
-      text: 'DAO Voting',
-      disabled: false,
-      href: '/voting',
-    },
-    {
-      text: 'Hydro Wind Energy',
-      disabled: true,
-      href: '/voting/123',
-    },
-  ]
+  @Provide() vm = new VotingDetailViewModel(get(this.$route, 'params.code'))
+
+  goToVotingList() {
+    this.$router.push(RoutePaths.voting_list)
+  }
 }
 </script>
 
@@ -102,10 +88,6 @@ export default class VotingDetail extends Vue {
   .header {
     font-size: em(28);
     line-height: em(36.4);
-    .header-title {
-    }
-    .header-subtitle {
-    }
   }
 }
 </style>

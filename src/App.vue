@@ -67,15 +67,15 @@ export default class App extends Vue {
   }
 }
 
-// .container {
-//   padding: 0 16px !important;
-//   max-width: 1130px;
-// }
 .font-weight-400 {
   font-weight: 400 !important;
 }
 .font-weight-600 {
   font-weight: 600 !important;
+}
+.font-18 {
+  font-size: 18px !important;
+  line-height: 24px !important;
 }
 .theme--dark {
   .date-picker-dialog-custom {
@@ -194,6 +194,10 @@ export default class App extends Vue {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
 }
 
 /* ----------------------------------------------------------------------------------------------- */
