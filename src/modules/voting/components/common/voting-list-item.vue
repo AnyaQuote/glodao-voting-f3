@@ -1,23 +1,35 @@
 <template>
-  <v-sheet v-bind="$attrs" class="row align-center rounded">
+  <v-sheet v-if="$vuetify.breakpoint.mdAndUp" v-bind="$attrs" class="row align-center rounded">
     <div class="col-12 col-md-4">
       <div class="font-weight-bold">{{ props.address }}</div>
       <div>{{ props.badge }}</div>
     </div>
-    <div class="col-12 col-md-4 d-flex align-center justify-space-around">
+    <div class="col-12 col-md-4 d-flex align-center justify-space-between">
       <v-chip color="green">{{ props.hasVoted === 'yes' ? '👍YES' : '👎NO' }}</v-chip>
       <span class="font-weight-medium">
         {{ props.hasVoted === 'yes' ? 'We want to join in this project' : "We don't want to join this project" }}</span
       >
     </div>
-    <div class="col-12 col-md-2 d-flex flex-column align-end text-subtitle-2">
+    <div class="col-12 col-md-2 d-flex flex-row flex-md-column align-md-end justify-space-between text-subtitle-2">
       <span class="neutral10--text">Time voted</span>
       <span class="font-weight-bold">{{ props.votedAt }}</span>
     </div>
-    <div class="col-12 col-md-2 d-flex justify-end">
-      <v-sheet width="120" class="pa-4 rounded d-flex align-center justify-space-around" outlined>
+    <div class="col-12 col-md-2 d-flex justify-center justify-sm-end">
+      <v-sheet class="pa-4 rounded d-flex align-center justify-space-around" outlined>
         <span>{{ props.tribe }}</span>
-        <v-icon large>mdi-fingerprint</v-icon>
+        <v-icon>mdi-fingerprint</v-icon>
+      </v-sheet>
+    </div>
+  </v-sheet>
+  <v-sheet v-else v-bind="$attrs" class="row align-center rounded">
+    <div class="col-5 font-weight-bold">{{ props.address }}</div>
+    <div class="col-4 d-flex justify-center">
+      <v-chip class="green white--text">{{ props.hasVoted === 'yes' ? '👍YES' : '👎NO' }}</v-chip>
+    </div>
+    <div class="col-3 d-flex">
+      <v-sheet class="pa-4 rounded ml-auto" outlined>
+        <span>{{ props.tribe }}</span>
+        <v-icon>mdi-fingerprint</v-icon>
       </v-sheet>
     </div>
   </v-sheet>
