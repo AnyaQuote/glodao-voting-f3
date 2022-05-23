@@ -9,6 +9,7 @@ import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
 import { walletStore } from './wallet-store'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { loginController } from '@/components/login-dialog/login-dialog-controller'
 
 export class AuthStore {
   @observable attachWalletDialog = false
@@ -24,22 +25,10 @@ export class AuthStore {
     if (localdata.user) this.changeUser(localdata.user)
     reaction(
       () => walletStore.account,
-      () => this.logout
+      () => {
+        this.logout()
+      }
     )
-  }
-
-  @action.bound changeAttachWalletDialog(value: boolean) {
-    if (!value && !this.user.hunter.address) {
-      snackController.error('You need to set your main wallet')
-      return
-    }
-    this.attachWalletDialog = value
-  }
-  @action.bound changeWalletDialogInput(value: string) {
-    this.walletDialogInput = value
-  }
-  @asyncAction *saveAttachWallet() {
-    //
   }
 
   @action.bound changeJwt(value: string) {
@@ -52,20 +41,15 @@ export class AuthStore {
   @action.bound changeUser(user: any) {
     this.user = user
     localdata.user = user
-    if (this.user.id && !get(user, 'hunter.address', '')) this.changeAttachWalletDialog(true)
   }
   @action.bound resetUser() {
     this.user = {}
   }
 
   @action logout() {
-    try {
-      this.resetJwt()
-      this.resetUser()
-      localdata.resetAuth()
-    } catch (error) {
-      snackController.commonError(error)
-    }
+    this.resetJwt()
+    this.resetUser()
+    localdata.resetAuth()
   }
 
   @asyncAction *login() {
@@ -109,6 +93,7 @@ export class AuthStore {
       } else {
         throw error
       }
+      return 'success'
     }
   }
 
@@ -137,8 +122,7 @@ export class AuthStore {
     const isExpired = Date.now() >= exp * 1000
     if (isExpired) {
       this.logout()
-      snackController.commonError('Your session has expired! Please log in')
-      this.login()
+      loginController.open({ message: 'Your session has expired. Please login to continue.' })
     }
   }
 

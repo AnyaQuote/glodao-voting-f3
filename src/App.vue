@@ -11,6 +11,7 @@
     <snack-bar />
     <alert />
     <global-loading />
+    <login-dialog />
   </v-app>
 </template>
 
@@ -20,11 +21,7 @@ import { Component, Provide, Vue } from 'vue-property-decorator'
 import { AppProvider } from './app-providers'
 
 @Observer
-@Component({
-  components: {
-    'twitter-login-dialog': () => import('@/components/twitter-login-dialog.vue'),
-  },
-})
+@Component({})
 export default class App extends Vue {
   @Provide() providers = new AppProvider(this.$router)
   wallet = this.providers.wallet
