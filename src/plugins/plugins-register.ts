@@ -13,6 +13,9 @@ export const pluginsRegister = () => {
       Vue.prototype.$_get = (any: any, path: string, defaultValue = '') => {
         return _.get(any, path, defaultValue)
       }
+      Vue.prototype.$_keys = (any: any) => {
+        return _.keys(any)
+      }
     },
   })
 }

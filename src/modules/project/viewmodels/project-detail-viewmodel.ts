@@ -9,6 +9,7 @@ export class ProjectDetailViewModel {
   @observable missions = [
     {
       image: 'sao-hoa.png',
+      status: 'ended',
       name: 'Dragon SB',
       totalReward: 150,
       priorityReward: 100,
@@ -17,6 +18,7 @@ export class ProjectDetailViewModel {
     },
     {
       image: 'sao-hoa.png',
+      status: 'running',
       name: 'Dragon SB',
       totalReward: 150,
       priorityReward: 100,
@@ -25,6 +27,7 @@ export class ProjectDetailViewModel {
     },
     {
       image: 'sao-hoa.png',
+      status: 'ended',
       name: 'Dragon SB',
       totalReward: 150,
       priorityReward: 100,
@@ -33,6 +36,7 @@ export class ProjectDetailViewModel {
     },
     {
       image: 'sao-hoa.png',
+      status: 'ended',
       name: 'Dragon SB',
       totalReward: 150,
       priorityReward: 100,
