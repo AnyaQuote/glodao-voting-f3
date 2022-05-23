@@ -30,10 +30,10 @@
 
       <v-col cols="12">
         <!-- HEADER START -->
-        <div class="nominated-section mt-72">
-          <div class="header d-flex align-center">
-            <span class="mr-5 font-weight-bold text-uppercase">Nominatied project</span>
-            <span class="neutral10--text font-weight-medium">Vote for launch on GLODAO</span>
+        <div class="mt-72 mb-4">
+          <div class="d-flex flex-column flex-md-row align-md-center align-start">
+            <span class="mr-5 text-h4 font-weight-bold text-uppercase">Nominatied project</span>
+            <span class="neutral10--text text-h5 font-weight-medium">Vote for launch on GLODAO</span>
           </div>
         </div>
         <!-- HEADER END -->
@@ -69,10 +69,12 @@
       </v-col>
 
       <v-col cols="12">
-        <div class="nominated-section mt-72">
-          <div class="header d-flex align-center">
-            <span class="mr-5 font-weight-bold text-uppercase">ENDED VOTING</span>
-            <span class="neutral10--text font-weight-medium">All potential projects are voted by Glodao user </span>
+        <div class="mt-72 mb-4">
+          <div class="d-flex d-flex flex-column flex-md-row align-md-center align-start">
+            <span class="mr-5 text-h4 font-weight-bold text-uppercase">ENDED VOTING</span>
+            <span class="neutral10--text text-h5 font-weight-medium"
+              >All potential projects are voted by Glodao user
+            </span>
           </div>
         </div>
         <v-row>

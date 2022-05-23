@@ -42,7 +42,7 @@
         </div>
         <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
           <v-slide-group class="ma-n1 px-1">
-            <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" width="348" :pool="pool" />
+            <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" :pool="pool" />
           </v-slide-group>
         </div>
         <v-row v-else class="row">

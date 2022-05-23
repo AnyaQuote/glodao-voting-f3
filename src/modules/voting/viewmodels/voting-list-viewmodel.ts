@@ -8,16 +8,22 @@ export class VotingListViewModel {
   @observable voteList: VotingPools[] = []
   @observable filterOption = 'bounty'
 
+  @observable loading = false
+
   constructor() {
     this.fetchVotingPools()
   }
 
   @asyncAction *fetchVotingPools() {
     try {
+      this.loading = true
       const res = yield apiService.voting.find({}, { _limit: -1 })
       this.voteList = res
+      this.loading = false
     } catch (error) {
       snackController.commonError(error)
+    } finally {
+      //
     }
   }
   @computed get approvedList() {
