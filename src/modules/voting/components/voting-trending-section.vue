@@ -7,7 +7,7 @@
 
     <!-- --------------------------------------------------------------------------------------------------- -->
     <v-col v-else cols="12" md="8">
-      <v-carousel :height="carouselItemHeight" hide-delimiter-background hide-delimiters v-model="tab">
+      <v-carousel height="555" hide-delimiter-background hide-delimiters v-model="tab">
         <template v-slot:prev="{ on, attrs }">
           <v-sheet
             class="ml-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-l-0 carousel-button"
@@ -101,7 +101,7 @@ export default class VotingTrendingSection extends Vue {
   }
 
   get carouselItemHeight() {
-    return this.$vuetify.breakpoint.mdAndUp ? '474' : 'auto'
+    return this.$vuetify.breakpoint.mdAndUp ? '480' : 'auto'
   }
 
   get carouselItemClass() {
