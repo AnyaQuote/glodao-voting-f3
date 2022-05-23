@@ -1,0 +1,42 @@
+<template>
+  <v-dialog :value="controller.show" max-width="480px" persistent>
+    <v-card class="neutral100--bg" outlined>
+      <v-card-title class="text-none">
+        <v-spacer />
+        <v-icon @click="controller.close">mdi-close</v-icon>
+      </v-card-title>
+      <v-card-title> Please sign in with your wallet</v-card-title>
+      <v-card-text class="red--text">{{ controller.config.message }}</v-card-text>
+      <v-card-text>
+        Remember that this wallet will be the pool owner's address. Only the pool owner can update pool information and
+        will send the token and pay the fee when creating the pool.
+      </v-card-text>
+      <v-card-text>
+        <strong>Your wallet address:</strong>
+        <app-text-field :value="controller.wallet.account" readonly />
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          class="linear-blue--bg white--text mb-2"
+          :loading="controller.loading"
+          @click="controller.confirm"
+          depressed
+          block
+        >
+          Sign message
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import { loginController } from './login-dialog-controller'
+@Component
+export default class LoginDialog extends Vue {
+  controller = loginController
+}
+</script>
+
+<style scoped></style>
