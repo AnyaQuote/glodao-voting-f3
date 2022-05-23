@@ -1,6 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { VotingPools } from '@/models/VotingModel'
-import { observable, computed } from 'mobx'
+import { observable, computed, action } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
 import { RoutePaths } from '@/router'
@@ -45,6 +45,18 @@ export class ProjectDetailViewModel {
     },
   ]
   @observable loading = false
+
+  @observable dialog = false
+  @observable cancelSuccess = false
+
+  @action.bound changeCancelDialog(val: boolean) {
+    this.dialog = val
+  }
+
+  @action.bound cancelAndWithdraw() {
+    this.cancelSuccess = true
+    this.changeCancelDialog(false)
+  }
 
   constructor(unicodeName: string) {
     this.fetchProjectDetail(unicodeName)
