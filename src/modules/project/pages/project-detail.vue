@@ -26,8 +26,7 @@
 
       <!-- ----------------------------Voting project  ------------------------------>
       <v-col cols="12" v-else>
-        <voting-header class="mb-8"></voting-header>
-        <voting-content></voting-content>
+        <voting-content class="mb-8"></voting-content>
       </v-col>
     </v-row>
   </v-container>
@@ -46,7 +45,6 @@ import { Observer } from 'mobx-vue'
     'others-header': () => import('../components/project-detail-components/project-others/header.vue'),
     'others-content': () => import('../components/project-detail-components/project-others/content.vue'),
 
-    'voting-header': () => import('../components/project-detail-components/project-votings/content.vue'),
     'voting-content': () => import('../components/project-detail-components/project-votings/content.vue'),
   },
 })
