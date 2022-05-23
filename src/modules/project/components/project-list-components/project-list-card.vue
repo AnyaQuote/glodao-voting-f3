@@ -3,7 +3,7 @@
     <v-row no-gutters dense align="stretch" style="border-bottom: thin solid var(--v-neutral20-base)">
       <!------------------------------------------ CARD RIGHT -------------------------------------------------->
       <v-col cols="6" style="border-right: thin solid var(--v-neutral20-base)">
-        <v-sheet height="124" class="pa-6 d-flex blue lighten-3 rounded-tl-lg">
+        <v-sheet height="124" class="pa-6 d-flex app-blue lighten-1 rounded-tl-lg">
           <v-img
             class="d-flex justify-center align-center mr-4"
             max-width="76"
@@ -20,7 +20,9 @@
 
         <v-divider></v-divider>
 
-        <v-sheet class="pa-6"> {{ $_get(pool, 'data.shortDescription') }} </v-sheet>
+        <v-sheet height="140" class="pa-6 clip-text neutral10--text">
+          {{ $_get(pool, 'data.shortDescription') }}
+        </v-sheet>
 
         <v-divider></v-divider>
 
@@ -43,9 +45,9 @@
           <v-sheet
             height="40"
             class="d-flex justify-center align-center rounded white--text font-weight-600 text-subtitle-1"
-            :class="statusClass"
+            :class="statusReport.color"
           >
-            {{ statusReport }}
+            {{ statusReport.text }}
           </v-sheet>
         </v-sheet>
 
@@ -57,7 +59,7 @@
               <v-sheet
                 height="27"
                 width="60"
-                class="d-flex justify-center align-center rounded-lg white--text subtitle-2 font-weight-400 mr-3 green lighten-1"
+                class="d-flex justify-center align-center rounded-lg white--text subtitle-2 font-weight-400 mr-3 green lighten-2"
               >
                 👍 YES
               </v-sheet>
@@ -89,15 +91,18 @@
         </v-sheet>
       </v-col>
     </v-row>
-    <v-btn class="blue lighten-3 d-flex rounded-b-lg" height="56" block depressed @click="goToDetail">
-      <span blue--text font-weight-600 text-subtitle-1>View detail</span>
-    </v-btn>
+    <router-link
+      :to="`/projects/${pool.unicodeName}`"
+      class="d-block app-blue lighten-1 rounded-lg rounded-t-0 d-flex align-center justify-center"
+      style="height: 56px"
+    >
+      <span class="app-blue--text font-weight-600 text-subtitle-1 text-none">View detail</span>
+    </router-link>
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { VotingPools } from '@/models/VotingModel'
-import { RoutePaths } from '@/router'
 import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -111,20 +116,29 @@ export default class ProjectCard extends Vue {
   downvoteCount = Math.floor(Math.random() * 500)
   totalVoteCount = this.upvoteCount + this.downvoteCount
 
-  goToDetail() {
-    this.$router.push(RoutePaths.project_detail + this.pool.unicodeName)
-  }
-
   get upvote() {
     return (this.upvoteCount / this.totalVoteCount) * 100
   }
 
-  get statusClass() {
-    return this.pool.status === 'approved' ? 'green lighten-1' : 'red lighten-1'
-  }
-
   get statusReport() {
-    return this.pool.status === 'approved' ? 'Your project is approved' : 'Your project is rejected'
+    switch (this.pool.status) {
+      case 'voting':
+        return {
+          color: 'app-blue',
+          text: 'Your project is opening for vote',
+        }
+      case 'approved':
+        return {
+          color: 'green lighten-2',
+          text: 'Your project is approved',
+        }
+
+      default:
+        return {
+          color: 'red',
+          text: 'Your project is rejected',
+        }
+    }
   }
 
   get projectLogo() {
@@ -133,4 +147,20 @@ export default class ProjectCard extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clip-text {
+  word-break: break-word;
+  text-overflow: hidden;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+</style>

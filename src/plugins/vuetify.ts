@@ -75,6 +75,7 @@ export default new Vuetify({
         },
         blue: {
           base: '#0276F0',
+          lighten1: '#F0F7FF',
         },
         grey: {
           base: '#F9F9F9',
@@ -87,6 +88,14 @@ export default new Vuetify({
         orange: {
           base: '#FF7A00',
           lighten1: '#ffe0c2',
+        },
+        'app-blue': {
+          base: '#0276F0',
+          lighten1: '#F0F7FF',
+        },
+
+        'app-grey': {
+          base: '#D9D9D9',
         },
       },
       dark: {
@@ -150,6 +159,14 @@ export default new Vuetify({
         orange: {
           base: '#FF7A00',
           lighten1: '#ffe0c2',
+        },
+        'app-blue': {
+          base: '#0276F0',
+          lighten1: '#F0F7FF',
+        },
+
+        'app-grey': {
+          base: '#D9D9D9',
         },
       },
     },

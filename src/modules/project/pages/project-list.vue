@@ -1,9 +1,9 @@
 <template>
   <div>
-    <banner />
+    <project-list-header />
 
     <v-container>
-      <v-row>
+      <v-row no-gutters dense>
         <!-- ----------------------- LOADING SKELETON --------------------------- -->
         <div v-if="vm.loading" class="row">
           <div class="col-12 d-flex">
@@ -41,7 +41,7 @@
         </v-col>
         <!-- ------------------------ HAS PROJECTS ---------------------------- -->
         <v-col cols="12" v-else class="rounded-lg neutral100--bg" outlined>
-          <v-sheet class="d-flex justify-space-between align-center text-h6 rounded-t-lg blue lighten-3">
+          <v-sheet class="d-flex justify-space-between align-center text-h6 rounded-t-lg blue lighten-1">
             <v-sheet height="58" class="d-flex align-stretch">
               <!--- ==== TAB FILTER ==== -->
               <v-sheet
@@ -68,7 +68,7 @@
               hide-details
               label="Hide rejected project"
               class="pa-0 ma-0 mr-8"
-              color="blue"
+              color="app-blue"
             ></v-checkbox>
           </v-sheet>
           <!-- ==== CONTENT DISPLAY ==== -->
@@ -86,7 +86,12 @@
           <!-- HAS DATA -->
           <v-scale-transition leave-absolute v-else>
             <div class="padding-form">
-              <project-card v-for="(pool, index) in vm.filteredStatusProjects" :key="index" :pool="pool" class="mb-6" />
+              <project-list-card
+                v-for="(pool, index) in vm.filteredStatusProjects"
+                :key="index"
+                :pool="pool"
+                class="mb-6"
+              />
             </div>
           </v-scale-transition>
         </v-col>
@@ -103,8 +108,8 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 
 @Component({
   components: {
-    'project-card': () => import('../components/project-card.vue'),
-    banner: () => import('../components/banner.vue'),
+    'project-list-header': () => import('../components/project-list-components/project-list-banner.vue'),
+    'project-list-card': () => import('../components/project-list-components/project-list-card.vue'),
   },
 })
 export default class ProjectListPage extends Vue {
@@ -115,7 +120,7 @@ export default class ProjectListPage extends Vue {
   }
 
   get activeClass() {
-    return (activeValue: string) => (this.vm.filterType === activeValue ? 'blue white--text' : 'blue lighten-3')
+    return (activeValue: string) => (this.vm.filterType === activeValue ? 'app-blue white--text' : 'app-blue lighten-1')
   }
 }
 </script>

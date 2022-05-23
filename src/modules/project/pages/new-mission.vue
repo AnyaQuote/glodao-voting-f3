@@ -77,7 +77,7 @@ import { Component, Vue } from 'vue-property-decorator'
 @Observer
 @Component({
   components: {
-    'switch-field': () => import('../components/switch-field.vue'),
+    'switch-field': () => import('../components/new-missions-components/new-misstion-switch-field.vue'),
     'image-upload-field': () => import('@/components/image-upload-field.vue'),
   },
 })

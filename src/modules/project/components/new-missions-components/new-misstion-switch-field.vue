@@ -6,7 +6,7 @@
         <div class="font-weight-bold text-subtitle-1 mr-4">{{ title }}</div>
         <span class="bullet text-subtitle-1 font-weight-regular">{{ subtitle }}</span>
       </div>
-      <v-switch color="bluePrimary" :value="value" @change="onChange" />
+      <v-switch color="app-blue" :value="value" @change="onChange" />
     </div>
     <div v-if="hasSlot" class="mx-5 dotted-border"></div>
     <div v-if="hasSlot" class="px-5 py-6">
@@ -16,8 +16,10 @@
 </template>
 
 <script lang="ts">
+import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
+@Observer
 @Component
 export default class SwitchField extends Vue {
   @Prop(Boolean) value!: boolean
