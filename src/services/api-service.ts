@@ -195,7 +195,6 @@ export class ApiService {
 
   setupAuthInjection() {
     this.axios.interceptors.request.use((config) => {
-      // ---- Stringify params in headers ----
       config.paramsSerializer = (params) => {
         if ('_where' in params) return qs.stringify(params)
         else return qs.stringify(params, { arrayFormat: 'repeat' })
@@ -209,8 +208,6 @@ export class ApiService {
       },
       (error) => {
         if (get(error, 'response.status') === 401) {
-          console.log('i got 401')
-          // ---- Check expire token when sending request to api ----
           authStore.checkJwtExpiration()
         }
         return Promise.reject(error)
