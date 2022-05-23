@@ -1,7 +1,13 @@
 <template>
   <v-row>
-    <v-col cols="12" md="8">
-      <v-carousel height="auto" hide-delimiter-background hide-delimiters v-model="tab">
+    <v-col v-if="vm.loading" cols="12" md="9">
+      <v-skeleton-loader type="image, image" />
+      <v-skeleton-loader tile v-show="$vuetify.breakpoint.mdAndUp" type="image" />
+    </v-col>
+
+    <!-- --------------------------------------------------------------------------------------------------- -->
+    <v-col v-else cols="12" md="8">
+      <v-carousel :height="carouselItemHeight" hide-delimiter-background hide-delimiters v-model="tab">
         <template v-slot:prev="{ on, attrs }">
           <v-sheet
             class="ml-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-l-0 carousel-button"
@@ -37,13 +43,18 @@
         </v-carousel-item>
       </v-carousel>
     </v-col>
-    <v-col cols="12" md="4">
+    <!-- --------------------------------------------------------------------------------------------------- -->
+
+    <v-col v-if="vm.loading" cols="12" md="3">
+      <div class="row">
+        <v-skeleton-loader v-for="index in 3" :key="index" height="206" type="image" class="col-4 col-md-12" />
+      </div>
+    </v-col>
+
+    <!-- --------------------------------------------------------------------------------------------------- -->
+    <v-col v-else cols="12" md="4">
       <div class="text-uppercase blue--text text-h6 mb-4">Trending now</div>
-      <v-sheet
-        class="d-flex flex-row flex-md-column"
-        :height="$vuetify.breakpoint.mdAndUp ? '474' : 'auto'"
-        :class="$vuetify.breakpoint.mdAndUp ? 'overflow-y-auto' : 'overflow-x-auto'"
-      >
+      <v-sheet class="d-flex flex-row flex-md-column" :height="carouselItemHeight" :class="carouselItemClass">
         <!-- PREVIEW SCROLL ITEM START -->
         <div
           v-for="(item, index) in vm.votingList"
@@ -84,10 +95,17 @@ import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 })
 export default class VotingTrendingSection extends Vue {
   @Inject() vm!: VotingListViewModel
-
   tab = 1
   changeTab(index: number) {
     this.tab = index
+  }
+
+  get carouselItemHeight() {
+    return this.$vuetify.breakpoint.mdAndUp ? '474' : 'auto'
+  }
+
+  get carouselItemClass() {
+    return this.$vuetify.breakpoint.mdAndUp ? 'overflow-y-auto' : 'overflow-x-auto'
   }
 }
 </script>
