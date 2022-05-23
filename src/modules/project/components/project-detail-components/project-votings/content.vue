@@ -136,10 +136,11 @@
       <v-sheet class="rounded-lg" elevation="3">
         <v-sheet
           height="40"
-          class="rounded-t-lg d-flex align-center justify-center white--text"
-          color="linear-blue--bg"
+          class="rounded-t-lg d-flex align-center justify-center white--text cursor-pointer"
+          color="red"
+          @click="wallet.cancelDialog()"
         >
-          Withdraw token
+          Cancel project
         </v-sheet>
         <v-sheet class="pa-6">
           <div class="font-weight-bold neutral0--text mb-3">Final result</div>

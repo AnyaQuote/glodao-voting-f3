@@ -67,6 +67,16 @@ export class WalletStore {
 
   private _bnbBalanceSubscription: Subscription | undefined
 
+  @observable dialogCancel = false
+
+  @action.bound cancelDialog() {
+    this.dialogCancel = !this.dialogCancel
+  }
+
+  @action.bound cancelAndWithdraw() {
+    //
+  }
+
   constructor() {
     reaction(
       () => this.chainType,
