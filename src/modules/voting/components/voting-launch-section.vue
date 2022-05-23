@@ -1,5 +1,9 @@
 <template>
+  <div v-if="vm.loading">
+    <v-skeleton-loader type="image, image, image" />
+  </div>
   <v-carousel
+    v-else
     :height="carouselHeight"
     :hide-delimiters="$vuetify.breakpoint.smAndUp"
     delimiter-icon="mdi-minus"
