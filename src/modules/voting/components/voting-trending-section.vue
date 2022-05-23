@@ -7,7 +7,7 @@
 
     <!-- --------------------------------------------------------------------------------------------------- -->
     <v-col v-else cols="12" md="8">
-      <v-carousel height="555" hide-delimiter-background hide-delimiters v-model="tab">
+      <v-carousel height="auto" hide-delimiter-background hide-delimiters v-model="tab">
         <template v-slot:prev="{ on, attrs }">
           <v-sheet
             class="ml-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-l-0 carousel-button"
@@ -53,8 +53,12 @@
 
     <!-- --------------------------------------------------------------------------------------------------- -->
     <v-col v-else cols="12" md="4">
-      <div class="text-uppercase blue--text text-h6 mb-4">Trending now</div>
-      <v-sheet class="d-flex flex-row flex-md-column" :height="carouselItemHeight" :class="carouselItemClass">
+      <div class="text-uppercase bluePrimary--text text-h6 mb-4">Trending now</div>
+      <v-sheet
+        class="d-flex flex-row flex-md-column transparent--bg"
+        :height="carouselItemHeight"
+        :class="carouselItemClass"
+      >
         <!-- PREVIEW SCROLL ITEM START -->
         <div
           v-for="(item, index) in vm.votingList"

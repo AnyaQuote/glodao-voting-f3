@@ -4,8 +4,8 @@
   </div>
   <v-carousel
     v-else
-    :height="carouselHeight"
-    :hide-delimiters="$vuetify.breakpoint.smAndUp"
+    height="auto"
+    hide-delimiters
     delimiter-icon="mdi-minus"
     show-arrows-on-hover
     class="elevation-3 rounded-lg"
@@ -49,10 +49,6 @@ import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 })
 export default class VotingLaunchSection extends Vue {
   @Inject() vm!: VotingListViewModel
-
-  get carouselHeight() {
-    return this.$vuetify.breakpoint.mdAndUp ? '756' : this.$vuetify.breakpoint.xsOnly ? '700' : 'auto'
-  }
 }
 </script>
 
