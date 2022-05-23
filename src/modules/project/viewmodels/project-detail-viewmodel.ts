@@ -49,13 +49,13 @@ export class ProjectDetailViewModel {
   @observable dialog = false
   @observable cancelSuccess = false
 
-  @action.bound cancelDialog() {
-    this.dialog = !this.dialog
+  @action.bound changeCancelDialog(val: boolean) {
+    this.dialog = val
   }
 
   @action.bound cancelAndWithdraw() {
     this.cancelSuccess = true
-    this.cancelDialog()
+    this.changeCancelDialog(false)
   }
 
   constructor(unicodeName: string) {

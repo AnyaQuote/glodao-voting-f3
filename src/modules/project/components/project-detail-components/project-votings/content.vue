@@ -138,7 +138,7 @@
           height="40"
           class="rounded-t-lg d-flex align-center justify-center white--text cursor-pointer"
           :color="vm.cancelSuccess ? 'linear-blue--bg' : 'red'"
-          @click="vm.cancelDialog()"
+          @click="vm.changeCancelDialog(true)"
         >
           {{ vm.cancelSuccess ? 'Withdraw token' : 'Cancel project' }}
         </v-sheet>

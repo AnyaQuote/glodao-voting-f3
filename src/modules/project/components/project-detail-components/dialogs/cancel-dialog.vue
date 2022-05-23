@@ -3,7 +3,7 @@
     <v-sheet class="rounded-lg pa-6">
       <div class="d-flex mb-4">
         <v-spacer class="font-weight-bold" style="font-size: 18px">Cancel project</v-spacer>
-        <v-icon size="18" @click="vm.cancelDialog()">mdi-close</v-icon>
+        <v-icon size="18" @click="vm.changeCancelDialog(false)">mdi-close</v-icon>
       </div>
       <div class="neutral0--text mb-4">
         Are you sure cancel this pool! You will only withdraw total token, the creating pool fee can not be pay back.
