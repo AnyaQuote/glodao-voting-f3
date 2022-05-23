@@ -137,15 +137,19 @@
         <v-sheet
           height="40"
           class="rounded-t-lg d-flex align-center justify-center white--text cursor-pointer"
-          color="red"
-          @click="wallet.cancelDialog()"
+          :color="vm.cancelSuccess ? 'linear-blue--bg' : 'red'"
+          @click="vm.cancelDialog()"
         >
-          Cancel project
+          {{ vm.cancelSuccess ? 'Withdraw token' : 'Cancel project' }}
         </v-sheet>
         <v-sheet class="pa-6">
           <div class="font-weight-bold neutral0--text mb-3">Final result</div>
-          <v-sheet height="40" class="d-flex align-center justify-center blue neutral100--text rounded">
-            Your project is opening for vote
+          <v-sheet
+            height="40"
+            class="d-flex align-center justify-center neutral100--text rounded"
+            :class="vm.cancelSuccess ? 'red' : 'blue'"
+          >
+            {{ vm.cancelSuccess ? 'Your project is rejected' : 'Your project is opening for vote' }}
           </v-sheet>
         </v-sheet>
         <div class="pa-6">
@@ -196,7 +200,6 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 @Observer
 @Component
 export default class extends Vue {
-  wallet = walletStore
   @Inject() vm!: ProjectDetailViewModel
 }
 </script>

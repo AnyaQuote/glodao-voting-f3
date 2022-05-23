@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :value="wallet.dialogCancel" persistent max-width="500">
+  <v-dialog :value="vm.dialog" persistent max-width="500">
     <v-sheet class="rounded-lg pa-6">
       <div class="d-flex mb-4">
         <v-spacer class="font-weight-bold" style="font-size: 18px">Cancel project</v-spacer>
-        <v-icon size="18" @click="wallet.cancelDialog()">mdi-close</v-icon>
+        <v-icon size="18" @click="vm.cancelDialog()">mdi-close</v-icon>
       </div>
       <div class="neutral0--text mb-4">
         Are you sure cancel this pool! You will only withdraw total token, the creating pool fee can not be pay back.
@@ -22,7 +22,7 @@
         elevation="0"
         block
         class="linear-blue--bg text-none text-subtitle-1 rounded white--text"
-        @click="wallet.cancelAndWithdraw()"
+        @click="vm.cancelAndWithdraw()"
       >
         Cancel and withdraw
       </v-btn>
@@ -31,14 +31,14 @@
 </template>
 
 <script lang="ts">
-import { walletStore } from '@/stores/wallet-store'
+import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { Observer } from 'mobx-vue'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Inject, Vue } from 'vue-property-decorator'
 
 @Observer
 @Component
 export default class extends Vue {
-  wallet = walletStore
+  @Inject() vm!: ProjectDetailViewModel
 }
 </script>
 
