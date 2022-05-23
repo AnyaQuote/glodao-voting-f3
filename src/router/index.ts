@@ -2,6 +2,7 @@ import { authStore } from '@/stores/auth-store'
 import Vue from 'vue'
 import VueRouter, { RouteConfig, Route } from 'vue-router'
 import { get, isEmpty } from 'lodash'
+import { loginController } from '@/components/login-dialog/login-dialog-controller'
 
 Vue.use(VueRouter)
 
@@ -102,11 +103,17 @@ const routes: Array<RouteConfig> = [
     path: '/comming-soon',
     name: 'comming-soon',
     component: () => import('@/modules/error/pages/coming-soon.vue'),
+    meta: {
+      title: 'Comming soon',
+    },
   },
   {
     path: '/404',
     name: 'not-found',
     component: () => import('@/modules/error/pages/404.vue'),
+    meta: {
+      title: 'Not found',
+    },
   },
 ]
 
@@ -131,12 +138,18 @@ router.beforeEach((to, from, next) => {
         next(RoutePaths.not_found)
       } else next()
     } else if (requiredAuth && !isAuthenticated) {
-      // login dialog will be check in here and will be open to new page
-      // If cancel dialog without login, go back to previous page (prevent from going to page)
       next()
     } else {
       console.error(`VueRouter error ${to.name} requriedAuth=${requiredAuth} isAuthenticated=${isAuthenticated}`)
     }
+  }
+})
+
+router.afterEach((to, from) => {
+  const isAuthenticated = authStore.isAuthenticated
+  const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+  if (requiredAuth && !isAuthenticated) {
+    loginController.open({ message: 'This page required login. Please sign in to continue' })
   }
 })
 
