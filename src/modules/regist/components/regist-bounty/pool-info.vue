@@ -36,26 +36,6 @@
       ></app-text-field>
 
       <div class="blue--text font-18 font-weight-bold mt-6">Campaign Information</div>
-      <div class="font-18 font-weight-bold mt-4">Campaign duration</div>
-      <v-radio-group
-        :rules="[$rules.required]"
-        :value="$_get(vm.poolInfo, 'campaignDuration')"
-        @change="vm.changePoolInfo('campaignDuration', $event)"
-        class="pa-0 ma-0 mt-2"
-      >
-        <div class="d-flex flex-column flex-md-row">
-          <v-sheet outlined class="py-3 px-4 rounded mb-2 mb-md-0 flex-grow-1">
-            <v-radio class="font-weight-bold" label="7 days" value="7" />
-          </v-sheet>
-          <v-sheet outlined class="ml-0 ml-md-6 py-3 px-4 rounded mb-2 mb-md-0 flex-grow-1">
-            <v-radio class="font-weight-bold" label="15 days" value="15" />
-          </v-sheet>
-          <v-sheet outlined class="ml-0 ml-md-6 py-3 px-4 rounded flex-grow-1">
-            <v-radio class="font-weight-bold" label="30 days" value="30" />
-          </v-sheet>
-        </div>
-      </v-radio-group>
-
       <div class="d-flex flex-column flex-sm-row mt-3">
         <div class="flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Start date</div>
@@ -63,7 +43,7 @@
             :rules="[$rules.required, $rules.yyyymmdd]"
             :value="$_get(vm.poolInfo, 'startDate.date')"
             @input="vm.changePoolInfo('startDate.date', $event)"
-            placeholder="DD/MM/YYYY"
+            placeholder="dd/mm/yyyy"
           ></app-text-field>
         </div>
         <div class="pl-0 pl-sm-6 flex-grow-1">
@@ -72,7 +52,28 @@
             :rules="[$rules.required, $rules.hhmm]"
             :value="$_get(vm.poolInfo, 'startDate.time')"
             @input="vm.changePoolInfo('startDate.time', $event)"
-            placeholder="00:00"
+            placeholder="hh:mm"
+          ></app-text-field>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column flex-sm-row mt-6">
+        <div class="flex-grow-1">
+          <div class="font-18 font-weight-bold mb-2">End date</div>
+          <app-text-field
+            :rules="[$rules.required, $rules.yyyymmdd]"
+            :value="$_get(vm.poolInfo, 'endDate.date')"
+            @input="vm.changePoolInfo('endDate.date', $event)"
+            placeholder="dd/mm/yyyy"
+          ></app-text-field>
+        </div>
+        <div class="pl-0 pl-sm-6 flex-grow-1">
+          <div class="font-18 font-weight-bold mb-2">End time</div>
+          <app-text-field
+            :rules="[$rules.required, $rules.hhmm]"
+            :value="$_get(vm.poolInfo, 'endDate.time')"
+            @input="vm.changePoolInfo('endDate.time', $event)"
+            placeholder="hh:mm"
           ></app-text-field>
         </div>
       </div>
