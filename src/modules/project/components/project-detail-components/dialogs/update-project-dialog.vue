@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="true" max-width="625" persistent>
+  <v-dialog :value="dialog" max-width="625" persistent>
     <v-sheet class="pa-6">
       <!-- header -->
       <div class="d-flex justify-space-between mb-7">
