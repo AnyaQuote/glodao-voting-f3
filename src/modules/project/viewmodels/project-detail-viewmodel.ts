@@ -52,9 +52,15 @@ export class ProjectDetailViewModel {
     },
   ]
   @observable loading = false
-  @observable showCancelDialog = false
-  @observable cancelSuccess = false
+
+  // Cancel dialog
+  @observable cancelDialog = false
+  @observable cancelled = false
   @observable cancelling = false
+
+  // Withdraw dialog
+  @observable withdrawDialog = false
+
   @observable poolInfo: any = {}
 
   constructor(unicodeName: string) {
@@ -98,14 +104,14 @@ export class ProjectDetailViewModel {
 
   @asyncAction *cancelAndWithdraw() {
     this.cancelling = true
-    let cancelled = false
+    this.cancelled = false
     try {
       yield votingHandler.cancelPool(this.poolDetail?.poolId, walletStore.account)
-      cancelled = true
+      this.cancelled = true
     } catch (error) {
       appProvider.snackbar.commonError(error)
     }
-    if (cancelled) {
+    if (this.cancelled) {
       try {
         yield apiService.cancelVotingPool({
           id: this.poolDetail!.id,
@@ -124,7 +130,11 @@ export class ProjectDetailViewModel {
   }
 
   @action.bound changeCancelDialog(val: boolean) {
-    this.showCancelDialog = val
+    this.cancelDialog = val
+  }
+
+  @action.bound changeWithdrawDialog(val: boolean) {
+    this.withdrawDialog = val
   }
 
   @computed get projectLogo() {

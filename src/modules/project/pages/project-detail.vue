@@ -30,6 +30,7 @@
       </v-col>
     </v-row>
     <cancel-dialog />
+    <withdraw-dialog />
   </v-container>
 </template>
 
@@ -48,6 +49,7 @@ import { Observer } from 'mobx-vue'
 
     'voting-content': () => import('../components/project-detail-components/project-votings/content.vue'),
     'cancel-dialog': () => import('../components/project-detail-components/dialogs/cancel-dialog.vue'),
+    'withdraw-dialog': () => import('../components/project-detail-components/dialogs/withdraw-dialog.vue'),
   },
 })
 export default class ProjectDetailPage extends Vue {
