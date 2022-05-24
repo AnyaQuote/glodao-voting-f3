@@ -103,13 +103,13 @@
 </template>
 
 <script lang="ts">
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPool } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RoutePaths } from '@/router'
 
 @Component
 export default class EndedVotingCard extends Vue {
-  @Prop({ required: true }) pool!: VotingPools
+  @Prop({ required: true }) pool!: VotingPool
 
   // HARD CODED-------
   upvote = this.isApproved ? Math.floor(Math.random() * 100) + 1 : 10

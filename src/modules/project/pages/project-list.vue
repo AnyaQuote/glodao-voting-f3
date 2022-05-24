@@ -15,7 +15,7 @@
           <v-skeleton-loader class="col-12" type="image" />
         </div>
         <!-- ----------------------- EMPTY PROJECT --------------------------- -->
-        <v-col cols="12" v-else-if="!vm.loading && !vm.projects.length">
+        <v-col cols="12" v-else-if="!vm.loading && !vm.votingPools.length">
           <div class="row mt-100">
             <div class="col-12 col-md-7">
               <div class="text-h3 mb-9 font-weight-bold">Create the first application</div>

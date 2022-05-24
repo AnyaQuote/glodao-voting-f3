@@ -1,11 +1,11 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPool } from '@/models/VotingModel'
 import { apiService } from '@/services/api-service'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
 export class VotingListViewModel {
-  @observable voteList: VotingPools[] = []
+  @observable voteList: VotingPool[] = []
   @observable filterOption = 'bounty'
 
   @observable loading = false

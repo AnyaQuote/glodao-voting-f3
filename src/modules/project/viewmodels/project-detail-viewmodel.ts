@@ -1,18 +1,17 @@
 import { appProvider } from '@/app-providers'
-import { VotingPools } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { flatMap, get, isEmpty, set } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
-import { votingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { apiService } from '@/services/api-service'
+import { PoolStore } from '@/stores/pool-store'
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
-  @observable poolDetail?: VotingPools
+  @observable poolStore?: PoolStore
   @observable missions = [
     {
       image: 'sao-hoa.png',
@@ -52,9 +51,14 @@ export class ProjectDetailViewModel {
     },
   ]
   @observable loading = false
-  @observable showCancelDialog = false
-  @observable cancelSuccess = false
+
+  // Cancel dialog
+  @observable cancelDialog = false
   @observable cancelling = false
+
+  // Withdraw dialog
+  @observable withdrawDialog = false
+
   @observable poolInfo: any = {}
 
   constructor(unicodeName: string) {
@@ -64,7 +68,7 @@ export class ProjectDetailViewModel {
       reaction(
         () => walletStore.account,
         () => {
-          votingHandler?.injectMetamask(walletStore.web3!)
+          //
         }
       ),
     ]
@@ -86,9 +90,7 @@ export class ProjectDetailViewModel {
       if (isEmpty(res)) {
         appProvider.router.push(RoutePaths.not_found)
       }
-      this.poolDetail = get(res, '[0]')
-      const poolInfo = yield votingHandler.getPoolInfo(this.poolDetail?.poolId)
-      this.poolInfo = poolInfo
+      this.poolStore = new PoolStore(get(res, '[0]'))
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -97,10 +99,17 @@ export class ProjectDetailViewModel {
   }
 
   @asyncAction *cancelAndWithdraw() {
-    this.cancelling = true
     let cancelled = false
+    const contract = this.poolStore?.contract
+    if (!contract) {
+      appProvider.snackbar.commonError('Contract not valid')
+      return
+    }
+
+    this.cancelling = true
     try {
-      yield votingHandler.cancelPool(this.poolDetail?.poolId, walletStore.account)
+      yield contract.cancelPool(this.poolStore?.poolId, walletStore.account)
+      contract.getPoolInfo(this.poolStore?.poolId)
       cancelled = true
     } catch (error) {
       appProvider.snackbar.commonError(error)
@@ -108,9 +117,9 @@ export class ProjectDetailViewModel {
     if (cancelled) {
       try {
         yield apiService.cancelVotingPool({
-          id: this.poolDetail!.id,
-          poolId: this.poolDetail!.poolId,
-          ownerAddress: this.poolDetail!.ownerAddress,
+          id: this.poolStore!.id,
+          poolId: this.poolStore!.poolId,
+          ownerAddress: this.poolStore!.ownerAddress,
         })
 
         appProvider.snackbar.success('Cancel successfully')
@@ -124,18 +133,18 @@ export class ProjectDetailViewModel {
   }
 
   @action.bound changeCancelDialog(val: boolean) {
-    this.showCancelDialog = val
+    this.cancelDialog = val
   }
 
-  @computed get projectLogo() {
-    return get(this.poolDetail, 'data.projectLogo', '')
+  @action.bound changeWithdrawDialog(val: boolean) {
+    this.withdrawDialog = val
   }
 
-  @computed get projectName() {
-    return get(this.poolDetail, 'projectName', '')
+  @computed get poolCancelled() {
+    return this.poolStore?.cancelled
   }
 
-  @computed get status() {
-    return get(this.poolDetail, 'status', '')
+  @computed get poolRejected() {
+    return false
   }
 }

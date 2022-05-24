@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="vm.showCancelDialog" persistent max-width="500">
+  <v-dialog :value="vm.cancelDialog" v-if="vm.poolStore" persistent max-width="500">
     <v-sheet class="rounded-lg pa-6">
       <div class="d-flex mb-4">
         <v-spacer class="font-weight-bold" style="font-size: 18px">Cancel project</v-spacer>
@@ -11,11 +11,15 @@
       <div style="font-size: 18px" class="mb-6">
         <div class="d-flex justify-space-between">
           <div class="neutral10--text">Total sent</div>
-          <div class="neutral0--text">{{ vm.poolInfo.amount | formatNumber }}</div>
+          <div class="neutral0--text">
+            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}
+          </div>
         </div>
         <div class="d-flex justify-space-between">
           <div class="neutral10--text">Withdraw amount:</div>
-          <div class="neutral0--text">{{ vm.poolInfo.amount | formatNumber(2, 2) }}</div>
+          <div class="neutral0--text">
+            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}
+          </div>
         </div>
       </div>
       <v-btn

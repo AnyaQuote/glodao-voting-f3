@@ -1,13 +1,14 @@
 import { appProvider } from '@/app-providers'
 import { loadingController } from '@/components/global-loading/global-loading-controller'
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPool } from '@/models/VotingModel'
+import { PoolStore } from '@/stores/pool-store'
 import { isEmpty } from 'lodash-es'
 import { observable, action, computed, IReactionDisposer, reaction, autorun } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 export class ProjectListViewModel {
   @observable filterRejected = false
   @observable filterType = 'bounty'
-  @observable projects: VotingPools[] = []
+  @observable votingPools: PoolStore[] = []
   @observable loading = false
 
   constructor() {
@@ -17,13 +18,18 @@ export class ProjectListViewModel {
   @asyncAction *fetchMyProject() {
     try {
       this.loading = true
-      const res = yield appProvider.api.voting.find(
+      const pools = yield appProvider.api.voting.find(
         {
           ownerAddress: appProvider.authStore.username,
         },
         { _limit: -1 }
       )
-      this.projects = res
+      if (pools && pools.length) {
+        this.votingPools = pools.map((pool: any) => {
+          const poolStore = new PoolStore(pool)
+          return poolStore
+        })
+      }
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -36,7 +42,7 @@ export class ProjectListViewModel {
   }
 
   @computed get filteredTypeProjects() {
-    return this.projects.filter((item) => item.type === this.filterType)
+    return this.votingPools.filter((item) => item.type === this.filterType)
   }
 
   @computed get filteredStatusProjects() {

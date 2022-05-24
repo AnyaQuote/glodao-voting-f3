@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { Metadata, VotingPools } from '@/models/VotingModel'
+import { Metadata, VotingPool } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { get } from 'lodash-es'
 import moment from 'moment'
@@ -83,7 +83,7 @@ import moment from 'moment'
   },
 })
 export default class VotingLaunchItem extends Vue {
-  @Prop({ required: true }) pool!: VotingPools
+  @Prop({ required: true }) pool!: VotingPool
   upvote = Math.floor(Math.random() * 100 + 1)
   downvote = 100 - this.upvote
   platform = this.pool.type === 'bounty' ? 'Bounty Hunter' : 'Launchpad'

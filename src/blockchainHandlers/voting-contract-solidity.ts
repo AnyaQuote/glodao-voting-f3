@@ -4,11 +4,10 @@ import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { toNumber } from 'lodash-es'
+import { chunk, toNumber } from 'lodash-es'
 import Web3 from 'web3'
 import { blockchainHandler } from '.'
-
-const web3 = blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!
+import { IVotingContract } from './ido-contract-interface'
 
 class PoolType {
   fee?: FixedNumber
@@ -18,22 +17,36 @@ class PoolType {
   targetPercentShare?: FixedNumber
 }
 
-export class VotingHandler {
+export class VotingHandler implements IVotingContract {
   votingContract: any
   poolType: PoolType = {}
+  web3: any
 
-  constructor() {
+  _owner = ''
+  _amount = Zero
+  _poolType = '0'
+  _votedWeight = Zero
+  _createdAt = ''
+  _completed = false
+  _cancelled = false
+
+  constructor(public address: string, web3: Web3) {
+    this.web3 = web3
     try {
-      this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), process.env.VUE_APP_VOTING_ADDRESS)
+      this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), address)
     } catch (error) {
       console.error(error)
     }
   }
 
-  injectMetamask(web3: Web3) {
-    if (web3) {
-      this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), process.env.VUE_APP_VOTING_ADDRESS)
-    }
+  async init() {
+    await this.getPoolType()
+  }
+
+  injectProvider() {
+    const web3 = walletStore.web3 as any
+    this.web3 = web3
+    this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), process.env.VUE_APP_VOTING_SOLIDITY)
   }
 
   async getPoolType() {
@@ -48,13 +61,30 @@ export class VotingHandler {
     return this.poolType
   }
 
+  async getOwnerPools(poolIds) {
+    const methods = this.votingContract.methods
+
+    const group = chunk(poolIds, 10)
+    const contractPoolInfors: any[] = []
+    for (const ids of group) {
+      const poolInfors: any[] = await blockchainHandler.etherBatchRequest(
+        this.web3,
+        ids.map((id) => methods.poolInfos(id))
+      )
+      contractPoolInfors.push(...poolInfors)
+    }
+    console.log('contractPoolInfors: ', contractPoolInfors)
+  }
+
   async getPoolInfo(poolId) {
     const poolInfo = await this.votingContract.methods.poolInfos(poolId).call()
-    return {
-      ...poolInfo,
-      amount: bnHelper.fromDecimals(poolInfo.amount),
-      votedWeight: bnHelper.fromDecimals(poolInfo.votedWeight),
-    }
+    this._owner = poolInfo.owner
+    this._amount = bnHelper.fromDecimals(poolInfo.amount)
+    this._poolType = poolInfo.poolType
+    this._votedWeight = bnHelper.fromDecimals(poolInfo.votedWeight)
+    this._createdAt = poolInfo.createdAt
+    this._completed = poolInfo.completed
+    this._cancelled = poolInfo.cancelled
   }
 
   async createPool(rewardTokenAddress: string, rewardAmount: FixedNumber | string, account: string) {
@@ -96,7 +126,7 @@ export class VotingHandler {
     const web3 = walletStore.web3!
     try {
       const erc20Contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), rewardAddress)
-      const allowance = await erc20Contract.methods.allowance(account, process.env.VUE_APP_VOTING_ADDRESS).call()
+      const allowance = await erc20Contract.methods.allowance(account, process.env.VUE_APP_VOTING_SOLIDITY).call()
       return !!+Web3.utils.fromWei(allowance)
     } catch (error) {
       if (index) {
@@ -110,8 +140,26 @@ export class VotingHandler {
   async approve(rewardAddress, account) {
     const web3 = walletStore.web3!
     const erc20Contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), rewardAddress)
-    const f = erc20Contract.methods.approve(process.env.VUE_APP_VOTING_ADDRESS, web3.utils.toWei(`${2 ** 64 - 1}`))
+    const f = erc20Contract.methods.approve(process.env.VUE_APP_VOTING_SOLIDITY, web3.utils.toWei(`${2 ** 64 - 1}`))
     await sendRequest(f, account)
+  }
+
+  get poolInfo() {
+    return {
+      owner: this._owner,
+      amount: this._amount,
+      poolType: this._poolType,
+      votedWeight: this._votedWeight,
+      createdAt: this._createdAt,
+      completed: this._completed,
+      cancelled: this._cancelled,
+    }
+  }
+
+  async getTokenBalance(web3, address, account) {
+    const contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), address)
+    const allowance = await contract.methods.balanceOf(account).call()
+    return FixedNumber.from(`${web3.utils.fromWei(allowance)}`)
   }
 }
 
@@ -122,5 +170,3 @@ async function sendRequest(fx, from, value = '') {
       .on('error', (error) => reject(error))
   })
 }
-
-export const votingHandler = new VotingHandler()
