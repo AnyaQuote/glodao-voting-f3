@@ -2,15 +2,13 @@ import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase } from 'lodash'
 import { asyncAction } from 'mobx-utils'
-import { toMoment } from '@/helpers/date-helper'
+import { toISO } from '@/helpers/date-helper'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { authStore } from '@/stores/auth-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { promiseHelper } from '@/helpers/promise-helper'
-import moment from 'moment'
 import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RoutePaths } from '@/router'
@@ -21,26 +19,32 @@ const projectInfoDefault = {
   projectCover: null,
   projectLogo: null,
   fields: [],
-  socials: {},
-  tokenAddressSymbol: '',
-  tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
+  socialLinks: {},
 }
 
-const confirmInfoDefault = {
-  immediate: false,
-  openDate: {
+const poolInfoDefault = {
+  rewardToken: '',
+  rewardAmount: '',
+  tokenAddress: '',
+  startDate: {
     date: '',
     time: '',
   },
+  endDate: {
+    date: '',
+    time: '',
+  },
+  totalMissions: '',
 }
+
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
   @observable step = 1.1
-  @observable unlockedStep = 2.1
+  @observable unlockedStep = 1.1
   @observable projectInfo = projectInfoDefault
-  @observable confirmInfo = confirmInfoDefault
+  @observable poolInfo = poolInfoDefault
   @observable creating = false
 
   @observable approved = false
@@ -81,14 +85,14 @@ export class BountyApplyViewModel {
   }
 
   checkApproved() {
-    this.votingHandler!.approved(this.projectInfo.tokenAddress, walletStore.account).then((approved) =>
+    this.votingHandler!.approved(this.poolInfo.tokenAddress, walletStore.account).then((approved) =>
       runInAction(() => (this.approved = approved))
     )
   }
   @asyncAction *approve() {
     this.approving = true
     try {
-      yield this.votingHandler?.approve(this.projectInfo.tokenAddress, walletStore.account)
+      yield this.votingHandler?.approve(this.poolInfo.tokenAddress, walletStore.account)
       this.approved = true
     } catch (error) {
       this.approved = false
@@ -102,12 +106,13 @@ export class BountyApplyViewModel {
     this.creating = true
     try {
       const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
-        this.projectInfo.tokenAddress,
+        this.poolInfo.tokenAddress,
         '100',
         walletStore.account
       )
 
       const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
+      const { startDate, endDate, tokenAddress, ...poolInfo } = this.poolInfo
 
       // upload image
       let images
@@ -124,13 +129,14 @@ export class BountyApplyViewModel {
         type: 'bounty',
         poolId,
         ownerAddress,
-        tokenAddress: this.projectInfo.tokenAddress,
+        tokenAddress: this.poolInfo.tokenAddress,
         status: 'voting',
         unicodeName: kebabCase(projectName),
-        startDate: moment().toISOString(),
-        endDate: moment().add(3, 'days').toISOString(),
+        startDate: toISO(startDate),
+        endDate: toISO(endDate),
         data: {
           ...projectInfo,
+          ...poolInfo,
           projectLogo: images ? getApiFileUrl(images[0]) : null,
           projectCover: images ? getApiFileUrl(images[1]) : null,
           poolType,
@@ -155,8 +161,8 @@ export class BountyApplyViewModel {
     set(this.projectInfo, property, value)
   }
 
-  @action.bound changePaymentInfo(property: string, value: string) {
-    set(this.confirmInfo, property, value)
+  @action.bound changePoolInfo(property: string, value: any) {
+    set(this.poolInfo, property, value)
   }
 
   @action nextStep(value: number) {

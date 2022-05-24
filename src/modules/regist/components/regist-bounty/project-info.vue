@@ -5,48 +5,53 @@
     </v-chip>
 
     <v-form ref="project-info-form" v-model="valid" class="form pa-6">
-      <div class="label font-weight-bold">Project name</div>
+      <div class="font-18 font-weight-bold">Project name</div>
       <app-text-field
+        :rules="[$rules.required]"
         :value="vm.projectInfo.projectName"
         @input="vm.changeProjectInfo('projectName', $event)"
         placeholder="Enter name of project"
       ></app-text-field>
 
-      <div class="label font-weight-bold mt-6">Short description</div>
+      <div class="font-18 font-weight-bold mt-6">Short description</div>
       <app-textarea
+        :rules="[$rules.required]"
         :value="vm.projectInfo.shortDescription"
         @input="vm.changeProjectInfo('shortDescription', $event)"
         placeholder="Enter project's short description"
       ></app-textarea>
 
-      <div class="label font-weight-bold mt-6">Project logo</div>
+      <div class="font-18 font-weight-bold mt-6">Project logo</div>
       <image-upload-field
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectLogo', $event)"
       />
 
-      <div class="label font-weight-bold mt-6">Project cover</div>
+      <div class="font-18 font-weight-bold mt-6">Project cover</div>
       <image-upload-field
         :value="$_get(vm.projectInfo, 'projectCover')"
         @change="vm.changeProjectInfo('projectCover', $event)"
       />
 
-      <div class="label font-weight-bold mt-6">Field of project</div>
+      <div class="font-18 font-weight-bold mt-6">Field of project</div>
       <div class="neutral10--text font-weight-light mb-1">Select some keyword about your project</div>
-      <v-chip-group
-        multiple
-        column
+      <v-autocomplete
         :value="vm.projectInfo.fields"
+        :rules="[$rules.required]"
         @change="vm.changeProjectInfo('fields', $event)"
-        active-class="active"
-      >
-        <v-chip v-for="field in fields" :key="field" :value="field" class="neutral10--text text-caption text-uppercase">
-          {{ field }}
-        </v-chip>
-      </v-chip-group>
-      <div class="label font-weight-bold mt-6">Website and social link</div>
+        :items="fields"
+        deletable-chips
+        multiple
+        small-chips
+        solo
+        flat
+        outlined
+      ></v-autocomplete>
+
+      <div class="font-18 font-weight-bold mt-6">Website and social link</div>
       <app-text-field
         class="thin-border"
+        :rules="[$rules.required]"
         :value="$_get(vm.projectInfo, 'socialLinks.website')"
         @input="vm.changeProjectInfo('socialLinks.website', $event)"
         :outlined="false"
@@ -63,6 +68,7 @@
 
       <app-text-field
         class="mt-3 thin-border"
+        :rules="[$rules.required]"
         :outlined="false"
         :value="$_get(vm.projectInfo, 'socialLinks.medium')"
         @input="vm.changeProjectInfo('socialLinks.medium', $event)"
@@ -79,6 +85,7 @@
 
       <app-text-field
         class="mt-3 thin-border"
+        :rules="[$rules.required]"
         :outlined="false"
         :value="$_get(vm.projectInfo, 'socialLinks.twitter')"
         @input="vm.changeProjectInfo('socialLinks.twitter', $event)"
@@ -98,6 +105,7 @@
 
       <app-text-field
         class="mt-3 thin-border"
+        :rules="[$rules.required]"
         :outlined="false"
         :value="$_get(vm.projectInfo, 'socialLinks.telegram')"
         @input="vm.changeProjectInfo('socialLinks.telegram', $event)"
@@ -123,24 +131,10 @@
         <v-icon>mdi-plus-circle</v-icon>
         <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3">Add more link</div>
       </v-sheet>
-
-      <div class="label neutral10--text mt-6 font-weight-bold">Token reward address symbol</div>
-      <app-text-field
-        :value="$_get(vm.projectInfo, 'tokenAddressSymbol')"
-        @input="vm.changeProjectInfo('tokenAddressSymbol', $event)"
-        placeholder="Enter link"
-      ></app-text-field>
-      <div class="label neutral10--text mt-6">
-        <span class="font-weight-bold">Token reward address</span>
-        <i class="text-subtitle-1 ml-2">Optional</i>
-      </div>
-      <app-text-field
-        :value="$_get(vm.projectInfo, 'tokenAddress')"
-        @input="vm.changeProjectInfo('tokenAddress', $event)"
-        placeholder="Enter link"
-      ></app-text-field>
       <v-btn
-        class="linear-blue--bg white--text font-weight-bold text-none mt-6"
+        class="white--text font-weight-bold text-none mt-6"
+        :class="valid && 'linear-blue--bg'"
+        :disabled="!valid"
         depressed
         width="100%"
         height="40"
@@ -167,16 +161,13 @@ export default class ProjectInfo extends Vue {
   valid = false
   fields = ['gaming', 'NFT', 'finance']
   submit() {
-    this.form.validate() && this.vm.nextStep(2.1)
+    this.form.validate() && this.vm.nextStep(1.2)
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .form {
-  .label {
-    font-size: em(18);
-  }
   .thin-border {
     border: thin solid var(--v-neutral20-base);
   }

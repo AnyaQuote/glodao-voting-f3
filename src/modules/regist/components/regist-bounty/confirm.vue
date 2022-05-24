@@ -1,21 +1,23 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip label outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6">Confirm</v-chip>
+    <v-chip font-18 outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6">Confirm</v-chip>
 
     <v-form ref="payment-form" class="pa-6">
       <div class="d-flex align-center">
         <img src="@/assets/icons/mock-crypto.svg" alt="currency" width="36" height="36" />
         <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">hydro wind</div>
-        <!-- <v-icon color="neutral10">mdi-circle-small</v-icon>
+        <v-icon color="neutral10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">$HWD</div>
         <v-icon color="neutral10">mdi-circle-small</v-icon>
-        <div class="neutral10--text text-h5 font-weight-bold">100,000 HWD reward</div> -->
+        <div class="neutral10--text text-h5 font-weight-bold">100,000 HWD reward</div>
       </div>
 
       <div class="ma-7">
         <div class="mb-7">
-          After your application is submitted, create pool fee will be taken and not be refunded for any reason. You can
-          still edit pool information after that.
+          <i
+            >After your application is submitted, create pool fee will be taken and not be refunded for any reason. You
+            can still edit pool information after that.</i
+          >
         </div>
 
         <div class="d-flex label font-weight-bold">
@@ -28,32 +30,11 @@
           <span> {{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
 
-        <!-- <div class="label font-weight-bold">
-          <span class="bluePrimary--text">Time for launch on DAO Voting</span>
-          <v-checkbox
-            :value="$_get(vm.confirmInfo, 'immediate')"
-            @change="vm.changePaymentInfo('immediate', $event)"
-            label="Publish project immediately after creating pool"
-          ></v-checkbox>
-          <div class="d-flex">
-            <div class="mr-6 flex-grow-1">
-              <span>Start date</span>
-              <app-text-field
-                :value="$_get(vm.confirmInfo, 'openDate.date')"
-                @input="vm.changePaymentInfo('openDate.date', $event)"
-                placeholder="DD/MM/YYYY"
-              ></app-text-field>
-            </div>
-            <div class="flex-grow-1">
-              <span>Start time</span>
-              <app-text-field
-                :value="$_get(vm.confirmInfo, 'openDate.time')"
-                @input="vm.changePaymentInfo('openDate.time', $event)"
-                placeholder="00:00"
-              ></app-text-field>
-            </div>
-          </div>
-        </div> -->
+        <ul class="mt-5">
+          <li class="mb-2 font-weight-600">Project will published immediately after creating pool</li>
+          <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
+        </ul>
+
         <v-btn
           v-if="!vm.approved"
           class="linear-blue--bg white--text font-weight-bold text-none mt-6"
@@ -77,6 +58,7 @@
         </v-btn>
       </div>
     </v-form>
+    <confirm-campaign-dialog ref="confirm-dialog" />
   </v-sheet>
 </template>
 
@@ -85,15 +67,16 @@ import { walletStore } from '@/stores/wallet-store'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
-@Component
+@Component({
+  components: {
+    'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
+  },
+})
 export default class ConfirmPayment extends Vue {
   @Inject() vm!: BountyApplyViewModel
+  @Ref('confirm-dialog') dialog
   @Ref('payment-form') form
   walletStore = walletStore
-
-  mounted() {
-    this.vm.checkApproved()
-  }
 
   submit() {
     this.form.validate() && this.vm.submit()
@@ -101,12 +84,4 @@ export default class ConfirmPayment extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.label {
-  font-size: em(18) !important;
-  margin-bottom: em(20);
-}
-.blue-border {
-  border: thin solid var(--v-bluePrimary-base);
-}
-</style>
+<style lang="scss" scoped></style>
