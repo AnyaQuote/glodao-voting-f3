@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="dialog" max-width="625" persistent>
+  <v-dialog :value="true" max-width="625" persistent>
     <v-sheet class="pa-6">
       <!-- header -->
       <div class="d-flex justify-space-between mb-7">
@@ -19,7 +19,8 @@
           outlined
           color="red"
           class="font-weight-bold"
-          :value="vm.poolDetail.projectName"
+          :value="$_get(vm.dataTemp, ' ', '')"
+          @input="vm.onProjectNameChange"
         ></v-text-field>
       </div>
 
@@ -32,19 +33,20 @@
           no-resize
           row-height="4"
           :value="vm.poolDetail.data.shortDescription"
+          @input="vm.onShortDescriptionChange"
         ></v-textarea>
       </div>
 
       <!-- project avatar -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project avatar</div>
-        <image-upload-file />
+        <image-upload-file @change="vm.onChangeImage('projectCover', $event)" :value="vm.projectLogo" dense />
       </div>
 
       <!-- project cover -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project cover</div>
-        <image-upload-file />
+        <image-upload-file @change="vm.onChangeImage('projectLogo', $event)" :value="vm.projectCover" dense />
       </div>
 
       <!-- project fields -->
@@ -89,6 +91,7 @@
             hide-details
             class="text-subtitle-1 spacer input-min-height"
             :value="vm.poolDetail.data.socialLinks[key]"
+            @input="vm.onSocialLinkChange(key, $event)"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
         </div>
@@ -104,7 +107,7 @@
 <script lang="ts">
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { Observer } from 'mobx-vue'
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 
 @Observer
 @Component({
@@ -119,6 +122,7 @@ export default class extends Vue {
   active: number[] = []
 
   open() {
+    this.vm.setDataTemp()
     this.active = []
     const fields = this.vm.poolDetail?.data?.fields
     fields?.forEach((field) => {
@@ -141,6 +145,12 @@ export default class extends Vue {
     } else {
       this.active.push(index)
     }
+
+    let fields: string[] = []
+    this.active.forEach((index) => {
+      fields = [...fields, this.fields[index]]
+    })
+    this.vm.onFieldsChange(fields)
   }
 }
 </script>

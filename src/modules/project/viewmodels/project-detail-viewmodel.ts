@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPools, Metadata } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { flatMap, get, isEmpty, set } from 'lodash-es'
@@ -8,6 +8,7 @@ import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
 import { votingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { apiService } from '@/services/api-service'
+import { getApiFileUrl } from '@/helpers/file-helper'
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
@@ -147,5 +148,52 @@ export class ProjectDetailViewModel {
 
   @computed get status() {
     return get(this.poolDetail, 'status', '')
+  }
+
+  @computed get projectCover() {
+    return get(this.poolDetail, 'data.projectCover', '')
+  }
+
+  /**
+   * Update project
+   */
+  @observable dataTemp?: VotingPools
+
+  @action setDataTemp() {
+    this.dataTemp = this.poolDetail
+  }
+
+  @action.bound onProjectNameChange(val: string) {
+    if (this.dataTemp) {
+      set(this.dataTemp, 'projectName', val)
+    }
+  }
+
+  @action.bound onShortDescriptionChange(val: string) {
+    if (this.dataTemp) {
+      set(this.dataTemp, 'data.shortDescription', val)
+    }
+  }
+
+  @action.bound onChangeImage(type: 'projectCover' | 'projectLogo', image: any) {
+    if (this.dataTemp) {
+      set(this.dataTemp, `data.${type}`, image)
+    }
+  }
+
+  @action.bound onFieldsChange(fields: string[]) {
+    if (this.dataTemp) {
+      set(this.dataTemp, 'datas.fields', fields)
+    }
+  }
+
+  @action.bound onSocialLinkChange(key: string, val: string) {
+    if (this.dataTemp) {
+      set(this.dataTemp, `data.socialLinks[${key}]`, val)
+    }
+  }
+
+  @action.bound save() {
+    //
   }
 }
