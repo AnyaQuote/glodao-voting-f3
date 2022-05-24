@@ -51,7 +51,6 @@
       <div class="font-18 font-weight-bold mt-6">Website and social link</div>
       <app-text-field
         class="thin-border"
-        :rules="[$rules.required]"
         :value="$_get(vm.projectInfo, 'socialLinks.website')"
         @input="vm.changeProjectInfo('socialLinks.website', $event)"
         :outlined="false"
@@ -68,7 +67,6 @@
 
       <app-text-field
         class="mt-3 thin-border"
-        :rules="[$rules.required]"
         :outlined="false"
         :value="$_get(vm.projectInfo, 'socialLinks.medium')"
         @input="vm.changeProjectInfo('socialLinks.medium', $event)"
@@ -85,7 +83,6 @@
 
       <app-text-field
         class="mt-3 thin-border"
-        :rules="[$rules.required]"
         :outlined="false"
         :value="$_get(vm.projectInfo, 'socialLinks.twitter')"
         @input="vm.changeProjectInfo('socialLinks.twitter', $event)"
@@ -105,7 +102,6 @@
 
       <app-text-field
         class="mt-3 thin-border"
-        :rules="[$rules.required]"
         :outlined="false"
         :value="$_get(vm.projectInfo, 'socialLinks.telegram')"
         @input="vm.changeProjectInfo('socialLinks.telegram', $event)"
