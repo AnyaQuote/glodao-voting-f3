@@ -18,25 +18,28 @@ const projectInfoDefault = {
   projectLogo: null,
   fields: [],
   socialLinks: {},
-  tokenAddressSymbol: '',
-  tokenAddress: '',
 }
 
-const confirmInfoDefault = {
-  immediate: false,
-  openDate: {
+const poolInfoDefault = {
+  rewardToken: '',
+  rewardAmount: '',
+  tokenAddress: '',
+  campaignDuration: '7',
+  startDate: {
     date: '',
     time: '',
   },
+  totalMissions: '',
 }
+
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
   @observable step = 1.1
-  @observable unlockedStep = 2.1
+  @observable unlockedStep = 1.1
   @observable projectInfo = projectInfoDefault
-  @observable confirmInfo = confirmInfoDefault
+  @observable poolInfo = poolInfoDefault
 
   @observable votingHandler?: VotingHandler
 
@@ -75,8 +78,8 @@ export class BountyApplyViewModel {
 
   @asyncAction *submit() {
     try {
-      const { projectName, projectLogo, projectCover, tokenAddress, ...projectInfo } = this.projectInfo
-      const { immediate, openDate } = this.confirmInfo
+      const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
+      const { startDate, campaignDuration, tokenAddress, ...poolInfo } = this.poolInfo
       let res
 
       const media = new FormData()
@@ -91,11 +94,12 @@ export class BountyApplyViewModel {
         type: 'bounty',
         ownerAddress: walletStore.account,
         tokenAddress: tokenAddress,
-        status: immediate ? 'voting' : 'pending',
-        startDate: toMoment(openDate).toISOString(),
-        endDate: toMoment(openDate).add(3, 'days').toISOString(),
+        status: 'voting',
+        startDate: toMoment(startDate).toISOString(),
+        endDate: toMoment(startDate).add(campaignDuration, 'days').toISOString(),
         data: {
           ...projectInfo,
+          ...poolInfo,
           projectLogo: getApiFileUrl(res[0]),
           projectCover: getApiFileUrl(res[1]),
         },
@@ -123,8 +127,8 @@ export class BountyApplyViewModel {
     set(this.projectInfo, property, value)
   }
 
-  @action.bound changePaymentInfo(property: string, value: string) {
-    set(this.confirmInfo, property, value)
+  @action.bound changePoolInfo(property: string, value: any) {
+    set(this.poolInfo, property, value)
   }
 
   @action nextStep(value: number) {
