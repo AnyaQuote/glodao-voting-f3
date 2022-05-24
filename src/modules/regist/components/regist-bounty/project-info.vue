@@ -131,14 +131,6 @@
         <v-icon>mdi-plus-circle</v-icon>
         <div class="neutral10--text text-subtitle-2 font-weight-600 line-height-1 ml-3">Add more link</div>
       </v-sheet>
-
-      <div class="font-18 neutral10--text mt-6 font-weight-bold">Token reward address</div>
-      <app-text-field
-        :rules="[$rules.required]"
-        :value="$_get(vm.projectInfo, 'tokenAddress')"
-        @input="vm.changeProjectInfo('tokenAddress', $event)"
-        placeholder="Enter link"
-      ></app-text-field>
       <v-btn
         class="white--text font-weight-bold text-none mt-6"
         :class="valid && 'linear-blue--bg'"
