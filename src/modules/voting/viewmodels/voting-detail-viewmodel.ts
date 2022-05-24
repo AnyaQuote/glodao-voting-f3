@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPool } from '@/models/VotingModel'
 import { observable, computed, IReactionDisposer, when, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
@@ -10,6 +10,7 @@ import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { apiService } from '@/services/api-service'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { PoolStore } from '@/stores/pool-store'
 
 export class VotingDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -17,11 +18,12 @@ export class VotingDetailViewModel {
 
   @observable voting = false
 
-  @observable poolDetail?: VotingPools
-  @observable votingList?: VotingPools[] = []
-  @observable votingHandler?: VotingHandler
+  @observable poolDetail?: VotingPool
+  @observable votingList?: VotingPool[] = []
   @observable stakeFee?: FixedNumber
   @observable poolInfo?: any
+
+  @observable poolStore?: PoolStore
 
   constructor(unicodeName: string) {
     this.loadData(unicodeName)
@@ -30,7 +32,7 @@ export class VotingDetailViewModel {
       reaction(
         () => walletStore.walletConnected,
         async () => {
-          this.votingHandler?.injectMetamask(walletStore.web3!)
+          //
         }
       )
     )
@@ -58,11 +60,12 @@ export class VotingDetailViewModel {
       this.poolDetail = get(poolDetail, '[0]')
       this.votingList = votingList
 
-      const votingHandler = new VotingHandler()
-      this.votingHandler = votingHandler
+      this.poolStore = new PoolStore(this.poolDetail!)
+      const contract = this.poolStore?.contract
+
       const [poolType, poolInfo] = yield Promise.all([
-        this.votingHandler.getPoolType(),
-        this.votingHandler.getPoolInfo(this.poolDetail!.poolId),
+        contract?.getPoolType(),
+        contract?.getPoolInfo(this.poolDetail!.poolId),
       ])
 
       this.stakeFee = poolType.stakeFee
@@ -75,7 +78,7 @@ export class VotingDetailViewModel {
   }
 
   async vote() {
-    const { completed } = await this.votingHandler!.vote(this.poolDetail!.poolId, walletStore.account)
+    const { completed } = await this.poolStore?.contract!.vote(this.poolDetail!.poolId, walletStore.account)
     if (completed) {
       try {
         // api update status to approved

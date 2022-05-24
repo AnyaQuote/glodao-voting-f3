@@ -12,21 +12,21 @@
           <span>Total reward:</span>
           <v-spacer />
           <span class="font-weight-bold neutral0--text"
-            >{{ $_get(vm.poolInfo, 'rewardAmount') }} {{ $_get(vm.poolInfo, 'rewardToken') }}</span
+            >{{ $_get(vm.projectInfo, 'rewardAmount') }} {{ $_get(vm.projectInfo, 'rewardToken') }}</span
           >
         </div>
 
         <div class="font-18 d-flex mb-2">
           <span>Total missions:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral0--text">{{ $_get(vm.poolInfo, 'totalMissions') }}</span>
+          <span class="font-weight-bold neutral0--text">{{ $_get(vm.projectInfo, 'totalMissions') }}</span>
         </div>
 
         <div class="font-18 d-flex mb-2">
           <span>Reward per mission:</span>
           <v-spacer />
           <span class="font-weight-bold neutral0--text"
-            >{{ rewardPerMission }} {{ $_get(vm.poolInfo, 'rewardToken') }}</span
+            >{{ vm.rewardPerMission | formatNumber }} {{ $_get(vm.projectInfo, 'rewardToken') }}</span
           >
         </div>
 
@@ -72,16 +72,12 @@ export default class ConfirmCampaignDialog extends Vue {
     this.vm.nextStep(2.1)
   }
 
-  get rewardPerMission() {
-    return toNumber(this.vm.poolInfo.rewardAmount) / toNumber(this.vm.poolInfo.totalMissions)
-  }
-
   get startDate() {
-    return toISO(this.vm.poolInfo.endDate)
+    return ''
   }
 
   get endDate() {
-    return toISO(this.vm.poolInfo.endDate)
+    return ''
   }
 }
 </script>

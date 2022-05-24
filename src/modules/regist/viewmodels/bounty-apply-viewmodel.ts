@@ -12,29 +12,23 @@ import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RoutePaths } from '@/router'
 import { toISO } from '@/helpers/date-helper'
+import { blockchainHandler } from '@/blockchainHandlers'
+import { FixedNumber } from '@ethersproject/bignumber'
 
-const projectInfoDefault = {
-  projectName: '',
-  shortDescription: '',
-  projectCover: null,
-  projectLogo: null,
-  fields: [],
-  socialLinks: {},
-}
+class ProjectInfo {
+  projectName?: string
+  shortDescription?: string
+  projectCover?: any
+  projectLogo?: any
+  fields?: any[]
+  socialLinks?: any
 
-const poolInfoDefault = {
-  rewardToken: '',
-  rewardAmount: '',
-  tokenAddress: '',
-  startDate: {
-    date: '',
-    time: '',
-  },
-  endDate: {
-    date: '',
-    time: '',
-  },
-  totalMissions: '',
+  rewardToken?: string
+  rewardAmount?: string
+  tokenAddress?: string
+  startDate?: string
+  endDate?: string
+  totalMissions?: string
 }
 
 export class BountyApplyViewModel {
@@ -43,14 +37,14 @@ export class BountyApplyViewModel {
 
   @observable step = 1.1
   @observable unlockedStep = 1.1
-  @observable projectInfo = projectInfoDefault
-  @observable poolInfo = poolInfoDefault
+  @observable projectInfo: ProjectInfo = {}
   @observable creating = false
 
   @observable approved = false
   @observable approving = false
 
   @observable bnbFee = Zero
+  @observable rewardTokenBalance = Zero
 
   @observable votingHandler?: VotingHandler
 
@@ -69,30 +63,46 @@ export class BountyApplyViewModel {
   }
 
   async loadData() {
-    const votingHandler = new VotingHandler()
-    this.votingHandler = votingHandler
-    await this.votingHandler.getPoolType()
-    this.bnbFee = this.votingHandler.poolType.fee!
-
-    this._disposers.push(
-      when(
-        () => walletStore.walletConnected,
-        async () => {
-          votingHandler.injectMetamask(walletStore.web3!)
-        }
+    if (walletStore.chainType === 'sol') {
+      //
+    } else {
+      const address = process.env.VUE_APP_VOTING_SOLIDITY
+      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(walletStore.chainId)!)
+      this.votingHandler = votingHandler
+      await this.votingHandler.getPoolType()
+      this.bnbFee = this.votingHandler.poolType.fee!
+      this._disposers.push(
+        when(
+          () => walletStore.walletConnected,
+          async () => {
+            votingHandler.injectProvider()
+          }
+        )
       )
-    )
+    }
   }
 
-  checkApproved() {
-    this.votingHandler!.approved(this.poolInfo.tokenAddress, walletStore.account).then((approved) =>
-      runInAction(() => (this.approved = approved))
-    )
+  async loadConfirmData() {
+    await Promise.all([this.checkApproved(), this.getTokenBalance()])
   }
+
+  @asyncAction *checkApproved() {
+    const approved = yield this.votingHandler!.approved(this.projectInfo.tokenAddress, walletStore.account)
+    this.approved = approved
+  }
+  @asyncAction *getTokenBalance() {
+    const rewardTokenBalance = yield this.votingHandler?.getTokenBalance(
+      walletStore.web3,
+      this.projectInfo.tokenAddress,
+      walletStore.account
+    )
+    this.rewardTokenBalance = rewardTokenBalance
+  }
+
   @asyncAction *approve() {
     this.approving = true
     try {
-      yield this.votingHandler?.approve(this.poolInfo.tokenAddress, walletStore.account)
+      yield this.votingHandler?.approve(this.projectInfo.tokenAddress, walletStore.account)
       this.approved = true
     } catch (error) {
       this.approved = false
@@ -106,37 +116,37 @@ export class BountyApplyViewModel {
     this.creating = true
     try {
       const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
-        this.poolInfo.tokenAddress,
-        '100',
+        this.projectInfo.tokenAddress!,
+        this.projectInfo.rewardAmount!,
         walletStore.account
       )
 
-      const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
-      const { startDate, endDate, tokenAddress, ...poolInfo } = this.poolInfo
-
       // upload image
       let images
-      if (projectLogo && projectCover) {
+      if (this.projectInfo.projectLogo && this.projectInfo.projectCover) {
         const media = new FormData()
-        media.append('files', projectLogo!)
-        media.append('files', projectCover!)
+        media.append('files', this.projectInfo.projectLogo)
+        media.append('files', this.projectInfo.projectCover)
         images = yield apiService.uploadFile(media)
       }
 
       // update voting pool
       const data = {
-        projectName,
+        projectName: this.projectInfo.projectName,
         type: 'bounty',
         poolId,
         ownerAddress,
-        tokenAddress: this.poolInfo.tokenAddress,
+        tokenAddress: this.projectInfo.tokenAddress,
+        rewardTokenSymbol: this.projectInfo.rewardToken,
         status: 'voting',
-        unicodeName: kebabCase(projectName),
-        startDate: toISO(startDate),
-        endDate: toISO(endDate),
+        unicodeName: kebabCase(this.projectInfo.projectName),
+        totalMission: this.projectInfo.totalMissions,
+        // startDate: toISO(startDate),
+        // endDate: toISO(endDate),
         data: {
-          ...projectInfo,
-          ...poolInfo,
+          shortDescription: this.projectInfo.shortDescription,
+          fields: this.projectInfo.fields,
+          socialLinks: this.projectInfo.socialLinks,
           projectLogo: images ? getApiFileUrl(images[0]) : null,
           projectCover: images ? getApiFileUrl(images[1]) : null,
           poolType,
@@ -153,6 +163,7 @@ export class BountyApplyViewModel {
   }
 
   @action.bound changeStep(value: number) {
+    if (this.creating) return
     if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
     else this.step = value
   }
@@ -161,11 +172,17 @@ export class BountyApplyViewModel {
     set(this.projectInfo, property, value)
   }
 
-  @action.bound changePoolInfo(property: string, value: any) {
-    set(this.poolInfo, property, value)
-  }
-
   @action nextStep(value: number) {
     this.unlockedStep = this.step = value
+  }
+
+  @computed get rewardPerMission() {
+    try {
+      return FixedNumber.from(this.projectInfo?.rewardAmount).divUnsafe(
+        FixedNumber.from(this.projectInfo?.totalMissions)
+      )
+    } catch (error) {
+      return Zero
+    }
   }
 }

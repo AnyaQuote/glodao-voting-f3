@@ -7,8 +7,8 @@
           <img :src="require('@/assets/icons/voting-trending--logo.png')" height="100%" />
         </v-sheet>
         <div class="d-flex flex-column justify-center">
-          <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ vm.poolDetail.projectName }}</div>
-          <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolDetail.data.tokenName }}</div>
+          <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ vm.poolStore.projectName }}</div>
+          <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
         </div>
       </v-col>
       <v-col cols="6" class="d-flex align-center">

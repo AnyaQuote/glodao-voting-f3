@@ -19,20 +19,14 @@
           outlined
           color="red"
           class="font-weight-bold"
-          :value="vm.poolDetail.projectName"
+          :value="vm.poolStore.projectName"
         ></v-text-field>
       </div>
 
       <!-- short description -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Short description</div>
-        <v-textarea
-          hide-details
-          outlined
-          no-resize
-          row-height="4"
-          :value="vm.poolDetail.data.shortDescription"
-        ></v-textarea>
+        <v-textarea hide-details outlined no-resize row-height="4" :value="vm.poolStore.shortDescription"></v-textarea>
       </div>
 
       <!-- project avatar -->
@@ -71,7 +65,7 @@
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Website and social link</div>
         <div
-          v-for="(key, i) in $_keys(vm.poolDetail.data.socialLinks)"
+          v-for="(key, i) in $_keys(vm.poolStore.socialLinks)"
           :key="i"
           class="py-3 px-4 rounded d-flex mb-2"
           style="border: 1px solid var(--v-neutral20-base)"
@@ -88,7 +82,7 @@
             flat
             hide-details
             class="text-subtitle-1 spacer input-min-height"
-            :value="vm.poolDetail.data.socialLinks[key]"
+            :value="vm.poolStore.socialLinks[key]"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
         </div>
@@ -120,7 +114,7 @@ export default class extends Vue {
 
   open() {
     this.active = []
-    const fields = this.vm.poolDetail?.data?.fields
+    const fields = this.vm.poolStore?.fields
     fields?.forEach((field) => {
       const index = this.fields.indexOf(field)
       if (index > -1) {

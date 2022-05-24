@@ -8,22 +8,22 @@
         </v-btn>
       </div>
       <div class="d-flex flex-column">
-        <span>Voting for</span>
+        <div class="d-flex flex-column justify-center flex-grow-1">
+          <div class="text-subtitle-1">Your connected wallet</div>
+          <div class="d-flex align-center text-subtitle-1 font-weight-bold">
+            <span class="ml-1">{{ walletStore.account }}</span>
+          </div>
+        </div>
+
+        <span class="mt-2">Voting for</span>
         <div class="d-flex align-center" v-if="voteResult === 'yes'">
           <v-chip label class="rounded-lg white--text" color="green">👍 YES</v-chip>
           <span class="ml-2 text-body-1 font-weight-bold">We want the project to launch </span>
         </div>
-        <div class="d-flex align-center" v-else>
+        <!-- <div class="d-flex align-center" v-else>
           <v-chip label class="rounded-lg white--text" color="error">👎NO</v-chip>
           <span class="ml-2 text-body-1 font-weight-bold">We don't want the project to launch </span>
-        </div>
-      </div>
-      <div class="d-flex flex-column align-start">
-        <span>Your voting power</span>
-        <v-sheet outlined class="rounded d-flex align-center pa-3">
-          <span class="mr-1">TRIBE</span>
-          <v-icon>mdi-fingerprint</v-icon>
-        </v-sheet>
+        </div> -->
       </div>
       <div v-if="staked" class="d-flex flex-column">
         <span>GLD burn amount</span>
@@ -64,6 +64,7 @@
 
 <script lang="ts">
 import { appProvider } from '@/app-providers'
+import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Ref, Prop, Inject } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 
@@ -74,6 +75,7 @@ export default class VoteConfirmDialog extends Vue {
   @Inject() vm!: VotingDetailViewModel
 
   staked = true
+  walletStore = walletStore
 
   open() {
     this.dialog.open()
@@ -86,6 +88,7 @@ export default class VoteConfirmDialog extends Vue {
     this.dialog.increaseRequest()
     try {
       await this.vm.vote()
+      this.close()
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {

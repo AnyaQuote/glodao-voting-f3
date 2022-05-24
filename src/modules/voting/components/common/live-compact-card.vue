@@ -67,12 +67,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPool } from '@/models/VotingModel'
 import { RoutePaths } from '@/router'
 
 @Component
 export default class LiveCompactCard extends Vue {
-  @Prop({ required: true }) pool!: VotingPools
+  @Prop({ required: true }) pool!: VotingPool
 
   get typeName() {
     return this.pool.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'

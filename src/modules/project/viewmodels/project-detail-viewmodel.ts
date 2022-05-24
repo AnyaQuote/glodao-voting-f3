@@ -1,18 +1,17 @@
 import { appProvider } from '@/app-providers'
-import { VotingPools } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { flatMap, get, isEmpty, set } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
-import { votingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { apiService } from '@/services/api-service'
+import { PoolStore } from '@/stores/pool-store'
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
-  @observable poolDetail?: VotingPools
+  @observable poolStore?: PoolStore
   @observable missions = [
     {
       image: 'sao-hoa.png',
@@ -55,7 +54,6 @@ export class ProjectDetailViewModel {
 
   // Cancel dialog
   @observable cancelDialog = false
-  @observable cancelled = false
   @observable cancelling = false
 
   // Withdraw dialog
@@ -70,7 +68,7 @@ export class ProjectDetailViewModel {
       reaction(
         () => walletStore.account,
         () => {
-          votingHandler?.injectMetamask(walletStore.web3!)
+          //
         }
       ),
     ]
@@ -92,9 +90,7 @@ export class ProjectDetailViewModel {
       if (isEmpty(res)) {
         appProvider.router.push(RoutePaths.not_found)
       }
-      this.poolDetail = get(res, '[0]')
-      const poolInfo = yield votingHandler.getPoolInfo(this.poolDetail?.poolId)
-      this.poolInfo = poolInfo
+      this.poolStore = new PoolStore(get(res, '[0]'))
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -103,20 +99,27 @@ export class ProjectDetailViewModel {
   }
 
   @asyncAction *cancelAndWithdraw() {
+    let cancelled = false
+    const contract = this.poolStore?.contract
+    if (!contract) {
+      appProvider.snackbar.commonError('Contract not valid')
+      return
+    }
+
     this.cancelling = true
-    this.cancelled = false
     try {
-      yield votingHandler.cancelPool(this.poolDetail?.poolId, walletStore.account)
-      this.cancelled = true
+      yield contract.cancelPool(this.poolStore?.poolId, walletStore.account)
+      contract.getPoolInfo(this.poolStore?.poolId)
+      cancelled = true
     } catch (error) {
       appProvider.snackbar.commonError(error)
     }
-    if (this.cancelled) {
+    if (cancelled) {
       try {
         yield apiService.cancelVotingPool({
-          id: this.poolDetail!.id,
-          poolId: this.poolDetail!.poolId,
-          ownerAddress: this.poolDetail!.ownerAddress,
+          id: this.poolStore!.id,
+          poolId: this.poolStore!.poolId,
+          ownerAddress: this.poolStore!.ownerAddress,
         })
 
         appProvider.snackbar.success('Cancel successfully')
@@ -137,15 +140,11 @@ export class ProjectDetailViewModel {
     this.withdrawDialog = val
   }
 
-  @computed get projectLogo() {
-    return get(this.poolDetail, 'data.projectLogo', '')
+  @computed get poolCancelled() {
+    return this.poolStore?.cancelled
   }
 
-  @computed get projectName() {
-    return get(this.poolDetail, 'projectName', '')
-  }
-
-  @computed get status() {
-    return get(this.poolDetail, 'status', '')
+  @computed get poolRejected() {
+    return false
   }
 }

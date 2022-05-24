@@ -1,4 +1,5 @@
-import { MyAnchorWallet } from '@/stores/wallet-store'
+import { VotingPool } from '@/models/VotingModel'
+import { MyAnchorWallet, walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { ProgramError, Provider } from '@project-serum/anchor'
 import { ENV as SOL_CHAINID } from '@solana/spl-token-registry'
@@ -6,6 +7,8 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { clusterApiUrl, ConfirmOptions, Connection, SendTransactionError } from '@solana/web3.js'
 import { isNumber, last } from 'lodash-es'
 import Web3 from 'web3'
+import { IVotingContract } from './ido-contract-interface'
+import { VotingHandler } from './voting-contract-solidity'
 
 export interface MarketplaceOrder {
   id: any
@@ -165,6 +168,32 @@ function fixAnchorAccounts(accounts) {
   )
 }
 
+const cachedContracts: { [id: string]: IVotingContract } = {}
+function votingContractFactory(): IVotingContract | undefined {
+  const chainType = walletStore.chainType
+  const chainId = walletStore.chainId
+  const contractAddress = chainType === 'sol' ? '' : process.env.VUE_APP_VOTING_SOLIDITY
+  let result: any = undefined
+
+  if (contractAddress) {
+    result = cachedContracts[contractAddress]
+    if (!result) {
+      switch (chainId) {
+        // case 'sol':
+        //   result = new SolanaIdoContract(contractAddress, getSolanaConfig(chainId))
+        //   break
+        case 56:
+        case 97:
+        default:
+          result = new VotingHandler(contractAddress, getWeb3(chainId)!)
+          break
+      }
+      cachedContracts[contractAddress] = result
+    }
+  }
+  return result
+}
+
 export const blockchainHandler = {
   getChainConfig,
   getWeb3,
@@ -174,5 +203,6 @@ export const blockchainHandler = {
   etherBatchRequest,
   getSolanaMainNetRpc,
   fixAnchorAccounts,
+  votingContractFactory,
 }
 export type ChainType = 'eth' | 'bsc' | 'sol'

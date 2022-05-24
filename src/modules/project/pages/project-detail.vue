@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row no-gutters dense>
+    <v-row no-gutters dense v-if="vm.poolStore">
       <!-- ---------------------------- BREADCRUMBS --------------------------------------- -->
       <v-col cols="12" class="mt-4 mb-16">
         <div class="d-flex align-center font-weight-medium">
           <span class="app-blue--text mr-5 cursor-pointer" @click="$router.push('/projects')">Your project</span>
           <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-          <span class="neutral10--text">{{ vm.projectName }}</span>
+          <span class="neutral10--text">{{ vm.poolStore.projectName }}</span>
         </div>
       </v-col>
 
@@ -19,7 +19,8 @@
       </v-col>
 
       <!--  ----------------------------Approved && Reject project ------------------------------>
-      <v-col cols="12" v-else-if="vm.status !== 'voting'">
+
+      <v-col cols="12" v-else-if="vm.poolStore.status === 'approved'">
         <others-header class="mb-8"></others-header>
         <others-content></others-content>
       </v-col>
@@ -46,7 +47,6 @@ import { Observer } from 'mobx-vue'
   components: {
     'others-header': () => import('../components/project-detail-components/project-others/header.vue'),
     'others-content': () => import('../components/project-detail-components/project-others/content.vue'),
-
     'voting-content': () => import('../components/project-detail-components/project-votings/content.vue'),
     'cancel-dialog': () => import('../components/project-detail-components/dialogs/cancel-dialog.vue'),
     'withdraw-dialog': () => import('../components/project-detail-components/dialogs/withdraw-dialog.vue'),

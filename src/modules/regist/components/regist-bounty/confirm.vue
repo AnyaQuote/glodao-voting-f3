@@ -23,26 +23,30 @@
 
         <div class="d-flex font-18 mb-2">
           <span class="mr-2">BNB balance:</span>
-          <span class="font-weight-medium">{{ vm.bnbFee | formatNumber }} BNB</span>
+          <span class="font-weight-medium">{{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
 
         <div class="font-18">
-          <span class="mr-2">HWD Balance:</span>
-          <span class="font-weight-medium"> {{ walletStore.bnbBalance | formatNumber }} HWD</span>
+          <span class="mr-2">Reward Token Balance:</span>
+          <span class="font-weight-medium"
+            >{{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.rewardToken }}</span
+          >
         </div>
 
         <v-sheet outlined class="pa-3 rounded-lg font-18 font-weight-600 mt-6">
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total campaign reward:</span>
-            <span class="flex-grow-1 text-end">1,000,000 HWD</span>
+            <span class="flex-grow-1 text-end">{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.rewardToken }}</span>
           </div>
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total send:</span>
-            <span class="app-blue--text flex-grow-1 text-end">1,000,000 HWD</span>
+            <span class="app-blue--text flex-grow-1 text-end"
+              >{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.rewardToken }}</span
+            >
           </div>
           <div class="d-flex">
             <span class="neutral10--text">Creating pool fee:</span>
-            <span class="app-blue--text flex-grow-1 text-end">0.2 BNB</span>
+            <span class="app-blue--text flex-grow-1 text-end">{{ vm.bnbFee | formatNumber }} BNB</span>
           </div>
         </v-sheet>
 
@@ -88,6 +92,10 @@ export default class ConfirmPayment extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('payment-form') form
   walletStore = walletStore
+
+  mounted() {
+    this.vm.loadConfirmData()
+  }
 
   submit() {
     this.form.validate() && this.vm.submit()
