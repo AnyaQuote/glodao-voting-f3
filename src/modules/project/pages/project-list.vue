@@ -24,7 +24,11 @@
                 GloDAO investors will review and vote for your project on Voting. If your project has enough votes, it
                 will be launched on Bounty Huter or Launchpad.
               </div>
+              <div v-if="!walletStore.account">
+                <ConnectWallet />
+              </div>
               <v-btn
+                v-else
                 class="linear-blue--bg white--text text-none"
                 height="fit-content"
                 depressed
@@ -102,7 +106,9 @@
 </template>
 
 <script lang="ts">
+import ConnectWallet from '@/components/connect-wallet.vue'
 import { RoutePaths } from '@/router'
+import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 
@@ -110,10 +116,14 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
   components: {
     'project-list-header': () => import('../components/project-list-components/project-list-banner.vue'),
     'project-list-card': () => import('../components/project-list-components/project-list-card.vue'),
+    ConnectWallet,
   },
 })
 export default class ProjectListPage extends Vue {
   @Provide() vm = new ProjectListViewModel()
+
+  walletStore = walletStore
+  chainId = process.env.VUE_APP_CHAIN_ID
 
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)

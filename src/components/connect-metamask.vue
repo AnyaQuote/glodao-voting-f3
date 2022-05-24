@@ -1,17 +1,48 @@
 <template>
-  <div></div>
+  <v-btn
+    v-if="!walletStore.account"
+    class="linear-blue--bg white--text text-none rounded"
+    :disabled="disabled"
+    depressed
+    rounded
+    @click="walletStore.switchNetwork(chainType, +requiredChainId)"
+    :block="block"
+    :large="large"
+    :small="small"
+    :class="applyClass"
+  >
+    <span>{{ connectText || 'Connect Wallet' }}</span>
+  </v-btn>
+  <v-btn
+    class="text-none btn-text rounded"
+    :class="applyClass"
+    :disabled="disabled"
+    depressed
+    rounded
+    color="primary"
+    v-else-if="walletStore.chainType !== chainType || walletStore.chainId !== +requiredChainId"
+    @click="walletStore.switchNetwork(chainType, +requiredChainId)"
+    :block="block"
+    :large="large"
+    :small="small"
+  >
+    <span :class="{ 'small-text font-weight-bold': smallText }">{{ switchText || 'Switch to ' + networkName }}</span>
+  </v-btn>
+  <div v-else>
+    <slot />
+  </div>
 </template>
 
 <script lang="ts">
-// import { blockchainHandler, ChainType } from '@/blockchainHandlers'
-// import { walletStore } from '@/stores/wallet-store'
+import { blockchainHandler, ChainType } from '@/blockchainHandlers'
+import { walletStore } from '@/stores/wallet-store'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Observer
 @Component
 export default class ConnectMetamask extends Vue {
-  // @Prop() requiredChain!: ChainType
+  @Prop() requiredChain!: ChainType
   @Prop() requiredChainId!: number
   @Prop({ default: '' }) connectText!: string
   @Prop({ default: '' }) switchText!: string
@@ -22,10 +53,10 @@ export default class ConnectMetamask extends Vue {
   @Prop({ default: '' }) applyClass!: string
   @Prop({ default: false }) disabled!: boolean
 
-  // walletStore = walletStore
+  walletStore = walletStore
 
   get networkName() {
-    // const { name } = blockchainHandler.getChainConfig(this.requiredChainId)
+    const { name } = blockchainHandler.getChainConfig(this.requiredChainId)
     return name
   }
 

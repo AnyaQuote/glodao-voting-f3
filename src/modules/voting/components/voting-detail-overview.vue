@@ -111,8 +111,8 @@
     </v-sheet>
     <!-- --------------------------------------------------------------------------------------------------------------- -->
     <!-- CONTENT SECTION END -->
-    <vote-prep-dialog ref="vote-prep-dialog" />
-    <vote-confirm-dialog ref="vote-confirm-dialog" />
+    <vote-prep-dialog ref="vote-prep-dialog" @openConfirmDialog="openConfirmDialog" />
+    <vote-confirm-dialog ref="vote-confirm-dialog" :voteResult="voteResult" />
   </v-sheet>
 </template>
 
@@ -141,8 +141,15 @@ export default class VotingDetailOverview extends Vue {
   downvote = 100 - this.upvote
   typeColor = this.vm.type === 'bounty' ? 'orange' : 'green'
 
+  voteResult = ''
+
   openDialog() {
     this.votePrepDialog.open()
+  }
+
+  openConfirmDialog(voteResult) {
+    this.voteResult = voteResult
+    this.voteConfirmDialog.open()
   }
 }
 </script>

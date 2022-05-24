@@ -30,6 +30,7 @@ import { action, computed, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { Subscription, timer } from 'rxjs'
 import Web3 from 'web3'
+import { authStore } from './auth-store'
 
 export class WalletStore {
   ethereum: any = window.ethereum
@@ -339,6 +340,7 @@ export class WalletStore {
   }
 
   ethereumConfigChanged = () => {
+    authStore.logout()
     window.location.reload()
   };
 

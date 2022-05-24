@@ -6,10 +6,10 @@
       <div class="d-flex align-center">
         <img src="@/assets/icons/mock-crypto.svg" alt="currency" width="36" height="36" />
         <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">hydro wind</div>
-        <v-icon color="neutral10">mdi-circle-small</v-icon>
+        <!-- <v-icon color="neutral10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">$HWD</div>
         <v-icon color="neutral10">mdi-circle-small</v-icon>
-        <div class="neutral10--text text-h5 font-weight-bold">100,000 HWD reward</div>
+        <div class="neutral10--text text-h5 font-weight-bold">100,000 HWD reward</div> -->
       </div>
 
       <div class="ma-7">
@@ -20,15 +20,15 @@
 
         <div class="d-flex label font-weight-bold">
           <span>Creating pool fee:</span>
-          <span class="bluePrimary--text">&nbsp;0.2 BNB</span>
+          <span class="bluePrimary--text">{{ vm.bnbFee | formatNumber }} BNB</span>
         </div>
 
         <div class="label font-weight-bold">
           <span>Balance:</span>
-          <span>&nbsp;20.68 BNB</span>
+          <span> {{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
 
-        <div class="label font-weight-bold">
+        <!-- <div class="label font-weight-bold">
           <span class="bluePrimary--text">Time for launch on DAO Voting</span>
           <v-checkbox
             :value="$_get(vm.confirmInfo, 'immediate')"
@@ -53,13 +53,25 @@
               ></app-text-field>
             </div>
           </div>
-        </div>
+        </div> -->
         <v-btn
+          v-if="!vm.approved"
+          class="linear-blue--bg white--text font-weight-bold text-none mt-6"
+          block
+          depressed
+          :loading="vm.approving"
+          @click="vm.approve()"
+        >
+          <span class="btn-font">Approve</span>
+        </v-btn>
+        <v-btn
+          v-else
           class="linear-blue--bg white--text font-weight-bold text-none mt-6"
           width="100%"
           height="40"
           depressed
           @click="submit"
+          :loading="vm.creating"
         >
           Confirm and pay fee
         </v-btn>
@@ -69,6 +81,7 @@
 </template>
 
 <script lang="ts">
+import { walletStore } from '@/stores/wallet-store'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
@@ -76,6 +89,11 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 export default class ConfirmPayment extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('payment-form') form
+  walletStore = walletStore
+
+  mounted() {
+    this.vm.checkApproved()
+  }
 
   submit() {
     this.form.validate() && this.vm.submit()
