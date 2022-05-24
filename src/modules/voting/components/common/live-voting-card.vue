@@ -132,7 +132,7 @@
 </template>
 
 <script lang="ts">
-import { VotingPools } from '@/models/VotingModel'
+import { VotingPool } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RoutePaths } from '@/router'
 import { get } from 'lodash'
@@ -143,7 +143,7 @@ import { get } from 'lodash'
   },
 })
 export default class LiveVotingCard extends Vue {
-  @Prop({ required: true }) pool!: VotingPools
+  @Prop({ required: true }) pool!: VotingPool
 
   get typeName() {
     return this.pool.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'

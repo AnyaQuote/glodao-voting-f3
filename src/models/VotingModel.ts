@@ -5,15 +5,16 @@ export interface Metadata {
   projectLogo?: string
   tokenContract?: string
   additionLink?: string
-  chainID?: string
   socialLinks?: any
   poolType?: string
 }
 
-export interface VotingPools {
+export interface VotingPool {
   id?: string
   projectName?: string
   tokenAddress?: string
+  rewardTokenSymbol?: string
+  totalMission?: string
   ownerAddress?: string
   poolId?: string
   status?: string
@@ -21,6 +22,8 @@ export interface VotingPools {
   startDate?: string
   endDate?: string
   unicodeName?: string
+  chain?: string
+  chainId?: string
   data?: Metadata
 }
 

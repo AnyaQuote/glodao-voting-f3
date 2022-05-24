@@ -8,7 +8,7 @@
       <div class="font-18 font-weight-bold">Project name</div>
       <app-text-field
         :rules="[$rules.required]"
-        :value="vm.projectInfo.projectName"
+        :value="$_get(vm.projectInfo, 'projectName')"
         @input="vm.changeProjectInfo('projectName', $event)"
         placeholder="Enter name of project"
       ></app-text-field>
@@ -16,7 +16,7 @@
       <div class="font-18 font-weight-bold mt-6">Short description</div>
       <app-textarea
         :rules="[$rules.required]"
-        :value="vm.projectInfo.shortDescription"
+        :value="$_get(vm.projectInfo, 'shortDescription')"
         @input="vm.changeProjectInfo('shortDescription', $event)"
         placeholder="Enter project's short description"
       ></app-textarea>
@@ -36,8 +36,7 @@
       <div class="font-18 font-weight-bold mt-6">Field of project</div>
       <div class="neutral10--text font-weight-light mb-1">Select some keyword about your project</div>
       <v-autocomplete
-        :value="vm.projectInfo.fields"
-        :rules="[$rules.required]"
+        :value="$_get(vm.projectInfo, 'fields')"
         @change="vm.changeProjectInfo('fields', $event)"
         :items="fields"
         deletable-chips

@@ -19,7 +19,7 @@
           outlined
           color="red"
           class="font-weight-bold"
-          :value="$_get(vm.dataTemp, ' ', '')"
+          :value="$_get(vm.dataTemp, 'projectName', '')"
           @input="vm.onProjectNameChange"
         ></v-text-field>
       </div>
@@ -32,7 +32,7 @@
           outlined
           no-resize
           row-height="4"
-          :value="vm.poolDetail.data.shortDescription"
+          :value="$_get(vm.dataTemp, 'data.shortDescription', '')"
           @input="vm.onShortDescriptionChange"
         ></v-textarea>
       </div>
@@ -40,13 +40,21 @@
       <!-- project avatar -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project avatar</div>
-        <image-upload-file @change="vm.onChangeImage('projectCover', $event)" :value="vm.projectLogo" dense />
+        <image-upload-file
+          @change="vm.onChangeImage('projectLogo', $event)"
+          :value="$_get(vm.dataTemp, 'data.projectLogo', '')"
+          dense
+        />
       </div>
 
       <!-- project cover -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project cover</div>
-        <image-upload-file @change="vm.onChangeImage('projectLogo', $event)" :value="vm.projectCover" dense />
+        <image-upload-file
+          @change="vm.onChangeImage('projectCover', $event)"
+          :value="$_get(vm.dataTemp, 'data.projectCover', '')"
+          dense
+        />
       </div>
 
       <!-- project fields -->
@@ -73,7 +81,7 @@
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Website and social link</div>
         <div
-          v-for="(key, i) in $_keys(vm.poolDetail.data.socialLinks)"
+          v-for="(key, i) in $_keys($_get(vm.dataTemp, 'data.socialLinks', {}))"
           :key="i"
           class="py-3 px-4 rounded d-flex mb-2"
           style="border: 1px solid var(--v-neutral20-base)"
@@ -90,7 +98,7 @@
             flat
             hide-details
             class="text-subtitle-1 spacer input-min-height"
-            :value="vm.poolDetail.data.socialLinks[key]"
+            :value="$_get(vm.dataTemp, `data.socialLinks[${key}]`, '')"
             @input="vm.onSocialLinkChange(key, $event)"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
@@ -124,7 +132,7 @@ export default class extends Vue {
   open() {
     this.vm.setDataTemp()
     this.active = []
-    const fields = this.vm.poolDetail?.data?.fields
+    const fields = this.vm.poolStore?.fields
     fields?.forEach((field) => {
       const index = this.fields.indexOf(field)
       if (index > -1) {
