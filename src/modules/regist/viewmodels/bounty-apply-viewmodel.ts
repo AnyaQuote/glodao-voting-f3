@@ -2,15 +2,13 @@ import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase } from 'lodash'
 import { asyncAction } from 'mobx-utils'
-import { toMoment } from '@/helpers/date-helper'
+import { toISO } from '@/helpers/date-helper'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { authStore } from '@/stores/auth-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { promiseHelper } from '@/helpers/promise-helper'
-import moment from 'moment'
 import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RoutePaths } from '@/router'
@@ -28,8 +26,11 @@ const poolInfoDefault = {
   rewardToken: '',
   rewardAmount: '',
   tokenAddress: '',
-  campaignDuration: '7',
   startDate: {
+    date: '',
+    time: '',
+  },
+  endDate: {
     date: '',
     time: '',
   },
@@ -111,7 +112,7 @@ export class BountyApplyViewModel {
       )
 
       const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
-      const { startDate, campaignDuration, tokenAddress, ...poolInfo } = this.poolInfo
+      const { startDate, endDate, tokenAddress, ...poolInfo } = this.poolInfo
 
       // upload image
       let images
@@ -131,8 +132,8 @@ export class BountyApplyViewModel {
         tokenAddress: this.poolInfo.tokenAddress,
         status: 'voting',
         unicodeName: kebabCase(projectName),
-        startDate: toMoment(startDate).toISOString(),
-        endDate: toMoment(startDate).add(campaignDuration, 'days').toISOString(),
+        startDate: toISO(startDate),
+        endDate: toISO(endDate),
         data: {
           ...projectInfo,
           ...poolInfo,
