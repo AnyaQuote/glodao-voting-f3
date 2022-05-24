@@ -15,12 +15,14 @@
           <bounty-stepper />
         </v-col>
         <v-col cols="12" md="9">
-          <v-slide-y-transition leave-absolute>
-            <project-info v-if="vm.step === 1.1" />
-            <pool-info v-if="vm.step === 1.2" />
-            <confirm-payment v-if="vm.step === 2.1" />
-            <send-token v-if="vm.step === 2.2" />
-          </v-slide-y-transition>
+          <div class="mb-6">
+            <v-slide-y-transition leave-absolute>
+              <project-info v-if="vm.step === 1.1" />
+              <pool-info v-if="vm.step === 1.2" />
+              <confirm-payment v-if="vm.step === 2.1" />
+              <send-token v-if="vm.step === 2.2" />
+            </v-slide-y-transition>
+          </div>
         </v-col>
       </v-row>
     </v-container>
