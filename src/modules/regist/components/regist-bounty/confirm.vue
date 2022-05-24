@@ -1,6 +1,6 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip label outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6">Confirm</v-chip>
+    <v-chip font-18 outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6">Confirm</v-chip>
 
     <v-form ref="payment-form" class="pa-6">
       <div class="d-flex align-center">
@@ -20,14 +20,14 @@
           >
         </div>
 
-        <div class="d-flex font-18 font-weight-bold">
+        <div class="d-flex label font-weight-bold">
           <span>Creating pool fee:</span>
-          <span class="bluePrimary--text">&nbsp;0.2 BNB</span>
+          <span class="bluePrimary--text">{{ vm.bnbFee | formatNumber }} BNB</span>
         </div>
 
-        <div class="font-18 font-weight-bold mt-5">
+        <div class="label font-weight-bold">
           <span>Balance:</span>
-          <span>&nbsp;20.68 BNB</span>
+          <span> {{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
 
         <ul class="mt-5">
@@ -36,11 +36,23 @@
         </ul>
 
         <v-btn
+          v-if="!vm.approved"
+          class="linear-blue--bg white--text font-weight-bold text-none mt-6"
+          block
+          depressed
+          :loading="vm.approving"
+          @click="vm.approve()"
+        >
+          <span class="btn-font">Approve</span>
+        </v-btn>
+        <v-btn
+          v-else
           class="linear-blue--bg white--text font-weight-bold text-none mt-6"
           width="100%"
           height="40"
           depressed
           @click="submit"
+          :loading="vm.creating"
         >
           Confirm and pay fee
         </v-btn>
@@ -51,6 +63,7 @@
 </template>
 
 <script lang="ts">
+import { walletStore } from '@/stores/wallet-store'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
@@ -63,9 +76,10 @@ export default class ConfirmPayment extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('confirm-dialog') dialog
   @Ref('payment-form') form
+  walletStore = walletStore
 
   submit() {
-    this.form.validate() && this.dialog.open()
+    this.form.validate() && this.vm.submit()
   }
 }
 </script>

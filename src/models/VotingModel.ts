@@ -7,9 +7,11 @@ export interface Metadata {
   additionLink?: string
   chainID?: string
   socialLinks?: any
+  poolType?: string
 }
 
 export interface VotingPools {
+  id?: string
   projectName?: string
   tokenAddress?: string
   ownerAddress?: string

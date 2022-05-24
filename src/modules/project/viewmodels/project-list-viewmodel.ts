@@ -11,7 +11,7 @@ export class ProjectListViewModel {
   @observable loading = false
 
   constructor() {
-    this.fetchMyProject()
+    if (appProvider.authStore.username) this.fetchMyProject()
   }
 
   @asyncAction *fetchMyProject() {

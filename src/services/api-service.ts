@@ -184,7 +184,6 @@ export class ApiHandlerJWT<T> {
 export class ApiService {
   axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
 
-  // fixedPool = new ApiHandler<FixedPoolModel>(axios, 'pool')
   users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
   tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
@@ -213,6 +212,36 @@ export class ApiService {
         return Promise.reject(error)
       }
     )
+  }
+
+  async createOrUpdateVotingPool(data) {
+    const res = await this.axios.post(
+      'createOrUpdateVotingPool',
+      {
+        ...data,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.jwt}`,
+        },
+      }
+    )
+
+    return res.data
+  }
+
+  async updateStatusToApproved(data) {
+    const res = await this.axios.put('updateStatusToApproved', data)
+    return res.data
+  }
+
+  async cancelVotingPool(data) {
+    const res = await this.axios.put('cancelVotingPool', data, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
   }
 
   async getFile(id: any) {

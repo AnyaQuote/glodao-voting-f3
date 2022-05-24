@@ -30,7 +30,7 @@ export default class AppDialog extends Vue {
     }
   }
 
-  private get requesting() {
+  get requesting() {
     return this.request > 0
   }
 }

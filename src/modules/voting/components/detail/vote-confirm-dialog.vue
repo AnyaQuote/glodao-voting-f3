@@ -9,9 +9,13 @@
       </div>
       <div class="d-flex flex-column">
         <span>Voting for</span>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center" v-if="voteResult === 'yes'">
           <v-chip label class="rounded-lg white--text" color="green">👍 YES</v-chip>
           <span class="ml-2 text-body-1 font-weight-bold">We want the project to launch </span>
+        </div>
+        <div class="d-flex align-center" v-else>
+          <v-chip label class="rounded-lg white--text" color="error">👎NO</v-chip>
+          <span class="ml-2 text-body-1 font-weight-bold">We don't want the project to launch </span>
         </div>
       </div>
       <div class="d-flex flex-column align-start">
@@ -27,7 +31,7 @@
           <v-avatar size="24" class="mr-1">
             <v-img src="@/assets/icons/icon-glodao.svg" />
           </v-avatar>
-          <span class="font-weight-bold text-h5">0.02 GLD</span>
+          <span class="font-weight-bold text-h5">{{ vm.stakeFee | formatNumber }} GLD</span>
         </div>
       </div>
       <v-sheet v-else outlined class="error-border pa-4 rounded-lg d-flex align-start">
@@ -37,27 +41,56 @@
         </div>
       </v-sheet>
       <div class="d-flex flex-column">
-        <v-btn class="btnA white--text text-none mb-2" depressed>Confirm</v-btn>
-        <v-btn class="text-none" color="blue" @click="close" outlined depressed>Cancel</v-btn>
+        <v-btn
+          class="linear-blue--bg white--text font-weight-bold text-none"
+          depressed
+          @click="vote"
+          :loading="dialog && dialog.requesting"
+          >Confirm</v-btn
+        >
+        <v-btn
+          class="text-none mt-4"
+          color="blue"
+          @click="close"
+          :disabled="dialog && dialog.requesting"
+          outlined
+          depressed
+          >Cancel</v-btn
+        >
       </div>
     </v-sheet>
   </app-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
+import { appProvider } from '@/app-providers'
+import { Component, Vue, Ref, Prop, Inject } from 'vue-property-decorator'
+import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 
 @Component
 export default class VoteConfirmDialog extends Vue {
   @Ref('dialog') dialog
+  @Prop({ default: 'yes' }) voteResult
+  @Inject() vm!: VotingDetailViewModel
 
-  staked = false
+  staked = true
 
   open() {
     this.dialog.open()
   }
   close() {
     this.dialog.close()
+  }
+
+  async vote() {
+    this.dialog.increaseRequest()
+    try {
+      await this.vm.vote()
+    } catch (error) {
+      appProvider.snackbar.commonError(error)
+    } finally {
+      this.dialog.decreaseRequest()
+    }
   }
 }
 </script>

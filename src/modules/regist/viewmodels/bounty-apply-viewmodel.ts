@@ -1,5 +1,5 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { action, autorun, computed, IReactionDisposer, observable, reaction, when } from 'mobx'
+import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { toMoment } from '@/helpers/date-helper'
@@ -9,7 +9,11 @@ import { walletStore } from '@/stores/wallet-store'
 import { authStore } from '@/stores/auth-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { VotingPools } from '@/models/VotingModel'
+import { promiseHelper } from '@/helpers/promise-helper'
+import moment from 'moment'
+import { Zero } from '@/constants'
+import { appProvider } from '@/app-providers'
+import { RoutePaths } from '@/router'
 
 const projectInfoDefault = {
   projectName: '',
@@ -40,19 +44,21 @@ export class BountyApplyViewModel {
   @observable unlockedStep = 1.1
   @observable projectInfo = projectInfoDefault
   @observable poolInfo = poolInfoDefault
+  @observable creating = false
+
+  @observable approved = false
+  @observable approving = false
+
+  @observable bnbFee = Zero
 
   @observable votingHandler?: VotingHandler
 
   constructor() {
-    this.loadData()
-    this._disposers = [
-      reaction(
-        () => walletStore.account,
-        () => {
-          //
-        }
-      ),
-    ]
+    if (authStore.isAuthenticated) {
+      this.loadData()
+    } else {
+      appProvider.router.push(RoutePaths.project_list)
+    }
   }
 
   destroy() {
@@ -64,11 +70,12 @@ export class BountyApplyViewModel {
   async loadData() {
     const votingHandler = new VotingHandler()
     this.votingHandler = votingHandler
-    // await votingHandler.init()
+    await this.votingHandler.getPoolType()
+    this.bnbFee = this.votingHandler.poolType.fee!
 
     this._disposers.push(
       when(
-        () => walletStore.solidityConnected,
+        () => walletStore.walletConnected,
         async () => {
           votingHandler.injectMetamask(walletStore.web3!)
         }
@@ -76,45 +83,71 @@ export class BountyApplyViewModel {
     )
   }
 
-  @asyncAction *submit() {
+  checkApproved() {
+    this.votingHandler!.approved(this.poolInfo.tokenAddress, walletStore.account).then((approved) =>
+      runInAction(() => (this.approved = approved))
+    )
+  }
+  @asyncAction *approve() {
+    this.approving = true
     try {
+      yield this.votingHandler?.approve(this.poolInfo.tokenAddress, walletStore.account)
+      this.approved = true
+    } catch (error) {
+      this.approved = false
+      snackController.commonError(error)
+    } finally {
+      this.approving = false
+    }
+  }
+
+  @asyncAction *submit() {
+    this.creating = true
+    try {
+      const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
+        this.poolInfo.tokenAddress,
+        '100',
+        walletStore.account
+      )
+
       const { projectName, projectLogo, projectCover, ...projectInfo } = this.projectInfo
       const { startDate, campaignDuration, tokenAddress, ...poolInfo } = this.poolInfo
-      let res
 
-      const media = new FormData()
-      media.append('files', projectLogo!)
-      media.append('files', projectCover!)
-      res = yield apiService.uploadFile(media)
+      // upload image
+      let images
+      if (projectLogo && projectCover) {
+        const media = new FormData()
+        media.append('files', projectLogo!)
+        media.append('files', projectCover!)
+        images = yield apiService.uploadFile(media)
+      }
 
-      const data: VotingPools = {
-        poolId: '',
-        projectName: projectName,
-        unicodeName: kebabCase(projectName),
+      // update voting pool
+      const data = {
+        projectName,
         type: 'bounty',
-        ownerAddress: walletStore.account,
-        tokenAddress: tokenAddress,
+        poolId,
+        ownerAddress,
+        tokenAddress: this.poolInfo.tokenAddress,
         status: 'voting',
+        unicodeName: kebabCase(projectName),
         startDate: toMoment(startDate).toISOString(),
         endDate: toMoment(startDate).add(campaignDuration, 'days').toISOString(),
         data: {
           ...projectInfo,
           ...poolInfo,
-          projectLogo: getApiFileUrl(res[0]),
-          projectCover: getApiFileUrl(res[1]),
+          projectLogo: images ? getApiFileUrl(images[0]) : null,
+          projectCover: images ? getApiFileUrl(images[1]) : null,
+          poolType,
         },
       }
-      res = yield apiService.voting.create(data)
+      const pool = yield apiService.createOrUpdateVotingPool(data)
+      appProvider.router.push(RoutePaths.project_list)
     } catch (error) {
+      console.error(error)
       snackController.commonError(error)
-    }
-  }
-
-  @asyncAction *createPool() {
-    try {
-      yield this.votingHandler?.createPool('0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf', walletStore.account)
-    } catch (error) {
-      console.error('error: ', error)
+    } finally {
+      this.creating = false
     }
   }
 

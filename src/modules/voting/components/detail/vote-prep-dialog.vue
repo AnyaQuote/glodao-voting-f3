@@ -14,7 +14,7 @@
           <div class="text-subtitle-1">Your connected wallet</div>
           <div class="d-flex align-center text-subtitle-1 font-weight-bold">
             <icon-chain />
-            <span class="ml-1">GxmhrPKccNj...ywQT</span>
+            <span class="ml-1">{{ walletStore.shortAccount }}</span>
           </div>
         </div>
         <div>
@@ -26,37 +26,47 @@
         <v-spacer />
       </div>
       <div>
-        <v-sheet class="blue lighten-4 rounded-lg rounded-b-0 mb-0" outlined>
-          <v-radio class="ma-4">
-            <template v-slot:label>
-              <div>
-                <v-chip class="mr-1" color="green">👍YES</v-chip>
-                <span class="text-subtitle-1 font-weight-medium">We want the project to launch</span>
-              </div>
-            </template>
-          </v-radio>
-        </v-sheet>
+        <v-radio-group v-model="result">
+          <v-sheet class="blue lighten-4 rounded-lg rounded-b-0 mb-0" outlined>
+            <v-radio class="ma-4" value="yes">
+              <template v-slot:label>
+                <div>
+                  <v-chip class="mr-1" color="green">👍YES</v-chip>
+                  <span class="text-subtitle-1 font-weight-medium">We want the project to launch</span>
+                </div>
+              </template>
+            </v-radio>
+          </v-sheet>
 
-        <v-sheet class="rounded-lg rounded-t-0 mt-0" outlined>
-          <v-radio class="ma-4">
-            <template v-slot:label>
-              <v-chip class="mr-1" color="error">👎NO</v-chip>
-              <span class="text-subtitle-1 font-weight-medium">We don't want the project to launch</span>
-            </template>
-          </v-radio>
-        </v-sheet>
+          <v-sheet class="rounded-lg rounded-t-0 mt-0" outlined>
+            <v-radio class="ma-4" value="no">
+              <template v-slot:label>
+                <v-chip class="mr-1" color="error">👎NO</v-chip>
+                <span class="text-subtitle-1 font-weight-medium">We don't want the project to launch</span>
+              </template>
+            </v-radio>
+          </v-sheet>
+        </v-radio-group>
       </div>
       <div class="d-flex flex-column">
         <span>*By voting, you will burn 0.002 GLD in your staked</span>
       </div>
       <div>
-        <v-btn block class="btnA text-none white--text" depressed> Cast vote </v-btn>
+        <v-btn
+          block
+          class="linear-blue--bg white--text font-weight-bold text-none"
+          depressed
+          @click="$emit('openConfirmDialog', result)"
+        >
+          Cast vote
+        </v-btn>
       </div>
     </v-sheet>
   </app-dialog>
 </template>
 
 <script lang="ts">
+import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Ref } from 'vue-property-decorator'
 
 @Component({
@@ -66,6 +76,8 @@ import { Component, Vue, Ref } from 'vue-property-decorator'
 })
 export default class VotePrepDialog extends Vue {
   @Ref('dialog') dialog
+  walletStore = walletStore
+  result = 'yes'
 
   open() {
     this.dialog.open()

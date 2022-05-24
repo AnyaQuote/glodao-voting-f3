@@ -23,12 +23,6 @@ export class AuthStore {
   constructor() {
     if (localdata.jwt) this.changeJwt(localdata.jwt)
     if (localdata.user) this.changeUser(localdata.user)
-    reaction(
-      () => walletStore.account,
-      () => {
-        this.logout()
-      }
-    )
   }
 
   @action.bound changeJwt(value: string) {
