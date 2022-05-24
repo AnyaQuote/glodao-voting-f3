@@ -14,13 +14,11 @@
           </div>
           <v-divider />
           <v-form class="pa-7">
-            <!-- MISSION INFORMATION -->
-            <mission-info-form />
-            <!-- REWARD INFORMATION -->
-            <reward-info-form />
+            <!-- MISSION, REWARD AND TIME INFORMATION -->
+            <mission-info />
             <!-- MISSION SETTING -->
-            <mission-setting-form />
-            <v-btn class="linear-blue--bg white--text text-none" height="40" depressed block> Create </v-btn>
+            <mission-setting />
+            <v-btn class="linear-blue--bg white--text text-none mt-7" height="40" depressed block> Create </v-btn>
           </v-form>
         </v-sheet>
       </v-col>
@@ -30,40 +28,22 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
+import { NewMissionViewModel } from '../viewmodels/new-mission-viewmodel'
 
 @Observer
 @Component({
   components: {
-    'mission-info-form': () => import('../components/new-mission/mission-info-form.vue'),
-    'reward-info-form': () => import('../components/new-mission/reward-info-form.vue'),
-    'mission-setting-form': () => import('../components/new-mission/mission-setting-form.vue'),
+    'mission-info': () => import('../components/new-mission/mission-info.vue'),
+    'mission-setting': () => import('../components/new-mission/mission-setting.vue'),
   },
 })
 export default class MissionForm extends Vue {
+  @Provide() vm = new NewMissionViewModel()
   goBack() {
     this.$router.go(-1)
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.section {
-  margin-bottom: em(28);
-  .title {
-    font-size: em(18);
-    margin-bottom: em(8);
-  }
-  .label {
-    font-weight: 600;
-    font-size: em(16);
-    margin-bottom: em(16);
-  }
-  .field {
-    margin-bottom: em(28);
-  }
-  .label-field {
-    margin-bottom: em(16);
-  }
-}
-</style>
+<style lang="scss" scoped></style>
