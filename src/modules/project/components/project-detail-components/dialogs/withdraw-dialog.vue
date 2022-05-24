@@ -10,7 +10,7 @@
       </div>
       <div class="d-flex justify-space-between mn-4" style="font-size: 18px">
         <div class="neutral10--text">Total sent</div>
-        <div class="neutral0--text">{{ 1000 | formatNumber(2, 2) }}HWD</div>
+        <div class="neutral0--text font-weight-bold">{{ 1000 | formatNumber(2, 2) }} HWD</div>
       </div>
 
       <div style="border: 1px solid var(--v-neutral20-base)" class="rounded-lg py-4 text-center mb-4">
