@@ -79,13 +79,13 @@
       </div>
 
       <div class="font-18 flex-grow-1 mt-6 mb-2">
-        <span class="font-weight-bold">Total mission</span>
+        <span class="font-weight-bold">Total missions</span>
         <span class="ml-1">(Max is 10 mission)</span>
       </div>
       <app-text-field
         :rules="[$rules.required, $rules.integer, $rules.max(10), $rules.min(1)]"
-        :value="$_get(vm.poolInfo, 'totalMission')"
-        @input="vm.changePoolInfo('totalMission', $event)"
+        :value="$_get(vm.poolInfo, 'totalMissions')"
+        @input="vm.changePoolInfo('totalMissions', $event)"
         placeholder="Enter number of missions"
       ></app-text-field>
 
@@ -100,25 +100,29 @@
         Continue
       </v-btn>
     </v-form>
+    <confirm-campaign-dialog ref="confirm-dialog" />
   </v-sheet>
 </template>
 
 <script lang="ts">
+import { Observer } from 'mobx-vue'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
+@Observer
 @Component({
   components: {
-    'duration-selector': () => import('../common/duration-selector.vue'),
+    'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
   },
 })
 export default class RaisingInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
+  @Ref('confirm-dialog') dialog
   @Ref('fund-info-form') form
   valid = false
   tokens = ['HWD', 'BNB']
   submit() {
-    this.form.validate() && this.vm.nextStep(2.1)
+    this.form.validate() && this.dialog.open()
   }
 }
 </script>
