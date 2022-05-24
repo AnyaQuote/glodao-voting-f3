@@ -19,7 +19,7 @@
       </v-col>
 
       <!--  ----------------------------Approved && Reject project ------------------------------>
-      <v-col cols="12" v-else-if="vm.poolDetail.status !== 'voting'">
+      <v-col cols="12" v-else-if="vm.status !== 'voting'">
         <others-header class="mb-8"></others-header>
         <others-content></others-content>
       </v-col>
@@ -59,10 +59,6 @@ export default class ProjectDetailPage extends Vue {
 
   goToNewMission() {
     this.$router.push(RoutePaths.new_mission)
-  }
-
-  get statusColor() {
-    return this.vm.status === 'approved' ? 'green ' : this.vm.status === 'rejected' ? 'red' : 'neutral100'
   }
 }
 </script>

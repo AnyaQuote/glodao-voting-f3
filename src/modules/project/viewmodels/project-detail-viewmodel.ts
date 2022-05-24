@@ -130,4 +130,12 @@ export class ProjectDetailViewModel {
   @computed get projectLogo() {
     return get(this.poolDetail, 'data.projectLogo', '')
   }
+
+  @computed get projectName() {
+    return get(this.poolDetail, 'projectName', '')
+  }
+
+  @computed get status() {
+    return get(this.poolDetail, 'status', '')
+  }
 }
