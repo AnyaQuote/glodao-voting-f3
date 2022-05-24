@@ -2,7 +2,7 @@ import { appProvider } from '@/app-providers'
 import { VotingPools } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { get, isEmpty } from 'lodash-es'
+import { flatMap, get, isEmpty, set } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
@@ -129,13 +129,5 @@ export class ProjectDetailViewModel {
 
   @computed get projectLogo() {
     return get(this.poolDetail, 'data.projectLogo', '')
-  }
-
-  @computed get projectName() {
-    return this.poolDetail?.projectName
-  }
-
-  @computed get status() {
-    return get(this.poolDetail, 'status', '')
   }
 }
