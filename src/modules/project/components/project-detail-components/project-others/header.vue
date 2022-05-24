@@ -52,7 +52,7 @@
               block
               elevation="0"
               height="48"
-              :to="`/new-project`"
+              @click="goToNewMission"
             >
               Create mission
             </v-btn>
@@ -65,6 +65,7 @@
 
 <script lang="ts">
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
+import { RoutePaths } from '@/router'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 
@@ -72,6 +73,10 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 @Component
 export default class extends Vue {
   @Inject() vm!: ProjectDetailViewModel
+
+  goToNewMission() {
+    this.$router.push(RoutePaths.new_mission)
+  }
 }
 </script>
 

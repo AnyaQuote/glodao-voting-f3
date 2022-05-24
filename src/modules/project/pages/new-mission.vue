@@ -15,53 +15,11 @@
           <v-divider />
           <v-form class="pa-7">
             <!-- MISSION INFORMATION -->
-            <div class="section">
-              <div class="title font-weight-bold bluePrimary--text">Mission information</div>
-              <span class="label">Mission name</span>
-              <app-text-field class="field" placeholder="Enter name of mission" />
-              <span class="label">Short description</span>
-              <app-text-field class="field" placeholder="Enter short description to describe the mission" />
-              <span class="label">Mission cover</span>
-              <image-upload-field class="field" />
-            </div>
+            <mission-info-form />
             <!-- REWARD INFORMATION -->
-            <div class="d-flex flex-column section">
-              <div class="title font-weight-bold bluePrimary--text">Reward information</div>
-              <div class="d-flex mb-7">
-                <div class="flex-grow-1">
-                  <span class="label">Reward Token</span>
-                  <app-select class="mr-4" placeholder="Choose token" />
-                </div>
-                <div class="flex-grow-1">
-                  <span class="label">Total reward</span>
-                  <app-text-field placeholder="Enter amount" />
-                </div>
-              </div>
-              <div class="d-flex mb-7">
-                <div class="flex-grow-1">
-                  <span class="label">Priority amount</span>
-                  <app-text-field class="mr-4" placeholder="Enter amount" />
-                </div>
-                <div class="flex-grow-1">
-                  <span class="label">Max participant in priority pool</span>
-                  <app-text-field placeholder="Enter participants" />
-                </div>
-              </div>
-            </div>
+            <reward-info-form />
             <!-- MISSION SETTING -->
-            <div class="section">
-              <div class="title font-weight-bold bluePrimary--text">Mission setting</div>
-              <switch-field class="label-field" title="Telegram task" subtitle="Join telegram group" />
-              <switch-field class="label-field" title="Twitter task" subtitle="Follow project twitter" />
-              <switch-field class="label-field" title="Twitter task" subtitle="Quote a tweet">
-                <app-text-field placeholder="Enter your hastag" append-icon="fa-solid fa-hashtag" />
-              </switch-field>
-              <switch-field class="label-field" title="Twitter task" subtitle="Like and reply a post">
-                <app-text-field placeholder="Enter your tweet link" append-icon="mdi-link" />
-              </switch-field>
-              <switch-field class="label-field" title="Learn to earn" subtitle="Learn document and answer question" />
-            </div>
-
+            <mission-setting-form />
             <v-btn class="linear-blue--bg white--text text-none" height="40" depressed block> Create </v-btn>
           </v-form>
         </v-sheet>
@@ -77,8 +35,9 @@ import { Component, Vue } from 'vue-property-decorator'
 @Observer
 @Component({
   components: {
-    'switch-field': () => import('../components/new-missions-components/new-misstion-switch-field.vue'),
-    'image-upload-field': () => import('@/components/image-upload-field.vue'),
+    'mission-info-form': () => import('../components/new-mission/mission-info-form.vue'),
+    'reward-info-form': () => import('../components/new-mission/reward-info-form.vue'),
+    'mission-setting-form': () => import('../components/new-mission/mission-setting-form.vue'),
   },
 })
 export default class MissionForm extends Vue {
