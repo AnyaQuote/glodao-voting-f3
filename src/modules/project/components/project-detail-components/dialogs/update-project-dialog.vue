@@ -20,7 +20,6 @@
           color="red"
           class="font-weight-bold"
           :value="vm.poolDetail.projectName"
-          @input="vm.inputProjectName($event)"
         ></v-text-field>
       </div>
 
@@ -33,7 +32,6 @@
           no-resize
           row-height="4"
           :value="vm.poolDetail.data.shortDescription"
-          @input="vm.inputShortDescription($event)"
         ></v-textarea>
       </div>
 
@@ -91,7 +89,6 @@
             hide-details
             class="text-subtitle-1 spacer input-min-height"
             :value="vm.poolDetail.data.socialLinks[key]"
-            @input="vm.inputSocialLinks(key, $event)"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
         </div>
@@ -144,9 +141,6 @@ export default class extends Vue {
     } else {
       this.active.push(index)
     }
-    let fields: string[] = []
-    this.active.forEach((index) => fields.push(this.fields[index]))
-    this.vm.updateFields(fields)
   }
 }
 </script>

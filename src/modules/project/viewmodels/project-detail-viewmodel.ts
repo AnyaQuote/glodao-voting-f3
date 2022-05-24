@@ -130,38 +130,4 @@ export class ProjectDetailViewModel {
   @computed get projectLogo() {
     return get(this.poolDetail, 'data.projectLogo', '')
   }
-
-  /**
-   * Updae project dialog
-   * @param
-   */
-  @observable poolDetailTemp = this.poolDetail
-
-  @action.bound inputProjectName(val: string | undefined) {
-    //
-  }
-
-  @action.bound inputShortDescription(val: string | undefined) {
-    // 
-  }
-
-  @action.bound projectCover() {
-    //
-  }
-
-  @action.bound projectAvatar() {
-    //
-  }
-
-  @action.bound updateFields(fields: string[]) {
-    //
-  }
-
-  @action.bound inputSocialLinks(key, val: string) {
-    set(this.poolDetail?.data?.socialLinks, key, val)
-  }
-
-  @action.bound save() {
-    //
-  }
 }
