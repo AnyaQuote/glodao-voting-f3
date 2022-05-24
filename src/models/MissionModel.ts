@@ -1,15 +1,17 @@
 export interface Task {
   type?: string
+  content?: string
   page?: string
-  required?: string
+  required?: boolean
   link?: string
   hashtag?: string
   embedLink?: string
 }
 
 export interface Data {
-  twitter?: Task
-  telegram?: Task
+  twitter?: Task[]
+  telegram?: Task[]
+  quiz?: { type: string; quizId: string }[]
 }
 
 export interface MetaData {
@@ -23,4 +25,21 @@ export interface MetaData {
   website?: string
 }
 
-export interface Mission {}
+export interface Mission {
+  name?: string
+  status?: string
+  chainId?: string
+  startTime?: string
+  endTime?: string
+  maxParticipant?: number
+  totalParticipants?: number
+  maxPriorityParticipants?: number
+  completedParticipants?: number
+  tokenBasePrice?: string
+  rewardAmount?: string
+  priorityRewardAmount?: string
+  data?: Data
+  metadata?: MetaData
+  type?: 'bounty' | 'learn'
+  missionIndex?: number
+}
