@@ -17,7 +17,7 @@
         <v-col cols="12" md="9">
           <v-slide-y-transition leave-absolute>
             <project-info v-if="vm.step === 1.1" />
-            <bounty-info v-if="vm.step === 1.2" />
+            <pool-info v-if="vm.step === 1.2" />
             <confirm-payment v-if="vm.step === 2.1" />
             <send-token v-if="vm.step === 2.2" />
           </v-slide-y-transition>
@@ -36,7 +36,7 @@ import { BountyApplyViewModel } from '../viewmodels/bounty-apply-viewmodel'
     'bounty-stepper': () => import('../components/regist-bounty/bounty-stepper.vue'),
     'project-info': () => import('../components/regist-bounty/project-info.vue'),
     'confirm-payment': () => import('../components/regist-bounty/confirm.vue'),
-    'bounty-info': () => import('../components/regist-bounty/pool-info.vue'),
+    'pool-info': () => import('../components/regist-bounty/pool-info.vue'),
     'send-token': () => import('../components/regist-bounty/send-token.vue'),
     banner: () => import('../components/common/banner.vue'),
   },
