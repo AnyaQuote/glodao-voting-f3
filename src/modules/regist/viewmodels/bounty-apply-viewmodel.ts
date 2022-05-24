@@ -2,7 +2,6 @@ import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase } from 'lodash'
 import { asyncAction } from 'mobx-utils'
-import { toISO } from '@/helpers/date-helper'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
@@ -12,6 +11,7 @@ import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RoutePaths } from '@/router'
+import { toISO } from '@/helpers/date-helper'
 
 const projectInfoDefault = {
   projectName: '',
