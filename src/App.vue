@@ -247,4 +247,8 @@ a {
     }
   }
 }
+
+.input-min-height .v-input__control {
+  min-height: 18px !important;
+}
 </style>

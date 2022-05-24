@@ -2,7 +2,7 @@ import { appProvider } from '@/app-providers'
 import { VotingPools } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { get, isEmpty } from 'lodash-es'
+import { flatMap, get, isEmpty, set } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
@@ -131,11 +131,37 @@ export class ProjectDetailViewModel {
     return get(this.poolDetail, 'data.projectLogo', '')
   }
 
-  @computed get projectName() {
-    return this.poolDetail?.projectName
+  /**
+   * Updae project dialog
+   * @param
+   */
+  @observable poolDetailTemp = this.poolDetail
+
+  @action.bound inputProjectName(val: string | undefined) {
+    //
   }
 
-  @computed get status() {
-    return get(this.poolDetail, 'status', '')
+  @action.bound inputShortDescription(val: string | undefined) {
+    // 
+  }
+
+  @action.bound projectCover() {
+    //
+  }
+
+  @action.bound projectAvatar() {
+    //
+  }
+
+  @action.bound updateFields(fields: string[]) {
+    //
+  }
+
+  @action.bound inputSocialLinks(key, val: string) {
+    set(this.poolDetail?.data?.socialLinks, key, val)
+  }
+
+  @action.bound save() {
+    //
   }
 }

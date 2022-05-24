@@ -58,7 +58,7 @@
           <div class="d-flex align-baseline justify-space-between mb-2">
             <div class="font-weight-600 text-h5 neutral0--text mr-5">Project information detail</div>
             <div class="font-weight-600 text-subtitle-1 blue--text d-flex">
-              Edit infomation<v-icon size="17" color="blue" class="ml-2">mdi-pencil</v-icon>
+              Edit infomation<v-icon size="17" color="blue" class="ml-2" @click="open()">mdi-pencil</v-icon>
             </div>
           </div>
           <v-icon size="17" class="mr-2">mdi-information-outline</v-icon>
@@ -188,19 +188,29 @@
         </div>
       </v-sheet>
     </div>
+    <update-project-dialog ref="update-dialog" />
   </div>
 </template>
 
 <script lang="ts">
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
-import { walletStore } from '@/stores/wallet-store'
 import { Observer } from 'mobx-vue'
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 
 @Observer
-@Component
+@Component({
+  components: {
+    'update-project-dialog': () => import('../dialogs/update-project-dialog.vue'),
+  },
+})
 export default class extends Vue {
   @Inject() vm!: ProjectDetailViewModel
+
+  @Ref('update-dialog') dialog: any
+
+  open() {
+    this.dialog.open()
+  }
 }
 </script>
 
