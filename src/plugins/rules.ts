@@ -29,9 +29,12 @@ export const rules = {
   nospace: (v: string) => !v || !/ /.test(v.trim()) || 'There is space',
   notEmpty: (v: string) => !Array.isArray(v) || !!v.length || 'Required',
   floatNumberOnly: (v: string) => !v || /^(?!0\d)\d*(\.\d+)?$/gi.test(v) || 'Number is not valid',
-  yyyymmdd: (v: string) => moment(v).isValid() || 'Invalid date',
+  yyyymmdd: (v: string) =>
+    (/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/.test(v.trim()) && moment(v, 'DD/MM/YYYY').isValid()) || 'Invalid date',
   integer: (v: string) => /[0-9]+/.test(v.trim()) || 'Must be interger',
-  hhmm: (v: string) => moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid() || 'Invalid time ',
+  hhmm: (v: string) =>
+    (/^[0-9]{2}:[0-9]{2}$/.test(v.trim()) && (moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid())) ||
+    'Invalid time ',
 }
 
 export const appRules = {}
