@@ -13,6 +13,7 @@
       </div>
 
       <div class="ma-7">
+        <div class="mb-2 font-18 font-weight-bold">Please send full amount of reward token to create pool</div>
         <div class="mb-7">
           <i
             >After your application is submitted, create pool fee will be taken and not be refunded for any reason. You
@@ -20,17 +21,32 @@
           >
         </div>
 
-        <div class="d-flex label font-weight-bold">
-          <span>Creating pool fee:</span>
-          <span class="bluePrimary--text">{{ vm.bnbFee | formatNumber }} BNB</span>
+        <div class="d-flex font-18 mb-2">
+          <span class="mr-2">BNB balance:</span>
+          <span class="font-weight-medium">{{ vm.bnbFee | formatNumber }} BNB</span>
         </div>
 
-        <div class="label font-weight-bold">
-          <span>Balance:</span>
-          <span> {{ walletStore.bnbBalance | formatNumber }} BNB</span>
+        <div class="font-18">
+          <span class="mr-2">HWD Balance:</span>
+          <span class="font-weight-medium"> {{ walletStore.bnbBalance | formatNumber }} HWD</span>
         </div>
 
-        <ul class="mt-5">
+        <v-sheet outlined class="pa-3 rounded-lg font-18 font-weight-600 mt-6">
+          <div class="mb-3 d-flex">
+            <span class="neutral10--text">Total campaign reward:</span>
+            <span class="flex-grow-1 text-end">1,000,000 HWD</span>
+          </div>
+          <div class="mb-3 d-flex">
+            <span class="neutral10--text">Total send:</span>
+            <span class="app-blue--text flex-grow-1 text-end">1,000,000 HWD</span>
+          </div>
+          <div class="d-flex">
+            <span class="neutral10--text">Creating pool fee:</span>
+            <span class="app-blue--text flex-grow-1 text-end">0.2 BNB</span>
+          </div>
+        </v-sheet>
+
+        <ul class="mt-6">
           <li class="mb-2 font-weight-600">Project will published immediately after creating pool</li>
           <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
         </ul>
@@ -39,6 +55,7 @@
           v-if="!vm.approved"
           class="linear-blue--bg white--text font-weight-bold text-none mt-6"
           block
+          height="40"
           depressed
           :loading="vm.approving"
           @click="vm.approve()"
@@ -58,7 +75,6 @@
         </v-btn>
       </div>
     </v-form>
-    <confirm-campaign-dialog ref="confirm-dialog" />
   </v-sheet>
 </template>
 
@@ -67,14 +83,9 @@ import { walletStore } from '@/stores/wallet-store'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
-@Component({
-  components: {
-    'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
-  },
-})
+@Component
 export default class ConfirmPayment extends Vue {
   @Inject() vm!: BountyApplyViewModel
-  @Ref('confirm-dialog') dialog
   @Ref('payment-form') form
   walletStore = walletStore
 
