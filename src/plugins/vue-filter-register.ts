@@ -21,6 +21,7 @@ export const vueFilterRegister = () => {
   Vue.filter('ddmmyyyyhhmma', (isoStr: number) => (isoStr ? moment(isoStr).format('MMM DD YYYY, hh:mm a') : ''))
   Vue.filter('ddmmyyyyhhmmss', (isoStr: string) => (isoStr ? moment(isoStr).format('DD/MM/YYYY HH:mm:ss') : ''))
   Vue.filter('MMMddYYYYhhmm', (isoStr: number) => (isoStr ? moment(isoStr).format('MMM DD YYYY, hh:mm') : ''))
+  Vue.filter('MMDoYYYY', (isoStr: number) => (isoStr ? moment(isoStr).format('MMM Do[,] YYYY') : ''))
   Vue.filter('formatDateFromUnix', (isoStr: number) => (isoStr ? moment.unix(isoStr).format('DD/MM/YYYY') : ''))
 
   Vue.filter('_get', (any: any, path: string, defaultValue = '') => {
