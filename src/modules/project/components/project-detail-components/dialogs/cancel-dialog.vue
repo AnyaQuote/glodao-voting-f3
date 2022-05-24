@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="vm.showCancelDialog" persistent max-width="500">
+  <v-dialog :value="vm.cancelDialog" persistent max-width="500">
     <v-sheet class="rounded-lg pa-6">
       <div class="d-flex mb-4">
         <v-spacer class="font-weight-bold" style="font-size: 18px">Cancel project</v-spacer>
