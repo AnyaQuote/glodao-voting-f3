@@ -60,13 +60,6 @@
           >
             Confirm and pay fee
           </div>
-          <div
-            class="cursor-pointer mt-3"
-            :class="vm.step === 2.2 ? 'blue--text' : 'neutral10--text'"
-            @click="vm.changeStep(2.2)"
-          >
-            Send reward amount
-          </div>
         </div>
       </div>
     </div>
