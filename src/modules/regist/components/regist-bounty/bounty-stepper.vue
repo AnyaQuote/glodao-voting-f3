@@ -3,7 +3,7 @@
     <div class="text-h6 font-weight-bold text-center pa-6">New application</div>
     <v-divider></v-divider>
     <div class="pa-6">
-      <div class="d-flex align-center text-h6 font-weight-bold" :class="{ 'neutral10--text': section !== 1 }">
+      <div class="d-flex align-center" :class="{ 'neutral10--text': section !== 1 }">
         <v-sheet
           class="d-flex justify-center align-center text-h6 font-weight-bold mr-6"
           :class="section === 1 ? 'blue white--text bg--border' : 'neutral100--bg neutral10--text'"
@@ -13,7 +13,7 @@
         >
           1
         </v-sheet>
-        Application
+        <span class="text-h5 font-weight-bold">Application</span>
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
@@ -27,9 +27,16 @@
           >
             Project information
           </div>
+          <div
+            class="cursor-pointer mt-3"
+            :class="vm.step === 1.2 ? 'blue--text' : 'neutral10--text'"
+            @click="vm.changeStep(1.2)"
+          >
+            Bounty pool information
+          </div>
         </div>
       </div>
-      <div class="d-flex align-center text-h6 font-weight-bold mt-3" :class="{ 'neutral10--text': section !== 2 }">
+      <div class="d-flex align-center mt-3" :class="{ 'neutral10--text': section !== 2 }">
         <v-sheet
           class="d-flex justify-center align-center text-h6 font-weight-bold mr-6"
           :class="section === 2 ? 'blue white--text bg--border' : 'neutral100--bg neutral10--text'"
@@ -39,7 +46,7 @@
         >
           2
         </v-sheet>
-        Confirm
+        <span class="text-h5 font-weight-bold">Confirm</span>
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
@@ -52,6 +59,13 @@
             @click="vm.changeStep(2.1)"
           >
             Confirm and pay fee
+          </div>
+          <div
+            class="cursor-pointer mt-3"
+            :class="vm.step === 2.2 ? 'blue--text' : 'neutral10--text'"
+            @click="vm.changeStep(2.2)"
+          >
+            Send reward amount
           </div>
         </div>
       </div>
