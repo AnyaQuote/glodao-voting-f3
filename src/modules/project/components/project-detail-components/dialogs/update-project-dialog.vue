@@ -90,8 +90,8 @@
             flat
             hide-details
             class="text-subtitle-1 spacer input-min-height"
-            :value="vm.socialLinksTemp"
-            @input="vm.onSocialLinkChange(`data.socialLinks[${key}]`, $event)"
+            :value="vm.socialLinksTemp[key]"
+            @input="vm.onSocialLinkChange(key, $event)"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
         </div>
@@ -148,8 +148,8 @@ export default class extends Vue {
     this.dialog = false
   }
 
-  save() {
-    this.vm.save()
+  async save() {
+    await this.vm.save()
     this.close()
   }
 

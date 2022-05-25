@@ -10,6 +10,7 @@ import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { PoolStore } from '@/stores/pool-store'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import { loadingController } from '@/components/global-loading/global-loading-controller'
 
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -197,61 +198,66 @@ export class ProjectDetailViewModel {
     this.fieldsTemp = value
   }
 
-  @action.bound onSocialLinkChange(path: string, value: string): void {
-    set(this.socialLinksTemp, path, value)
+  @action.bound onSocialLinkChange(key: string, value: string): void {
+    this.socialLinksTemp[key] = value
   }
 
   @asyncAction *save() {
-    const media = new FormData()
+    try {
+      loadingController.increaseRequest()
+      const media = new FormData()
 
-    let cover = false
-    let logo = false
+      let cover = false
+      let logo = false
 
-    if (typeof this.projectLogoTemp !== 'string') {
-      media.append('files', this.projectLogoTemp)
-      logo = true
-    }
+      if (typeof this.projectLogoTemp !== 'string') {
+        media.append('files', this.projectLogoTemp)
+        logo = true
+      }
 
-    if (typeof this.projectCoverTemp !== 'string') {
-      media.append('files', this.projectCoverTemp)
-      cover = true
-    }
+      if (typeof this.projectCoverTemp !== 'string') {
+        media.append('files', this.projectCoverTemp)
+        cover = true
+      }
 
-    let images
-    if (media.getAll('files').length) {
-      images = yield apiService.uploadFile(media)
-      if (logo && cover) {
-        this.projectLogoTemp = getApiFileUrl(images[0])
-        this.projectCoverTemp = getApiFileUrl(images[1])
-      } else {
-        if (logo) {
+      let images
+      if (media.getAll('files').length) {
+        images = yield apiService.uploadFile(media)
+        if (logo && cover) {
           this.projectLogoTemp = getApiFileUrl(images[0])
+          this.projectCoverTemp = getApiFileUrl(images[1])
         } else {
-          this.projectCoverTemp = getApiFileUrl(images[0])
+          if (logo) {
+            this.projectLogoTemp = getApiFileUrl(images[0])
+          } else {
+            this.projectCoverTemp = getApiFileUrl(images[0])
+          }
         }
       }
+
+      const poolData = this.poolStore!.poolData!
+
+      const model = {
+        id: this.poolStore?.id,
+        projectName: this.projectNameTemp,
+        ownerAddress: this.poolStore!.ownerAddress,
+        unicodeName: kebabCase(this.projectNameTemp),
+        data: {
+          ...poolData.data,
+          shortDescription: this.shortDescriptionTemp,
+          fields: this.fieldsTemp,
+          socialLinks: this.socialLinksTemp,
+          projectCover: this.projectCoverTemp,
+          projectLogo: this.projectLogoTemp,
+        },
+      }
+
+      const pool = yield apiService.updateVotingPoolInfo(model)
+      this.poolStore!.poolData = pool
+    } catch (error) {
+      snackController.error(error.message)
+    } finally {
+      loadingController.decreaseRequest()
     }
-
-    const poolData = this.poolStore!.poolData!
-
-    const model = {
-      id: this.poolStore?.id,
-      projectName: this.projectNameTemp,
-      ownerAddress: this.poolStore!.ownerAddress,
-      unicodeName: kebabCase(this.projectNameTemp),
-      data: {
-        ...poolData.data,
-        shortDescription: this.shortDescriptionTemp,
-        fields: this.fieldsTemp,
-        socialLinks: this.socialLinksTemp,
-        projectCover: this.projectCoverTemp,
-        projectLogo: this.projectLogoTemp,
-      },
-    }
-
-    const pool = yield apiService.updateVotingPoolInfo(model)
-    this.poolStore!.poolData = pool
-
-    // this.poolStore!.poolData = pool
   }
 }
