@@ -1,8 +1,8 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <div v-if="!$vuetify.breakpoint.xs" class="pa-1 rounded-lg d-flex fill-height" :class="typeBorderColor">
+    <div v-if="pool" class="pa-1 rounded-lg d-flex fill-height" :class="typeBorderColor">
       <v-sheet class="rounded-lg neutral100--bg d-flex flex-column overflow-hidden">
-        <v-img :src="$_get(pool, 'data.projectCover')" class="rounded-lg rounded-b-0 flex-shrink-0">
+        <v-img :src="pool.projectCover" class="rounded-lg rounded-b-0 flex-shrink-0">
           <div class="d-flex flex-column fill-height" :class="{ blur: hover }">
             <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
               🔥Ended
@@ -23,12 +23,12 @@
           <div class="d-flex flex-column pa-6 pb-0">
             <div class="d-flex align-center">
               <v-avatar size="48" class="mr-4">
-                <v-img :src="$_get(pool, 'data.projectLogo')"> </v-img>
+                <v-img :src="pool.projectLogo"> </v-img>
               </v-avatar>
-              <div class="text-h5 clip-text flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
+              <div class="text-h5 clip-text flex-grow-1 font-weight-bold">{{ pool.projectName }}</div>
             </div>
             <div class="text-subtitle-2 clip-text font-weight-bold">
-              {{ $_get(pool, 'data.shortDescription') }}
+              {{ pool.shortDescription }}
             </div>
           </div>
 
@@ -42,21 +42,18 @@
             <v-divider />
             <div class="d-flex align-center mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold number-count mr-1">{{ upvote }}%</div>
+              <div class="font-weight-bold number-count mr-1">{{ pool.votedPercent | formatNumber(4) }}%</div>
               <div><span class="green--text font-weight-bold">YES</span> votes</div>
-              <div class="dot mx-2"></div>
-              <div class="font-weight-bold number-count mr-1">{{ downvote }}%</div>
-              <div><span class="error--text font-weight-bold">NO</span> votes</div>
             </div>
             <div class="text-center py-2" :class="typeBackgroundColor">
-              <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
+              <span class="text-uppercase white--text">{{ typeName }}</span>
             </div>
           </div>
         </div>
         <!-- CARD BOTTOM END -->
       </v-sheet>
     </div>
-    <div v-else class="mb-6">
+    <!-- <div v-else class="mb-6">
       <div class="rounded-lg pa-1" :class="typeBackgroundColor">
         <div class="white rounded-lg overflow-hidden">
           <div class="pa-6">
@@ -98,23 +95,18 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </v-hover>
 </template>
 
 <script lang="ts">
-import { VotingPool } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RoutePaths } from '@/router'
+import { PoolStore } from '@/stores/pool-store'
 
 @Component
 export default class EndedVotingCard extends Vue {
-  @Prop({ required: true }) pool!: VotingPool
-
-  // HARD CODED-------
-  upvote = this.isApproved ? Math.floor(Math.random() * 100) + 1 : 10
-  downvote = 100 - this.upvote
-  // ------------------
+  @Prop({ required: true }) pool!: PoolStore
 
   get typeName() {
     return this.pool.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'

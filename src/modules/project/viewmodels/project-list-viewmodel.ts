@@ -2,38 +2,51 @@ import { appProvider } from '@/app-providers'
 import { loadingController } from '@/components/global-loading/global-loading-controller'
 import { VotingPool } from '@/models/VotingModel'
 import { PoolStore } from '@/stores/pool-store'
+import { walletStore } from '@/stores/wallet-store'
 import { isEmpty } from 'lodash-es'
-import { observable, action, computed, IReactionDisposer, reaction, autorun } from 'mobx'
+import { observable, action, computed, IReactionDisposer, reaction, autorun, when } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 export class ProjectListViewModel {
+  _disposers: IReactionDisposer[] = []
+
   @observable filterRejected = false
   @observable filterType = 'bounty'
   @observable votingPools: PoolStore[] = []
   @observable loading = false
 
   constructor() {
-    if (appProvider.authStore.username) this.fetchMyProject()
+    this.fetchMyProject()
+    this._disposers.push(
+      reaction(
+        () => walletStore.account,
+        () => {
+          this.fetchMyProject()
+        }
+      )
+    )
   }
 
   @asyncAction *fetchMyProject() {
-    try {
+    if (walletStore.account) {
       this.loading = true
-      const pools = yield appProvider.api.voting.find(
-        {
-          ownerAddress: appProvider.authStore.username,
-        },
-        { _limit: -1 }
-      )
-      if (pools && pools.length) {
-        this.votingPools = pools.map((pool: any) => {
-          const poolStore = new PoolStore(pool)
-          return poolStore
-        })
+      try {
+        const pools = yield appProvider.api.voting.find(
+          {
+            ownerAddress: walletStore.account,
+          },
+          { _limit: -1 }
+        )
+        if (pools && pools.length) {
+          this.votingPools = pools.map((pool: any) => {
+            const poolStore = new PoolStore(pool)
+            return poolStore
+          })
+        }
+      } catch (error) {
+        appProvider.snackbar.commonError(error)
+      } finally {
+        this.loading = false
       }
-    } catch (error) {
-      appProvider.snackbar.commonError(error)
-    } finally {
-      this.loading = false
     }
   }
 

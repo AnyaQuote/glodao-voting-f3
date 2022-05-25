@@ -17,6 +17,7 @@ export class PoolStore {
   @observable participants = 0
   @observable amount = Zero
   @observable votedWeight = Zero
+  @observable votedPercent = Zero
   @observable completed = false
   @observable cancelled = false
 
@@ -32,7 +33,7 @@ export class PoolStore {
       this.contract?.init()
       this.loadData()
     } catch (error) {
-      //
+      console.error(error)
     }
 
     this._diposers = [
@@ -78,8 +79,9 @@ export class PoolStore {
   @action.bound syncState() {
     const contract = this.contract
     if (contract) {
-      const { owner, amount, poolType, votedWeight, createdAt, completed, cancelled } = contract.poolInfo!
+      const { owner, amount, poolType, votedWeight, votedPercent, createdAt, completed, cancelled } = contract.poolInfo!
       this.votedWeight = votedWeight!
+      this.votedPercent = votedPercent!
       this.completed = completed!
       this.cancelled = cancelled!
       this.amount = amount!
@@ -123,6 +125,12 @@ export class PoolStore {
       return Zero
     }
   }
+  @computed get startDate() {
+    return this.poolData.startDate
+  }
+  @computed get endDate() {
+    return this.poolData.endDate
+  }
   @computed get projectLogo() {
     return this.poolData.data?.projectLogo
   }
@@ -137,5 +145,8 @@ export class PoolStore {
   }
   @computed get fields() {
     return this.poolData.data?.fields
+  }
+  @computed get website() {
+    return this.poolData.data?.socialLinks?.website
   }
 }

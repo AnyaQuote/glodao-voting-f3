@@ -58,10 +58,10 @@
               </v-sheet>
               <v-sheet class="text-subtitle-1">We want the project to launch </v-sheet>
             </v-sheet>
-            <progress-bar :value="pool.votedWeight" class="mb-2" />
+            <progress-bar :value="pool.votedPercent" class="mb-2" />
             <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-400">
               <!-- <v-sheet>{{ upvoteCount }} votes</v-sheet> -->
-              <v-sheet>{{ pool.votedWeight | formatNumber }}%</v-sheet>
+              <v-sheet>{{ pool.votedPercent | formatNumber }}%</v-sheet>
             </v-sheet>
           </v-sheet>
         </v-sheet>
