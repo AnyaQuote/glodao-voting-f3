@@ -2,18 +2,13 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <!-- VOTING LAUNCHING SOON START -->
         <voting-launch-section></voting-launch-section>
-        <!-- VOTING LAUNCHING SOON END -->
       </v-col>
-      <v-col cols="12">
-        <!-- VOTING TRENDING SECTION START -->
+      <v-col cols="12" v-if="vm.votingList && vm.votingList.length">
         <voting-trending-section class="mt-72"></voting-trending-section>
-        <!-- VOTING TRENDING SECTION END -->
       </v-col>
 
       <v-col cols="12">
-        <!-- HINT BOX START -->
         <v-sheet class="box rounded-lg pa-4 pa-sm-8" elevation="3">
           <div class="text-sm-h5 neutral0--text font-weight-bold mb-2" style="font-size: 18px">
             Vote for new projects launching on GLODAO (1 xGLD = 1 vote)
@@ -25,33 +20,26 @@
             <span class="white--text mx-4 font-weight-bold">Learn more</span>
           </v-btn>
         </v-sheet>
-        <!-- HINT BOX END -->
       </v-col>
 
       <v-col cols="12">
-        <!-- HEADER START -->
         <div class="mt-72 mb-4">
           <div class="d-flex flex-column flex-md-row align-md-center align-start">
             <span class="mr-5 text-h4 font-weight-bold text-uppercase">Nominatied project</span>
             <span class="neutral10--text text-h5 font-weight-medium">Vote for launch on GLODAO</span>
           </div>
         </div>
-        <!-- HEADER END -->
 
-        <!-- RADIO GROUP SECTION START -->
         <v-radio-group row mandatory v-model="vm.filterOption">
           <v-radio class="text-subtitle-2 font-weight-bold" value="bounty" label="Bounty Project"> </v-radio>
           <v-radio class="text-subtitle-2 font-weight-bold" value="launchpad" label="Launching project"> </v-radio>
         </v-radio-group>
-        <!-- RADIO GROUP SECTION END -->
 
-        <!-- CARDS SECTION START -->
         <v-row>
           <v-col cols="12" sm="6" md="4" v-for="(pool, i) in vm.filteredVotingList" :key="i">
             <live-voting-card :pool="pool" />
           </v-col>
         </v-row>
-        <!-- CARDS SECTION END -->
       </v-col>
 
       <v-col cols="12" class="mb-16">

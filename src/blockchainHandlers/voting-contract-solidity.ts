@@ -19,6 +19,7 @@ class PoolType {
 
 export class VotingHandler implements IVotingContract {
   votingContract: any
+  stakingContract: any
   poolType: PoolType = {}
   web3: any
 
@@ -26,6 +27,7 @@ export class VotingHandler implements IVotingContract {
   _amount = Zero
   _poolType = '0'
   _votedWeight = Zero
+  _votedPercent = Zero
   _createdAt = ''
   _completed = false
   _cancelled = false
@@ -34,6 +36,10 @@ export class VotingHandler implements IVotingContract {
     this.web3 = web3
     try {
       this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), address)
+      this.stakingContract = new web3.eth.Contract(
+        require('./abis/stake.abi.json'),
+        process.env.VUE_APP_STAKE_CONTRACT_ADDRESS
+      )
     } catch (error) {
       console.error(error)
     }
@@ -47,6 +53,10 @@ export class VotingHandler implements IVotingContract {
     const web3 = walletStore.web3 as any
     this.web3 = web3
     this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), process.env.VUE_APP_VOTING_SOLIDITY)
+    this.stakingContract = new web3.eth.Contract(
+      require('./abis/stake.abi.json'),
+      process.env.VUE_APP_STAKE_CONTRACT_ADDRESS
+    )
   }
 
   async getPoolType() {
@@ -73,18 +83,23 @@ export class VotingHandler implements IVotingContract {
       )
       contractPoolInfors.push(...poolInfors)
     }
-    console.log('contractPoolInfors: ', contractPoolInfors)
   }
 
   async getPoolInfo(poolId) {
-    const poolInfo = await this.votingContract.methods.poolInfos(poolId).call()
-    this._owner = poolInfo.owner
-    this._amount = bnHelper.fromDecimals(poolInfo.amount)
-    this._poolType = poolInfo.poolType
-    this._votedWeight = bnHelper.fromDecimals(poolInfo.votedWeight)
-    this._createdAt = poolInfo.createdAt
-    this._completed = poolInfo.completed
-    this._cancelled = poolInfo.cancelled
+    const [votingPoolInfo, stakePoolInfo] = await blockchainHandler.etherBatchRequest(this.web3, [
+      this.votingContract.methods.poolInfos(poolId),
+      this.stakingContract.methods.poolInfo(0),
+    ])
+
+    const totalStaked = bnHelper.fromDecimals((stakePoolInfo as any).amount)
+    this._owner = (votingPoolInfo as any).owner
+    this._amount = bnHelper.fromDecimals((votingPoolInfo as any).amount)
+    this._poolType = (votingPoolInfo as any).poolType
+    this._votedWeight = bnHelper.fromDecimals((votingPoolInfo as any).votedWeight)
+    this._votedPercent = this._votedWeight.divUnsafe(totalStaked).mulUnsafe(FixedNumber.from('100'))
+    this._createdAt = (votingPoolInfo as any).createdAt
+    this._completed = (votingPoolInfo as any).completed
+    this._cancelled = (votingPoolInfo as any).cancelled
   }
 
   async createPool(rewardTokenAddress: string, rewardAmount: FixedNumber | string, account: string) {
@@ -144,12 +159,18 @@ export class VotingHandler implements IVotingContract {
     await sendRequest(f, account)
   }
 
+  async checkUserVotedPool(account, poolId) {
+    const voted = await this.votingContract.methods.userVotedPools(account, poolId).call()
+    return voted
+  }
+
   get poolInfo() {
     return {
       owner: this._owner,
       amount: this._amount,
       poolType: this._poolType,
       votedWeight: this._votedWeight,
+      votedPercent: this._votedPercent,
       createdAt: this._createdAt,
       completed: this._completed,
       cancelled: this._cancelled,
@@ -160,6 +181,11 @@ export class VotingHandler implements IVotingContract {
     const contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), address)
     const allowance = await contract.methods.balanceOf(account).call()
     return FixedNumber.from(`${web3.utils.fromWei(allowance)}`)
+  }
+
+  async getUserStakeBalance(account) {
+    const amount = await this.stakingContract.methods.getUserStakeBalance(0, account).call()
+    return FixedNumber.from(`${this.web3.utils.fromWei(amount)}`)
   }
 }
 

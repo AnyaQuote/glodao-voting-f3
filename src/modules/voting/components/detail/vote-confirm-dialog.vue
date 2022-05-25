@@ -88,6 +88,7 @@ export default class VoteConfirmDialog extends Vue {
     this.dialog.increaseRequest()
     try {
       await this.vm.vote()
+      this.dialog.decreaseRequest()
       this.close()
     } catch (error) {
       appProvider.snackbar.commonError(error)

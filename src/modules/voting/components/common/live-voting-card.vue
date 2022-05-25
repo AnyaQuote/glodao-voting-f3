@@ -1,9 +1,9 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <div v-if="!$vuetify.breakpoint.xs" class="pa-1 rounded-lg d-flex fill-height" :class="typeBorderColor">
+    <div v-if="pool" class="pa-1 rounded-lg d-flex fill-height" :class="typeBorderColor">
       <v-sheet class="flex-grow-1 overflow-hidden d-flex flex-column rounded-lg neutral100--bg">
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <v-img :src="$_get(pool, 'data.projectCover')">
+          <v-img :src="pool.projectCover">
             <div class="d-flex flex-column fill-height" :class="{ blur: hover }">
               <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
                 🔥Trending
@@ -18,52 +18,42 @@
               </div>
             </div>
           </v-img>
-          <!-- HOVER SHOW SECTION START -->
-
-          <!-- HOVER SHOW SECTION END -->
         </div>
-        <!-- -------------------------------------------------------------------------------------------------- -->
         <div class="flex-grow-1 d-flex flex-column">
-          <!-- CARD TOP START -->
           <div class="d-flex flex-column flex-grow-1 pa-6">
             <div class="d-flex align-center">
               <v-avatar size="48" class="mr-4">
-                <v-img :src="$_get(pool, 'data.projectLogo')"> </v-img>
+                <v-img :src="pool.projectLogo"> </v-img>
               </v-avatar>
-              <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ pool.projectName }}</div>
             </div>
 
             <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4">
-              {{ $_get(pool, 'data.shortDescription') }}
+              {{ pool.shortDescription }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(field, i) in $_get(pool, 'data.fields')" :key="i" class="rounded-lg ma-1">{{
-                field
-              }}</v-chip>
+              <v-chip v-for="(field, i) in pool.fields" :key="i" class="rounded-lg ma-1">{{ field }}</v-chip>
             </div>
           </div>
-          <!-- CARD TOP END -->
 
-          <!-- CARD BOTTOM START -->
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class="text-h5 my-3" :to="$_get(pool, 'endDate')"> </countdown>
+            <countdown class="text-h5 my-3" :to="pool.endDate"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold mr-1">90</div>
-              <div>votes for launching</div>
+              <div class="font-weight-bold number-count mr-1">{{ pool.votedPercent | formatNumber(4) }}%</div>
+              <div><span class="green--text font-weight-bold">YES</span> votes</div>
             </div>
             <div class="flag text-center py-2" :class="typeBackgroundColor">
-              <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
+              <span class="text-uppercase white--text">{{ typeName }}</span>
             </div>
           </div>
-          <!-- CARD BOTTOM END -->
         </div>
       </v-sheet>
     </div>
-    <div v-else class="pa-1 rounded-lg" :class="typeBorderColor">
+    <!-- <div v-else class="pa-1 rounded-lg" :class="typeBorderColor">
       <v-sheet class="rounded-lg">
         <v-img :src="$_get(pool, 'data.projectCover')" height="221" class="rounded-t-lg">
           <div class="fill-height fill-width d-flex flex-column justify-space-between">
@@ -113,13 +103,12 @@
             </div>
           </div>
         </v-img>
-        <!---->
         <countdown class="my-2 font-weight-bold text-subtitle-1" :to="$_get(pool, 'endDate')"> </countdown>
         <v-divider></v-divider>
         <div class="pa-4 d-flex align-center">
           <v-icon class="mr-2">mdi-star-outline</v-icon>
           <div class="mt-1">
-            <span class="text-subtitle-2 mr-1 font-weight-600">{{ 90 }}</span>
+            <span class="text-subtitle-2 mr-1 font-weight-600"></span>
             <span>votes for launching</span>
           </div>
         </div>
@@ -127,15 +116,15 @@
           <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
         </div>
       </v-sheet>
-    </div>
+    </div> -->
   </v-hover>
 </template>
 
 <script lang="ts">
-import { VotingPool } from '@/models/VotingModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RoutePaths } from '@/router'
 import { get } from 'lodash'
+import { PoolStore } from '@/stores/pool-store'
 
 @Component({
   components: {
@@ -143,7 +132,7 @@ import { get } from 'lodash'
   },
 })
 export default class LiveVotingCard extends Vue {
-  @Prop({ required: true }) pool!: VotingPool
+  @Prop({ required: true }) pool!: PoolStore
 
   get typeName() {
     return this.pool.type === 'bounty' ? 'Bounty Project' : 'Launchpad Project'

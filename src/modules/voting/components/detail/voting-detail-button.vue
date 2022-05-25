@@ -7,58 +7,45 @@
     <v-sheet v-else-if="!connected && !voted" class="bluePrimary fill-height d-flex justify-center align-center">
       <span class="white--text text-h5">Please connect wallet to vote for project</span>
     </v-sheet>
-    <!-- I DONT KNOW WHY BUT DO NOT REMOVE mx-0 FROM row -->
     <v-sheet v-else class="pa-6 fill-height blue lighten-5 overflow-hidden">
-      <div v-if="$vuetify.breakpoint.mdAndUp" class="d-flex flex-row">
-        <div class="mr-4">
-          <div class="text-subtitle-1">Your connected wallet:</div>
-          <div class="text-subtitle-2 d-flex align-center">
-            <!-- <icon-chain class="mr-1" /> -->
-            <span>{{ wallet.account }}</span>
+      <v-row>
+        <v-col cols="12" md="5" sm="12">
+          <div class="mr-4">
+            <div class="text-subtitle-2 d-flex align-center">
+              <!-- <icon-chain class="mr-1" /> -->
+              <div v-if="!walletStore.account">
+                <ConnectWallet />
+              </div>
+              <div v-else>
+                <div class="text-subtitle-1">Your connected wallet:</div>
+                <span>{{ walletStore.account }}</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="d-flex flex-column mr-4">
-          <span class="text-subtitle-1">Staking</span>
-          <span class="text-subtitle-2">--- GLD</span>
-        </div>
-        <v-spacer />
-        <v-btn
-          color="bluePrimary"
-          height="48"
-          class="white--text rounded-lg"
-          depressed
-          :disabled="vm.poolStore.completed"
-          @click="$emit('buttonClick')"
-        >
-          <span class="px-5">Vote</span>
-        </v-btn>
-      </div>
-      <div v-else class="d-flex flex-column">
-        <div class="mb-4">
-          <div class="text-subtitle-1">Your connected wallet:</div>
-          <div class="text-subtitle-2 d-flex align-center">
-            <icon-chain class="mr-1" />
-            <span>{{ wallet.account }}</span>
-          </div>
-        </div>
-        <div class="d-flex mb-4">
-          <div class="d-flex flex-column mr-6">
+        </v-col>
+        <v-col cols="12" md="3" sm="12">
+          <div class="d-flex flex-column mr-4">
             <span class="text-subtitle-1">Staking</span>
-            <span class="text-subtitle-2">--- GLD</span>
+            <span class="text-subtitle-2">{{ vm.userStakeBalance | formatNumber }} GLD</span>
           </div>
-        </div>
-        <v-btn
-          color="bluePrimary"
-          height="48"
-          block
-          class="white--text rounded-lg"
-          depressed
-          :disabled="vm.poolStore.completed"
-          @click="$emit('buttonClick')"
-        >
-          <span class="px-5">Vote</span>
-        </v-btn>
-      </div>
+        </v-col>
+        <v-col cols="12" md="4" sm="12" :class="{ 'text-right': $vuetify.breakpoint.mdAndUp }">
+          <v-btn height="48" class="rounded-lg" depressed v-if="vm.voted" disabled>
+            <span class="px-5">Voted</span>
+          </v-btn>
+          <v-btn
+            v-else
+            color="bluePrimary"
+            height="48"
+            class="white--text rounded-lg"
+            depressed
+            :disabled="vm.poolStore.completed || !walletStore.account"
+            @click="$emit('buttonClick')"
+          >
+            <span class="px-5">Vote</span>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-sheet>
   </div>
 </template>
@@ -71,13 +58,14 @@ import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 @Component({
   components: {
     'icon-chain': () => import('@/assets/icons/icon-chain.vue'),
+    ConnectWallet: () => import('@/components/connect-wallet.vue'),
   },
 })
 export default class VotingDetailButton extends Vue {
   @Inject() vm!: VotingDetailViewModel
   connected = false
   voted = true
-  wallet = walletStore
+  walletStore = walletStore
 }
 </script>
 

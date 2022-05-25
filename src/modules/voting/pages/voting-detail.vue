@@ -15,16 +15,13 @@
 
       <v-col cols="12">
         <div class="row mt-72">
-          <!-- <div class=" debug mb-6"> -->
           <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
-            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE (800)</div>
+            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE</div>
             <v-btn icon>
               <v-icon large>mdi-information</v-icon>
             </v-btn>
           </v-sheet>
-          <!-- </div> -->
 
-          <!-- VOTED USER LIST START -->
           <div class="col-12">
             <voting-list-item class="mb-4 pa-2" elevation="3" v-for="i in Array(7)" :key="i" />
           </div>
@@ -32,7 +29,6 @@
           <div class="col-12">
             <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
           </div>
-          <!-- VOTED USER LIST END -->
         </div>
       </v-col>
 
