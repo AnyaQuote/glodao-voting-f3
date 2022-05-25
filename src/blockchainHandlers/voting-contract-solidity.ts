@@ -183,6 +183,12 @@ export class VotingHandler implements IVotingContract {
     return FixedNumber.from(`${web3.utils.fromWei(allowance)}`)
   }
 
+  async getRewardTokenSymbol(web3, address) {
+    const contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), address)
+    const symbol = await contract.methods.symbol().call()
+    return symbol
+  }
+
   async getUserStakeBalance(account) {
     const amount = await this.stakingContract.methods.getUserStakeBalance(0, account).call()
     return FixedNumber.from(`${this.web3.utils.fromWei(amount)}`)

@@ -14,6 +14,8 @@ import { RoutePaths } from '@/router'
 import { toISO } from '@/helpers/date-helper'
 import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
+import moment from 'moment'
+import web3 from 'web3'
 
 class ProjectInfo {
   projectName?: string
@@ -130,6 +132,15 @@ export class BountyApplyViewModel {
         images = yield apiService.uploadFile(media)
       }
 
+      let unicodeName = kebabCase(this.projectInfo.projectName)
+      // check duplicate unicodeName
+      const count = yield apiService.voting.count({
+        unicodeName,
+      })
+      if (count > 0) {
+        unicodeName = unicodeName + moment().unix().toString()
+      }
+
       // update voting pool
       const data = {
         projectName: this.projectInfo.projectName,
@@ -169,6 +180,16 @@ export class BountyApplyViewModel {
   }
 
   @action.bound changeProjectInfo(property: string, value: any) {
+    if (property === 'tokenAddress') {
+      if (web3.utils.isAddress(value)) {
+        value = web3.utils.toChecksumAddress(value)
+
+        this.votingHandler!.getRewardTokenSymbol(walletStore.web3, value).then((symbol) => {
+          runInAction(() => set(this.projectInfo, 'rewardTokenSymbol', symbol))
+        })
+      }
+    }
+
     set(this.projectInfo, property, value)
   }
 
