@@ -2,7 +2,7 @@ import { appProvider } from '@/app-providers'
 import { VotingPool } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction, toJS } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { clone, get, isEmpty, set } from 'lodash-es'
+import { clone, get, isEmpty, kebabCase, set } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
@@ -236,9 +236,11 @@ export class ProjectDetailViewModel {
 
     const model = {
       id: this.poolStore?.id,
-      ownerAddress: this.poolStore?.ownerAddress,
       projectName: this.projectNameTemp,
+      ownerAddress: this.poolStore!.ownerAddress,
+      unicodeName: kebabCase(this.projectNameTemp),
       data: {
+        ...poolData.data,
         shortDescription: this.shortDescriptionTemp,
         fields: this.fieldsTemp,
         socialLinks: this.socialLinksTemp,
