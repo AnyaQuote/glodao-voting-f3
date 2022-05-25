@@ -102,6 +102,7 @@
         height="40"
         elevation="0"
         block
+        :loading="vm.saving"
         @click="save()"
       >
         Save

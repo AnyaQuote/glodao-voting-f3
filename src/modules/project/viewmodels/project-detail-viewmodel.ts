@@ -169,6 +169,8 @@ export class ProjectDetailViewModel {
   @observable projectCoverTemp: any = ''
   @observable projectLogoTemp: any = ''
 
+  @observable saving = false
+
   @action setDefaultValue() {
     this.projectNameTemp = this.poolStore?.projectName
     this.shortDescriptionTemp = this.poolStore?.shortDescription
@@ -204,7 +206,7 @@ export class ProjectDetailViewModel {
 
   @asyncAction *save() {
     try {
-      loadingController.increaseRequest()
+      this.saving = true
       const media = new FormData()
 
       let cover = false
@@ -257,7 +259,7 @@ export class ProjectDetailViewModel {
     } catch (error) {
       snackController.error(error.message)
     } finally {
-      loadingController.decreaseRequest()
+      this.saving = false
     }
   }
 }
