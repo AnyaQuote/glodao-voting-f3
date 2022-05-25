@@ -19,8 +19,8 @@
           outlined
           color="red"
           class="font-weight-bold"
-          :value="$_get(vm.dataTemp, 'projectName', '')"
-          @input="vm.changeData('projectName', $event)"
+          :value="vm.projectNameTemp"
+          @input="vm.onProjectNameChange"
         ></v-text-field>
       </div>
 
@@ -32,29 +32,21 @@
           outlined
           no-resize
           row-height="4"
-          :value="$_get(vm.dataTemp, 'data.shortDescription', '')"
-          @input="vm.changeData('data.shortDescription', $event)"
+          :value="vm.shortDescriptionTemp"
+          @input="vm.onShortDescriptionChange"
         ></v-textarea>
       </div>
 
       <!-- project avatar -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project avatar</div>
-        <image-upload-file
-          dense
-          :value="$_get(vm.dataTemp, 'data.projectLogo', '')"
-          @change="vm.changeData('data.projectLogo', $event)"
-        />
+        <image-upload-file dense :value="vm.projectLogoTemp" @change="vm.onProjectLogoChange" />
       </div>
 
       <!-- project cover -->
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project cover</div>
-        <image-upload-file
-          dense
-          :value="$_get(vm.dataTemp, 'data.projectCover', '')"
-          @change="vm.changeData('data.projectCover', $event)"
-        />
+        <image-upload-file dense :value="vm.projectCoverTemp" @change="vm.onProjectCoverChange" />
       </div>
 
       <!-- project fields -->
@@ -69,7 +61,7 @@
             color="text-uppercase text-caption rounded-pill mr-2 mb-2 pa-2 cursor-pointer"
             height="32"
             style="line-height: 130%"
-            :class="active.includes(index) ? 'blue white--text ' : 'neutral20 neutral10--text'"
+            :class="activeIndex.includes(index) ? 'blue white--text ' : 'neutral20 neutral10--text'"
             @click="addActive(index)"
           >
             {{ field }}
@@ -98,8 +90,8 @@
             flat
             hide-details
             class="text-subtitle-1 spacer input-min-height"
-            :value="$_get(vm.dataTemp, `data.socialLinks[${key}]`, '')"
-            @input="vm.changeData(`data.socialLinks[${key}]`, $event)"
+            :value="vm.socialLinksTemp"
+            @input="vm.onSocialLinkChange(`data.socialLinks[${key}]`, $event)"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
         </div>
@@ -119,7 +111,6 @@
 </template>
 
 <script lang="ts">
-import { loadingController } from '@/components/global-loading/global-loading-controller'
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
@@ -131,22 +122,26 @@ import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
   },
 })
 export default class extends Vue {
-  dialog = false
   @Inject() vm!: ProjectDetailViewModel
+  dialog = false
+
   fields: string[] = ['finance', 'gaming', 'NFT', 'finance', 'finance', 'gaming']
-  active: number[] = []
+  activeIndex: number[] = []
 
   open() {
-    this.vm.setDataTemp()
-    this.active = []
-    const fields = this.vm.poolStore?.fields
-    fields?.forEach((field) => {
+    this.vm.setDefaultValue()
+    this.setFieldActived()
+    this.dialog = true
+  }
+
+  setFieldActived() {
+    this.activeIndex = []
+    this.vm.fieldsTemp?.forEach((field) => {
       const index = this.fields.indexOf(field)
-      if (index > -1) {
-        this.active.push(index)
+      if (this.fields.indexOf(field) > -1) {
+        this.activeIndex = [...this.activeIndex, index]
       }
     })
-    this.dialog = true
   }
 
   close() {
@@ -159,18 +154,17 @@ export default class extends Vue {
   }
 
   addActive(index: number) {
-    const result = this.active.includes(index)
-    if (result) {
-      this.active = this.active.filter((val) => val !== index)
+    const include = this.activeIndex.includes(index)
+    if (include) {
+      this.activeIndex = this.activeIndex.filter((val) => val !== index)
     } else {
-      this.active.push(index)
+      this.activeIndex = [...this.activeIndex, index]
     }
-
     let fields: string[] = []
-    this.active.forEach((index) => {
+    this.activeIndex.forEach((index) => {
       fields = [...fields, this.fields[index]]
     })
-    this.vm.changeData('data.fields', fields)
+    this.vm.onFieldChange(fields)
   }
 }
 </script>
