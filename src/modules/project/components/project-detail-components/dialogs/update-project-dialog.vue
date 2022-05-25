@@ -20,7 +20,7 @@
           color="red"
           class="font-weight-bold"
           :value="$_get(vm.dataTemp, 'projectName', '')"
-          @input="vm.onProjectNameChange"
+          @input="vm.changeData('projectName', $event)"
         ></v-text-field>
       </div>
 
@@ -33,7 +33,7 @@
           no-resize
           row-height="4"
           :value="$_get(vm.dataTemp, 'data.shortDescription', '')"
-          @input="vm.onShortDescriptionChange"
+          @input="vm.changeData('data.shortDescription', $event)"
         ></v-textarea>
       </div>
 
@@ -41,9 +41,9 @@
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project avatar</div>
         <image-upload-file
-          @change="vm.onChangeImage('projectLogo', $event)"
-          :value="$_get(vm.dataTemp, 'data.projectLogo', '')"
           dense
+          :value="$_get(vm.dataTemp, 'data.projectLogo', '')"
+          @change="vm.changeData('data.projectLogo', $event)"
         />
       </div>
 
@@ -51,9 +51,9 @@
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project cover</div>
         <image-upload-file
-          @change="vm.onChangeImage('projectCover', $event)"
-          :value="$_get(vm.dataTemp, 'data.projectCover', '')"
           dense
+          :value="$_get(vm.dataTemp, 'data.projectCover', '')"
+          @change="vm.changeData('data.projectCover', $event)"
         />
       </div>
 
@@ -99,13 +99,19 @@
             hide-details
             class="text-subtitle-1 spacer input-min-height"
             :value="$_get(vm.dataTemp, `data.socialLinks[${key}]`, '')"
-            @input="vm.onSocialLinkChange(key, $event)"
+            @input="vm.changeData(`data.socialLinks[${key}]`, $event)"
           ></v-text-field>
           <v-icon size="20" color="neutral10"> mdi-link</v-icon>
         </div>
       </div>
 
-      <v-btn class="linear-blue--bg text-none text-subtitle-1 neutral100--text" height="40" elevation="0" block>
+      <v-btn
+        class="linear-blue--bg text-none text-subtitle-1 neutral100--text"
+        height="40"
+        elevation="0"
+        block
+        @click="save()"
+      >
         Save
       </v-btn>
     </v-sheet>
@@ -113,6 +119,7 @@
 </template>
 
 <script lang="ts">
+import { loadingController } from '@/components/global-loading/global-loading-controller'
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
@@ -146,6 +153,11 @@ export default class extends Vue {
     this.dialog = false
   }
 
+  save() {
+    this.vm.save()
+    this.close()
+  }
+
   addActive(index: number) {
     const result = this.active.includes(index)
     if (result) {
@@ -158,7 +170,7 @@ export default class extends Vue {
     this.active.forEach((index) => {
       fields = [...fields, this.fields[index]]
     })
-    this.vm.onFieldsChange(fields)
+    this.vm.changeData('data.fields', fields)
   }
 }
 </script>

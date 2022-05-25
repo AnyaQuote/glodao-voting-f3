@@ -2,13 +2,14 @@ import { appProvider } from '@/app-providers'
 import { VotingPool } from '@/models/VotingModel'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { flatMap, get, isEmpty, set } from 'lodash-es'
+import { clone, flatMap, get, isEmpty, set } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { PoolStore } from '@/stores/pool-store'
+import { imageHelper } from '@/helpers/image-helper'
 
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -158,42 +159,77 @@ export class ProjectDetailViewModel {
   /**
    * Update project
    */
-  @observable dataTemp?: VotingPool
+
+  @observable dataTemp: VotingPool = {
+    id: '',
+    projectName: '',
+    ownerAddress: '',
+    data: {
+      shortDescription: '',
+      projectCover: '',
+      projectLogo: '',
+      fields: [],
+      socialLinks: {},
+    },
+  }
+
   @action setDataTemp() {
-    this.dataTemp = this.poolStore?.poolData
+    this.dataTemp.id = clone(this.poolStore?.id)
+    this.dataTemp.projectName = clone(this.poolStore?.projectName)
+    this.dataTemp.ownerAddress = clone(this.poolStore?.ownerAddress)
+    this.dataTemp.data!.projectLogo = clone(this.poolStore!.projectLogo)
+    this.dataTemp.data!.projectCover = this.poolStore?.poolData.data?.projectCover
+    this.dataTemp.data!.fields = clone(this.poolStore?.fields)
+    this.dataTemp.data!.socialLinks = clone(this.poolStore?.socialLinks)
   }
 
-  @action.bound onProjectNameChange(val: string) {
-    if (this.dataTemp) {
-      set(this.dataTemp, 'projectName', val)
+  @action.bound changeData(path: string, value: any) {
+    set(this.dataTemp, path, value)
+  }
+
+  @asyncAction *save() {
+    const media = new FormData()
+
+    let cover = false
+    let logo = false
+
+    if (typeof this.dataTemp.data!.projectLogo !== 'string') {
+      media.append('files', this.dataTemp.data!.projectLogo!)
+      logo = true
     }
-  }
 
-  @action.bound onShortDescriptionChange(val: string) {
-    if (this.dataTemp) {
-      set(this.dataTemp, 'data.shortDescription', val)
+    if (typeof this.dataTemp.data!.projectCover !== 'string') {
+      media.append('files', this.dataTemp.data!.projectCover!)
+      cover = true
+      console.log('append success')
     }
-  }
 
-  @action.bound onChangeImage(type: 'projectCover' | 'projectLogo', image: any) {
-    if (this.dataTemp) {
-      set(this.dataTemp, `data.${type}`, image)
+    // upload
+    let images
+
+    if (media.getAll('files').length) {
+      images = yield apiService.uploadFile(media)
+      // update projectLogo and projectCover
+      if (logo && cover) {
+        console.log('all')
+
+        this.dataTemp.data!.projectLogo = getApiFileUrl(images[0])
+        this.dataTemp.data!.projectCover = getApiFileUrl(images[1])
+      } else {
+        if (logo) {
+          console.log('logo')
+
+          this.dataTemp.data!.projectLogo = getApiFileUrl(images[0])
+        } else {
+          console.log('cover')
+
+          console.log(getApiFileUrl(images[0]))
+          this.dataTemp.data!.projectCover = getApiFileUrl(images[0])
+        }
+      }
     }
-  }
 
-  @action.bound onFieldsChange(fields: string[]) {
-    if (this.dataTemp) {
-      set(this.dataTemp, 'datas.fields', fields)
-    }
-  }
-
-  @action.bound onSocialLinkChange(key: string, val: string) {
-    if (this.dataTemp) {
-      set(this.dataTemp, `data.socialLinks[${key}]`, val)
-    }
-  }
-
-  @action.bound save() {
-    //
+    const pool = yield apiService.updateVotingPoolInfo(this.dataTemp)
+    this.poolStore!.poolData = pool
   }
 }
