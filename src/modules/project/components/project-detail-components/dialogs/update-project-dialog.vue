@@ -146,6 +146,7 @@ export default class extends Vue {
   }
 
   close() {
+    if (this.vm.saving) return
     this.dialog = false
   }
 
