@@ -73,7 +73,7 @@
       <div class="mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Website and social link</div>
         <div
-          v-for="(key, i) in $_keys($_get(vm.dataTemp, 'data.socialLinks', {}))"
+          v-for="(key, i) in $_keys(vm.socialLinksTemp)"
           :key="i"
           class="py-3 px-4 rounded d-flex mb-2"
           style="border: 1px solid var(--v-neutral20-base)"
