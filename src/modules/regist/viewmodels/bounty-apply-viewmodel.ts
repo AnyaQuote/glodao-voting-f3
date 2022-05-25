@@ -47,6 +47,7 @@ export class BountyApplyViewModel {
 
   @observable bnbFee = Zero
   @observable rewardTokenBalance = Zero
+  @observable tokenSymbolLoading = false
 
   @observable votingHandler?: VotingHandler
 
@@ -182,11 +183,16 @@ export class BountyApplyViewModel {
   @action.bound changeProjectInfo(property: string, value: any) {
     if (property === 'tokenAddress') {
       if (web3.utils.isAddress(value)) {
+        this.tokenSymbolLoading = true
         value = web3.utils.toChecksumAddress(value)
-
         this.votingHandler!.getRewardTokenSymbol(walletStore.web3, value).then((symbol) => {
-          runInAction(() => set(this.projectInfo, 'rewardTokenSymbol', symbol))
+          runInAction(() => {
+            this.projectInfo = { ...this.projectInfo, rewardToken: symbol }
+            this.tokenSymbolLoading = false
+          })
         })
+      } else {
+        runInAction(() => (this.projectInfo = { ...this.projectInfo, rewardToken: '' }))
       }
     }
 

@@ -9,7 +9,7 @@ export default class AppTextArea extends VTextarea {
   @Prop({ default: true }) outlined!: boolean
   @Prop({ default: true }) autoGrow!: boolean
   @Prop({ default: '3' }) row!: string
-  @Prop({ default: 'auto' }) hideDetails!: string
+  @Prop({ default: false }) hideDetails!: boolean
 }
 </script>
 

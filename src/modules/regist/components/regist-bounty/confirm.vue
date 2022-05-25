@@ -5,11 +5,15 @@
     <v-form ref="payment-form" class="pa-6">
       <div class="d-flex align-center">
         <img src="@/assets/icons/mock-crypto.svg" alt="currency" width="36" height="36" />
-        <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">hydro wind</div>
+        <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">
+          {{ vm.projectInfo.projectName }}
+        </div>
+        <!-- <v-icon color="neutral10">mdi-circle-small</v-icon>
+        <div class="neutral10--text text-h5 font-weight-bold">$HWD</div> -->
         <v-icon color="neutral10">mdi-circle-small</v-icon>
-        <div class="neutral10--text text-h5 font-weight-bold">$HWD</div>
-        <v-icon color="neutral10">mdi-circle-small</v-icon>
-        <div class="neutral10--text text-h5 font-weight-bold">100,000 HWD reward</div>
+        <div class="neutral10--text text-h5 font-weight-bold">
+          {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.rewardToken }}
+        </div>
       </div>
 
       <div class="ma-7">
