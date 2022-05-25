@@ -6,9 +6,16 @@
 
     <v-form ref="fund-info-form" v-model="valid" class="pa-6">
       <div class="blue--text font-18 font-weight-bold mt-6">Reward Information</div>
+      <div class="font-18 font-weight-bold mt-6 mb-2">Token reward address</div>
+      <app-text-field
+        :rules="[$rules.required]"
+        :value="$_get(vm.projectInfo, 'tokenAddress')"
+        @input="vm.changeProjectInfo('tokenAddress', $event)"
+        placeholder="Enter address"
+      ></app-text-field>
       <div class="d-flex flex-column flex-sm-row">
         <div class="mt-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward token</div>
+          <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
           <app-text-field
             :rules="[$rules.required]"
             :value="$_get(vm.projectInfo, 'rewardToken')"
@@ -26,13 +33,6 @@
           ></app-text-field>
         </div>
       </div>
-      <div class="font-18 font-weight-bold mt-6 mb-2">Token reward address</div>
-      <app-text-field
-        :rules="[$rules.required]"
-        :value="$_get(vm.projectInfo, 'tokenAddress')"
-        @input="vm.changeProjectInfo('tokenAddress', $event)"
-        placeholder="Enter address"
-      ></app-text-field>
 
       <div class="blue--text font-18 font-weight-bold mt-6">Campaign Information</div>
       <div class="d-flex flex-column flex-sm-row mt-3">

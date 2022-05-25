@@ -37,6 +37,7 @@ export class NewProjectViewModel {
       this.loading = true
       const res = yield authStore.login()
     } catch (error) {
+      console.error(error)
       snackController.commonError(error)
     } finally {
       this.loading = false
