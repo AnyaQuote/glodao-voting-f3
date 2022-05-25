@@ -2,10 +2,22 @@
   <div class="mt-7">
     <div class="title font-weight-bold bluePrimary--text">Mission setting</div>
     <!-- Setting one -->
-    <switch-field class="mt-4" title="Telegram task" value="" subtitle="Join telegram group" />
+    <switch-field
+      class="mt-4"
+      title="Telegram task"
+      :value="settingOneValue"
+      @change="vm.updateMissionSetting('twitter', $event)"
+      subtitle="Join telegram group"
+    ></switch-field>
 
     <!-- Setting two -->
-    <switch-field class="mt-4" title="Twitter task" value="" subtitle="Follow project twitter" />
+    <switch-field
+      class="mt-4"
+      title="Twitter task"
+      :value="settingTwoValue"
+      @change="vm.updateMissionSetting('twitter', $event)"
+      subtitle="Follow project twitter"
+    />
 
     <!-- Setting three -->
     <switch-field class="mt-4" title="Twitter task" value="" subtitle="Quote a tweet">
@@ -69,7 +81,7 @@
 
 <script lang="ts">
 import { Component, Vue, Inject, Ref } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
+import { NewMissionViewModel, settingOneValue, settingTwoValue } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
 
 @Observer
@@ -85,6 +97,9 @@ export default class MissionSettingForm extends Vue {
   @Ref('1') form1
   @Ref('2') form2
   @Ref('3') form3
+
+  settingOneValue = settingOneValue
+  settingTwoValue = settingTwoValue
 
   mounted() {
     this.vm.injectForm([this.form1, this.form2, this.form3])
