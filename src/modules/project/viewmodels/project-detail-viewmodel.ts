@@ -235,10 +235,10 @@ export class ProjectDetailViewModel {
     const poolData = this.poolStore!.poolData!
 
     const model = {
-      ...poolData,
+      id: this.poolStore?.id,
+      ownerAddress: this.poolStore?.ownerAddress,
       projectName: this.projectNameTemp,
       data: {
-        ...poolData.data,
         shortDescription: this.shortDescriptionTemp,
         fields: this.fieldsTemp,
         socialLinks: this.socialLinksTemp,
