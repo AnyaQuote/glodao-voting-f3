@@ -18,7 +18,9 @@
             <mission-info />
             <!-- MISSION SETTING -->
             <mission-setting />
-            <v-btn class="linear-blue--bg white--text text-none mt-7" height="40" depressed block> Create </v-btn>
+            <v-btn class="linear-blue--bg white--text text-none mt-7" height="40" depressed block @click="submit">
+              Create
+            </v-btn>
           </v-form>
         </v-sheet>
       </v-col>
@@ -42,6 +44,9 @@ export default class MissionForm extends Vue {
   @Provide() vm = new NewMissionViewModel()
   goBack() {
     this.$router.go(-1)
+  }
+  submit() {
+    this.vm.submit()
   }
 }
 </script>

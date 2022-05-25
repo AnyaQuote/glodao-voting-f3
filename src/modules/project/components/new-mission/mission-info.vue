@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-form ref="info">
     <!-- MISSION INFORMATION -->
     <div class="d-flex flex-column">
       <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
@@ -10,7 +10,7 @@
         placeholder="Enter name of mission"
       />
       <span class="font-18 font-weight-bold mt-3 mb-1">Short description</span>
-      <app-text-field
+      <app-textarea
         :value="$_get(vm.missionInfo, 'shortDescription')"
         @change="vm.changeMissionInfo('shortDescription', $event)"
         placeholder="Enter short description to describe the mission"
@@ -93,11 +93,11 @@
         </div>
       </div>
     </div>
-  </div>
+  </v-form>
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
 
@@ -109,6 +109,7 @@ import { Observer } from 'mobx-vue'
 })
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
+  @Ref('info') form
 }
 </script>
 

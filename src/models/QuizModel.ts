@@ -12,7 +12,7 @@ export interface MetaData {
 
 export interface Answer {
   id?: string
-  answer?: string
+  answer?: number | string
 }
 
 export interface Quiz {

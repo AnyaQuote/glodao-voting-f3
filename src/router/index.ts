@@ -130,18 +130,7 @@ router.beforeEach((to, from, next) => {
   if (!get(to, 'name', '')) {
     next(RoutePaths.not_found)
   } else {
-    const isAuthenticated = authStore.isAuthenticated
-    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    const requiredParams = to.matched.some((m) => m.meta?.params === true)
-    if ((requiredAuth && isAuthenticated) || !requiredAuth) {
-      if (requiredParams && isEmpty(get(to, 'params.code', ''))) {
-        next(RoutePaths.not_found)
-      } else next()
-    } else if (requiredAuth && !isAuthenticated) {
-      next()
-    } else {
-      console.error(`VueRouter error ${to.name} requriedAuth=${requiredAuth} isAuthenticated=${isAuthenticated}`)
-    }
+    next()
   }
 })
 

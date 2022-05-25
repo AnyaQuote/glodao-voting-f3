@@ -13,6 +13,7 @@ export type ApiRouteType =
   | 'users'
   | 'campaigns'
   | 'voting-pools'
+  | 'quizzes'
 
 export class ApiHandler<T> {
   constructor(private axios, private route: ApiRouteType) {}
@@ -187,6 +188,7 @@ export class ApiService {
   users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
   tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
+  quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes')
 
   constructor() {
     this.setupAuthInjection()

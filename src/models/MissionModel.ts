@@ -16,9 +16,10 @@ export interface Data {
 
 export interface MetaData {
   shortDescription?: string
+  decimals?: string
   projectLogo?: string
   tokenLogo?: string
-  projectCover?: string
+  coverImage?: string
   caption?: string
   rewardToken?: string
   socialLinks?: any
