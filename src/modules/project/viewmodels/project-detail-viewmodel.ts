@@ -88,7 +88,7 @@ export class ProjectDetailViewModel {
         { _limit: 1 }
       )
       if (isEmpty(res)) {
-        appProvider.router.push(RoutePaths.not_found)
+        appProvider.router.replace(RoutePaths.not_found)
       }
       this.poolStore = new PoolStore(get(res, '[0]'))
     } catch (error) {

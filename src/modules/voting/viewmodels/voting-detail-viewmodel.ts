@@ -55,7 +55,7 @@ export class VotingDetailViewModel {
         appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
       ])
       if (isEmpty(poolDetail)) {
-        appProvider.router.push(RoutePaths.not_found)
+        appProvider.router.replace(RoutePaths.not_found)
       }
       this.poolDetail = get(poolDetail, '[0]')
       this.votingList = votingList
