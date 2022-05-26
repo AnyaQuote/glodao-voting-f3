@@ -42,15 +42,15 @@ export default class ImageUploadField extends Vue {
   }
 
   get imgName() {
-    return this.image && !isEmpty(this.image) ? this.image.name : 'Upload your image'
+    return this.image ? this.image.name : 'Upload your image'
   }
 
   get imgSize() {
-    return this.image && !isEmpty(this.image) ? convertBytes(this.image.size) : 'Allowed file types: png, jpg'
+    return this.image ? convertBytes(this.image.size) : 'Allowed file types: png, jpg'
   }
 
   get source() {
-    return this.image && !isEmpty(this.image) ? URL.createObjectURL(this.image) : ''
+    return this.image ? URL.createObjectURL(this.image) : ''
   }
 }
 </script>
