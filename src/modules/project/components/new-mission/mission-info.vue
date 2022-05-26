@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="info">
+  <div>
     <!-- MISSION INFORMATION -->
     <div class="d-flex flex-column">
       <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
@@ -93,11 +93,11 @@
         </div>
       </div>
     </div>
-  </v-form>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
+import { Component, Inject, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
 
@@ -109,7 +109,6 @@ import { Observer } from 'mobx-vue'
 })
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
-  @Ref('info') form
 }
 </script>
 
