@@ -7,49 +7,13 @@ import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
 import { apiService } from '@/services/api-service'
 import { PoolStore } from '@/stores/pool-store'
+import { Mission } from '@/models/MissionModel'
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
   @observable poolStore?: PoolStore
-  @observable missions = [
-    {
-      image: 'sao-hoa.png',
-      status: 'ended',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-    {
-      image: 'sao-hoa.png',
-      status: 'running',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-    {
-      image: 'sao-hoa.png',
-      status: 'ended',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-    {
-      image: 'sao-hoa.png',
-      status: 'ended',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-  ]
+  @observable missions: Mission[] = []
   @observable loading = false
 
   // Cancel dialog
