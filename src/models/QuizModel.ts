@@ -23,3 +23,14 @@ export interface Quiz {
   answer?: Answer[]
   metadata?: MetaData
 }
+
+export interface LearnToEarn {
+  enabled?: boolean
+  setting?: {
+    name?: string
+    description?: string
+    imageCover?: File | null
+    quizFile?: File | null
+    learningFile?: File | null
+  }
+}
