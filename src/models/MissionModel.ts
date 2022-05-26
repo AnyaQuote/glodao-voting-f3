@@ -27,6 +27,7 @@ export interface MetaData {
 }
 
 export interface Mission {
+  poolId?: string
   name?: string
   status?: string
   chainId?: string
@@ -41,6 +42,6 @@ export interface Mission {
   priorityRewardAmount?: string
   data?: Data
   metadata?: MetaData
-  type?: 'bounty' | 'learn'
+  type?: string
   missionIndex?: number
 }
