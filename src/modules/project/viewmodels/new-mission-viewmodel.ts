@@ -3,11 +3,12 @@ import { getApiFileUrl, getJSONFromFile } from '@/helpers/file-helper'
 import { Data } from '@/models/MissionModel'
 import { Quiz, LearnToEarn } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get } from 'lodash-es'
+import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
 import { action, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import moment from 'moment'
-import { PoolStore } from '@/stores/pool-store'
+import { RoutePaths } from '@/router'
+import { VotingPool } from '@/models/VotingModel'
+import { toISO } from '@/helpers/date-helper'
 
 const missionInfoDefault = {
   name: '',
@@ -77,17 +78,39 @@ const commentTweetDef = {
 }
 
 export class NewMissionViewModel {
-  @observable pool?: PoolStore
+  @observable pool?: VotingPool
   @observable missionInfo = missionInfoDefault
   @observable joinTelegram = joinTelegramDef
   @observable followTwitter = followTwitterDef
   @observable quoteTweet = quoteTweetDef
   @observable commentTweet = commentTweetDef
   @observable learnToEarn = learnToEarnDefault
-  @observable loading = false
+  @observable pageLoading = false
+  @observable btnLoading = false
 
-  constructor(poolData?: PoolStore) {
-    //
+  constructor(unicodeName: string) {
+    this.fetchProjectByUnicode(unicodeName)
+  }
+
+  @asyncAction *fetchProjectByUnicode(query: string) {
+    try {
+      this.pageLoading = true
+      const res = yield appProvider.api.voting.find(
+        {
+          unicodeName: query,
+          ownerAddress: appProvider.authStore.username,
+        },
+        { _limit: 1 }
+      )
+      if (isEmpty(res)) {
+        appProvider.router.replace(RoutePaths.not_found)
+      }
+      this.pool = res[0]
+    } catch (error) {
+      appProvider.snackbar.commonError(error)
+    } finally {
+      this.pageLoading = false
+    }
   }
 
   @action.bound changeMissionInfo(property: string, value: string) {
@@ -127,7 +150,7 @@ export class NewMissionViewModel {
       media.append('files', imageCover)
       coverUrl = getApiFileUrl(yield appProvider.api.uploadFile(media)[0])
     } else {
-      // get project Cover for learn to earn cover
+      coverUrl = this.pool?.data?.projectCover
     }
     if (quizFile) {
       const textData = yield quizFile.text()
@@ -136,18 +159,19 @@ export class NewMissionViewModel {
     if (learningFile) {
       learningInformation = yield learningFile.text()
     } else throw new Error('Missing learning file')
-    const data: Quiz = {
+    const quiz: Quiz = {
       name,
       description,
       learningInformation,
-      metadata: {
-        coverImage: coverUrl,
-        tags: ['nft'],
-      },
       data: quizJSON,
       answer: answerJSON,
+      metadata: {
+        coverImage: coverUrl,
+        tags: this.pool?.data?.fields,
+      },
     }
-    return yield appProvider.api.quizzes.create(data)
+    const res = yield appProvider.api.quizzes.create(quiz)
+    return res.id
   }
 
   @asyncAction *getMissionSetting() {
@@ -166,54 +190,60 @@ export class NewMissionViewModel {
       set(missionSetting, 'twitter', [...get(missionSetting, 'twitter', []), { ...this.commentTweet.setting }])
     }
     if (this.learnToEarn.enabled) {
-      const quiz = yield this.getQuizId()
+      const quizId = yield this.getQuizId()
       // set(missionSetting, 'quiz', [...get(missionSetting, 'quiz', []), { type: 'quiz', quizId: quiz.id }])
-      set(missionSetting, 'quiz', [{ type: 'quiz', quizId: quiz.id }])
+      set(missionSetting, 'quiz', [{ type: 'quiz', quizId }])
     }
     return missionSetting
   }
 
+  @action mappingFields(setting: Data, missionInfo: any, pool: VotingPool): Mission {
+    const { website, ...socialLinks } = get(pool, 'data.socialLinks')
+    // HARD CODE
+    const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
+    const decimals = '18'
+    const status = 'draft'
+    const tokenBasePrice = '1.2'
+    const rewardAmount = '1000'
+    // =========
+    return {
+      poolId: pool.id,
+      name: missionInfo.name,
+      type: pool.type,
+      status,
+      chainId: pool.chain,
+      tokenBasePrice,
+      rewardAmount,
+      startTime: toISO(missionInfo.startDate),
+      endTime: toISO(missionInfo.endDate),
+      maxParticipant: toNumber(missionInfo.maxParticipants),
+      priorityRewardAmount: missionInfo.priorityAmount,
+      data: setting,
+      metadata: {
+        shortDescription: missionInfo.shortDescription,
+        decimals,
+        projectLogo: pool.data?.projectLogo,
+        tokenLogo,
+        coverImage: pool.data?.projectCover,
+        caption: missionInfo.shortDescription,
+        rewardToken: pool.tokenName,
+        socialLinks,
+        website,
+      },
+    }
+  }
+
   @asyncAction *submit() {
     try {
-      this.loading = true
-      const data = yield this.getMissionSetting()
-      console.log('mission.data:::', data)
-      // const mission: Mission = {
-      //   name: 'Hận Toản',
-      //   type: 'bounty',
-      //   status: 'draft',
-      //   chainId: 'BSC',
-      //   tokenBasePrice: '1.2',
-      //   rewardAmount: '1000',
-      //   startTime: moment().toISOString(),
-      //   endTime: moment().toISOString(),
-      //   data,
-      //   metadata: {
-      //     shortDescription:
-      //       'Decentralized autonomous community of users, investors, and partners called GloDAO. This is an open ecosystem that combines Web3.0 Social Networking, DAO Organization, and Advertising. ',
-      //     decimals: '18',
-      //     projectLogo: 'https://diversity-api.contracts.dev/uploads/Tubbly_logo_3x_e3e569ffda.png',
-      //     tokenLogo: 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg',
-      //     coverImage: 'https://diversity-api.contracts.dev/uploads/Facebook_cover_1_b3e93b5f13.png',
-      //     caption:
-      //       "GloDAO establishes itself as a decentralized autonomous community of users, investors, and partners. This provides an open ecosystem and a fusion of Web3.0 Social Networking - DAO organization - Advertising, all in one place. <br/>GloDAO was born with a purpose: to support and promote the full potential of the projects and optimize its user performance. <br/>GloDAO is on its way to form a publicly open, transparent, and completely decentralized environment. The vast range of users that this can touch includes community members, projects, and KOL partners who can generate even more value and wealth when participating in GloDAO's ecosystem.",
-      //     rewardToken: 'BUSD',
-      //     socialLinks: {
-      //       twitter: 'https://twitter.com/GloDAO_Official',
-      //       telegram: 'https://t.me/GloDAO_Channel',
-      //       facebook: 'https://www.facebook.com/GloDao-105742212066225',
-      //     },
-      //     website: 'https://glodao.io/',
-      //   },
-      // }
-      // console.log('final:::', mission)
-      // const fuck = yield appProvider.api.tasks.create(mission)
-      // console.log('res:::', fuck)
+      this.btnLoading = true
+      const missionSetting = yield this.getMissionSetting()
+      const model = this.mappingFields(missionSetting, this.missionInfo, this.pool!)
+      yield appProvider.api.tasks.create(model)
       appProvider.snackbar.addSuccess()
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
-      this.loading = false
+      this.btnLoading = false
     }
   }
 }
