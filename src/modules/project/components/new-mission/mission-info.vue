@@ -5,31 +5,38 @@
       <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
       <div class="font-18 font-weight-bold mt-3 mb-1">Mission name</div>
       <app-text-field
+        :rules="[$rules.required]"
         :value="$_get(vm.missionInfo, 'name')"
         @change="vm.changeMissionInfo('name', $event)"
         placeholder="Enter name of mission"
       />
       <span class="font-18 font-weight-bold mt-3 mb-1">Short description</span>
       <app-textarea
+        :rules="[$rules.required]"
         :value="$_get(vm.missionInfo, 'shortDescription')"
         @change="vm.changeMissionInfo('shortDescription', $event)"
         placeholder="Enter short description to describe the mission"
       />
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
-      <image-upload-field @change="vm.changeMissionInfo('missionCover', $event)" class="" />
+      <image-upload-field @change="vm.changeMissionInfo('missionCover', $event)" />
     </div>
 
     <!-- REWARD INFORMATION -->
     <div class="d-flex flex-column mt-7">
       <div class="title font-weight-bold bluePrimary--text">Reward information</div>
       <div class="font-18 font-weight-bold mt-4">
-        <span>Reward mission: 100 HWD</span>
+        <!-- rewardAmount is hard coded start -->
+        <span
+          >Reward mission: {{ $_get(vm.pool, 'rewardAmount', '100') }} {{ $_get(vm.pool, 'tokenName', 'HWD') }}</span
+        >
+        <!-- rewardAmount is hard coded end -->
       </div>
       <div class="mt-4 d-flex">
         <div class="flex-grow-1">
           <span class="font-18 font-weight-bold">Priority amount</span>
           <app-text-field
             class="mt-2"
+            :rules="[$rules.required, $rules.floatNumberOnly]"
             :value="$_get(vm.missionInfo, 'priorityAmount')"
             @change="vm.changeMissionInfo('priorityAmount', $event)"
             placeholder="Enter amount"
@@ -39,6 +46,7 @@
           <span class="font-18 font-weight-bold">Max participant in priority pool</span>
           <app-text-field
             class="mt-2"
+            :rules="[$rules.required, $rules.integer]"
             :value="$_get(vm.missionInfo, 'maxParticipants')"
             @change="vm.changeMissionInfo('maxParticipants', $event)"
             placeholder="Enter participants"
@@ -57,6 +65,7 @@
           <span class="font-18 font-weight-bold">Start date</span>
           <app-text-field
             class="mt-2"
+            :rules="[$rules.required, $rules.yyyymmdd]"
             :value="$_get(vm.missionInfo, 'startDate.date')"
             @change="vm.changeMissionInfo('startDate.date', $event)"
             placeholder="DD/MM/YYYY"
@@ -66,6 +75,7 @@
           <span class="font-18 font-weight-bold">Start time</span>
           <app-text-field
             class="mt-2"
+            :rules="[$rules.required, $rules.hhmm]"
             :value="$_get(vm.missionInfo, 'startDate.time')"
             @change="vm.changeMissionInfo('startDate.time', $event)"
             placeholder="hh:mm"
@@ -77,6 +87,7 @@
           <span class="font-18 font-weight-bold">End date</span>
           <app-text-field
             class="mt-2"
+            :rules="[$rules.required, $rules.yyyymmdd]"
             :value="$_get(vm.missionInfo, 'endDate.date')"
             @change="vm.changeMissionInfo('endDate.date', $event)"
             placeholder="DD/MM/YYYY"
@@ -86,6 +97,7 @@
           <span class="font-18 font-weight-bold">End time</span>
           <app-text-field
             class="mt-2"
+            :rules="[$rules.required, $rules.hhmm]"
             :value="$_get(vm.missionInfo, 'endDate.time')"
             @change="vm.changeMissionInfo('endDate.time', $event)"
             placeholder="hh:mm"
