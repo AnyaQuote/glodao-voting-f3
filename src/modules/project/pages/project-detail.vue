@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row no-gutters dense v-if="vm.poolStore">
+    <v-row no-gutters dense v-if="vm.poolStore" class="mb-16">
       <!-- ---------------------------- BREADCRUMBS --------------------------------------- -->
       <v-col cols="12" class="mt-4 mb-16">
         <div class="d-flex align-center font-weight-medium">
