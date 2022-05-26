@@ -10,7 +10,7 @@
       @change="vm.changeJoinTelegramSetting('enabled', $event)"
     >
       <app-text-field
-        :rules="[$rules.required]"
+        :rules="[$rules.required, $rules.url]"
         :value="$_get(vm.joinTelegram, 'setting.link')"
         @change="vm.changeJoinTelegramSetting('setting.link', $event)"
         placeholder="Enter telegram group link"
@@ -27,7 +27,7 @@
       @change="vm.changeFollowTwitterSetting('enabled', $event)"
     >
       <app-text-field
-        :rules="[$rules.required]"
+        :rules="[$rules.required, $rules.url]"
         :value="$_get(vm.followTwitter, 'setting.link')"
         @change="vm.changeFollowTwitterSetting('setting.link', $event)"
         placeholder="Enter your twitter projects link"
@@ -46,7 +46,7 @@
       <div class="font-18 font-weight-bold">Twitter link</div>
       <app-text-field
         class="mt-2"
-        :rules="[$rules.required]"
+        :rules="[$rules.required, $rules.url]"
         :value="$_get(vm.quoteTweet, 'setting.link')"
         @change="vm.changeQuoteTweetSetting('setting.link', $event)"
         placeholder="Enter twitter link"
@@ -72,7 +72,7 @@
       @change="vm.changeCommentTweetSetting('enabled', $event)"
     >
       <app-text-field
-        :rules="[$rules.required]"
+        :rules="[$rules.required, $rules.url]"
         :value="$_get(vm.commentTweet, 'setting.link')"
         @change="vm.changeCommentTweetSetting('setting.link', $event)"
         placeholder="Enter your tweet link"
