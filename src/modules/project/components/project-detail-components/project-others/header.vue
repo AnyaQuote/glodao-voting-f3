@@ -55,10 +55,10 @@
               class="linear-blue--bg text-none white--text text-subtitle-1"
               :disabled="maxMissionReached"
               style="letter-spacing: 0"
-              block
-              elevation="0"
-              height="48"
               @click="goToNewMission"
+              height="48"
+              elevation="0"
+              block
             >
               Create mission
             </v-btn>
