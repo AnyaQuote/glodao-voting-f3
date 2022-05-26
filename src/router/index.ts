@@ -91,11 +91,12 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-mission',
+    path: '/projects/:code/new-mission',
     name: 'mission-apply',
     component: () => import('@/modules/project/pages/new-mission.vue'),
     meta: {
       auth: true,
+      params: true,
       title: 'Mission Form',
     },
   },
@@ -127,6 +128,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('to:::', to)
   if (!get(to, 'name', '')) {
     next(RoutePaths.not_found)
   } else {
