@@ -51,7 +51,7 @@
         <div class="d-flex align-center">
           <span class="neutral0--text pr-6">Campaign time:</span>
           <span class="font-weight-bold">Jan 21st, 10:00 pm</span>
-          <span style="width: 4px; height: 4px" class="rounded-circle app-grey mx-2"> </span>
+          <span style="width: 4px; height: 4px; background: #D9D9D9 !important" class="rounded-circle mx-2"> </span>
           <span class="font-weight-bold">Jan 21st, 10:00 pm</span>
         </div>
       </v-sheet>
