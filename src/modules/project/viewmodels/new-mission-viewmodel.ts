@@ -207,6 +207,7 @@ export class NewMissionViewModel {
     const rewardAmount = '1000'
     // =========
     return {
+      ownerAddress: appProvider.wallet.account,
       poolId: pool.id,
       name: missionInfo.name,
       type: pool.type,
@@ -238,7 +239,7 @@ export class NewMissionViewModel {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
       const model = this.mappingFields(missionSetting, this.missionInfo, this.pool!)
-      yield appProvider.api.tasks.create(model)
+      yield appProvider.api.createTask(model)
       appProvider.snackbar.addSuccess()
     } catch (error) {
       appProvider.snackbar.commonError(error)
