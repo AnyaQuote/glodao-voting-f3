@@ -1,6 +1,6 @@
 <template>
   <app-dialog ref="dialog">
-    <v-sheet class="dialog-container d-flex flex-column pa-6">
+    <v-sheet class="dialog-container d-flex flex-column pa-6 neutral-100">
       <div class="d-flex align-center justify-space-between">
         <span class="font-weight-bold text-h6">Cast your vote</span>
         <v-btn icon @click="close"><v-icon>mdi-close</v-icon></v-btn>

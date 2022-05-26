@@ -13,11 +13,6 @@
         </v-sheet>
 
         <v-divider></v-divider>
-        <v-sheet height="140" class="pa-6 clip-text neutral10--text">
-          {{ pool.shortDescription }}
-        </v-sheet>
-
-        <v-divider></v-divider>
 
         <v-sheet class="pa-6">
           <div class="d-flex mb-2">

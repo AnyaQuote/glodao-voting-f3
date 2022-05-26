@@ -1,6 +1,6 @@
 <template>
   <v-dialog max-width="438" :value="vm.withdrawDialog" persistent>
-    <v-sheet class="pa-6 pa-6">
+    <v-sheet class="pa-6 pa-6 neutral-100">
       <div class="font-weight-bold mb-4 neutral0--text d-flex justify-space-between" style="font-size: 18px">
         <div>Withdraw token</div>
         <v-icon size="22" @click="vm.changeWithdrawDialog(false)">mdi-close</v-icon>

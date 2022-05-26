@@ -1,6 +1,6 @@
 <template>
   <v-dialog :value="dialog" max-width="625" persistent>
-    <v-sheet class="pa-6">
+    <v-sheet class="pa-6 neutral-100">
       <!-- header -->
       <div class="d-flex justify-space-between mb-7">
         <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Edit pool information</div>
