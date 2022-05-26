@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row justify="center">
+    <v-row justify="center" class="mb-100">
       <v-col cols="12">
         <div class="d-flex align-center justify-start" @click="goBack">
           <v-icon>mdi-arrow-left</v-icon>
@@ -18,7 +18,14 @@
             <mission-info />
             <!-- MISSION SETTING -->
             <mission-setting />
-            <v-btn class="linear-blue--bg white--text text-none mt-7" height="40" depressed block @click="submit">
+            <v-btn
+              class="linear-blue--bg white--text text-none mt-7"
+              :loading="vm.loading"
+              @click="submit"
+              height="40"
+              depressed
+              block
+            >
               Create
             </v-btn>
           </v-form>
@@ -47,10 +54,13 @@ export default class MissionForm extends Vue {
     this.$router.go(-1)
   }
   submit() {
-    this.form.validate()
-    // this.vm.submit()
+    this.form.validate() && this.vm.submit()
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mb-100 {
+  margin-bottom: 100px;
+}
+</style>
