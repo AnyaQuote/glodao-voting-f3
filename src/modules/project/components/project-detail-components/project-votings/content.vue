@@ -11,7 +11,7 @@
             <div class="text-h5 font-weight-bold neutral0--text font-weight-bold mb-1">
               {{ vm.poolStore.projectName }}
             </div>
-            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
+            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.rewardTokenSymbol }}</div>
           </div>
           <div></div>
         </div>
@@ -77,7 +77,7 @@
               </v-sheet>
               <div class="d-flex flex-column">
                 <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ vm.poolStore.projectName }}</div>
-                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
+                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.rewardTokenSymbol }}</div>
               </div>
             </div>
             <div class="d-flex flex-wrap">

@@ -23,4 +23,5 @@ export interface IVotingContract {
   cancelPool(id, account): Promise<any>
   getUserStakeBalance(account): Promise<any>
   checkUserVotedPool(account, poolId)
+  getVotedUsers(poolId)
 }

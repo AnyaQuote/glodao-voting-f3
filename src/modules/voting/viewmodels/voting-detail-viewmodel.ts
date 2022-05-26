@@ -21,6 +21,8 @@ export class VotingDetailViewModel {
   @observable votingList?: VotingPool[] = []
   @observable stakeFee = Zero
   @observable userStakeBalance = Zero
+  @observable dataLoading = false
+  @observable votedUsers = []
 
   @observable poolStore?: PoolStore
 
@@ -28,10 +30,9 @@ export class VotingDetailViewModel {
     this.loadData(unicodeName)
     this._disposers.push(
       reaction(
-        () => walletStore.account || this.poolStore?.contract,
+        () => walletStore.account,
         () => {
-          this.checkUserVotedPool()
-          this.getUserStakedBalance()
+          this.loadData(unicodeName)
         }
       )
     )
@@ -56,12 +57,14 @@ export class VotingDetailViewModel {
   }
 
   @asyncAction *loadData(unicodeName) {
+    this.dataLoading = true
     try {
       yield this.fetchPoolDetail(unicodeName)
-      const contract = this.poolStore?.contract
 
-      const [poolType] = yield Promise.all([contract?.getPoolType()])
-      this.stakeFee = poolType.stakeFee
+      this.getStakeFee()
+      this.checkUserVotedPool()
+      this.getUserStakedBalance()
+      this.getVotedUsers()
 
       timer(0, 10000)
         .pipe(takeUntil(this._unsubcrible))
@@ -71,8 +74,13 @@ export class VotingDetailViewModel {
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
-      //
+      this.dataLoading = false
     }
+  }
+
+  @asyncAction *getStakeFee() {
+    const poolType = yield this.poolStore?.contract?.getPoolType()
+    this.stakeFee = poolType.stakeFee
   }
 
   @asyncAction *checkUserVotedPool() {
@@ -89,9 +97,15 @@ export class VotingDetailViewModel {
     }
   }
 
+  @asyncAction *getVotedUsers() {
+    const users = yield this.poolStore?.contract?.getVotedUsers(this.poolStore.poolId)
+    this.votedUsers = users
+  }
+
   async vote() {
     const { completed } = await this.poolStore?.contract!.vote(this.poolStore!.poolId, walletStore.account)
     this.voted = true
+    this.getVotedUsers()
     this.poolStore?.fetchPoolInfo()
 
     if (completed) {

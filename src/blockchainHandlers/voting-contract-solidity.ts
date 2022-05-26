@@ -164,6 +164,11 @@ export class VotingHandler implements IVotingContract {
     return voted
   }
 
+  async getVotedUsers(poolId) {
+    const users = await this.votingContract.methods.getVotedUsers(poolId).call()
+    return users
+  }
+
   get poolInfo() {
     return {
       owner: this._owner,

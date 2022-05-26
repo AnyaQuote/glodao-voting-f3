@@ -264,6 +264,35 @@
         "type": "uint256"
       }
     ],
+    "name": "getMaxTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      }
+    ],
     "name": "getMinTime",
     "outputs": [
       {
@@ -323,6 +352,25 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getVotedUsers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -434,19 +482,43 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "requiredErc20",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "minTime",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "minTime",
+        "name": "maxTime",
         "type": "uint256"
       },
       {
         "internalType": "bool",
         "name": "added",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "poolVotedUsers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -484,13 +556,13 @@
             "type": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "requiredErc20",
-            "type": "address"
+            "internalType": "uint256",
+            "name": "minTime",
+            "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "minTime",
+            "name": "maxTime",
             "type": "uint256"
           },
           {
