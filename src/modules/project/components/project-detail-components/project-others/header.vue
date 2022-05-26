@@ -52,8 +52,9 @@
           </v-col>
           <v-col cols="4">
             <v-btn
-              class="linear-blue--bg text-none white--text text-subtitle-1"
-              :disabled="maxMissionReached"
+              class="text-none white--text text-subtitle-1"
+              :class="remainingMission > 0 && 'linear-blue--bg'"
+              :disabled="remainingMission === 0"
               style="letter-spacing: 0"
               @click="goToNewMission"
               height="48"
@@ -87,10 +88,6 @@ export default class extends Vue {
 
   get remainingMission() {
     return toNumber(get(this.vm.poolStore, 'totalMission')) - toNumber(get(this.vm, 'missions.length')) || 0
-  }
-
-  get maxMissionReached() {
-    return isEqual(this.vm.poolStore?.totalMission, this.vm.missions.length.toString)
   }
 }
 </script>
