@@ -3,8 +3,6 @@ export interface Metadata {
   fields?: string[]
   projectCover?: string
   projectLogo?: string
-  tokenContract?: string
-  additionLink?: string
   socialLinks?: any
   poolType?: string
 }
@@ -13,7 +11,7 @@ export interface VotingPool {
   id?: string
   projectName?: string
   tokenAddress?: string
-  rewardTokenSymbol?: string
+  tokenName?: string
   totalMission?: string
   ownerAddress?: string
   poolId?: string
@@ -25,13 +23,4 @@ export interface VotingPool {
   chain?: string
   chainId?: string
   data?: Metadata
-}
-
-export interface Mission {
-  name?: string
-  image?: string
-  totalReward?: string
-  priorityReward?: string
-  start?: string
-  end?: string
 }
