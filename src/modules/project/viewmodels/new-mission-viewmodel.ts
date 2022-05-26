@@ -7,6 +7,7 @@ import { isEqual, set, get } from 'lodash-es'
 import { action, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
+import { PoolStore } from '@/stores/pool-store'
 
 const missionInfoDefault = {
   name: '',
@@ -22,18 +23,6 @@ const missionInfoDefault = {
     date: '',
     time: '',
   },
-}
-
-const missionSettingDefault: Data = {
-  twitter: [
-    //
-  ],
-  telegram: [
-    //
-  ],
-  quiz: [
-    //
-  ],
 }
 
 const learnToEarnDefault: LearnToEarn = {
@@ -88,6 +77,7 @@ const commentTweetDef = {
 }
 
 export class NewMissionViewModel {
+  @observable pool?: PoolStore
   @observable missionInfo = missionInfoDefault
   @observable joinTelegram = joinTelegramDef
   @observable followTwitter = followTwitterDef
@@ -96,7 +86,7 @@ export class NewMissionViewModel {
   @observable learnToEarn = learnToEarnDefault
   @observable loading = false
 
-  constructor() {
+  constructor(poolData?: PoolStore) {
     //
   }
 
@@ -135,7 +125,7 @@ export class NewMissionViewModel {
     if (imageCover) {
       const media = new FormData()
       media.append('files', imageCover)
-      coverUrl = getApiFileUrl(yield appProvider.api.uploadFile(media))
+      coverUrl = getApiFileUrl(yield appProvider.api.uploadFile(media)[0])
     } else {
       // get project Cover for learn to earn cover
     }
@@ -157,8 +147,7 @@ export class NewMissionViewModel {
       data: quizJSON,
       answer: answerJSON,
     }
-    const res = yield appProvider.api.quizzes.create(data)
-    return res
+    return yield appProvider.api.quizzes.create(data)
   }
 
   @asyncAction *getMissionSetting() {
