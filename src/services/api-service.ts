@@ -238,7 +238,12 @@ export class ApiService {
   }
 
   async cancelVotingPool(data) {
-    const res = await this.axios.put('cancelVotingPool', data, {
+    const res = await this.axios.put('cancelVotingPool', data)
+    return res.data
+  }
+
+  async updateVotingPoolInfo(model) {
+    const res = await this.axios.post('updateVotingPoolInfo', model, {
       headers: {
         Authorization: `Bearer ${authStore.jwt}`,
       },

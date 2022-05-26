@@ -1,4 +1,4 @@
-import { isInteger } from 'lodash-es'
+import web3 from 'web3'
 import moment from 'moment'
 
 export const rules = {
@@ -35,6 +35,7 @@ export const rules = {
   hhmm: (v: string) =>
     (/^[0-9]{2}:[0-9]{2}$/.test(v.trim()) && (moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid())) ||
     'Invalid time ',
+  isAddress: (v: string) => web3.utils.isAddress(v.trim()) || 'Address not valid',
 }
 
 export const appRules = {}

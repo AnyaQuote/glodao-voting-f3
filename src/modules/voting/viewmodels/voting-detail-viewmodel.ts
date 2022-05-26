@@ -4,35 +4,35 @@ import { observable, computed, IReactionDisposer, when, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
 import { RoutePaths } from '@/router'
-import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { Subject } from 'rxjs'
+import { Subject, timer } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
-import { FixedNumber } from '@ethersproject/bignumber'
 import { apiService } from '@/services/api-service'
-import { promiseHelper } from '@/helpers/promise-helper'
 import { PoolStore } from '@/stores/pool-store'
+import { Zero } from '@/constants'
+import { takeUntil } from 'rxjs/operators'
 
 export class VotingDetailViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
   @observable voting = false
+  @observable voted = false
 
-  @observable poolDetail?: VotingPool
   @observable votingList?: VotingPool[] = []
-  @observable stakeFee?: FixedNumber
-  @observable poolInfo?: any
+  @observable stakeFee = Zero
+  @observable userStakeBalance = Zero
+  @observable dataLoading = false
+  @observable votedUsers = []
 
   @observable poolStore?: PoolStore
 
   constructor(unicodeName: string) {
     this.loadData(unicodeName)
-
     this._disposers.push(
       reaction(
-        () => walletStore.walletConnected,
-        async () => {
-          //
+        () => walletStore.account,
+        () => {
+          this.loadData(unicodeName)
         }
       )
     )
@@ -44,90 +44,87 @@ export class VotingDetailViewModel {
     this._disposers.forEach((d) => d())
   }
 
-  /**
-   * Fetch all data for pool detail and related voting pools
-   * Go back to last page if api failed
-   */
-  @asyncAction *loadData(query: any) {
+  @asyncAction *fetchPoolDetail(unicodeName) {
+    const [poolStore, votingList] = yield Promise.all([
+      appProvider.api.voting.find({ unicodeName }, { _limit: 1 }),
+      appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
+    ])
+    if (isEmpty(poolStore)) {
+      appProvider.router.push(RoutePaths.not_found)
+    }
+    this.votingList = votingList
+    this.poolStore = new PoolStore(get(poolStore, '[0]'))
+  }
+
+  @asyncAction *loadData(unicodeName) {
+    this.dataLoading = true
     try {
-      const [poolDetail, votingList] = yield Promise.all([
-        appProvider.api.voting.find({ unicodeName: query }, { _limit: 1 }),
-        appProvider.api.voting.find({ status: 'voting' }, { _limit: -1 }),
-      ])
-      if (isEmpty(poolDetail)) {
-        appProvider.router.replace(RoutePaths.not_found)
-      }
-      this.poolDetail = get(poolDetail, '[0]')
-      this.votingList = votingList
+      yield this.fetchPoolDetail(unicodeName)
 
-      this.poolStore = new PoolStore(this.poolDetail!)
-      const contract = this.poolStore?.contract
+      this.getStakeFee()
+      this.checkUserVotedPool()
+      this.getUserStakedBalance()
+      this.getVotedUsers()
 
-      const [poolType, poolInfo] = yield Promise.all([
-        contract?.getPoolType(),
-        contract?.getPoolInfo(this.poolDetail!.poolId),
-      ])
-
-      this.stakeFee = poolType.stakeFee
-      this.poolInfo = poolInfo
+      timer(0, 10000)
+        .pipe(takeUntil(this._unsubcrible))
+        .subscribe(async () => {
+          this.poolStore?.fetchPoolInfo()
+        })
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
-      //
+      this.dataLoading = false
     }
   }
 
+  @asyncAction *getStakeFee() {
+    const poolType = yield this.poolStore?.contract?.getPoolType()
+    this.stakeFee = poolType.stakeFee
+  }
+
+  @asyncAction *checkUserVotedPool() {
+    if (walletStore.account && this.poolStore?.contract) {
+      const voted = yield this.poolStore.contract!.checkUserVotedPool(walletStore.account, this.poolStore.poolId)
+      this.voted = voted
+    }
+  }
+
+  @asyncAction *getUserStakedBalance() {
+    if (walletStore.account) {
+      const userStakeBalance = yield this.poolStore?.contract!.getUserStakeBalance(walletStore.account)
+      this.userStakeBalance = userStakeBalance
+    }
+  }
+
+  @asyncAction *getVotedUsers() {
+    const users = yield this.poolStore?.contract?.getVotedUsers(this.poolStore.poolId)
+    this.votedUsers = users
+  }
+
   async vote() {
-    const { completed } = await this.poolStore?.contract!.vote(this.poolDetail!.poolId, walletStore.account)
+    const { completed } = await this.poolStore?.contract!.vote(this.poolStore!.poolId, walletStore.account)
+    this.voted = true
+    this.getVotedUsers()
+    this.poolStore?.fetchPoolInfo()
+
     if (completed) {
       try {
         // api update status to approved
-        await apiService.updateStatusToApproved({ id: this.poolDetail!.id, poolId: this.poolDetail!.poolId })
+        await apiService.updateStatusToApproved({ id: this.poolStore!.id, poolId: this.poolStore!.poolId })
       } catch (error) {
         console.error(error)
       }
     }
   }
 
-  @computed get projectLogo() {
-    return get(this.poolDetail, 'data.projectLogo', '')
-  }
-
-  @computed get projectCover() {
-    return get(this.poolDetail, 'data.projectCover', '')
-  }
-
-  @computed get endDate() {
-    return get(this.poolDetail, 'endDate', '')
-  }
-
-  @computed get projectName() {
-    return get(this.poolDetail, 'projectName', '')
-  }
-
-  @computed get fields() {
-    return get(this.poolDetail, 'data.fields', [])
-  }
-
-  @computed get type() {
-    return get(this.poolDetail, 'type', '')
-  }
-
-  @computed get shortDescription() {
-    return get(this.poolDetail, 'data.shortDescription', '')
-  }
-
   @computed get socialLinks() {
-    const arrs = get(this.poolDetail, 'data.socialLinks', [])
+    const arrs = get(this.poolStore, 'data.socialLinks', [])
     return Object.keys(arrs)
       .filter((x) => x !== 'website')
       .map((key) => ({
         icon: key,
-        link: get(this.poolDetail, `data.socialLinks[${key}]`, ''),
+        link: get(this.poolStore, `data.socialLinks[${key}]`, ''),
       }))
-  }
-
-  @computed get website() {
-    return get(this.poolDetail, 'data.socialLinks.website', '')
   }
 }

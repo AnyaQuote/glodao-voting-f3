@@ -5,6 +5,7 @@ export class PoolInfo {
   amount?: FixedNumber
   poolType?: string
   votedWeight?: FixedNumber
+  votedPercent?: FixedNumber
   createdAt?: string
   completed?: boolean
   cancelled?: boolean
@@ -20,4 +21,7 @@ export interface IVotingContract {
   vote(id, account): Promise<any>
   getPoolType(): Promise<any>
   cancelPool(id, account): Promise<any>
+  getUserStakeBalance(account): Promise<any>
+  checkUserVotedPool(account, poolId)
+  getVotedUsers(poolId)
 }

@@ -2,30 +2,33 @@
   <v-sheet
     outlined
     v-ripple
-    class="pa-5 d-flex align-center cursor-pointer rounded transparent--bg"
+    class="d-flex align-center cursor-pointer rounded transparent--bg"
+    :class="dense ? 'pa-2' : 'pa-5'"
     @click.stop="open"
     @change="handleChange"
   >
     <input type="file" ref="file-dialog" accept=".jpg,.png,.svg" hidden />
-    <img v-if="image" :src="source" width="48" height="48" class="rounded" />
-    <img v-else :src="require('@/assets/icons/file-logo.svg')" width="42" height="42" class="rounded" />
+    <v-img v-if="image" :src="source" class="rounded" max-width="50" aspect-ratio="1"></v-img>
+    <v-img v-else :src="require('@/assets/icons/file-logo.svg')" class="rounded" max-height="42" max-width="42"></v-img>
     <div class="d-flex flex-column flex-grow-1 ml-5">
-      <span class="text-subtitle-1 font-weight-bold">{{ imgName }}</span>
-      <span class="text-subtitle-2 font-weight-regular">{{ imgSize }}</span>
+      <span class="text-subtitle-1 font-weight-bold">{{ name ? name : 'Upload your image' }}</span>
+      <span class="text-subtitle-2 font-weight-regular">{{ imgSize ? imgSize : 'Allowed file types: png, jpg' }}</span>
     </div>
-    <v-icon>mdi-upload</v-icon>
+    <div v-if="dense" class="app-blue--text text-subtite-1 font-weight-600">Change</div>
+    <v-icon v-else>mdi-upload</v-icon>
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
-import { convertBytes } from '@/helpers/file-helper'
-import { get, isEmpty } from 'lodash'
+import { get } from 'lodash'
+import { imageHelper } from '@/helpers/image-helper'
 @Component
 export default class ImageUploadField extends Vue {
-  @Prop({ default: null }) value!: File
+  @Prop({ default: null }) value!: File | string
   @Ref('file-dialog') dialog
-  image: File | null = null
+  image: File | string | null = null
+  @Prop({ type: Boolean }) dense
 
   open() {
     this.dialog.click()
@@ -41,16 +44,16 @@ export default class ImageUploadField extends Vue {
     this.image = value
   }
 
-  get imgName() {
-    return this.image ? this.image.name : 'Upload your image'
+  get name() {
+    return imageHelper.name(this.image)
   }
 
   get imgSize() {
-    return this.image ? convertBytes(this.image.size) : 'Allowed file types: png, jpg'
+    return imageHelper.size(this.image)
   }
 
   get source() {
-    return this.image ? URL.createObjectURL(this.image) : ''
+    return imageHelper.url(this.image)
   }
 }
 </script>

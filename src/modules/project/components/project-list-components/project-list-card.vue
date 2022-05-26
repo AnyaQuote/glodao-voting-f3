@@ -12,22 +12,27 @@
           </v-spacer>
         </v-sheet>
 
-        <v-divider></v-divider>
-
-        <v-sheet height="140" class="pa-6 clip-text neutral10--text">
+        <!-- <v-divider></v-divider> -->
+        <!-- <v-sheet height="140" class="pa-6 clip-text neutral10--text">
           {{ pool.shortDescription }}
-        </v-sheet>
+        </v-sheet> -->
 
         <v-divider></v-divider>
 
         <v-sheet class="pa-6">
           <v-sheet class="d-flex">
             <v-sheet class="mr-2">Voting start: </v-sheet>
-            <v-sheet class="font-weight-bold">{{ pool.startDate | ddmmyyyyhhmma }}</v-sheet>
+            <!-- <v-sheet class="font-weight-bold">{{ pool.startDate | ddmmyyyyhhmma }}</v-sheet> -->
+            24/05/2022 10:00 pm
           </v-sheet>
           <v-sheet class="d-flex">
             <v-sheet class="mr-2">Voting end: </v-sheet>
-            <v-sheet class="font-weight-bold">{{ pool.endDate | ddmmyyyyhhmma }}</v-sheet>
+            <!-- <v-sheet class="font-weight-bold">{{ pool.endDate | ddmmyyyyhhmma }}</v-sheet> -->
+            27/05/2022 10:00 pm
+          </v-sheet>
+          <v-sheet class="d-flex">
+            <v-sheet class="mr-2">Total reward amount: </v-sheet>
+            <v-sheet class="font-weight-bold">{{ pool.amount | formatNumber }} {{ pool.rewardTokenSymbol }}</v-sheet>
           </v-sheet>
         </v-sheet>
       </v-col>
@@ -58,10 +63,9 @@
               </v-sheet>
               <v-sheet class="text-subtitle-1">We want the project to launch </v-sheet>
             </v-sheet>
-            <progress-bar :value="pool.votedWeight" class="mb-2" />
+            <progress-bar :value="pool.votedPercent" class="mb-2" />
             <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-400">
-              <!-- <v-sheet>{{ upvoteCount }} votes</v-sheet> -->
-              <v-sheet>{{ pool.votedWeight | formatNumber }}%</v-sheet>
+              <v-sheet>{{ pool.votedPercent | formatNumber }}%</v-sheet>
             </v-sheet>
           </v-sheet>
         </v-sheet>
@@ -108,6 +112,11 @@ export default class ProjectCard extends Vue {
         return {
           color: 'green lighten-2',
           text: 'Your project is approved',
+        }
+      case 'cancelled':
+        return {
+          color: 'red',
+          text: 'Your project is cancelled',
         }
 
       default:

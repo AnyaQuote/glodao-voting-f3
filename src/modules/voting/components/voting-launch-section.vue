@@ -32,9 +32,11 @@
         <v-icon color="black">mdi-chevron-right</v-icon>
       </v-sheet>
     </template>
-    <v-carousel-item v-for="(pool, index) in vm.approvedList" :key="index" eager>
-      <voting-launch-item :pool="pool"></voting-launch-item>
-    </v-carousel-item>
+    <div v-if="vm.approvedList && vm.approvedList.length">
+      <v-carousel-item v-for="(pool, index) in vm.approvedList" :key="index" eager>
+        <voting-launch-item :pool="pool"></voting-launch-item>
+      </v-carousel-item>
+    </div>
   </v-carousel>
 </template>
 

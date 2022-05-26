@@ -15,24 +15,36 @@
 
       <v-col cols="12">
         <div class="row mt-72">
-          <!-- <div class=" debug mb-6"> -->
           <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
-            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE (800)</div>
-            <v-btn icon>
+            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ vm.votedUsers.length }})</div>
+            <!-- <v-btn icon>
               <v-icon large>mdi-information</v-icon>
-            </v-btn>
+            </v-btn> -->
           </v-sheet>
-          <!-- </div> -->
 
-          <!-- VOTED USER LIST START -->
-          <div class="col-12">
-            <voting-list-item class="mb-4 pa-2" elevation="3" v-for="i in Array(7)" :key="i" />
+          <div class="col-12" v-for="address in vm.votedUsers" :key="address">
+            <v-sheet v-bind="$attrs" class="row align-center rounded pa-4" elevation="3">
+              <div class="col-12 col-md-4">
+                <div class="font-weight-bold">{{ address | shortAddress(12, 6) }}</div>
+                <div>GLD Staker</div>
+              </div>
+              <div class="col-12 col-md-4 d-flex align-center">
+                <v-chip color="green mr-2">👍YES</v-chip>
+                <span class="font-weight-medium"> We want to join in this project </span>
+              </div>
+              <div
+                class="col-12 col-md-4 d-flex flex-row flex-md-column align-md-end justify-space-between text-subtitle-2"
+              >
+                <span class="neutral10--text">Time voted</span>
+                <span class="font-weight-bold">---</span>
+              </div>
+            </v-sheet>
+            <!-- <voting-list-item class="mb-4 pa-2" elevation="3" v-for="address in vm.votedUsers" :key="address" /> -->
           </div>
 
-          <div class="col-12">
+          <!-- <div class="col-12">
             <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
-          </div>
-          <!-- VOTED USER LIST END -->
+          </div> -->
         </div>
       </v-col>
 

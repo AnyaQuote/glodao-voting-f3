@@ -13,7 +13,7 @@
         placeholder="Enter name of project"
       ></app-text-field>
 
-      <div class="font-18 font-weight-bold mt-6">Short description</div>
+      <div class="font-18 font-weight-bold">Short description</div>
       <app-textarea
         :rules="[$rules.required]"
         :value="$_get(vm.projectInfo, 'shortDescription')"
@@ -21,7 +21,7 @@
         placeholder="Enter project's short description"
       ></app-textarea>
 
-      <div class="font-18 font-weight-bold mt-6">Project logo</div>
+      <div class="font-18 font-weight-bold">Project logo</div>
       <image-upload-field
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectLogo', $event)"
@@ -47,7 +47,7 @@
         outlined
       ></v-autocomplete>
 
-      <div class="font-18 font-weight-bold mt-6">Website and social link</div>
+      <div class="font-18 font-weight-bold">Website and social link</div>
       <app-text-field
         class="thin-border"
         :value="$_get(vm.projectInfo, 'socialLinks.website')"

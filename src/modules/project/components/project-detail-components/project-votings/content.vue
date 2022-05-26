@@ -11,7 +11,7 @@
             <div class="text-h5 font-weight-bold neutral0--text font-weight-bold mb-1">
               {{ vm.poolStore.projectName }}
             </div>
-            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
+            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.rewardTokenSymbol }}</div>
           </div>
           <div></div>
         </div>
@@ -77,7 +77,7 @@
               </v-sheet>
               <div class="d-flex flex-column">
                 <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ vm.poolStore.projectName }}</div>
-                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
+                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.rewardTokenSymbol }}</div>
               </div>
             </div>
             <div class="d-flex flex-wrap">
@@ -168,10 +168,10 @@
             </v-sheet>
             <v-sheet class="text-subtitle-1">We want the project to launch </v-sheet>
           </v-sheet>
-          <progress-bar :value="vm.poolStore.votedWeight" class="mb-2" />
+          <progress-bar :value="vm.poolStore.votedPercent" class="mb-2" />
           <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-600">
             <!-- <v-sheet>100 votes</v-sheet> -->
-            <v-sheet>{{ vm.poolStore.votedWeight }}%</v-sheet>
+            <v-sheet>{{ vm.poolStore.votedPercent }}%</v-sheet>
           </v-sheet>
         </div>
       </v-sheet>

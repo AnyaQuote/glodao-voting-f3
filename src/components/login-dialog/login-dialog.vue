@@ -8,8 +8,7 @@
       <v-card-title> Please sign in with your wallet</v-card-title>
       <v-card-text class="red--text">{{ controller.config.message }}</v-card-text>
       <v-card-text>
-        Remember that this wallet will be the pool owner's address. Only the pool owner can update pool information and
-        will send the token and pay the fee when creating the pool.
+        Remember that this wallet will be the pool owner's address. Only the pool owner can update pool information.
       </v-card-text>
       <v-card-text>
         <strong>Your wallet address:</strong>
