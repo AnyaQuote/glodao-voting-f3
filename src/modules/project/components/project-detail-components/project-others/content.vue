@@ -2,12 +2,12 @@
   <v-row v-if="vm.missions.length">
     <v-col cols="4" v-for="(mission, index) in vm.missions" :key="index">
       <v-sheet class="rounded-lg" elevation="3">
-        <v-img :src="require(`@/assets/images/${mission.image}`)" class="rounded-t-lg">
+        <v-img :src="$_get(mission, 'metadata.coverImage')" class="rounded-t-lg">
           <div
             class="d-inline-block rounded pa-2 mt-2 ml-2 text-subtitle-2 text-uppercase black--text"
-            :class="mission.status === 'ended' ? 'neutral100' : 'green lighten-1'"
+            :class="$_get(mission, 'status') === 'ended' ? 'neutral100' : 'green lighten-1'"
           >
-            {{ mission.status }}
+            {{ $_get(mission, 'status') }}
           </div>
         </v-img>
         <div class="pa-6">
@@ -17,19 +17,19 @@
           <div class="text-subtitle-1">
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Total reward</div>
-              <div class="font-weight-bold">{{ mission.totalReward }}</div>
+              <div class="font-weight-bold">{{ $_get(mission, 'rewardAmount') }}</div>
             </div>
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Priority reward</div>
-              <div class="font-weight-bold">{{ mission.priorityReward }}</div>
+              <div class="font-weight-bold">{{ $_get(mission, 'priorityRewardAmount') }}</div>
             </div>
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Start time</div>
-              <div class="font-weight-bold">{{ mission.start }}</div>
+              <div class="font-weight-bold">{{ $_get(mission, 'startTime') | ddmmyyyyhhmma }}</div>
             </div>
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">End time</div>
-              <div class="font-weight-bold">{{ mission.end }}</div>
+              <div class="font-weight-bold">{{ $_get(mission, 'endTime') | ddmmyyyyhhmma }}</div>
             </div>
           </div>
         </div>
