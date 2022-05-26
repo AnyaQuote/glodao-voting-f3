@@ -82,8 +82,9 @@ export class ProjectDetailViewModel {
 
   @asyncAction *fetchProjectDetail(query: string) {
     try {
+      let res
       this.loading = true
-      const res = yield appProvider.api.voting.find(
+      res = yield appProvider.api.voting.find(
         { unicodeName: query, ownerAddress: appProvider.authStore.username },
         { _limit: 1 }
       )
@@ -91,6 +92,11 @@ export class ProjectDetailViewModel {
         appProvider.router.replace(RoutePaths.not_found)
       }
       this.poolStore = new PoolStore(get(res, '[0]'))
+
+      if (this.poolStore.status === 'approved') {
+        res = yield appProvider.api.tasks.find({ poolId: this.poolStore.id }, { _limit: -1 })
+        this.missions = res
+      }
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
