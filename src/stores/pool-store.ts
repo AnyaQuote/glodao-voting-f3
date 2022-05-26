@@ -110,8 +110,8 @@ export class PoolStore {
   @computed get tokenAddress() {
     return this.poolData.tokenAddress
   }
-  @computed get rewardTokenSymbol() {
-    return this.poolData.rewardTokenSymbol
+  @computed get tokenName() {
+    return this.poolData.tokenName
   }
   @computed get totalMission() {
     return this.poolData.totalMission
