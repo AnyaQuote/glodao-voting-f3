@@ -4,7 +4,7 @@
     <v-row no-gutters dense class="app-blue lighten-1 rounded-t-lg pa-6">
       <v-col cols="6" class="d-flex align-stretch">
         <v-sheet height="76" width="76" class="white pa-1 rounded-lg d-flex justify-center mr-6">
-          <img :src="require('@/assets/icons/voting-trending--logo.png')" height="100%" />
+          <img :src="$_get(vm.poolStore, 'projectLogo', '')" height="100%" />
         </v-sheet>
         <div class="d-flex flex-column justify-center">
           <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ $_get(vm.poolStore, 'projectName') }}</div>
@@ -53,6 +53,7 @@
           <v-col cols="4">
             <v-btn
               class="linear-blue--bg text-none white--text text-subtitle-1"
+              :disabled="maxMissionReached"
               style="letter-spacing: 0"
               block
               elevation="0"
@@ -71,7 +72,7 @@
 <script lang="ts">
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { RoutePaths } from '@/router'
-import { toNumber, get } from 'lodash'
+import { toNumber, get, isEqual } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 
@@ -81,11 +82,15 @@ export default class extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
   goToNewMission() {
-    this.$router.push(RoutePaths.new_mission)
+    this.$router.push(RoutePaths.project_detail + get(this.vm.poolStore, 'unicodeName', null) + RoutePaths.new_mission)
   }
 
   get remainingMission() {
-    return toNumber(get(this.vm.poolStore, 'totalMission', '0')) - toNumber(get(this.vm, 'missions.length', '0'))
+    return toNumber(get(this.vm.poolStore, 'totalMission')) - toNumber(get(this.vm, 'missions.length')) || 0
+  }
+
+  get maxMissionReached() {
+    return isEqual(this.vm.poolStore?.totalMission, this.vm.missions.length.toString)
   }
 }
 </script>
