@@ -186,7 +186,7 @@ export class ApiService {
   axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
 
   users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
-  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
+  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks')
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
   quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes')
 
