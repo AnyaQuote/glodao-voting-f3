@@ -13,7 +13,7 @@
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
-          <v-form class="pa-7">
+          <v-form ref="form" class="pa-7">
             <!-- MISSION, REWARD AND TIME INFORMATION -->
             <mission-info />
             <!-- MISSION SETTING -->
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue, Provide } from 'vue-property-decorator'
+import { Component, Vue, Provide, Ref } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../viewmodels/new-mission-viewmodel'
 
 @Observer
@@ -42,11 +42,13 @@ import { NewMissionViewModel } from '../viewmodels/new-mission-viewmodel'
 })
 export default class MissionForm extends Vue {
   @Provide() vm = new NewMissionViewModel()
+  @Ref('form') form
   goBack() {
     this.$router.go(-1)
   }
   submit() {
-    this.vm.submit()
+    this.form.validate()
+    // this.vm.submit()
   }
 }
 </script>
