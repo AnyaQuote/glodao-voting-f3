@@ -10,8 +10,8 @@
     <img v-if="image" :src="source" width="48" height="48" class="rounded" />
     <img v-else :src="require('@/assets/icons/file-logo.svg')" width="42" height="42" class="rounded" />
     <div class="d-flex flex-column flex-grow-1 ml-5">
-      <span class="text-subtitle-1 font-weight-bold">{{ image ? image.name : 'Upload your image' }}</span>
-      <span class="text-subtitle-2 font-weight-regular">{{ imgSize || 'Allowed file types: png, jpg' }}</span>
+      <span class="text-subtitle-1 font-weight-bold">{{ imgName }}</span>
+      <span class="text-subtitle-2 font-weight-regular">{{ imgSize }}</span>
     </div>
     <v-icon>mdi-upload</v-icon>
   </v-sheet>
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
 import { convertBytes } from '@/helpers/file-helper'
-import { get, isNil } from 'lodash'
+import { get, isEmpty } from 'lodash'
 @Component
 export default class ImageUploadField extends Vue {
   @Prop({ default: null }) value!: File
@@ -41,12 +41,16 @@ export default class ImageUploadField extends Vue {
     this.image = value
   }
 
+  get imgName() {
+    return this.image && !isEmpty(this.image) ? this.image.name : 'Upload your image'
+  }
+
   get imgSize() {
-    return !isNil(this.image) && convertBytes(this.image!.size)
+    return this.image && !isEmpty(this.image) ? convertBytes(this.image.size) : 'Allowed file types: png, jpg'
   }
 
   get source() {
-    return !isNil(this.image) ? URL.createObjectURL(this.image) : ''
+    return this.image && !isEmpty(this.image) ? URL.createObjectURL(this.image) : ''
   }
 }
 </script>
