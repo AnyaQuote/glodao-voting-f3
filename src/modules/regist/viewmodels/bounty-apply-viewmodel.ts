@@ -137,7 +137,7 @@ export class BountyApplyViewModel {
         poolId,
         ownerAddress,
         tokenAddress: this.projectInfo.tokenAddress,
-        rewardTokenSymbol: this.projectInfo.rewardToken,
+        tokenName: this.projectInfo.rewardToken,
         status: 'voting',
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
