@@ -73,7 +73,7 @@
     >
       <app-text-field
         :rules="[$rules.required]"
-        :value="$_get(vm.quoteTweet, 'setting.link')"
+        :value="$_get(vm.commentTweet, 'setting.link')"
         @change="vm.changeCommentTweetSetting('setting.link', $event)"
         placeholder="Enter your tweet link"
         append-icon="mdi-link"
