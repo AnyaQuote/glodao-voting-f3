@@ -116,6 +116,11 @@ a {
     }
   }
 }
+
+.v-sheet {
+  background: transparent !important;
+}
+
 .neutral100--bg {
   background-color: var(--v-neutral100-base) !important;
 }

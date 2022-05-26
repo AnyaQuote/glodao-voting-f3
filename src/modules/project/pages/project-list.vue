@@ -44,62 +44,64 @@
           </div>
         </v-col>
         <!-- ------------------------ HAS PROJECTS ---------------------------- -->
-        <v-col cols="12" v-else class="rounded-lg neutral100--bg" outlined>
-          <v-sheet class="d-flex justify-space-between align-center text-h6 rounded-t-lg blue lighten-1">
-            <v-sheet height="58" class="d-flex align-stretch">
-              <!--- ==== TAB FILTER ==== -->
-              <v-sheet
-                width="240"
-                class="d-flex align-center justify-center rounded-tl-lg cursor-pointer"
-                :class="activeClass('bounty')"
-                @click="vm.changeFilterdType('bounty')"
-              >
-                <span class="font-weight-bold">Bounty project</span>
+        <v-col cols="12" v-else>
+          <v-sheet class="rounded-lg neutral-100">
+            <v-sheet class="d-flex justify-space-between align-center text-h6 rounded-t-lg blue-2">
+              <v-sheet height="58" class="d-flex align-stretch rounded-tl-lg">
+                <!--- ==== TAB FILTER ==== -->
+                <v-sheet
+                  width="240"
+                  class="d-flex align-center justify-center cursor-pointer rounded-tl-lg"
+                  :class="activeClass('bounty')"
+                  @click="vm.changeFilterdType('bounty')"
+                  :light="true"
+                >
+                  <span class="font-weight-bold">Bounty project</span>
+                </v-sheet>
+                <v-sheet
+                  width="240"
+                  class="d-flex justify-center align-center cursor-pointer"
+                  :class="activeClass('launchpad')"
+                  @click="vm.changeFilterdType('launchpad')"
+                >
+                  <span class="font-weight-bold">Lauchpad project</span>
+                </v-sheet>
               </v-sheet>
-              <v-sheet
-                width="240"
-                class="d-flex justify-center align-center cursor-pointer"
-                :class="activeClass('launchpad')"
-                @click="vm.changeFilterdType('launchpad')"
-              >
-                <span class="font-weight-bold">Lauchpad project</span>
-              </v-sheet>
+              <!-- ==== CHECKBOX HIDE REJECTED ==== -->
+              <v-checkbox
+                v-model="vm.filterRejected"
+                dense
+                hide-details
+                label="Hide rejected project"
+                class="pa-0 ma-0 mr-8 neutral-0--text"
+                color="app-blue"
+              ></v-checkbox>
             </v-sheet>
-            <!-- ==== CHECKBOX HIDE REJECTED ==== -->
-            <v-checkbox
-              v-model="vm.filterRejected"
-              dense
-              hide-details
-              label="Hide rejected project"
-              class="pa-0 ma-0 mr-8"
-              color="app-blue"
-            ></v-checkbox>
+            <!-- ==== CONTENT DISPLAY ==== -->
+            <!-- EMPTY DATA -->
+            <v-scale-transition leave-absolute v-if="!vm.filteredStatusProjects.length">
+              <v-sheet class="d-flex flex-column align-center justify-center" height="300">
+                <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
+                <div class="font-weight-bold text-h6">You have no {{ vm.filterType }} projects</div>
+                <div class="text-subtitle-1 neutral10--text mb-4">Ready to apply for a new project?</div>
+                <v-btn class="linear-blue--bg text-none" height="40" depressed @click="goToNewProject">
+                  <span class="white--text font-weight-bold">New {{ vm.filterType }} application</span>
+                </v-btn>
+              </v-sheet>
+            </v-scale-transition>
+            <!-- HAS DATA -->
+            <v-scale-transition leave-absolute v-else>
+              <div class="padding-form">
+                <project-list-card
+                  v-for="(pool, index) in vm.filteredStatusProjects"
+                  :key="index"
+                  :pool="pool"
+                  class="mb-6"
+                />
+              </div>
+            </v-scale-transition>
           </v-sheet>
-          <!-- ==== CONTENT DISPLAY ==== -->
-          <!-- EMPTY DATA -->
-          <v-scale-transition leave-absolute v-if="!vm.filteredStatusProjects.length">
-            <v-sheet class="d-flex flex-column align-center justify-center" height="300">
-              <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
-              <div class="font-weight-bold text-h6">You have no {{ vm.filterType }} projects</div>
-              <div class="text-subtitle-1 neutral10--text mb-4">Ready to apply for a new project?</div>
-              <v-btn class="linear-blue--bg text-none" height="40" depressed @click="goToNewProject">
-                <span class="white--text font-weight-bold">New {{ vm.filterType }} application</span>
-              </v-btn>
-            </v-sheet>
-          </v-scale-transition>
-          <!-- HAS DATA -->
-          <v-scale-transition leave-absolute v-else>
-            <div class="padding-form">
-              <project-list-card
-                v-for="(pool, index) in vm.filteredStatusProjects"
-                :key="index"
-                :pool="pool"
-                class="mb-6"
-              />
-            </div>
-          </v-scale-transition>
         </v-col>
-        <!-- ------------------------------------------------------------------ -->
       </v-row>
     </v-container>
   </div>
@@ -130,7 +132,8 @@ export default class ProjectListPage extends Vue {
   }
 
   get activeClass() {
-    return (activeValue: string) => (this.vm.filterType === activeValue ? 'app-blue white--text' : 'app-blue lighten-1')
+    return (activeValue: string) =>
+      this.vm.filterType === activeValue ? 'blue-diversity neutral-100--text' : 'blue-2 neutral-10--text'
   }
 }
 </script>
