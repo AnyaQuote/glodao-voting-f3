@@ -11,8 +11,8 @@
           <div class="font-18 font-weight-bold mb-2">Reward token</div>
           <app-text-field
             :rules="[$rules.required]"
-            :value="$_get(vm.projectInfo, 'rewardToken')"
-            @input="vm.changeProjectInfo('rewardToken', $event)"
+            :value="$_get(vm.projectInfo, 'tokenName')"
+            @input="vm.changeProjectInfo('tokenName', $event)"
             placeholder="Reward token symbol"
           />
         </div>

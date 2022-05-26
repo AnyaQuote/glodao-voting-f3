@@ -23,7 +23,7 @@ class ProjectInfo {
   fields?: any[]
   socialLinks?: any
 
-  rewardToken?: string
+  tokenName?: string
   rewardAmount?: string
   tokenAddress?: string
   startDate?: string
@@ -137,7 +137,7 @@ export class BountyApplyViewModel {
         poolId,
         ownerAddress,
         tokenAddress: this.projectInfo.tokenAddress,
-        tokenName: this.projectInfo.rewardToken,
+        tokenName: this.projectInfo.tokenName,
         status: 'voting',
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
