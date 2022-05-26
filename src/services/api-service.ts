@@ -246,6 +246,15 @@ export class ApiService {
     return res.data
   }
 
+  async createTask(model) {
+    const res = await this.axios.post('createTask', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
   async getFile(id: any) {
     const res = await this.axios.get(`upload/files/${id}`)
     return res.data
