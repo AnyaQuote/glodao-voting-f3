@@ -10,7 +10,7 @@
           <div class="row justify-center mt-10">
             <div class="col-12 text-center">
               <div class="text-h3 font-weight-bold">{{ pool.projectName }}</div>
-              <v-sheet width="500" class="mx-auto transparent--bg white--text mt-4 text-h5">
+              <v-sheet width="500" class="mx-auto transparent--bg white--text mt-4 text-h5 two-line">
                 {{ pool.shortDescription }}
               </v-sheet>
               <v-sheet max-width="456" class="row mx-auto my-10 rounded-lg blur-bg">
@@ -51,7 +51,7 @@
         </div>
       </v-img>
     </v-sheet>
-    <div class="pa-5 px-9 d-flex justify-space-between justify-start align-center">
+    <v-sheet height="80" class="pa-5 px-9 d-flex justify-space-between justify-start align-center">
       <div class="d-flex justify-center align-center mt-2 text-h6 font-weight-bold flex-wrap">
         <div class="mr-4">Ended voting in:</div>
         <div>{{ $_get(pool, 'endDate') | ddmmyyyyhhmmss }}</div>
@@ -61,7 +61,7 @@
       <v-btn class="rounded-lg" color="blue" outlined :to="'#'">
         <span class="text-h6">Read more</span>
       </v-btn>
-    </div>
+    </v-sheet>
   </v-sheet>
   <div v-else class="rounded-lg" :class="backgroundColor">
     <v-img max-height="244" :src="$_get(pool, 'projectCover', '')">

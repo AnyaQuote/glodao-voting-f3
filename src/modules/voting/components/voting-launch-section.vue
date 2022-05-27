@@ -8,7 +8,7 @@
     hide-delimiters
     delimiter-icon="mdi-minus"
     show-arrows-on-hover
-    class="elevation-3 rounded-lg mt-10"
+    class="rounded-lg mt-10 transparent--bg"
   >
     <template v-slot:prev="{ on, attrs }">
       <v-sheet

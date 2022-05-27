@@ -206,6 +206,15 @@ a {
   overflow: hidden !important;
 }
 
+.two-line {
+  word-break: break-word;
+  text-overflow: hidden;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;

@@ -28,7 +28,7 @@
               <div class="text-h5 flex-grow-1 font-weight-bold">{{ pool.projectName }}</div>
             </div>
 
-            <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4">
+            <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4 two-line">
               {{ pool.shortDescription }}
             </div>
             <div class="text-uppercase ma-n1">
@@ -73,7 +73,7 @@
                   {{ $_get(pool, 'projectName') }}
                 </div>
               </div>
-              <v-sheet height="40" class="transparent white--text text-caption line-clamp mb-1">
+              <v-sheet height="40" class="transparent white--text text-caption two-line mb-1">
                 {{ $_get(pool, 'data.shortDescription') }}
               </v-sheet>
               <div class="d-flex">
@@ -157,22 +157,6 @@ export default class LiveVotingCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.line-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.clip-text {
-  word-break: break-word;
-  text-overflow: hidden;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
 .bounty-border {
   background: linear-gradient(180deg, var(--v-orange-base) 0%, #fff9f3 80%);
 }
