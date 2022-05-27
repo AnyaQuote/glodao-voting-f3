@@ -88,6 +88,21 @@ export class PoolStore {
     }
   }
 
+  @computed get onVoting() {
+    const onVoting =
+      this.poolData.status === 'voting' && moment().isBetween(moment(this.startDate), moment(this.endDate))
+    return onVoting
+  }
+
+  @computed get voteEnded() {
+    const ended =
+      this.status === 'rejected' ||
+      this.status === 'approved' ||
+      (this.status === 'voting' && this.endDate && moment().isAfter(moment(this.endDate)))
+
+    return ended
+  }
+
   @computed get id() {
     return this.poolData?.id
   }

@@ -153,8 +153,8 @@ export class BountyApplyViewModel {
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
-        // startDate: toISO(startDate),
-        // endDate: toISO(endDate),
+        startDate: moment().toISOString(),
+        endDate: moment().add(3, 'days').toISOString(),
         data: {
           shortDescription: this.projectInfo.shortDescription,
           fields: this.projectInfo.fields,

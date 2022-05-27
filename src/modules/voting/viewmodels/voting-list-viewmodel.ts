@@ -43,15 +43,10 @@ export class VotingListViewModel {
   }
 
   @computed get votingList() {
-    return this.voteList.filter((item) => item.status === 'voting')
+    return this.voteList.filter((item) => item.onVoting)
   }
 
   @computed get endedList() {
-    return this.voteList.filter(
-      (item) =>
-        item.status === 'rejected' ||
-        item.status === 'approved' ||
-        (item.status === 'voting' && item.endDate && moment().isAfter(moment(item.endDate)))
-    )
+    return this.voteList.filter((item) => item.voteEnded)
   }
 }

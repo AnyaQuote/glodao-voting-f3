@@ -34,7 +34,7 @@
             <span class="px-5">Voted</span>
           </v-btn>
           <v-btn
-            v-else
+            v-else-if="vm.poolStore.onVoting"
             color="bluePrimary"
             height="48"
             class="white--text rounded-lg"

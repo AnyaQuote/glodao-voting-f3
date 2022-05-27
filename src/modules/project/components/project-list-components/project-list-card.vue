@@ -17,13 +17,11 @@
         <v-sheet class="pa-6">
           <div class="d-flex mb-2">
             <v-sheet class="mr-2">Voting start: </v-sheet>
-            <!-- <v-sheet class="font-weight-bold">{{ pool.startDate | ddmmyyyyhhmma }}</v-sheet> -->
-            24/05/2022 10:00 pm
+            <v-sheet class="font-weight-bold">{{ pool.startDate | ddmmyyyyhhmma }}</v-sheet>
           </div>
           <div class="d-flex mb-2">
             <div class="mr-2">Voting end:</div>
-            <!-- <v-sheet class="font-weight-bold">{{ pool.endDate | ddmmyyyyhhmma }}</v-sheet> -->
-            27/05/2022 10:00 pm
+            <v-sheet class="font-weight-bold">{{ pool.endDate | ddmmyyyyhhmma }}</v-sheet>
           </div>
           <div class="d-flex">
             <div class="mr-2">Total reward amount:</div>
@@ -94,27 +92,30 @@ export default class ProjectCard extends Vue {
   }
 
   get statusReport() {
-    switch (this.pool.status) {
-      case 'voting':
-        return {
-          color: 'app-blue',
-          text: 'Your project is opening for vote',
-        }
-      case 'approved':
-        return {
-          color: 'app-green',
-          text: 'Your project is approved',
-        }
-      case 'cancelled':
-        return {
-          color: 'app-red',
-          text: 'Your project is cancelled',
-        }
-      default:
-        return {
-          color: 'red',
-          text: 'Your project is rejected',
-        }
+    if (this.pool.onVoting)
+      return {
+        color: 'blue',
+        text: 'Your project is opening for vote',
+      }
+    if (this.pool.status === 'approved')
+      return {
+        color: 'green',
+        text: 'Project is approved',
+      }
+    if (this.pool.status === 'cancelled')
+      return {
+        color: 'red',
+        text: 'Project is cancelled',
+      }
+    if (this.pool.voteEnded)
+      return {
+        color: 'red',
+        text: 'Project is ended',
+      }
+
+    return {
+      color: 'app-grey',
+      text: this.pool.status,
     }
   }
 

@@ -51,8 +51,17 @@
           <div class="text-h4 font-weight-bold">{{ vm.poolStore.projectName }}</div>
         </div>
         <div class="col-4">
-          <countdown :to="vm.poolStore.endDate" class="text-h5" />
+          <countdown :to="vm.poolStore.endDate" v-if="vm.poolStore.onVoting" class="text-h5" />
+          <v-card
+            height="40"
+            class="d-flex justify-center align-center rounded font-weight-600 text-subtitle-1"
+            :class="statusReport.color"
+            outlined
+          >
+            {{ statusReport.text }}
+          </v-card>
         </div>
+
         <div class="col-12">
           <div class="row">
             <v-sheet class="rounded-lg pa-6 neutral10--text font-weight-medium mr-4" elevation="3">
@@ -160,6 +169,29 @@ export default class VotingDetailOverview extends Vue {
 
   get typeColor() {
     return this.vm.poolStore?.type === 'bounty' ? 'orange' : 'green'
+  }
+
+  get statusReport() {
+    if (this.vm.poolStore?.status === 'approved')
+      return {
+        color: 'green--text',
+        text: 'Project is approved',
+      }
+    if (this.vm.poolStore?.status === 'cancelled')
+      return {
+        color: 'red--text',
+        text: 'Project is cancelled',
+      }
+    if (this.vm.poolStore?.voteEnded)
+      return {
+        color: 'red--text',
+        text: 'Project is ended',
+      }
+
+    return {
+      color: 'grey--text',
+      text: this.vm.poolStore?.status,
+    }
   }
 }
 </script>

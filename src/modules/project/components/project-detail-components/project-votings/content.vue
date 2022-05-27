@@ -18,11 +18,11 @@
         <div>
           <div class="mb-2">
             <span class="neutral10--text">Voting starts: </span>
-            <span class="neutral0--text font-weight-bold">--- pm </span>
+            <span class="neutral0--text font-weight-bold">{{ vm.poolStore.startDate | ddmmyyyyhhmma }} </span>
           </div>
           <div>
             <span class="neutral10--text">Voting end: </span>
-            <span class="neutral0--text font-weight-bold">--- pm </span>
+            <span class="neutral0--text font-weight-bold">{{ vm.poolStore.endDate | ddmmyyyyhhmma }} </span>
           </div>
         </div>
       </v-sheet>
@@ -31,7 +31,7 @@
         <div class="text-h5 font-weight-regular mb-6">Bounty pool information setting</div>
         <v-row no-gutters dense class="mb-6">
           <v-col cols="4">
-            <div class="neutral10--text mb-1">Total reward amount</div>
+            <div class="neutral10--text mb-1">Reward amount</div>
             <div class="neutral0--text font-weight-bold">
               {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
             </div>
@@ -141,20 +141,21 @@
         <v-sheet
           height="40"
           class="rounded-t-lg d-flex align-center justify-center white--text cursor-pointer"
-          color="red"
+          :color="vm.poolStore.onVoting ? 'red' : 'blue'"
           @click="vm.changeCancelDialog(true)"
           v-if="!vm.poolCancelled"
         >
-          Cancel project
+          {{ vm.poolStore.onVoting ? 'Cancel project' : 'Withdraw' }}
         </v-sheet>
+
         <v-sheet class="pa-6">
           <div class="font-weight-bold neutral0--text mb-3">Final result</div>
           <v-sheet
             height="40"
-            class="d-flex align-center justify-center neutral100--text rounded"
-            :class="vm.poolCancelled ? 'red' : 'blue'"
+            class="mt-2 d-flex justify-center align-center rounded white--text font-weight-600 text-subtitle-1"
+            :class="statusReport.color"
           >
-            {{ vm.poolCancelled ? 'Your project is cancelled' : 'Your project is opening for vote' }}
+            {{ statusReport.text }}
           </v-sheet>
         </v-sheet>
         <div class="pa-6">
@@ -168,7 +169,7 @@
             </v-sheet>
             <v-sheet class="text-subtitle-1">We want the project to launch </v-sheet>
           </v-sheet>
-          <progress-bar :value="vm.poolStore.votedPercent" class="mb-2" />
+          <progress-bar :value="vm.poolStore.votedPercent" />
           <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-600">
             <!-- <v-sheet>100 votes</v-sheet> -->
             <v-sheet>{{ vm.poolStore.votedPercent }}%</v-sheet>
@@ -198,6 +199,34 @@ export default class extends Vue {
 
   open() {
     this.dialog.open()
+  }
+
+  get statusReport() {
+    if (this.vm.poolStore?.onVoting)
+      return {
+        color: 'blue',
+        text: 'Your project is opening for vote',
+      }
+    if (this.vm.poolStore?.status === 'approved')
+      return {
+        color: 'green',
+        text: 'Project is approved',
+      }
+    if (this.vm.poolStore?.status === 'cancelled')
+      return {
+        color: 'red',
+        text: 'Project is cancelled',
+      }
+    if (this.vm.poolStore?.voteEnded)
+      return {
+        color: 'red',
+        text: 'Project is ended',
+      }
+
+    return {
+      color: 'app-grey',
+      text: this.vm.poolStore?.status,
+    }
   }
 }
 </script>
