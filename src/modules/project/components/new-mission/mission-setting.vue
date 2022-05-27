@@ -107,9 +107,9 @@
       <div class="font-18 font-weight-bold mt-6">Quiz cover</div>
       <image-upload-field @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)" class="mt-2" />
       <div class="font-18 mt-6 d-flex">
-        <span class="font-weight-bold">Quiz file</span>
+        <span class="font-weight-bold">Quiz file (fileName.csv)</span>
         <v-spacer />
-        <span class="app-blue--text">Download the quiz template</span>
+        <span class="app-blue--text cursor-pointer" @click="download">Download the quiz template</span>
       </div>
       <file-selector
         :rules="[$rules.required]"
@@ -117,9 +117,9 @@
         class="mt-2"
       />
       <div class="d-flex mt-6">
-        <span class="font-weight-bold">Document</span>
-        <v-spacer />
-        <span class="app-blue--text">Download the quiz template</span>
+        <span class="font-weight-bold">Document (fileName.md)</span>
+        <!-- <v-spacer />
+        <span class="app-blue--text">Download the quiz template</span> -->
       </div>
       <file-selector
         :rules="[$rules.required]"
@@ -134,6 +134,7 @@
 import { Component, Vue, Inject, Ref } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
+import { loadingController } from '@/components/global-loading/global-loading-controller'
 
 @Observer
 @Component({
@@ -145,6 +146,10 @@ import { Observer } from 'mobx-vue'
 })
 export default class MissionSettingForm extends Vue {
   @Inject() vm!: NewMissionViewModel
+
+  download() {
+    window.location.href = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}quiz.csv`
+  }
 }
 </script>
 

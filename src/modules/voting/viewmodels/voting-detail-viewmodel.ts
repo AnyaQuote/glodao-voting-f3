@@ -10,6 +10,7 @@ import { apiService } from '@/services/api-service'
 import { PoolStore } from '@/stores/pool-store'
 import { Zero } from '@/constants'
 import { takeUntil } from 'rxjs/operators'
+import { bnHelper } from '@/helpers/bignumber-helper'
 
 export class VotingDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -126,5 +127,9 @@ export class VotingDetailViewModel {
         icon: key,
         link: get(this.poolStore, `data.socialLinks[${key}]`, ''),
       }))
+  }
+
+  @computed get stakeBalanceInsufficient() {
+    return bnHelper.lt(this.userStakeBalance, this.stakeFee)
   }
 }
