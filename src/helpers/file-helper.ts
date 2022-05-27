@@ -30,14 +30,15 @@ export const getJSONFromFile = (data: any) => {
     const answer: Answer[] = []
     const lines = data.split(/\r?\n/)
     lines.forEach((line, index) => {
-      const arrs = line.split('|')
+      const sentences = line.split('|')
+      console.log(sentences)
       // format [question, answer 1, answer 2, answer 3, answer 4, right answer position (1-4)]
-      const question = arrs[0].trim()
-      const choices = arrs.slice(1, 5).map((choice, index) => ({
-        text: choice.trim(),
+      const question = sentences[0]
+      const choices = sentences.slice(1, 5).map((choice, index) => ({
+        text: choice,
         value: `${index + 1}`,
       }))
-      const rightChoice = arrs[5].trim()
+      const rightChoice = sentences[5]
       quiz.push({
         id: `${index + 1}`,
         type: 'MC',
