@@ -1,14 +1,23 @@
 <template>
+  <!-- ---------------------------------- LOADING ------------------------------------------------------------ -->
   <div v-if="vm.loading">
     <v-skeleton-loader type="image, image, image" />
   </div>
+  <!-- ---------------------------------- EMPTY PROJECTS --------------------------------------------------------- -->
+
+  <v-sheet v-else-if="!vm.loading && !vm.approvedList.length" class="pa-8 rounded-lg" elevation="3">
+    <div class="text-h4 blue-diversity--text font-weight-bold">Launching soon</div>
+    <div class="font-weight-bold text-h6">No projects are avalible for launching right now</div>
+  </v-sheet>
+
+  <!-- ---------------------------------- HAS PROJECTS ---------------------------------------------------------- -->
   <v-carousel
     v-else
     height="auto"
     hide-delimiters
     delimiter-icon="mdi-minus"
     show-arrows-on-hover
-    class="rounded-lg mt-10 transparent--bg"
+    class="rounded-lg transparent--bg elevation-3"
   >
     <template v-slot:prev="{ on, attrs }">
       <v-sheet
