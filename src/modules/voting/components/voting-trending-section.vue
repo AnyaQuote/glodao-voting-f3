@@ -7,10 +7,17 @@
 
     <!-- --------------------------------------------------------------------------------------------------- -->
     <v-col v-else cols="12" md="8">
-      <v-carousel height="auto" hide-delimiter-background hide-delimiters v-model="tab">
+      <v-carousel
+        height="auto"
+        hide-delimiter-background
+        hide-delimiters
+        v-model="tab"
+        class="fill-height"
+        show-arrows-on-hover
+      >
         <template v-slot:prev="{ on, attrs }">
           <v-sheet
-            class="ml-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-l-0 carousel-button"
+            class="ml-n4 mt-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-l-0 carousel-button"
             v-bind="attrs"
             v-on="on"
           >
@@ -21,22 +28,29 @@
           <v-sheet
             v-bind="attrs"
             v-on="on"
-            class="mr-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-r-0 carousel-button"
+            class="mr-n4 mt-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-r-0 carousel-button"
           >
             <v-icon color="black">mdi-chevron-right</v-icon>
           </v-sheet>
         </template>
         <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
           <!-- CAROUSEL ITEM START -->
-          <v-sheet class="trending-left blue lighten-5 rounded-lg">
-            <v-img class="rounded-lg rounded-b-0 text-end" :src="$_get(item, 'data.projectCover')">
-              <voting-out-btn class="mt-7 mr-7" width="51" height="51" />
+          <v-sheet class="rounded-lg" :class="[carouselItemColor, customPadding]">
+            <v-img
+              class="p-relative rounded-lg rounded-b-0 text-end"
+              max-height="435"
+              aspect-ratio="1"
+              :src="$_get(item, 'projectCover', '')"
+            >
+              <voting-out-btn class="mt-7 mr-7" />
             </v-img>
-            <div class="trending-left-bottom d-flex align-end px-4 pb-4">
-              <div class="trending-left-bottom__content text-h4 py-6 font-weight-bold">{{ item.projectName }}</div>
-              <v-sheet class="trending-left-bottom__logo rounded-lg pa-3" width="160" height="160">
-                <v-img contain aspect-ratio="1" :src="$_get(item, 'data.projectLogo')" />
+            <div class="d-flex align-end p-absolute absolute-space">
+              <v-sheet class="neutral100--bg rounded-lg pa-3 ml-6" outlined :class="logoSize">
+                <v-img contain aspect-ratio="1" :src="$_get(item, 'projectLogo', '')" />
               </v-sheet>
+              <div class="font-weight-bold ml-4 mb-sm-6 mb-3 text-sm-h4 text-subtitle-1">
+                {{ $_get(item, 'projectName', '') }}
+              </div>
             </div>
           </v-sheet>
           <!-- CAROUSEL ITEM END -->
@@ -54,34 +68,42 @@
     <!-- --------------------------------------------------------------------------------------------------- -->
     <v-col v-else cols="12" md="4">
       <div class="text-uppercase bluePrimary--text text-h6 mb-4">Trending now</div>
-      <v-sheet
-        class="d-flex flex-row flex-md-column transparent--bg"
-        :height="carouselItemHeight"
-        :class="carouselItemClass"
-      >
+      <v-sheet class="d-flex flex-row flex-md-column transparent--bg" height="auto" :class="carouselItemClass">
         <!-- PREVIEW SCROLL ITEM START -->
+
         <div
           v-for="(item, index) in vm.votingList"
-          class="mb-md-4 mr-md-0 mr-2 cursor-pointer"
-          @click="changeTab(i)"
+          class="mb-md-4 mr-md-0 mr-2 pa-1 cursor-pointer"
+          @click="changeTab(index)"
           :key="index"
           v-ripple
         >
-          <div v-if="$vuetify.breakpoint.mdAndUp" class="d-flex">
-            <v-img class="rounded-lg" max-width="163" max-height="99" :src="$_get(item, 'data.projectCover')" />
-            <div class="ml-4 d-flex flex-column justify-space-around align-start">
-              <v-chip outlined :color="item.type === 'bounty' ? 'yellow' : 'green'">
-                <span class="black--text text-subtitle-2 mx-2 text-capitalize">{{ item.type }}</span>
-              </v-chip>
-              <div class="font-weight-medium">
-                {{ item.projectName }}
+          <v-hover v-slot="{ hover }">
+            <div
+              v-if="$vuetify.breakpoint.mdAndUp"
+              class="d-flex transparent-border"
+              :class="{ 'active-border': hover }"
+            >
+              <v-img class="rounded-lg" max-width="163" max-height="99" :src="$_get(item, 'projectCover')" />
+              <div class="ml-4 d-flex flex-column justify-space-around align-start">
+                <v-sheet
+                  class="transparent--bg rounded-pill px-3"
+                  :style="`border-color: ${borderColorBy(item.type)} !important`"
+                  outlined
+                >
+                  <span class="text-subtitle-2 text-capitalize">{{ item.type }}</span>
+                </v-sheet>
+                <div class="font-weight-medium">
+                  {{ item.projectName }}
+                </div>
               </div>
             </div>
-          </div>
-          <div v-else>
-            <v-img class="rounded-lg" max-width="164" :src="$_get(item, 'data.projectCover')" />
-          </div>
+            <div v-else class="transparent-border" :class="{ 'active-border': hover }">
+              <v-img class="rounded-lg" max-width="160" :src="$_get(item, 'projectCover')" />
+            </div>
+          </v-hover>
         </div>
+
         <!-- PREVIEW SCROLL ITEM END -->
       </v-sheet>
     </v-col>
@@ -111,26 +133,42 @@ export default class VotingTrendingSection extends Vue {
   get carouselItemClass() {
     return this.$vuetify.breakpoint.mdAndUp ? 'overflow-y-auto' : 'overflow-x-auto'
   }
+
+  get carouselItemColor() {
+    return this.$vuetify.theme.dark ? 'neutral100--bg' : 'blue lighten-4'
+  }
+
+  get logoSize() {
+    return this.$vuetify.breakpoint.smAndUp ? 'w-h-160' : 'w-h-80'
+  }
+
+  get customPadding() {
+    return this.$vuetify.breakpoint.smAndUp ? 'pb-92' : 'pb-12'
+  }
+
+  get borderColorBy() {
+    return (type) => (type === 'bounty' ? 'orange' : 'green')
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.pb-92 {
+  padding-bottom: 92px;
+}
+
+.transparent-border {
+  border: thin solid transparent;
+}
+
+.active-border {
+  border: thin solid var(--v-blue-diversity-base) !important;
+  border-radius: 8px;
+}
+
 .carousel-button {
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
-  margin-top: -100px;
-}
-
-.trending-left {
-  .trending-left-bottom {
-    position: relative;
-    .trending-left-bottom__content {
-      margin-left: 180px;
-    }
-    .trending-left-bottom__logo {
-      position: absolute;
-    }
-  }
 }
 
 .overflow-y-auto {
@@ -139,5 +177,15 @@ export default class VotingTrendingSection extends Vue {
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.w-h-160 {
+  width: 160px;
+  height: 160px;
+}
+
+.w-h-80 {
+  width: 80px;
+  height: 80px;
 }
 </style>

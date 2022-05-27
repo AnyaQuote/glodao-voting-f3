@@ -101,7 +101,7 @@ export default new Vuetify({
         'blue-diversity': '#0276F0',
         'neutral-100': '#FFFFFF',
         'neutral-20': '#E5E5E5',
-        'neutral-15': '##F9FBFD',
+        'neutral-15': '#F9FBFD',
         'neutral-10': '#5F6267',
         'neutral-0': '#06032B',
         'app-orange': {
@@ -118,6 +118,7 @@ export default new Vuetify({
           lighten2: '#1EB965',
           lighten3: '#DFFADA',
         },
+        'app-inverted': '#FFFFFF',
       },
       dark: {
         primary: {
@@ -209,6 +210,7 @@ export default new Vuetify({
           lighten2: '#1EB965',
           lighten3: '#DFFADA',
         },
+        'app-inverted': '#000000',
       },
     },
   },
