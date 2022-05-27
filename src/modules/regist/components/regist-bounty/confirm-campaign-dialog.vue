@@ -1,6 +1,6 @@
 <template>
   <app-dialog ref="dialog">
-    <v-card>
+    <v-card class="neutral-100">
       <v-card-title>
         Confirm campaign dialog
         <v-spacer />
