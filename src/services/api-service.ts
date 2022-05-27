@@ -13,6 +13,7 @@ export type ApiRouteType =
   | 'users'
   | 'campaigns'
   | 'voting-pools'
+  | 'quizzes'
 
 export class ApiHandler<T> {
   constructor(private axios, private route: ApiRouteType) {}
@@ -185,8 +186,9 @@ export class ApiService {
   axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
 
   users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
-  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false, findOne: false })
+  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks')
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
+  quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes')
 
   constructor() {
     this.setupAuthInjection()
@@ -242,6 +244,15 @@ export class ApiService {
 
   async updateVotingPoolInfo(model) {
     const res = await this.axios.post('updateVotingPoolInfo', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
+  async createTask(model) {
+    const res = await this.axios.post('createTask', model, {
       headers: {
         Authorization: `Bearer ${authStore.jwt}`,
       },

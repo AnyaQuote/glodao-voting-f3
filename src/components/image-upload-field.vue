@@ -8,19 +8,8 @@
     @change="handleChange"
   >
     <input type="file" ref="file-dialog" accept=".jpg,.png,.svg" hidden />
-    <v-sheet height="50" width="80">
-      <v-img v-if="image" :src="source" class="rounded" max-height="50" min-height="50" contain></v-img>
-      <v-img
-        v-else
-        :src="require('@/assets/icons/file-logo.svg')"
-        width="42"
-        height="42"
-        class="rounded"
-        max-height="50"
-        min-height="50"
-        contain
-      ></v-img>
-    </v-sheet>
+    <v-img v-if="image" :src="source" class="rounded" max-width="50" aspect-ratio="1"></v-img>
+    <v-img v-else :src="require('@/assets/icons/file-logo.svg')" class="rounded" max-height="42" max-width="42"></v-img>
     <div class="d-flex flex-column flex-grow-1 ml-5">
       <span class="text-subtitle-1 font-weight-bold">{{ name ? name : 'Upload your image' }}</span>
       <span class="text-subtitle-2 font-weight-regular">{{ imgSize ? imgSize : 'Allowed file types: png, jpg' }}</span>

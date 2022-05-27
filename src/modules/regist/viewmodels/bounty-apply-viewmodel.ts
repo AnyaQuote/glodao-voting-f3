@@ -25,7 +25,7 @@ class ProjectInfo {
   fields?: any[]
   socialLinks?: any
 
-  rewardToken?: string
+  tokenName?: string
   rewardAmount?: string
   tokenAddress?: string
   startDate?: string
@@ -147,7 +147,7 @@ export class BountyApplyViewModel {
         poolId,
         ownerAddress,
         tokenAddress: this.projectInfo.tokenAddress,
-        rewardTokenSymbol: this.projectInfo.rewardToken,
+        tokenName: this.projectInfo.tokenName,
         status: 'voting',
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
@@ -187,14 +187,14 @@ export class BountyApplyViewModel {
         value = web3.utils.toChecksumAddress(value)
         this.votingHandler!.getRewardTokenInfo(walletStore.web3, value, walletStore.account).then((tokenInfo) => {
           runInAction(() => {
-            this.projectInfo = { ...this.projectInfo, rewardToken: tokenInfo.symbol as string }
+            this.projectInfo = { ...this.projectInfo, tokenName: tokenInfo.symbol as string }
             this.rewardTokenBalance = tokenInfo.balance
             this.rewardTokenDecimals = toNumber(tokenInfo.decimals)
             this.tokenInfoLoading = false
           })
         })
       } else {
-        runInAction(() => (this.projectInfo = { ...this.projectInfo, rewardToken: '' }))
+        runInAction(() => (this.projectInfo = { ...this.projectInfo, tokenName: '' }))
       }
     }
 

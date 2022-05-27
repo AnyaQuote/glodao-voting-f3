@@ -9,52 +9,15 @@ import { walletStore } from '@/stores/wallet-store'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { PoolStore } from '@/stores/pool-store'
+import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { loadingController } from '@/components/global-loading/global-loading-controller'
 
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
   @observable poolStore?: PoolStore
-  @observable missions = [
-    {
-      image: 'sao-hoa.png',
-      status: 'ended',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-    {
-      image: 'sao-hoa.png',
-      status: 'running',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-    {
-      image: 'sao-hoa.png',
-      status: 'ended',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-    {
-      image: 'sao-hoa.png',
-      status: 'ended',
-      name: 'Dragon SB',
-      totalReward: 150,
-      priorityReward: 100,
-      start: '21/12/2022, 10:00 pm',
-      end: '21/12/2022, 10:00 pm',
-    },
-  ]
+  @observable missions: Mission[] = []
   @observable loading = false
 
   // Cancel dialog
@@ -87,15 +50,21 @@ export class ProjectDetailViewModel {
 
   @asyncAction *fetchProjectDetail(query: string) {
     try {
+      let res
       this.loading = true
-      const res = yield appProvider.api.voting.find(
+      res = yield appProvider.api.voting.find(
         { unicodeName: query, ownerAddress: appProvider.authStore.username },
         { _limit: 1 }
       )
       if (isEmpty(res)) {
-        appProvider.router.push(RoutePaths.not_found)
+        appProvider.router.replace(RoutePaths.not_found)
       }
       this.poolStore = new PoolStore(get(res, '[0]'))
+
+      if (this.poolStore.status === 'approved') {
+        res = yield appProvider.api.tasks.find({ poolId: this.poolStore.id }, { _limit: -1 })
+        this.missions = res
+      }
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -257,7 +226,7 @@ export class ProjectDetailViewModel {
       const pool = yield apiService.updateVotingPoolInfo(model)
       this.poolStore!.poolData = pool
     } catch (error) {
-      snackController.error(error.message)
+      snackController.commonError(error)
     } finally {
       this.saving = false
     }

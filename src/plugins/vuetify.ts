@@ -93,7 +93,6 @@ export default new Vuetify({
           base: '#0276F0',
           lighten1: '#F0F7FF',
         },
-
         'app-grey': {
           base: '#D9D9D9',
         },
@@ -186,7 +185,9 @@ export default new Vuetify({
           base: '#0276F0',
           lighten1: '#F0F7FF',
         },
-
+        'app-grey': {
+          base: '#D9D9D9',
+        },
         'blue-2': '#143973',
         'blue-diversity': '#00E5FF',
         'neutral-100': '#092249',

@@ -1,3 +1,4 @@
+import { Answer, Data } from '@/models/QuizModel'
 import { get } from 'lodash'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
@@ -21,4 +22,34 @@ export const convertBytes = (bytes, decimals = 2) => {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+}
+
+export const getJSONFromFile = (data: any) => {
+  if (data) {
+    const quiz: Data[] = []
+    const answer: Answer[] = []
+    const lines = data.split(/\r?\n/)
+    lines.forEach((line, index) => {
+      const arrs = line.split('|')
+      // format [question, answer 1, answer 2, answer 3, answer 4, right answer position (1-4)]
+      const question = arrs[0].trim()
+      const choices = arrs.slice(1, 5).map((choice, index) => ({
+        text: choice.trim(),
+        value: `${index + 1}`,
+      }))
+      const rightChoice = arrs[5].trim()
+      quiz.push({
+        id: `${index + 1}`,
+        type: 'MC',
+        question: question,
+        data: choices,
+      })
+      answer.push({
+        id: `${index + 1}`,
+        answer: rightChoice,
+      })
+    })
+    return [quiz, answer]
+  }
+  return []
 }
