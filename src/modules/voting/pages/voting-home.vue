@@ -2,10 +2,10 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <voting-launch-section></voting-launch-section>
+        <voting-launch-section class="mt-10"></voting-launch-section>
       </v-col>
-      <v-col cols="12" v-if="vm.votingList && vm.votingList.length">
-        <voting-trending-section class="mt-72"></voting-trending-section>
+      <v-col cols="12">
+        <voting-trending-section class="mt-16"></voting-trending-section>
       </v-col>
 
       <v-col cols="12">
