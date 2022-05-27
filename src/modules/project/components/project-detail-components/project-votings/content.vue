@@ -11,7 +11,7 @@
             <div class="text-h5 font-weight-bold neutral0--text font-weight-bold mb-1">
               {{ vm.poolStore.projectName }}
             </div>
-            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.rewardTokenSymbol }}</div>
+            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
           </div>
           <div></div>
         </div>
@@ -33,7 +33,7 @@
           <v-col cols="4">
             <div class="neutral10--text mb-1">Total reward amount</div>
             <div class="neutral0--text font-weight-bold">
-              {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}
+              {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
             </div>
           </v-col>
           <v-col cols="4">
@@ -43,7 +43,7 @@
           <v-col cols="4">
             <div class="neutral10--text mb-1">Reward per mission</div>
             <div class="neutral0--text font-weight-bold">
-              {{ vm.poolStore.rewardPerMission | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}
+              {{ vm.poolStore.rewardPerMission | formatNumber }} {{ vm.poolStore.tokenName }}
             </div>
           </v-col>
         </v-row>
@@ -51,7 +51,7 @@
         <div class="d-flex align-center">
           <span class="neutral0--text pr-6">Campaign time:</span>
           <span class="font-weight-bold">Jan 21st, 10:00 pm</span>
-          <span style="width: 4px; height: 4px; background: #D9D9D9 !important" class="rounded-circle mx-2"> </span>
+          <span style="width: 4px; height: 4px; background: #d9d9d9 !important" class="rounded-circle mx-2"> </span>
           <span class="font-weight-bold">Jan 21st, 10:00 pm</span>
         </div>
       </v-sheet>
@@ -77,7 +77,7 @@
               </v-sheet>
               <div class="d-flex flex-column">
                 <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ vm.poolStore.projectName }}</div>
-                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.rewardTokenSymbol }}</div>
+                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
               </div>
             </div>
             <div class="d-flex flex-wrap">

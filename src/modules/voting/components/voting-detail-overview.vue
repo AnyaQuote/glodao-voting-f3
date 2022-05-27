@@ -59,7 +59,7 @@
               <div>Total reward</div>
               <div class="d-flex align-center">
                 <span class="text-h6 font-weight-bold"
-                  >{{ vm.poolStore.amount | formatNumber(2, 0) }} {{ vm.poolStore.rewardTokenSymbol }}
+                  >{{ vm.poolStore.amount | formatNumber(2, 0) }} {{ vm.poolStore.tokenName }}
                 </span>
               </div>
             </v-sheet>
@@ -73,7 +73,7 @@
               <div>Mission reward</div>
               <div class="d-flex align-center">
                 <span class="text-h6 font-weight-bold"
-                  >{{ vm.poolStore.rewardPerMission | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}</span
+                  >{{ vm.poolStore.rewardPerMission | formatNumber }} {{ vm.poolStore.tokenName }}</span
                 >
               </div>
             </v-sheet>

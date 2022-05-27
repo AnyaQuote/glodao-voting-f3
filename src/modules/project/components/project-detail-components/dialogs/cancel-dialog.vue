@@ -12,13 +12,13 @@
         <div class="d-flex justify-space-between">
           <div class="neutral10--text">Total sent</div>
           <div class="font-weight-bold neutral-0--text">
-            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}
+            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
           </div>
         </div>
         <div class="d-flex justify-space-between">
           <div class="neutral10--text">Withdraw amount:</div>
           <div class="font-weight-bold neutral-0--text">
-            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.rewardTokenSymbol }}
+            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
           </div>
         </div>
       </div>

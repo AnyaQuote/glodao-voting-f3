@@ -27,7 +27,7 @@
           </div>
           <div class="d-flex">
             <div class="mr-2">Total reward amount:</div>
-            <div class="font-weight-bold">{{ pool.amount | formatNumber }} {{ pool.rewardTokenSymbol }}</div>
+            <div class="font-weight-bold">{{ pool.amount | formatNumber }} {{ pool.tokenName }}</div>
           </div>
         </v-sheet>
       </v-col>
