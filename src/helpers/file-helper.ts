@@ -31,7 +31,6 @@ export const getJSONFromFile = (data: any) => {
     const lines = data.split(/\r?\n/)
     lines.forEach((line, index) => {
       const sentences = line.split('|')
-      console.log(sentences)
       // format [question, answer 1, answer 2, answer 3, answer 4, right answer position (1-4)]
       const question = sentences[0]
       const choices = sentences.slice(1, 5).map((choice, index) => ({
