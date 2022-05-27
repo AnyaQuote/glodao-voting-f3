@@ -42,7 +42,7 @@
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class="text-h5 my-3" :to="pool.endDate"> </countdown>
+            <countdown class="text-h5 my-3" :to="$_get(pool, 'endDate')"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
