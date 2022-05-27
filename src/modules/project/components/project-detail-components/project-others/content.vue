@@ -17,7 +17,7 @@
           <div class="text-subtitle-1">
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Total reward</div>
-              <div class="font-weight-bold">{{ $_get(mission, 'rewardAmount') }}</div>
+              <div class="font-weight-bold">{{ $_get(mission, 'rewardAmount') | formatNumber(2) }}</div>
             </div>
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Priority reward</div>

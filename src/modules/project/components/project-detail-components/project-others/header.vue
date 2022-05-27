@@ -27,7 +27,7 @@
           <v-col cols="4">
             <div class="text-subtitle-1 neutral0--text">Reward/mission</div>
             <div class="text-h6 neutral0--text font-weight-bold">
-              {{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber(2, 2) }} BUSD
+              {{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber(2, 2) }} {{ $_get(vm.poolStore, 'tokenName') }}
             </div>
           </v-col>
         </v-row>
@@ -38,17 +38,23 @@
     <v-row no-gutters dense class="pa-6">
       <v-col cols="6">
         <div class="text-subtitle-1 neutral0--text">Campaign time</div>
-        <div class="text-h6 neutral0--text font-weight-bold">Jan 21st, 10:00 pm</div>
+        <div class="text-h6 neutral0--text font-weight-bold">
+          {{ $_get(vm.poolStore, 'startDate') | ddmmyyyyhhmma }} {{ $_get(vm.poolStore, 'endDate') | ddmmyyyyhhmma }}
+        </div>
       </v-col>
       <v-col cols="6">
         <v-row dense no-gutters align="center">
           <v-col cols="4">
             <div class="text-subtitle-1 neutral0--text">Created</div>
-            <div class="text-h6 neutral0--text font-weight-bold">{{ $_get(vm, 'missions.length') }} missions</div>
+            <div class="text-h6 neutral0--text font-weight-bold">
+              {{ $_get(vm, 'missions.length') }} {{ $_get(vm, 'missions.length') > 0 ? 'missions' : 'mission' }}
+            </div>
           </v-col>
           <v-col cols="4">
             <div class="text-subtitle-1 neutral0--text">Remaining</div>
-            <div class="text-h6 neutral0--text font-weight-bold">{{ remainingMission }} missions</div>
+            <div class="text-h6 neutral0--text font-weight-bold">
+              {{ remainingMission }} {{ remainingMission > 0 ? 'missions' : 'mission' }}
+            </div>
           </v-col>
           <v-col cols="4">
             <v-btn
@@ -58,7 +64,7 @@
               style="letter-spacing: 0"
               @click="goToNewMission"
               height="48"
-              elevation="0"
+              depressed
               block
             >
               Create mission
