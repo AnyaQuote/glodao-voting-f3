@@ -31,13 +31,13 @@ export class ProjectDetailViewModel {
   @observable poolInfo: any = {}
 
   constructor(unicodeName: string) {
-    this.fetchProjectDetail(unicodeName)
-
     this._disposers = [
       reaction(
         () => walletStore.account,
-        () => {
-          //
+        (account) => {
+          if (!isEmpty(account)) {
+            this.fetchProjectDetail({ unicodeName, ownerAddress: account })
+          }
         }
       ),
     ]
@@ -49,26 +49,23 @@ export class ProjectDetailViewModel {
     this._disposers.forEach((d) => d())
   }
 
-  @asyncAction *fetchProjectDetail(query: string) {
+  @asyncAction *fetchProjectDetail(query: { unicodeName: string; ownerAddress: string }) {
     try {
       let res
       this.loading = true
-      res = yield appProvider.api.voting.find(
-        { unicodeName: query, ownerAddress: appProvider.authStore.username },
-        { _limit: 1 }
-      )
+      res = yield appProvider.api.voting.find(query, { _limit: 1 })
       if (isEmpty(res)) {
         appProvider.router.replace(RoutePaths.not_found)
       }
       const votingPool = get(res, '[0]')
+      this.poolStore = new PoolStore(votingPool)
 
       if (votingPool.status === 'approved') {
         res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1 })
-        this.missions = res
-      } else {
-        this.poolStore = new PoolStore(votingPool)
+        this.missions = res || []
       }
     } catch (error) {
+      console.log(error)
       appProvider.snackbar.commonError(error)
     } finally {
       this.loading = false
