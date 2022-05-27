@@ -23,5 +23,6 @@ export interface VotingPool {
   unicodeName?: string
   chain?: string
   chainId?: string
+  rewardAmount?: string
   data?: Metadata
 }

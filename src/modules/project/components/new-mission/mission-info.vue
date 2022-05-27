@@ -26,9 +26,7 @@
       <div class="title font-weight-bold bluePrimary--text">Reward information</div>
       <div class="font-18 font-weight-bold mt-4">
         <!-- rewardAmount is hard coded start -->
-        <span
-          >Reward mission: {{ $_get(vm.pool, 'rewardAmount', '100') }} {{ $_get(vm.pool, 'tokenName', 'HWD') }}</span
-        >
+        <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName', 'HWD') }}</span>
         <!-- rewardAmount is hard coded end -->
       </div>
       <div class="mt-4 d-flex">
@@ -112,6 +110,7 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
+import { FixedNumber } from '@ethersproject/bignumber'
 
 @Observer
 @Component({
@@ -121,6 +120,10 @@ import { Observer } from 'mobx-vue'
 })
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
+
+  get rewardPerMission() {
+    return FixedNumber.from(this.vm.pool?.totalMission).divUnsafe(FixedNumber.from(this.vm.pool?.totalMission))
+  }
 }
 </script>
 

@@ -62,7 +62,7 @@ export class ProjectDetailViewModel {
       this.poolStore = new PoolStore(votingPool)
 
       if (votingPool.status === 'approved') {
-        res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1 })
+        res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1, _sort: 'startTime:asc' })
         this.missions = res || []
       }
     } catch (error) {
