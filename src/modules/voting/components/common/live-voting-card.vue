@@ -33,7 +33,9 @@
               {{ pool.shortDescription }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(field, i) in pool.fields" :key="i" class="rounded-lg ma-1">{{ field }}</v-chip>
+              <v-chip v-for="(field, index) in pool.fields" :key="index" class="rounded-lg ma-1 neutral-20">{{
+                field
+              }}</v-chip>
             </div>
           </div>
 

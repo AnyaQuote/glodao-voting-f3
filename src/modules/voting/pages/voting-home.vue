@@ -23,23 +23,32 @@
       </v-col>
 
       <v-col cols="12">
+        <!-- ------------------------------------- HEADER ----------------------------------------------- -->
         <div class="mb-4">
           <div class="d-flex flex-column flex-md-row align-md-center align-start">
             <span class="mr-5 text-h4 font-weight-bold text-uppercase">Nominatied project</span>
             <span class="neutral10--text text-h5 font-weight-medium">Vote for launch on GLODAO</span>
           </div>
         </div>
-
+        <!-- -------------------------------------- RADIO GROUP ----------------------------------------- -->
         <v-radio-group row mandatory v-model="vm.filterOption">
           <v-radio class="text-subtitle-2 font-weight-bold" value="bounty" label="Bounty Project"> </v-radio>
           <v-radio class="text-subtitle-2 font-weight-bold" value="launchpad" label="Launching project"> </v-radio>
         </v-radio-group>
-
+        <!-- --------------------------------------- CONTENT -------------------------------------------- -->
         <v-row>
-          <v-col cols="12" sm="6" md="4" v-for="(pool, i) in vm.filteredVotingList" :key="i">
-            <live-voting-card :pool="pool" />
-          </v-col>
+          <v-scale-transition v-if="!vm.filteredVotingList.length" leave-absolute>
+            <v-col class="d-flex justify-center">
+              <div class="text-h6 pa-8">No nominated project of this type right now</div>
+            </v-col>
+          </v-scale-transition>
+          <v-scale-transition v-else leave-absolute>
+            <v-col cols="12" sm="6" md="4" v-for="(pool, index) in vm.filteredVotingList" :key="index">
+              <live-voting-card :pool="pool" />
+            </v-col>
+          </v-scale-transition>
         </v-row>
+        <!-- -------------------------------------------------------------------------------------------- -->
       </v-col>
 
       <v-col cols="12">
