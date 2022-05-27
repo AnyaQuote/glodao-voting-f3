@@ -9,6 +9,7 @@ import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { toISO } from '@/helpers/date-helper'
+import { FixedNumber } from '@ethersproject/bignumber'
 
 const missionInfoDefault = {
   name: '',
@@ -201,10 +202,8 @@ export class NewMissionViewModel {
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
     // HARD CODE
     const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
-    const decimals = '18'
     const status = 'draft'
-    const tokenBasePrice = '1.2'
-    const rewardAmount = '1000'
+    const tokenBasePrice = '1'
     // =========
     return {
       ownerAddress: appProvider.wallet.account,
@@ -214,7 +213,7 @@ export class NewMissionViewModel {
       status,
       chainId: pool.chain,
       tokenBasePrice,
-      rewardAmount,
+      rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
       startTime: toISO(missionInfo.startDate),
       endTime: toISO(missionInfo.endDate),
       maxParticipant: toNumber(missionInfo.maxParticipants),
@@ -222,7 +221,7 @@ export class NewMissionViewModel {
       data: setting,
       metadata: {
         shortDescription: missionInfo.shortDescription,
-        decimals,
+        decimals: pool.data?.decimals,
         projectLogo: pool.data?.projectLogo,
         tokenLogo,
         coverImage: pool.data?.projectCover,
