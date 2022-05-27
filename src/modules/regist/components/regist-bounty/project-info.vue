@@ -154,7 +154,7 @@ export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('project-info-form') form
   valid = false
-  fields = ['gaming', 'NFT', 'finance']
+  fields = ['Gaming', 'NFT', 'Finance']
   submit() {
     this.form.validate() && this.vm.nextStep(1.2)
   }
