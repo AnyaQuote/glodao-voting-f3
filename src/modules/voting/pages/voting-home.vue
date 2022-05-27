@@ -9,21 +9,21 @@
       </v-col>
 
       <v-col cols="12">
-        <v-sheet class="box rounded-lg pa-4 pa-sm-8" elevation="3">
-          <div class="text-sm-h5 neutral0--text font-weight-bold mb-2" style="font-size: 18px">
+        <v-sheet class="rounded-lg pa-4 pa-sm-8 my-16" elevation="3" outlined>
+          <div class="text-sm-h5 font-18 font-weight-bold mb-2">
             Vote for new projects launching on GLODAO (1 xGLD = 1 vote)
           </div>
           <div class="neutral10--text text-subtitle-2 font-weight-medium mb-6 mb-sm-5">
             Voting does not decrease your xGLD, it merely shows the weight of your vote.
           </div>
-          <v-btn width="105" height="40" class="text-none linear-blue--bg" depressed>
+          <v-btn height="40" class="text-none linear-blue--bg" depressed>
             <span class="white--text mx-4 font-weight-bold">Learn more</span>
           </v-btn>
         </v-sheet>
       </v-col>
 
       <v-col cols="12">
-        <div class="mt-72 mb-4">
+        <div class="mb-4">
           <div class="d-flex flex-column flex-md-row align-md-center align-start">
             <span class="mr-5 text-h4 font-weight-bold text-uppercase">Nominatied project</span>
             <span class="neutral10--text text-h5 font-weight-medium">Vote for launch on GLODAO</span>
@@ -42,8 +42,8 @@
         </v-row>
       </v-col>
 
-      <v-col cols="12" class="mb-16">
-        <v-sheet class="box rounded-lg pa-8" elevation="3">
+      <v-col cols="12">
+        <v-sheet outlined class="rounded-lg pa-8 my-16" elevation="3">
           <div class="text-sm-h5 font-weight-bold mb-2" style="font-size: 18px">
             FREE APPLY YOUR PROJECT FOR LAUNCHING AND MARKETING
           </div>
@@ -51,13 +51,13 @@
             Voting does not decrease your xGLD, it merely shows the weight of your vote.
           </div>
           <v-btn width="155" height="40" class="linear-blue--bg text-none" depressed>
-            <span class="white--text mx-4 text-subtitle-2">Submit your project</span>
+            <span class="white--text mx-4 text-subtitle-2 font-weight-bold">Submit your project</span>
           </v-btn>
         </v-sheet>
       </v-col>
 
       <v-col cols="12">
-        <div class="mt-72 mb-4">
+        <div class="mb-4">
           <div class="d-flex d-flex flex-column flex-md-row align-md-center align-start">
             <span class="mr-5 text-h4 font-weight-bold text-uppercase">ENDED VOTING</span>
             <span class="neutral10--text text-h5 font-weight-medium"
@@ -105,20 +105,5 @@ export default class VotingHome extends Vue {
 
 .mb-72 {
   margin-bottom: em(72);
-}
-
-.box {
-  @extend .mt-72;
-  .box-subtitle {
-    font-size: em(16);
-    line-height: em(24);
-  }
-}
-
-.nominated-section {
-  .header {
-    font-size: em(28);
-    line-height: em(36.4);
-  }
 }
 </style>
