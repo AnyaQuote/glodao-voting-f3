@@ -128,7 +128,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('to:::', to)
   if (!get(to, 'name', '')) {
     next(RoutePaths.not_found)
   } else {

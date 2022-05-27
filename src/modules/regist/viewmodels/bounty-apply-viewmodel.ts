@@ -133,16 +133,17 @@ export class BountyApplyViewModel {
 
       let unicodeName = kebabCase(this.projectInfo.projectName)
       // check duplicate unicodeName
-      const count = yield apiService.voting.count({
+      const pools = yield apiService.voting.find({
         unicodeName,
+        _limit: 1,
       })
-      if (count > 0) {
+      if (pools && pools.length > 0) {
         unicodeName = unicodeName + moment().unix().toString()
       }
 
       // update voting pool
       const data = {
-        projectName: this.projectInfo.projectName,
+        projectName: this.projectInfo.projectName?.trim(),
         type: 'bounty',
         poolId,
         ownerAddress,

@@ -11,6 +11,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { PoolStore } from '@/stores/pool-store'
 import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import moment from 'moment'
 
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -59,11 +60,13 @@ export class ProjectDetailViewModel {
       if (isEmpty(res)) {
         appProvider.router.replace(RoutePaths.not_found)
       }
-      this.poolStore = new PoolStore(get(res, '[0]'))
+      const votingPool = get(res, '[0]')
 
-      if (this.poolStore.status === 'approved') {
-        res = yield appProvider.api.tasks.find({ poolId: this.poolStore.id }, { _limit: -1 })
+      if (votingPool.status === 'approved') {
+        res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1 })
         this.missions = res
+      } else {
+        this.poolStore = new PoolStore(votingPool)
       }
     } catch (error) {
       appProvider.snackbar.commonError(error)
@@ -181,12 +184,12 @@ export class ProjectDetailViewModel {
       let cover = false
       let logo = false
 
-      if (typeof this.projectLogoTemp !== 'string') {
+      if (this.projectLogoTemp && typeof this.projectLogoTemp !== 'string') {
         media.append('files', this.projectLogoTemp)
         logo = true
       }
 
-      if (typeof this.projectCoverTemp !== 'string') {
+      if (this.projectCoverTemp && typeof this.projectCoverTemp !== 'string') {
         media.append('files', this.projectCoverTemp)
         cover = true
       }
@@ -207,12 +210,22 @@ export class ProjectDetailViewModel {
       }
 
       const poolData = this.poolStore!.poolData!
+      const projectName = this.projectNameTemp?.trim()
+      let unicodeName = kebabCase(projectName)
+      // check duplicate unicodeName
+      const pools = yield apiService.voting.find({
+        unicodeName,
+        _limit: 1,
+      })
+      if (pools && pools.length > 0) {
+        unicodeName = unicodeName + moment().unix().toString()
+      }
 
       const model = {
         id: this.poolStore?.id,
-        projectName: this.projectNameTemp,
+        projectName,
         ownerAddress: this.poolStore!.ownerAddress,
-        unicodeName: kebabCase(this.projectNameTemp),
+        unicodeName,
         data: {
           ...poolData.data,
           shortDescription: this.shortDescriptionTemp,

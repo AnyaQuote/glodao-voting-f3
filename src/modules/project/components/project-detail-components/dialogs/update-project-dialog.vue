@@ -2,63 +2,53 @@
   <v-dialog :value="dialog" max-width="625" persistent>
     <v-sheet class="pa-6 neutral-100">
       <!-- header -->
-      <div class="d-flex justify-space-between mb-7">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Edit pool information</div>
+      <div class="d-flex justify-space-between mb-6">
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Edit pool information</div>
         <v-icon size="17" @click="close()">mdi-close</v-icon>
       </div>
 
       <!-- project name -->
-      <div class="mb-7">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Edit pool information</div>
-        <v-text-field
-          dense
-          solo
-          flat
-          hide-details
-          height="46"
-          outlined
-          color="red"
-          class="font-weight-bold"
+      <div class="mb-0">
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Project name</div>
+        <app-text-field
+          :rules="[$rules.required]"
           :value="vm.projectNameTemp"
           @input="vm.onProjectNameChange"
-        ></v-text-field>
+        ></app-text-field>
       </div>
 
       <!-- short description -->
-      <div class="mb-7">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Short description</div>
-        <v-textarea
-          hide-details
-          outlined
-          no-resize
-          row-height="4"
+      <div class="mb-0">
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Short description</div>
+        <app-textarea
+          :rules="[$rules.required]"
           :value="vm.shortDescriptionTemp"
           @input="vm.onShortDescriptionChange"
-        ></v-textarea>
+        ></app-textarea>
       </div>
 
       <!-- project avatar -->
-      <div class="mb-7">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project avatar</div>
+      <div class="mb-4">
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Project avatar</div>
         <image-upload-file dense :value="vm.projectLogoTemp" @change="vm.onProjectLogoChange" />
       </div>
 
       <!-- project cover -->
-      <div class="mb-7">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Project cover</div>
+      <div class="mb-4">
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Project cover</div>
         <image-upload-file dense :value="vm.projectCoverTemp" @change="vm.onProjectCoverChange" />
       </div>
 
       <!-- project fields -->
       <div class="mb-5">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Field of project</div>
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Field of project</div>
         <div class="neutral-10--text">Sellect some keyword about your project</div>
         <v-chip-group multiple> </v-chip-group>
         <div class="d-flex flex-wrap">
           <v-sheet
             v-for="(field, index) in fields"
             :key="index"
-            color="text-uppercase text-caption rounded-pill mr-2 mb-2 pa-2 cursor-pointer"
+            color="text-uppercase text-caption rounded-pill mr-2  pa-2 cursor-pointer"
             height="32"
             style="line-height: 130%"
             :class="activeIndex.includes(index) ? 'blue white--text ' : 'neutral20 neutral10--text'"
@@ -70,12 +60,12 @@
       </div>
 
       <!-- social links -->
-      <div class="mb-7">
-        <div class="neutral0--text font-weight-bold mb-2" style="font-size: 18px">Website and social link</div>
+      <div class="mb-0">
+        <div class="neutral0--text font-weight-bold" style="font-size: 18px">Website and social link</div>
         <div
           v-for="(key, i) in $_keys(vm.socialLinksTemp)"
           :key="i"
-          class="py-3 px-4 rounded d-flex mb-2"
+          class="py-3 px-4 rounded d-flex"
           style="border: 1px solid var(--v-neutral20-base)"
         >
           <v-sheet width="126" class="d-flex align-center">
