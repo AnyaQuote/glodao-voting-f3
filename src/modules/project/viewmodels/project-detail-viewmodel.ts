@@ -38,7 +38,8 @@ export class ProjectDetailViewModel {
           if (!isEmpty(account)) {
             this.fetchProjectDetail({ unicodeName, ownerAddress: account })
           }
-        }
+        },
+        { fireImmediately: true }
       ),
     ]
   }
