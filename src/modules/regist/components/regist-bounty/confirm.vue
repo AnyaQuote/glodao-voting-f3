@@ -12,7 +12,7 @@
         <div class="neutral10--text text-h5 font-weight-bold">$HWD</div> -->
         <v-icon color="neutral10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">
-          {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.rewardToken }}
+          {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
         </div>
       </div>
 
@@ -33,19 +33,19 @@
         <div class="font-18">
           <span class="mr-2">Reward Token Balance:</span>
           <span class="font-weight-medium"
-            >{{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.rewardToken }}</span
+            >{{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}</span
           >
         </div>
 
         <v-sheet outlined class="pa-3 rounded-lg font-18 font-weight-600 mt-6">
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total campaign reward:</span>
-            <span class="flex-grow-1 text-end">{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.rewardToken }}</span>
+            <span class="flex-grow-1 text-end">{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}</span>
           </div>
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total send:</span>
             <span class="app-blue--text flex-grow-1 text-end"
-              >{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.rewardToken }}</span
+              >{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}</span
             >
           </div>
           <div class="d-flex">

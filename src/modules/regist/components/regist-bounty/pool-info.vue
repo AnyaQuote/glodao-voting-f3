@@ -14,16 +14,7 @@
         placeholder="Enter address"
       ></app-text-field>
       <div class="d-flex flex-column flex-sm-row">
-        <div class="mt-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward token</div>
-          <app-text-field
-            :rules="[$rules.required]"
-            :value="$_get(vm.projectInfo, 'tokenName')"
-            @input="vm.changeProjectInfo('tokenName', $event)"
-            placeholder="Reward token symbol"
-          />
-        </div>
-        <div class="pl-0 pl-sm-6 mt-6 flex-grow-1">
+        <div class="pl-0 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Total reward amount</div>
           <app-text-field
             :rules="[$rules.required, $rules.floatNumberOnly]"
@@ -36,7 +27,7 @@
         <div class="pl-sm-6 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
           <app-text-field
-            :value="$_get(vm.projectInfo, 'rewardToken')"
+            :value="$_get(vm.projectInfo, 'tokenName')"
             :loading="vm.tokenInfoLoading"
             disabled
             placeholder="Reward token symbol"
