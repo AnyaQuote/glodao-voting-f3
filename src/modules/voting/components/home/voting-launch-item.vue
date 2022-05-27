@@ -1,7 +1,7 @@
 <template>
   <v-sheet v-if="smAndUp" class="rounded-lg" :class="backgroundColor">
-    <v-sheet class="rounded-lg rounded-b-0">
-      <v-img max-height="648" :src="pool.projectCover">
+    <v-sheet max-height="728" class="rounded-t-lg">
+      <v-img max-height="648" aspect-ratio="1" :src="pool.projectCover">
         <div class="d-flex flex-column white--text pt-7 px-9">
           <div class="d-flex align-center justify-space-between">
             <span class="text-h6 font-weight-bold">Project launching soon</span>
@@ -51,7 +51,7 @@
         </div>
       </v-img>
     </v-sheet>
-    <v-sheet height="80" class="pa-5 px-9 d-flex justify-space-between justify-start align-center">
+    <v-sheet class="pa-5 px-9 d-flex justify-space-between justify-start align-center rounded-b-lg">
       <div class="d-flex justify-center align-center mt-2 text-h6 font-weight-bold flex-wrap">
         <div class="mr-4">Ended voting in:</div>
         <div>{{ $_get(pool, 'endDate') | ddmmyyyyhhmmss }}</div>
