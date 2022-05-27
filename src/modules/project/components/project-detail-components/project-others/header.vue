@@ -4,11 +4,11 @@
     <v-row no-gutters dense class="app-blue lighten-1 rounded-t-lg pa-6">
       <v-col cols="6" class="d-flex align-stretch">
         <v-sheet height="76" width="76" class="white pa-1 rounded-lg d-flex justify-center mr-6">
-          <img :src="$_get(vm.poolStore, 'projectLogo', '')" height="100%" />
+          <img :src="$_get(vm.poolStore, 'projectLogo')" height="100%" />
         </v-sheet>
         <div class="d-flex flex-column justify-center">
           <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ $_get(vm.poolStore, 'projectName') }}</div>
-          <div class="text-h6 font-weight-bold neutral10--text">{{ $_get(vm.poolStore, 'tokenName', '') }}</div>
+          <div class="text-h6 font-weight-bold neutral10--text">{{ $_get(vm.poolStore, 'tokenName') }}</div>
         </div>
       </v-col>
       <v-col cols="6" class="d-flex align-center">
@@ -16,8 +16,8 @@
           <v-col cols="4">
             <div class="text-subtitle-1 neutral0--text">Total reward amount</div>
             <div class="text-h6 neutral0--text font-weight-bold">
-              {{ $_get(vm.poolStore, 'rewardAmount', '0') | formatNumber(2, 2) }}
-              {{ $_get(vm.poolStore, 'tokenName', '') }}
+              {{ $_get(vm.poolStore, 'amount') | formatNumber(2, 2) }}
+              {{ $_get(vm.poolStore, 'tokenName') }}
             </div>
           </v-col>
           <v-col cols="4">
