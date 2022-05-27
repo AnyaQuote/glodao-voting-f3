@@ -241,6 +241,7 @@ export class NewMissionViewModel {
       const model = this.mappingFields(missionSetting, this.missionInfo, this.pool!)
       yield appProvider.api.createTask(model)
       appProvider.snackbar.addSuccess()
+      appProvider.router.push(RoutePaths.project_detail + this.pool?.unicodeName)
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
