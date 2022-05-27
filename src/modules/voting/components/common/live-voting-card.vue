@@ -26,14 +26,14 @@
               <v-avatar size="48" class="mr-4">
                 <v-img :src="pool.projectLogo"> </v-img>
               </v-avatar>
-              <div class="text-h5 flex-grow-1 font-weight-bold">{{ pool.projectName }}</div>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
             </div>
 
             <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4 two-line">
-              {{ pool.shortDescription }}
+              {{ $_get(pool, 'shortDescription') }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(field, index) in pool.fields" :key="index" class="rounded-lg ma-1 neutral-20">{{
+              <v-chip v-for="(field, index) in $_get(pool, 'fields')" :key="index" class="rounded-lg ma-1 neutral-20">{{
                 field
               }}</v-chip>
             </div>
@@ -46,7 +46,7 @@
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold number-count mr-1">{{ pool.votedPercent | formatNumber(4) }}%</div>
+              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedPercent') | formatNumber(4) }}%</div>
               <div><span class="green--text font-weight-bold">YES</span> votes</div>
             </div>
             <div class="flag text-center py-2" :class="typeBackgroundColor">
