@@ -14,12 +14,12 @@
           class="rounded linear-blue--bg white--text"
           large
           :block="$vuetify.breakpoint.xs"
-          :class="btnClass"
-          height="40"
+          :class="$attrs.btnClass"
+          :height="height"
         >
           Connect Wallet
         </v-btn>
-        <div v-else class="d-flex address-container align-center justify-center" :class="btnClass">
+        <div v-else class="d-flex address-container align-center justify-center" :class="$attrs.btnClass">
           <img width="24" :src="require(`@/assets/icons/${walletStore.chainIcon}`)" />
           <div class="align-center ml-2 caption py-1 primary--text font-weight-medium">
             {{ walletStore.shortAccount }}
@@ -140,7 +140,8 @@ export default class extends Vue {
   @Provide() providers: AppProvider = appProvider
   @Provide() walletStore = walletStore
   private readonly SOLLET_WALLET_NAME = 'Sollet'
-  @Prop({ default: '' }) btnClass?: string
+
+  @Prop({ default: 55 }) height!: number
 
   copyAddress() {
     navigator.clipboard.writeText(this.walletStore?.account || '')
