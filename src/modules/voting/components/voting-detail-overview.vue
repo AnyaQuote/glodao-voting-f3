@@ -53,6 +53,7 @@
         <div class="col-4">
           <countdown :to="vm.poolStore.endDate" v-if="vm.poolStore.onVoting" class="text-h5" />
           <v-card
+            v-else
             height="40"
             class="d-flex justify-center align-center rounded font-weight-600 text-subtitle-1"
             :class="statusReport.color"

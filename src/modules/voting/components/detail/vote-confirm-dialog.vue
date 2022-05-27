@@ -40,11 +40,14 @@
           Stake some GLD in your wallet at the snapshot block to get voting power for projects.
         </div>
       </v-sheet>
+      <div v-if="vm.stakeBalanceInsufficient" class="error--text text-center">Stake Balance insufficient!</div>
       <div class="d-flex flex-column">
         <v-btn
-          class="linear-blue--bg white--text font-weight-bold text-none"
+          class="white--text font-weight-bold text-none"
+          :class="!vm.stakeBalanceInsufficient && 'linear-blue--bg'"
           depressed
           @click="vote"
+          :disabled="vm.stakeBalanceInsufficient"
           :loading="dialog && dialog.requesting"
           >Confirm</v-btn
         >
