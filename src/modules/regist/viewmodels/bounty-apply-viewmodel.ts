@@ -1,6 +1,6 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
-import { set, kebabCase } from 'lodash'
+import { set, kebabCase, toNumber } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
@@ -47,7 +47,10 @@ export class BountyApplyViewModel {
 
   @observable bnbFee = Zero
   @observable rewardTokenBalance = Zero
-  @observable tokenSymbolLoading = false
+  @observable rewardTokenDecimals = 18
+
+  @observable tokenInfoLoading = false
+  @observable approveChecking = false
 
   @observable votingHandler?: VotingHandler
 
@@ -86,20 +89,14 @@ export class BountyApplyViewModel {
   }
 
   async loadConfirmData() {
-    await Promise.all([this.checkApproved(), this.getTokenBalance()])
+    this.approveChecking = true
+    await this.checkApproved()
+    this.approveChecking = false
   }
 
   @asyncAction *checkApproved() {
     const approved = yield this.votingHandler!.approved(this.projectInfo.tokenAddress, walletStore.account)
     this.approved = approved
-  }
-  @asyncAction *getTokenBalance() {
-    const rewardTokenBalance = yield this.votingHandler?.getTokenBalance(
-      walletStore.web3,
-      this.projectInfo.tokenAddress,
-      walletStore.account
-    )
-    this.rewardTokenBalance = rewardTokenBalance
   }
 
   @asyncAction *approve() {
@@ -121,7 +118,8 @@ export class BountyApplyViewModel {
       const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
         this.projectInfo.tokenAddress!,
         this.projectInfo.rewardAmount!,
-        walletStore.account
+        walletStore.account,
+        this.rewardTokenDecimals
       )
 
       // upload image
@@ -153,6 +151,7 @@ export class BountyApplyViewModel {
         status: 'voting',
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
+        rewardAmount: this.projectInfo.rewardAmount,
         // startDate: toISO(startDate),
         // endDate: toISO(endDate),
         data: {
@@ -162,6 +161,7 @@ export class BountyApplyViewModel {
           projectLogo: images ? getApiFileUrl(images[0]) : null,
           projectCover: images ? getApiFileUrl(images[1]) : null,
           poolType,
+          decimals: this.rewardTokenDecimals,
         },
       }
       const pool = yield apiService.createOrUpdateVotingPool(data)
@@ -183,12 +183,14 @@ export class BountyApplyViewModel {
   @action.bound changeProjectInfo(property: string, value: any) {
     if (property === 'tokenAddress') {
       if (web3.utils.isAddress(value)) {
-        this.tokenSymbolLoading = true
+        this.tokenInfoLoading = true
         value = web3.utils.toChecksumAddress(value)
-        this.votingHandler!.getRewardTokenSymbol(walletStore.web3, value).then((symbol) => {
+        this.votingHandler!.getRewardTokenInfo(walletStore.web3, value, walletStore.account).then((tokenInfo) => {
           runInAction(() => {
-            this.projectInfo = { ...this.projectInfo, tokenName: symbol }
-            this.tokenSymbolLoading = false
+            this.projectInfo = { ...this.projectInfo, tokenName: tokenInfo.symbol as string }
+            this.rewardTokenBalance = tokenInfo.balance
+            this.rewardTokenDecimals = toNumber(tokenInfo.decimals)
+            this.tokenInfoLoading = false
           })
         })
       } else {

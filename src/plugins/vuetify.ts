@@ -96,6 +96,28 @@ export default new Vuetify({
         'app-grey': {
           base: '#D9D9D9',
         },
+
+        'blue-2': '#F0F7FF',
+        'blue-diversity': '#0276F0',
+        'neutral-100': '#FFFFFF',
+        'neutral-20': '#E5E5E5',
+        'neutral-15': '##F9FBFD',
+        'neutral-10': '#5F6267',
+        'neutral-0': '#06032B',
+        'app-orange': {
+          lighten1: '#FF7A00',
+          lighten2: '#FFE0C2',
+        },
+        'app-red': {
+          lighten1: '#E35E55',
+          lighten2: '#FFE0C2',
+          lighten3: '#FFF4F3',
+        },
+        'app-green': {
+          lighten1: '#1E8C0B',
+          lighten2: '#1EB965',
+          lighten3: '#DFFADA',
+        },
       },
       dark: {
         primary: {
@@ -165,6 +187,27 @@ export default new Vuetify({
         },
         'app-grey': {
           base: '#D9D9D9',
+        },
+        'blue-2': '#143973',
+        'blue-diversity': '#00E5FF',
+        'neutral-100': '#092249',
+        'neutral-20': '#30415C',
+        'neutral-15': '#00102A',
+        'neutral-10': '#B6B9BE',
+        'neutral-0': '#FFFFFF',
+        'app-orange': {
+          lighten1: '#FF7A00',
+          lighten2: '#FFE0C2',
+        },
+        'app-red': {
+          lighten1: '#E35E55',
+          lighten2: '#FFE0C2',
+          lighten3: '#FFF4F3',
+        },
+        'app-green': {
+          lighten1: '#1E8C0B',
+          lighten2: '#1EB965',
+          lighten3: '#DFFADA',
         },
       },
     },

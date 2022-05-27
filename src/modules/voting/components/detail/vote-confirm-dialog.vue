@@ -1,6 +1,6 @@
 <template>
   <app-dialog ref="dialog">
-    <v-sheet class="dialog-container d-flex flex-column pa-6">
+    <v-sheet class="dialog-container d-flex flex-column pa-6 neutral-100">
       <div class="d-flex justify-space-between align-center">
         <div class="text-h6">Confirm your vote</div>
         <v-btn icon @click="close">

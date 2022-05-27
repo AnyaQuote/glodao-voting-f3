@@ -37,7 +37,7 @@
           <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
           <app-text-field
             :value="$_get(vm.projectInfo, 'rewardToken')"
-            :loading="vm.tokenSymbolLoading"
+            :loading="vm.tokenInfoLoading"
             disabled
             placeholder="Reward token symbol"
             class="pb-0"
@@ -97,8 +97,8 @@
 
       <v-btn
         class="white--text font-weight-600 text-none elevation-0"
-        :class="valid && 'linear-blue--bg'"
-        :disabled="!valid"
+        :class="valid && !vm.tokenInfoLoading && 'linear-blue--bg'"
+        :disabled="!valid || vm.tokenInfoLoading"
         width="100%"
         height="40"
         @click="submit"

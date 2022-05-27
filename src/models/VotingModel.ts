@@ -5,6 +5,7 @@ export interface Metadata {
   projectLogo?: string
   socialLinks?: any
   poolType?: string
+  decimals?: number
 }
 
 export interface VotingPool {
