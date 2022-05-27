@@ -65,7 +65,7 @@
           block
           height="40"
           depressed
-          :loading="vm.approving"
+          :loading="vm.approving || vm.approveChecking"
           @click="vm.approve()"
         >
           <span class="btn-font">Approve</span>

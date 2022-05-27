@@ -102,13 +102,13 @@ export class VotingHandler implements IVotingContract {
     this._cancelled = (votingPoolInfo as any).cancelled
   }
 
-  async createPool(rewardTokenAddress: string, rewardAmount: FixedNumber | string, account: string) {
+  async createPool(rewardTokenAddress: string, rewardAmount: FixedNumber | string, account: string, decimals: number) {
     if (this.poolType.fee) {
       const bnbFee = bnHelper.toDecimalString(this.poolType.fee)
       const f = this.votingContract.methods.createPool(
         0,
         rewardTokenAddress,
-        bnHelper.toDecimalString(rewardAmount.toString())
+        bnHelper.toDecimalString(rewardAmount.toString(), decimals)
       )
       const res = await sendRequest(f, account, bnbFee)
 
@@ -182,16 +182,19 @@ export class VotingHandler implements IVotingContract {
     }
   }
 
-  async getTokenBalance(web3, address, account) {
+  async getRewardTokenInfo(web3, address, account) {
     const contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), address)
-    const allowance = await contract.methods.balanceOf(account).call()
-    return FixedNumber.from(`${web3.utils.fromWei(allowance)}`)
-  }
-
-  async getRewardTokenSymbol(web3, address) {
-    const contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), address)
-    const symbol = await contract.methods.symbol().call()
-    return symbol
+    const [symbol, decimals, balance] = await blockchainHandler.etherBatchRequest(web3, [
+      contract.methods.symbol(),
+      contract.methods.decimals(),
+      contract.methods.balanceOf(account),
+    ])
+    const info = {
+      symbol,
+      decimals,
+      balance: bnHelper.fromDecimals(balance, decimals),
+    }
+    return info
   }
 
   async getUserStakeBalance(account) {

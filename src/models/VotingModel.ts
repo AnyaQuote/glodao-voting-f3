@@ -7,6 +7,7 @@ export interface Metadata {
   additionLink?: string
   socialLinks?: any
   poolType?: string
+  decimals?: number
 }
 
 export interface VotingPool {
