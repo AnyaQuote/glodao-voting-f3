@@ -1,12 +1,14 @@
 <template>
+  <!-- -------------------------------------------- DESKTOP CARD ------------------------------------------ -->
   <v-hover v-slot="{ hover }">
-    <div v-if="pool" class="pa-thin rounded-lg fill-height" :class="typeBorderColor">
+    <div v-if="$vuetify.breakpoint.smAndUp" class="pa-thin rounded-lg fill-height" :class="typeBorderColor">
       <v-sheet class="rounded-lg d-flex flex-column fill-height overflow-hidden">
-        <v-img max-height="234" aspect-ratio="1" :src="$_get(pool, 'projectCover', '')" class="rounded-t-lg">
+        <!-- CARD TOP START -->
+        <v-img max-height="234" aspect-ratio="1" :src="$_get(pool, 'projectCover')" class="rounded-t-lg">
           <div class="d-flex flex-column fill-height" :class="{ blur: hover }">
-            <v-sheet class="align-self-start white rounded mt-1 ml-1 pa-1 pr-2 white orange--text font-weight-medium">
+            <div class="align-self-start white rounded mt-1 ml-1 pa-1 pr-2 white orange--text font-weight-medium">
               🔥 Ended
-            </v-sheet>
+            </div>
             <div class="fill-height d-flex justify-center align-center mt-n6">
               <v-fade-transition>
                 <v-btn v-show="hover" class="neutral100--bg rounded pa-2" @click="openDetail">
@@ -17,21 +19,19 @@
             </div>
           </div>
         </v-img>
-
         <div class="d-flex flex-column flex-grow-1">
           <!-- CARD TOP START -->
           <div class="d-flex flex-column pa-6 pb-0">
             <div class="d-flex align-center">
               <v-avatar size="48" class="mr-4">
-                <v-img :src="pool.projectLogo"> </v-img>
+                <v-img :src="$_get(pool, 'projectLogo')"> </v-img>
               </v-avatar>
-              <div class="text-h5 flex-grow-1 font-weight-bold">{{ pool.projectName }}</div>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
             </div>
             <div class="text-subtitle-2 two-lines font-weight-bold">
-              {{ pool.shortDescription }}
+              {{ $_get(pool, 'shortDescription') }}
             </div>
           </div>
-
           <!-- CARD TOP END -->
           <v-spacer />
           <v-sheet :class="statusColor" class="ma-4 mb-6 rounded d-flex align-center justify-center" height="36">
@@ -42,7 +42,7 @@
             <v-divider />
             <div class="d-flex align-center mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold number-count mr-1">{{ pool.votedPercent | formatNumber(4) }}%</div>
+              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedPercent') | formatNumber(4) }}%</div>
               <div><span class="green--text font-weight-bold">YES</span> votes</div>
             </div>
             <div class="text-center py-2" :class="typeBackgroundColor">
@@ -54,49 +54,41 @@
         <!-- CARD BOTTOM END -->
       </v-sheet>
     </div>
-    <!-- <div v-else class="mb-6">
-      <div class="rounded-lg pa-1" :class="typeBackgroundColor">
-        <div class="white rounded-lg overflow-hidden">
+    <!-- -------------------------------------------- MOBILE CARD ------------------------------------------ -->
+    <div v-else>
+      <div class="rounded-lg pa-thin" :class="typeBackgroundColor">
+        <v-sheet class="rounded-lg overflow-hidden">
           <div class="pa-6">
             <div class="d-flex align-stretch mb-2">
-              <v-img :src="$_get(pool, 'data.projectLogo')" max-width="36" max-height="36" class="mr-2" />
+              <v-img :src="$_get(pool, 'projectLogo')" max-width="36" max-height="36" class="mr-2" />
               <div class="d-flex align-center font-weight-bold font-18">
                 {{ $_get(pool, 'projectName') }}
               </div>
             </div>
-            <div style="height: 40px" class="neutral0--text text-caption line-clamp mb-2">
-              {{ $_get(pool, 'data.shortDescription') }}
+            <div class="text-caption two-line mb-2">
+              {{ $_get(pool, 'shortDescription') }}
             </div>
             <v-sheet :class="statusColor" class="ma-1 rounded d-flex align-center justify-center" height="36">
               {{ isApproved ? 'APPROVE for launch' : 'UNAPPROVE for launch' }}
             </v-sheet>
           </div>
           <v-divider></v-divider>
-          <div class="text-subtitle-2 rounded-lg pa-6 d-flex align-center" style="line-height: 150%">
+          <div class="text-subtitle-2 rounded-lg pa-4 d-flex align-center">
             <v-icon class="mr-2">mdi-star-outline</v-icon>
-            <div class="font-weight-bold mt-1">
-              {{ upvote }}%
-              <span class="green--text text--lighten-1">YES </span>
-              <span class="font-weight-600"> votes</span>
-            </div>
-            <v-sheet height="4" width="4" class="blue mx-1 rounded-circle pa-0"></v-sheet>
-            <div class="font-weight-bold mt-1">
-              {{ downvote }}%
-              <span class="error--text">NO</span>
+            <div class="font-weight-bold mt-1 text-subtitle-1">
+              {{ $_get(pool, 'votedPercent') | formatNumber(4) }}%
+              <span class="app-green--text">YES </span>
               <span class="font-weight-600"> votes</span>
             </div>
           </div>
-          <div class="rounded-lg">
-            <v-sheet
-              height="24"
-              class="orange orange--text text--lighten-1 text-caption d-flex align-center justify-center py-1"
-            >
-              BOUNTY PROJECT
-            </v-sheet>
-          </div>
-        </div>
+          <v-sheet height="24" class="text-caption text-center app-orange lighten-2 app-orange--text py-1">
+            BOUNTY PROJECT
+          </v-sheet>
+          <v-sheet height="4" class="app-orange" />
+        </v-sheet>
       </div>
-    </div> -->
+    </div>
+    <!-- ---------------------------------------------------------------------------------------------- -->
   </v-hover>
 </template>
 
