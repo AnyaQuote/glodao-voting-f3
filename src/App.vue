@@ -219,6 +219,12 @@ a {
   -webkit-box-orient: vertical;
 }
 
+.bullet {
+  display: list-item;
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
