@@ -2,16 +2,20 @@
   <v-sheet class="neutral100-bg rounded-lg" elevation="3" v-if="vm.poolStore" outlined>
     <!-- ------------------------------------------------------------------------------------------------------------- -->
     <v-sheet>
-      <v-img v-if="$vuetify.breakpoint.smAndUp" class="rounded-t-lg" :src="vm.poolStore.projectCover">
+      <v-img
+        v-if="$vuetify.breakpoint.smAndUp"
+        max-height="614"
+        aspect-ratio="1"
+        class="rounded-t-lg"
+        :src="$_get(vm.poolStore, 'projectCover')"
+      >
         <div class="d-flex flex-column align-center fill-height">
-          <voting-out-btn class="align-self-end mt-4 mr-4" width="51" height="51" />
           <div class="fill-height d-flex align-center pb-16">
             <div class="rounded-lg py-10 blur--bg">
-              <div class="text-h5 text-center font-weight-bold mb-10 white--text">Current result</div>
               <div class="d-flex justify-center transparent white--text mx-16">
                 <div>
                   <div class="d-flex align-center justify-space-between">
-                    <span class="text-h6">👍YES</span>
+                    <v-chip label color="app-green lighten-1" class="text-subtitle-2 white--text mb-2">👍 YES</v-chip>
                     <span class="font-weight-bold font-14">{{ $_get(vm.poolStore, 'votedPercent', 0) }} %</span>
                   </div>
                   <v-progress-linear
@@ -24,6 +28,7 @@
               </div>
             </div>
           </div>
+          <voting-out-btn class="align-self-start mb-8 ml-8" />
         </div>
       </v-img>
       <v-sheet v-else>
@@ -48,10 +53,10 @@
     <v-sheet class="pa-6 rounded-lg rounded-t-0">
       <div class="row">
         <div class="col-md-8 col-12">
-          <div class="text-h4 font-weight-bold">{{ vm.poolStore.projectName }}</div>
+          <div class="text-h4 font-weight-bold">{{ $_get(vm.poolStore, 'projectName') }}</div>
         </div>
         <div class="col-4">
-          <countdown :to="vm.poolStore.endDate" v-if="vm.poolStore.onVoting" class="text-h5" />
+          <countdown :to="$_get(vm.poolStore, 'endDate')" v-if="$_get(vm.poolStore, 'onVoting')" class="text-h5" />
           <v-card
             v-else
             height="40"
@@ -69,7 +74,7 @@
               <div>Total reward</div>
               <div class="d-flex align-center">
                 <span class="text-h6 font-weight-bold"
-                  >{{ vm.poolStore.amount | formatNumber(2, 0) }} {{ vm.poolStore.tokenName }}
+                  >{{ $_get(vm.poolStore, 'amount') | formatNumber(2, 0) }} {{ $_get(vm.poolStore, 'tokenName') }}
                 </span>
               </div>
             </v-sheet>
@@ -87,7 +92,7 @@
                 >
               </div>
             </v-sheet>
-            <v-tooltip right>
+            <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-icon v-bind="attrs" v-on="on" class="align-stretch mt-2" color="grey2">mdi-information</v-icon>
               </template>
@@ -96,9 +101,9 @@
           </div>
         </div>
         <div class="col-12">
-          <div>
-            {{ vm.poolStore.shortDescription }}
-          </div>
+          <ul>
+            <li class="neutral-10--text">{{ vm.poolStore.shortDescription }}</li>
+          </ul>
           <!-- <ul class="mb-n4">
             <li v-for="i in [1, 2, 3]" :key="i" class="mb-4">
               Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
@@ -188,7 +193,6 @@ export default class VotingDetailOverview extends Vue {
         color: 'red--text',
         text: 'Project is ended',
       }
-
     return {
       color: 'grey--text',
       text: this.vm.poolStore?.status,
