@@ -5,7 +5,7 @@
         <div class="mt-5 d-flex align-center font-weight-medium">
           <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
           <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-          <span class="neutral10--text">{{ vm.projectName }}</span>
+          <span class="neutral10--text">{{ $_get(vm.poolStore, 'projectName') }}</span>
         </div>
       </v-col>
 
@@ -16,10 +16,10 @@
       <v-col cols="12">
         <div class="row mt-72">
           <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
-            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ vm.votedUsers.length }})</div>
-            <!-- <v-btn icon>
+            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ $_get(vm, 'votedUsers.length') }})</div>
+            <v-btn icon @click="openGuideDialog">
               <v-icon large>mdi-information</v-icon>
-            </v-btn> -->
+            </v-btn>
           </v-sheet>
 
           <div class="col-12" v-for="address in vm.votedUsers" :key="address">
@@ -49,26 +49,38 @@
       </v-col>
 
       <v-col cols="12">
-        <div class="nominated-section mt-72">
-          <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        <div class="mt-72 mb-4 font-28 mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        <!-- ------------------------------------------ EMPTY PROJECTS ----------------------------------------- -->
+        <div v-if="$_empty(vm.votingList.length)" class="text-h6 text-center">
+          No projects similar of this type right now
         </div>
-        <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
-          <v-slide-group class="ma-n1 px-1">
-            <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" :pool="pool" />
+        <!-- ------------------------------------------ HAS PROJECTS ------------------------------------------ -->
+        <div v-else class="app-slide-group">
+          <v-slide-group class="">
+            <template v-slot:next>
+              <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-sheet>
+            </template>
+            <template v-slot:prev>
+              <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-sheet>
+            </template>
+            <v-slide-item v-for="(pool, index) in vm.votingList" :key="index">
+              <live-compact-card class="mr-4" :pool="pool" />
+            </v-slide-item>
           </v-slide-group>
         </div>
-        <v-row v-else class="row">
-          <v-col cols="12" v-for="(pool, i) in vm.votingList" :key="i">
-            <live-compact-card :pool="pool" />
-          </v-col>
-        </v-row>
+        <!-- ------------------------------------------------------------------------------------------------- -->
       </v-col>
     </v-row>
+    <vote-guide-dialog ref="guide-dialog" />
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Provide } from 'vue-property-decorator'
+import { Component, Vue, Provide, Ref } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
 import { get } from 'lodash-es'
 import { RoutePaths } from '@/router'
@@ -78,13 +90,19 @@ import { RoutePaths } from '@/router'
     'voting-detail-overview': () => import('../components/voting-detail-overview.vue'),
     'voting-list-item': () => import('../components/common/voting-list-item.vue'),
     'live-compact-card': () => import('../components/common/live-compact-card.vue'),
+    'vote-guide-dialog': () => import('../components/detail/vote-guide-dialog.vue'),
   },
 })
 export default class VotingDetail extends Vue {
   @Provide() vm = new VotingDetailViewModel(get(this.$route, 'params.code'))
+  @Ref('guide-dialog') dialog
 
   goToVotingList() {
     this.$router.push(RoutePaths.voting_list)
+  }
+
+  openGuideDialog() {
+    this.dialog.open()
   }
 }
 </script>
@@ -95,11 +113,5 @@ export default class VotingDetail extends Vue {
 }
 .mb-72 {
   margin-bottom: em(72);
-}
-.nominated-section {
-  .header {
-    font-size: em(28);
-    line-height: em(36.4);
-  }
 }
 </style>
