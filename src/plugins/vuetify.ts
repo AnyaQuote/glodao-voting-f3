@@ -119,7 +119,6 @@ export default new Vuetify({
           lighten1: '#1EB965',
           lighten2: '#DFFADA',
         },
-        'app-inverted': '#FFFFFF',
       },
       dark: {
         primary: {
@@ -212,7 +211,6 @@ export default new Vuetify({
           lighten1: '#1EB965',
           lighten2: '#DFFADA',
         },
-        'app-inverted': '#000000',
       },
     },
   },
