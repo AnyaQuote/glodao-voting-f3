@@ -266,8 +266,4 @@ a {
 .input-min-height .v-input__control {
   min-height: 18px !important;
 }
-
-.primary-text {
-  color: var(--v-primary-base) !important;
-}
 </style>
