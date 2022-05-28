@@ -50,7 +50,10 @@
         </div>
       </v-img>
     </v-sheet>
-    <v-sheet class="pa-5 px-9 d-flex justify-space-between justify-start align-center rounded-b-lg">
+    <v-sheet
+      class="pa-5 px-9 d-flex justify-space-between justify-start align-center rounded-b-lg"
+      :class="!$vuetify.theme.dark && 'app-blue lighten-1'"
+    >
       <div class="d-flex justify-center align-center mt-2 text-h6 font-weight-bold flex-wrap">
         <div class="mr-4">Ended voting in:</div>
         <div>{{ $_get(pool, 'endDate') | ddmmyyyyhhmmss }}</div>
