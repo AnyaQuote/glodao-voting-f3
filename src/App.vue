@@ -156,6 +156,10 @@ a {
 }
 .v-pagination__item {
   font-size: em(20) !important;
+  background: var(--v-neutral-100-base) !important;
+}
+.v-pagination__navigation {
+  background: var(--v-neutral-100-base) !important;
 }
 
 // .v-application {
