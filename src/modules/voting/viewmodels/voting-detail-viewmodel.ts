@@ -19,7 +19,7 @@ export class VotingDetailViewModel {
   @observable voting = false
   @observable voted = false
 
-  @observable votingList?: VotingPool[] = []
+  @observable votingList: VotingPool[] = []
   @observable stakeFee = Zero
   @observable userStakeBalance = Zero
   @observable dataLoading = false
