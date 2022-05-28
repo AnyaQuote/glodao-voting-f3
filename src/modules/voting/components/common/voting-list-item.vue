@@ -1,10 +1,10 @@
 <template>
   <v-sheet v-bind="$attrs" class="row align-center rounded pa-4" elevation="3">
-    <div class="col-12 col-md-4">
-      <div class="font-weight-bold">{{ address | shortAddress(12, 6) }}</div>
+    <div class="col-12 col-md-4 d-flex flex-row flex-md-column justify-space-between align-center align-md-start">
+      <div class="font-weight-bold order-last order-md-first">{{ address | shortAddress(12, 6) }}</div>
       <div>GLD Staker</div>
     </div>
-    <div class="col-12 col-md-4 d-flex align-center">
+    <div class="col-12 col-md-4 d-flex flex-row justify-space-between justify-md-start align-center">
       <v-chip color="green mr-2">👍YES</v-chip>
       <span class="font-weight-medium"> We want to join in this project </span>
     </div>
