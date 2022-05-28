@@ -14,8 +14,8 @@
       </v-col>
 
       <v-col cols="12">
-        <div class="row mt-72">
-          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
+        <div class="row mx-0 mt-72">
+          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6" outlined elevation="3">
             <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ $_get(vm, 'votedUsers.length') }})</div>
             <v-btn icon @click="openGuideDialog">
               <v-icon large>mdi-information</v-icon>
