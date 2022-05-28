@@ -1,9 +1,10 @@
 <template>
+  <!-- ------------------------------------------ DESKTOP CARD --------------------------------------------  -->
   <v-hover v-slot="{ hover }">
-    <div v-if="pool" class="pa-1 rounded-lg d-flex fill-height" :class="typeBorderColor">
-      <v-sheet class="flex-grow-1 overflow-hidden d-flex flex-column rounded-lg neutral100--bg">
+    <div v-if="$vuetify.breakpoint.smAndUp" class="pa-thin rounded-lg fill-height" :class="typeBorderColor">
+      <v-sheet class="overflow-hidden d-flex flex-column rounded-lg">
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <v-img :src="pool.projectCover">
+          <v-img max-height="234" aspect-ratio="1" :src="pool.projectCover">
             <div class="d-flex flex-column fill-height" :class="{ blur: hover }">
               <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
                 🔥Trending
@@ -25,37 +26,41 @@
               <v-avatar size="48" class="mr-4">
                 <v-img :src="pool.projectLogo"> </v-img>
               </v-avatar>
-              <div class="text-h5 flex-grow-1 font-weight-bold">{{ pool.projectName }}</div>
+              <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
             </div>
 
-            <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4">
-              {{ pool.shortDescription }}
+            <div class="text-subtitle-2 neutral10--text font-weight-bold mb-4 two-line">
+              {{ $_get(pool, 'shortDescription') }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(field, i) in pool.fields" :key="i" class="rounded-lg ma-1">{{ field }}</v-chip>
+              <v-chip v-for="(field, index) in $_get(pool, 'fields')" :key="index" class="rounded-lg ma-1 neutral-20">{{
+                field
+              }}</v-chip>
             </div>
           </div>
 
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class="text-h5 my-3" :to="pool.endDate"> </countdown>
+            <countdown class="text-h5 my-3" :to="$_get(pool, 'endDate')"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold number-count mr-1">{{ pool.votedPercent | formatNumber(4) }}%</div>
+              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedPercent') | formatNumber(4) }}%</div>
               <div><span class="green--text font-weight-bold">YES</span> votes</div>
             </div>
             <div class="flag text-center py-2" :class="typeBackgroundColor">
-              <span class="text-uppercase white--text">{{ typeName }}</span>
+              <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
             </div>
+            <v-sheet height="4" class="app-orange" />
           </div>
         </div>
       </v-sheet>
     </div>
-    <!-- <div v-else class="pa-1 rounded-lg" :class="typeBorderColor">
-      <v-sheet class="rounded-lg">
-        <v-img :src="$_get(pool, 'data.projectCover')" height="221" class="rounded-t-lg">
+    <!-- ----------------------------------------- MOBILE CARD --------------------------------------------  -->
+    <div v-else class="pa-thin rounded-lg overflow-hidden" :class="typeBorderColor">
+      <v-sheet class="rounded-t-lg">
+        <v-img :src="$_get(pool, 'projectCover')" max-height="221" aspect-ratio="1" class="rounded-t-lg">
           <div class="fill-height fill-width d-flex flex-column justify-space-between">
             <v-sheet
               width="90"
@@ -67,22 +72,22 @@
             <div class="pa-4 pr-8">
               <div class="d-flex align-stretch mb-1">
                 <v-avatar size="36">
-                  <img :src="$_get(pool, 'data.projectLogo')" />
+                  <img :src="$_get(pool, 'projectLogo')" />
                 </v-avatar>
                 <div class="font-18 spacer white--text font-weight-bold d-flex align-center pl-3">
                   {{ $_get(pool, 'projectName') }}
                 </div>
               </div>
-              <v-sheet height="40" class="transparent white--text text-caption line-clamp mb-1">
-                {{ $_get(pool, 'data.shortDescription') }}
+              <v-sheet height="40" class="transparent white--text text-caption two-line mb-1">
+                {{ $_get(pool, 'shortDescription') }}
               </v-sheet>
               <div class="d-flex">
                 <v-sheet
-                  v-for="(field, i) in $_get(pool, 'data.fields')"
+                  v-for="(field, i) in $_get(pool, 'fields')"
                   :key="i"
                   height="20"
                   width="43"
-                  class="neutral20 neutral0--text rounded-lg d-flex align-center justify-center text-uppercase mr-1"
+                  class="neutral20 rounded-lg d-flex align-center justify-center text-uppercase mr-1"
                   style="font-size: 9px"
                 >
                   {{ field }}
@@ -115,8 +120,9 @@
         <div class="text-center py-2" :class="typeBackgroundColor">
           <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
         </div>
+        <v-sheet height="4" class="app-orange" />
       </v-sheet>
-    </div> -->
+    </div>
   </v-hover>
 </template>
 
@@ -143,7 +149,7 @@ export default class LiveVotingCard extends Vue {
   }
 
   get typeBackgroundColor() {
-    return this.pool.type === 'bounty' ? 'orange lighten-1' : 'green lighten-4'
+    return this.pool.type === 'bounty' ? 'app-orange lighten-2' : 'app-green lighten-2'
   }
 
   get typeBorderColor() {
@@ -157,22 +163,6 @@ export default class LiveVotingCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.line-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.clip-text {
-  word-break: break-word;
-  text-overflow: hidden;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
 .bounty-border {
   background: linear-gradient(180deg, var(--v-orange-base) 0%, #fff9f3 80%);
 }
@@ -182,5 +172,10 @@ export default class LiveVotingCard extends Vue {
 
 .blur {
   background: rgba($color: #000000, $alpha: 0.5);
+}
+
+.pa-thin {
+  padding: 1px;
+  padding-bottom: 0px;
 }
 </style>

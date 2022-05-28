@@ -125,20 +125,4 @@ export default class ProjectCard extends Vue {
 }
 </script>
 
-<style scoped>
-.line-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.clip-text {
-  word-break: break-word;
-  text-overflow: hidden;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
-</style>
+<style scoped></style>

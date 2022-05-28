@@ -206,6 +206,15 @@ a {
   overflow: hidden !important;
 }
 
+.two-line {
+  word-break: break-word;
+  text-overflow: hidden;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
@@ -256,9 +265,5 @@ a {
 
 .input-min-height .v-input__control {
   min-height: 18px !important;
-}
-
-.primary-text {
-  color: var(--v-primary-base) !important;
 }
 </style>

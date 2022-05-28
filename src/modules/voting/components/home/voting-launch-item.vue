@@ -1,7 +1,8 @@
 <template>
+  <!-- -------------------------------------------- DESKTOP CARD -------------------------------------------- -->
   <v-sheet v-if="smAndUp" class="rounded-lg" :class="backgroundColor">
-    <v-sheet class="rounded-lg rounded-b-0">
-      <v-img max-height="648" :src="pool.projectCover">
+    <v-sheet max-height="728" class="rounded-t-lg">
+      <v-img max-height="648" aspect-ratio="1" :src="$_et(pool, 'projectCover')">
         <div class="d-flex flex-column white--text pt-7 px-9">
           <div class="d-flex align-center justify-space-between">
             <span class="text-h6 font-weight-bold">Project launching soon</span>
@@ -9,31 +10,29 @@
           </div>
           <div class="row justify-center mt-10">
             <div class="col-12 text-center">
-              <div class="text-h3 font-weight-bold">{{ pool.projectName }}</div>
-              <v-sheet width="500" class="mx-auto transparent--bg white--text mt-4 text-h5">
-                {{ pool.shortDescription }}
+              <div class="text-h3 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
+              <v-sheet width="500" class="mx-auto transparent--bg white--text mt-4 text-h5 two-line">
+                {{ $_get(pool, 'shortDescription') }}
               </v-sheet>
               <v-sheet max-width="456" class="row mx-auto my-10 rounded-lg blur-bg">
                 <div class="col-6 text-center">
                   <span class="text-subtitle-2 neutral-10--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1">{{ $_get(pool, 'amount', '0') }} {{ $_get(pool, 'tokenName', 'HWD') }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'amount') }} {{ $_get(pool, 'tokenName') }}</span>
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
                 <div class="col-6 text-center">
                   <span class="text-subtitle-2 neutral-10--text">Total missions </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1">{{ $_get(pool, 'totalMission', '0') }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'totalMission') }}</span>
                     <v-img src="@/assets/icons/bulleyes.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
                 <div class="col-6 text-center">
                   <span class="text-subtitle-2 neutral-10--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1">
-                      {{ $_get(pool, 'rewardPerMission', '0') }} {{ $_get(pool, 'tokenName', 'HWD') }}
-                    </span>
+                    <span class="mr-1"> {{ $_get(pool, 'rewardPerMission') }} {{ $_get(pool, 'tokenName') }} </span>
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
@@ -41,7 +40,7 @@
                   <span class="text-subtitle-2 neutral-10--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     <!-- TODO: Hard code rewardValue -->
-                    <span class="mr-1">{{ $_get(pool, 'rewardValue', '0') }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'amount') }}</span>
                     <v-img src="@/assets/icons/bsc-icon.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
@@ -51,7 +50,7 @@
         </div>
       </v-img>
     </v-sheet>
-    <div class="pa-5 px-9 d-flex justify-space-between justify-start align-center">
+    <v-sheet class="pa-5 px-9 d-flex justify-space-between justify-start align-center rounded-b-lg">
       <div class="d-flex justify-center align-center mt-2 text-h6 font-weight-bold flex-wrap">
         <div class="mr-4">Ended voting in:</div>
         <div>{{ $_get(pool, 'endDate') | ddmmyyyyhhmmss }}</div>
@@ -61,10 +60,11 @@
       <v-btn class="rounded-lg" color="blue" outlined :to="'#'">
         <span class="text-h6">Read more</span>
       </v-btn>
-    </div>
+    </v-sheet>
   </v-sheet>
+  <!-- -------------------------------------------- MOBILE CARD -------------------------------------------- -->
   <div v-else class="rounded-lg" :class="backgroundColor">
-    <v-img max-height="244" :src="$_get(pool, 'projectCover', '')">
+    <v-img max-height="244" aspect-ratio="1" :src="$_get(pool, 'projectCover')">
       <div class="text-end ma-4">
         <voting-out-btn />
       </div>
