@@ -2,7 +2,7 @@
   <!-- -------------------------------------------- DESKTOP CARD -------------------------------------------- -->
   <v-sheet v-if="smAndUp" class="rounded-lg" :class="backgroundColor">
     <v-sheet max-height="728" class="rounded-t-lg">
-      <v-img max-height="648" aspect-ratio="1" :src="$_et(pool, 'projectCover')">
+      <v-img max-height="648" aspect-ratio="1" :src="$_get(pool, 'projectCover')">
         <div class="d-flex flex-column white--text pt-7 px-9">
           <div class="d-flex align-center justify-space-between">
             <span class="text-h6 font-weight-bold">Project launching soon</span>
