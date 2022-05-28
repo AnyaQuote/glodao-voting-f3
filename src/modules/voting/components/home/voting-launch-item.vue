@@ -1,4 +1,5 @@
 <template>
+  <!-- -------------------------------------------- DESKTOP CARD -------------------------------------------- -->
   <v-sheet v-if="smAndUp" class="rounded-lg" :class="backgroundColor">
     <v-sheet max-height="728" class="rounded-t-lg">
       <v-img max-height="648" aspect-ratio="1" :src="pool.projectCover">
@@ -63,8 +64,9 @@
       </v-btn>
     </v-sheet>
   </v-sheet>
+  <!-- -------------------------------------------- MOBILE CARD -------------------------------------------- -->
   <div v-else class="rounded-lg" :class="backgroundColor">
-    <v-img max-height="244" :src="$_get(pool, 'projectCover', '')">
+    <v-img max-height="244" aspect-ratio="1" :src="$_get(pool, 'projectCover')">
       <div class="text-end ma-4">
         <voting-out-btn />
       </div>
