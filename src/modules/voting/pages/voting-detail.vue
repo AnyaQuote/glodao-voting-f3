@@ -26,8 +26,12 @@
               <v-icon large>mdi-information</v-icon>
             </v-btn>
           </v-sheet>
+          <!-- ------------------------------------ LOADING ------------------------------------ -->
+          <div v-if="vm.dataLoading" class="col-12 pa-0">
+            <v-skeleton-loader class="mb-3" v-for="index in 3" :key="index" height="80" type="image" />
+          </div>
           <!-- ------------------------------------ EMPTY -------------------------------------- -->
-          <div v-if="!vm.votedUsers.length" class="col-12 text-h6 text-center rounded-lg">
+          <div v-else-if="!vm.dataLoading && !vm.votedUsers.length" class="col-12 text-h6 text-center rounded-lg">
             No users has voted yet. Be the first to support this project
           </div>
           <!-- ------------------------------------ CONTENT ------------------------------------ -->
