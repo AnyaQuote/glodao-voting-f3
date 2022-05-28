@@ -24,7 +24,7 @@
           <div class="d-flex flex-column flex-grow-1 pa-6">
             <div class="d-flex align-center">
               <v-avatar size="48" class="mr-4">
-                <v-img :src="pool.projectLogo"> </v-img>
+                <v-img :src="$_get(pool, 'projectLogo')"> </v-img>
               </v-avatar>
               <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
             </div>
