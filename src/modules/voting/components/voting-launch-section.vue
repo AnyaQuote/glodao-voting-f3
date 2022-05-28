@@ -27,7 +27,7 @@
         v-on="on"
         outlined
       >
-        <v-icon color="black">mdi-chevron-left</v-icon>
+        <v-icon color="primary">mdi-chevron-left</v-icon>
       </v-sheet>
     </template>
     <template v-slot:next="{ on, attrs }">
@@ -38,7 +38,7 @@
         v-on="on"
         outlined
       >
-        <v-icon color="black">mdi-chevron-right</v-icon>
+        <v-icon color="primary">mdi-chevron-right</v-icon>
       </v-sheet>
     </template>
     <div v-if="vm.approvedList && vm.approvedList.length">

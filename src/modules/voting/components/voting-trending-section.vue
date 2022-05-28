@@ -36,7 +36,7 @@
               v-bind="attrs"
               v-on="on"
             >
-              <v-icon color="black">mdi-chevron-left</v-icon>
+              <v-icon color="primary">mdi-chevron-left</v-icon>
             </v-sheet>
           </template>
           <template v-slot:next="{ on, attrs }">
@@ -45,7 +45,7 @@
               v-on="on"
               class="mr-n4 mt-n4 px-2 py-10 d-flex justify-center rounded-lg rounded-r-0 carousel-button"
             >
-              <v-icon color="black">mdi-chevron-right</v-icon>
+              <v-icon color="primary">mdi-chevron-right</v-icon>
             </v-sheet>
           </template>
           <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
