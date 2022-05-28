@@ -1,7 +1,8 @@
 <template>
-  <v-btn v-bind="$attrs" v-on="$listeners" icon class="rounded-circle white px-2">
+  <!-- <v-btn v-bind="$attrs" v-on="$listeners" icon class="rounded-circle white px-2 neutral100--bg">
     <v-img contain src="@/assets/icons/voting-home--arrow-out.svg" />
-  </v-btn>
+  </v-btn> -->
+  <div></div>
 </template>
 
 <script lang="ts">

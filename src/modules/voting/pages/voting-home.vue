@@ -35,8 +35,14 @@
           <v-radio class="text-subtitle-2 font-weight-bold" value="bounty" label="Bounty Project"> </v-radio>
           <v-radio class="text-subtitle-2 font-weight-bold" value="launchpad" label="Launching project"> </v-radio>
         </v-radio-group>
+        <!-- --------------------------------------- LOADING -------------------------------------------- -->
+        <v-row v-if="vm.loading">
+          <v-col cols="4" v-for="index in 3" :key="index">
+            <v-skeleton-loader type="image, list-item-avatar, list-item-two-line" class="neutral-100" />
+          </v-col>
+        </v-row>
         <!-- --------------------------------------- CONTENT -------------------------------------------- -->
-        <v-row>
+        <v-row v-else>
           <v-scale-transition v-if="!vm.filteredVotingList.length" leave-absolute>
             <v-col class="d-flex justify-center">
               <div class="text-h6 pa-8">No nominated project of this type right now</div>
@@ -73,8 +79,15 @@
             >All potential projects are voted by Glodao user
           </span>
         </div>
+        <v-row v-if="vm.loading">
+          <v-col cols="4" v-for="index in 3" :key="index">
+            <v-skeleton-loader type="image, list-item-avatar, list-item-two-line" class="neutral-100" />
+          </v-col>
+        </v-row>
         <!-- -------------------------------------- EMPTY PROJECTS --------------------------------------- -->
-        <div v-if="!vm.endedList.length" class="text-center text-h6 pa-8">No ended project of this type yet</div>
+        <div v-else-if="!vm.loading && !vm.endedList.length" class="text-center text-h6 pa-8">
+          No ended project of this type yet
+        </div>
         <!-- -------------------------------------- HAS PROJECTS ----------------------------------------- -->
         <v-row v-else>
           <v-col cols="12" sm="6" md="4" v-for="(pool, index) in vm.endedList" :key="index">

@@ -1,22 +1,17 @@
 <template>
-  <!-- <v-slide-item> -->
+  <!-- ----------------------------------------------- DESKTOP CARD ------------------------------------------ -->
   <v-hover v-slot="{ hover }">
-    <div class="d-flex fill-height rounded-lg pa-1" :class="typeBorderColor">
-      <v-sheet
-        :width="$vuetify.breakpoint.mdAndUp ? '348' : 'auto'"
-        class="d-flex flex-column rounded-lg overflow-hidden"
-      >
-        <!-- ------------------------------------------------------------------------------------------------- -->
-        <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
-          <v-img :src="$_get(pool, 'data.projectCover')">
+    <v-sheet max-width="348" class="fill-height rounded-lg pa-thin overflow-hidden" :class="typeBorderColor">
+      <v-sheet class="d-flex flex-column">
+        <div class="rounded-t-lg flex-shrink-0">
+          <v-img max-height="234" aspect-ratio="1" :src="$_get(pool, 'data.projectCover')">
             <div class="p-absolute absolute-space d-flex flex-column" :class="{ blur: hover }">
               <v-sheet class="align-self-start white orange--text rounded mt-1 ml-1 pa-1 pr-2 font-weight-medium">
                 🔥Trending
               </v-sheet>
-
               <div class="fill-height d-flex justify-center align-center mt-n6">
                 <v-fade-transition>
-                  <v-btn v-show="hover" class="rounded pa-2" @click="openDetail">
+                  <v-btn v-show="hover" class="rounded pa-2 neutral100--bg" @click="openDetail">
                     <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
                     <span class="font-weight-medium">VOTE NOW</span>
                   </v-btn>
@@ -24,12 +19,8 @@
               </div>
             </div>
           </v-img>
-          <!-- HOVER SHOW SECTION START -->
-
-          <!-- HOVER SHOW SECTION END -->
         </div>
-        <!-- -------------------------------------------------------------------------------------------------- -->
-        <div class="card-content flex-grow-1 d-flex flex-column">
+        <div class="flex-grow-1 d-flex flex-column">
           <!-- CARD TOP START -->
           <div class="d-flex flex-column flex-grow-1 pa-6">
             <div class="d-flex align-center mb-4">
@@ -42,27 +33,21 @@
               {{ $_get(pool, 'data.shortDescription') }}
             </div>
             <div class="text-uppercase ma-n1">
-              <v-chip v-for="(field, i) in $_get(pool, 'data.fields')" :key="i" class="rounded-lg ma-1">{{
+              <v-chip v-for="(field, index) in $_get(pool, 'data.fields')" :key="index" class="rounded-lg ma-1">{{
                 field
               }}</v-chip>
             </div>
           </div>
-          <!-- CARD TOP END -->
-
-          <!-- CARD BOTTOM START -->
           <v-spacer />
-          <div class="card-content-bottom">
-            <div class="text-center py-2" :class="typeBackgroundColor">
-              <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
-            </div>
+          <div class="text-center py-2" :class="typeBackgroundColor">
+            <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
           </div>
-          <!-- CARD BOTTOM END -->
+          <v-sheet height="4" class="rounded-b-lg" :class="dividerBackground" />
         </div>
-        <!-- --------------------------------------------------------------------------------------------------- -->
       </v-sheet>
-    </div>
+    </v-sheet>
   </v-hover>
-  <!-- </v-slide-item> -->
+  <!-- --------------------------------------------------------------------------------------------------- -->
 </template>
 
 <script lang="ts">
@@ -91,11 +76,15 @@ export default class LiveCompactCard extends Vue {
   }
 
   get typeBackgroundColor() {
-    return this.pool.type === 'bounty' ? 'orange lighten-1' : 'green lighten-4'
+    return this.pool.type === 'bounty' ? 'app-orange lighten-2' : 'app-green lighten-2'
   }
 
   get typeBorderColor() {
     return this.pool.type === 'bounty' ? 'bounty-border' : 'launchpad-border'
+  }
+
+  get dividerBackground() {
+    return this.pool.type === 'bounty' ? 'orange' : 'green'
   }
 
   openDetail() {
@@ -114,5 +103,10 @@ export default class LiveCompactCard extends Vue {
 
 .blur {
   background: rgba($color: #000000, $alpha: 0.5);
+}
+
+.pa-thin {
+  padding: 1px;
+  padding-bottom: 0px;
 }
 </style>

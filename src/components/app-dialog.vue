@@ -1,6 +1,6 @@
 <template>
   <v-dialog persistent max-width="500" :value="show" @click:outside="close">
-    <slot></slot>
+    <slot :close="close"></slot>
   </v-dialog>
 </template>
 

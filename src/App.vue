@@ -77,6 +77,10 @@ a {
   font-size: 18px !important;
   line-height: 24px !important;
 }
+.font-28 {
+  font-size: 28px !important;
+  line-height: 36.4px !important;
+}
 .theme--dark {
   .date-picker-dialog-custom {
     .v-date-picker-header {
@@ -152,6 +156,10 @@ a {
 }
 .v-pagination__item {
   font-size: em(20) !important;
+  background: var(--v-neutral-100-base) !important;
+}
+.v-pagination__navigation {
+  background: var(--v-neutral-100-base) !important;
 }
 
 // .v-application {
@@ -215,18 +223,18 @@ a {
   -webkit-box-orient: vertical;
 }
 
+.bullet {
+  display: list-item;
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
 }
 
 .app-slide-group {
-  .active {
-    border-radius: em(8);
-    padding: em(28) em(8);
-    border: em(1) solid var(--v-bluePrimary-base);
-    background-color: var(--v-neutral100-base) !important;
-  }
   .v-slide-group {
     position: relative;
     z-index: 0;
@@ -237,9 +245,6 @@ a {
       left: -20px;
       z-index: 1 !important;
       margin-top: em(-60);
-      :not(.v-slide-group__prev--disabled) {
-        @extend .active;
-      }
     }
     .v-slide-group__next {
       display: block;
@@ -248,9 +253,6 @@ a {
       z-index: 1;
       position: absolute;
       margin-top: em(-60);
-      :not(.v-slide-group__next--disabled) {
-        @extend .active;
-      }
     }
   }
 }

@@ -5,70 +5,77 @@
         <div class="mt-5 d-flex align-center font-weight-medium">
           <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
           <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-          <span class="neutral10--text">{{ vm.projectName }}</span>
+          <span class="neutral-10--text">{{ $_get(vm.poolStore, 'projectName') }}</span>
         </div>
       </v-col>
 
       <v-col cols="12">
-        <voting-detail-overview></voting-detail-overview>
+        <!-- ------------------------------------- LOADING ------------------------------------- -->
+        <v-skeleton-loader v-if="vm.dataLoading" type="image, article, actions" />
+        <!-- ------------------------------------- CONTENT ------------------------------------- -->
+        <voting-detail-overview v-else></voting-detail-overview>
+        <!-- ----------------------------------------------------------------------------------- -->
       </v-col>
 
       <v-col cols="12">
-        <div class="row mt-72">
-          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6">
-            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ vm.votedUsers.length }})</div>
-            <!-- <v-btn icon>
+        <!-- ------------------------------------- HEADER -------------------------------------- -->
+        <div class="row mx-0 mt-72">
+          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6" outlined elevation="3">
+            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ $_get(vm, 'votedUsers.length') }})</div>
+            <v-btn icon @click="openGuideDialog">
               <v-icon large>mdi-information</v-icon>
-            </v-btn> -->
+            </v-btn>
           </v-sheet>
-
-          <div class="col-12" v-for="address in vm.votedUsers" :key="address">
-            <v-sheet v-bind="$attrs" class="row align-center rounded pa-4" elevation="3">
-              <div class="col-12 col-md-4">
-                <div class="font-weight-bold">{{ address | shortAddress(12, 6) }}</div>
-                <div>GLD Staker</div>
-              </div>
-              <div class="col-12 col-md-4 d-flex align-center">
-                <v-chip color="green mr-2">👍YES</v-chip>
-                <span class="font-weight-medium"> We want to join in this project </span>
-              </div>
-              <div
-                class="col-12 col-md-4 d-flex flex-row flex-md-column align-md-end justify-space-between text-subtitle-2"
-              >
-                <span class="neutral10--text">Time voted</span>
-                <span class="font-weight-bold">---</span>
-              </div>
-            </v-sheet>
-            <!-- <voting-list-item class="mb-4 pa-2" elevation="3" v-for="address in vm.votedUsers" :key="address" /> -->
+          <!-- ------------------------------------ EMPTY -------------------------------------- -->
+          <div v-if="!vm.votedUsers.length" class="col-12 text-h6 text-center rounded-lg">
+            No users has voted yet. Be the first to support this project
           </div>
-
-          <!-- <div class="col-12">
+          <!-- ------------------------------------ CONTENT ------------------------------------ -->
+          <div v-else class="row ma-0 justify-center">
+            <voting-list-item class="col-12 mb-3" v-for="address in vm.votedUsers" :address="address" :key="address" />
             <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
-          </div> -->
+          </div>
+          <!-- -------------------------------------------------------------------------------- -->
         </div>
       </v-col>
 
       <v-col cols="12">
-        <div class="nominated-section mt-72">
-          <div class="header mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        <div class="mt-72 mb-4 font-28 mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        <!-- ------------------------------------------ LOADING ------------------------------------------------ -->
+        <div v-if="vm.dataLoading" class="row">
+          <v-skeleton-loader v-for="index in 3" :key="index" class="col-4" type="image, article" />
         </div>
-        <div v-if="$vuetify.breakpoint.mdAndUp" class="app-slide-group">
-          <v-slide-group class="ma-n1 px-1">
-            <live-compact-card v-for="(pool, i) in vm.votingList" :key="i" class="ma-1" :pool="pool" />
+        <!-- ------------------------------------------ EMPTY PROJECTS ----------------------------------------- -->
+        <div v-else-if="!vm.dataLoading && $_empty(vm.votingList.length)" class="text-h6 text-center">
+          No projects similar of this type right now
+        </div>
+        <!-- ------------------------------------------ HAS PROJECTS ------------------------------------------ -->
+        <div v-else class="app-slide-group">
+          <v-slide-group class="">
+            <template v-slot:next>
+              <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-sheet>
+            </template>
+            <template v-slot:prev>
+              <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-sheet>
+            </template>
+            <v-slide-item v-for="(pool, index) in vm.votingList" :key="index">
+              <live-compact-card class="mr-4" :pool="pool" />
+            </v-slide-item>
           </v-slide-group>
         </div>
-        <v-row v-else class="row">
-          <v-col cols="12" v-for="(pool, i) in vm.votingList" :key="i">
-            <live-compact-card :pool="pool" />
-          </v-col>
-        </v-row>
+        <!-- ------------------------------------------------------------------------------------------------- -->
       </v-col>
     </v-row>
+    <vote-guide-dialog ref="guide-dialog" />
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Provide } from 'vue-property-decorator'
+import { Component, Vue, Provide, Ref } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
 import { get } from 'lodash-es'
 import { RoutePaths } from '@/router'
@@ -78,13 +85,19 @@ import { RoutePaths } from '@/router'
     'voting-detail-overview': () => import('../components/voting-detail-overview.vue'),
     'voting-list-item': () => import('../components/common/voting-list-item.vue'),
     'live-compact-card': () => import('../components/common/live-compact-card.vue'),
+    'vote-guide-dialog': () => import('../components/detail/vote-guide-dialog.vue'),
   },
 })
 export default class VotingDetail extends Vue {
   @Provide() vm = new VotingDetailViewModel(get(this.$route, 'params.code'))
+  @Ref('guide-dialog') dialog
 
   goToVotingList() {
     this.$router.push(RoutePaths.voting_list)
+  }
+
+  openGuideDialog() {
+    this.dialog.open()
   }
 }
 </script>
@@ -95,11 +108,5 @@ export default class VotingDetail extends Vue {
 }
 .mb-72 {
   margin-bottom: em(72);
-}
-.nominated-section {
-  .header {
-    font-size: em(28);
-    line-height: em(36.4);
-  }
 }
 </style>
