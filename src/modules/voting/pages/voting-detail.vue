@@ -5,15 +5,20 @@
         <div class="mt-5 d-flex align-center font-weight-medium">
           <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
           <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-          <span class="neutral10--text">{{ $_get(vm.poolStore, 'projectName') }}</span>
+          <span class="neutral-10--text">{{ $_get(vm.poolStore, 'projectName') }}</span>
         </div>
       </v-col>
 
       <v-col cols="12">
-        <voting-detail-overview></voting-detail-overview>
+        <!-- ------------------------------------- LOADING ------------------------------------- -->
+        <v-skeleton-loader v-if="vm.dataLoading" type="image, article, actions" />
+        <!-- ------------------------------------- CONTENT ------------------------------------- -->
+        <voting-detail-overview v-else></voting-detail-overview>
+        <!-- ----------------------------------------------------------------------------------- -->
       </v-col>
 
       <v-col cols="12">
+        <!-- ------------------------------------- HEADER -------------------------------------- -->
         <div class="row mx-0 mt-72">
           <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6" outlined elevation="3">
             <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ $_get(vm, 'votedUsers.length') }})</div>
@@ -21,37 +26,27 @@
               <v-icon large>mdi-information</v-icon>
             </v-btn>
           </v-sheet>
-
-          <div class="col-12" v-for="address in vm.votedUsers" :key="address">
-            <v-sheet v-bind="$attrs" class="row align-center rounded pa-4" elevation="3">
-              <div class="col-12 col-md-4">
-                <div class="font-weight-bold">{{ address | shortAddress(12, 6) }}</div>
-                <div>GLD Staker</div>
-              </div>
-              <div class="col-12 col-md-4 d-flex align-center">
-                <v-chip color="green mr-2">👍YES</v-chip>
-                <span class="font-weight-medium"> We want to join in this project </span>
-              </div>
-              <div
-                class="col-12 col-md-4 d-flex flex-row flex-md-column align-md-end justify-space-between text-subtitle-2"
-              >
-                <span class="neutral10--text">Time voted</span>
-                <span class="font-weight-bold">---</span>
-              </div>
-            </v-sheet>
-            <!-- <voting-list-item class="mb-4 pa-2" elevation="3" v-for="address in vm.votedUsers" :key="address" /> -->
+          <!-- ------------------------------------ EMPTY -------------------------------------- -->
+          <div v-if="!vm.votedUsers.length" class="col-12 text-h6 text-center rounded-lg">
+            No users has voted yet. Be the first to support this project
           </div>
-
-          <!-- <div class="col-12">
+          <!-- ------------------------------------ CONTENT ------------------------------------ -->
+          <div v-else class="row ma-0 justify-center">
+            <voting-list-item class="col-12 mb-3" v-for="address in vm.votedUsers" :address="address" :key="address" />
             <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
-          </div> -->
+          </div>
+          <!-- -------------------------------------------------------------------------------- -->
         </div>
       </v-col>
 
       <v-col cols="12">
         <div class="mt-72 mb-4 font-28 mr-5 font-weight-bold text-uppercase">SIMILIAR NOMINATED PROJECT</div>
+        <!-- ------------------------------------------ LOADING ------------------------------------------------ -->
+        <div v-if="vm.dataLoading" class="row">
+          <v-skeleton-loader v-for="index in 3" :key="index" class="col-4" type="image, article" />
+        </div>
         <!-- ------------------------------------------ EMPTY PROJECTS ----------------------------------------- -->
-        <div v-if="$_empty(vm.votingList.length)" class="text-h6 text-center">
+        <div v-else-if="!vm.dataLoading && $_empty(vm.votingList.length)" class="text-h6 text-center">
           No projects similar of this type right now
         </div>
         <!-- ------------------------------------------ HAS PROJECTS ------------------------------------------ -->
