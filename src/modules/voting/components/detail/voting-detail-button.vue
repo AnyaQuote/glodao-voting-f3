@@ -9,10 +9,9 @@
     </v-sheet>
     <v-sheet v-else class="pa-6 fill-height blue lighten-5 overflow-hidden">
       <v-row>
-        <v-col cols="12" md="5" sm="12">
+        <v-col cols="12" sm="6" md="5">
           <div class="mr-4">
             <div class="text-subtitle-2 d-flex align-center">
-              <!-- <icon-chain class="mr-1" /> -->
               <div v-if="!walletStore.account">
                 <ConnectWallet />
               </div>
@@ -23,14 +22,14 @@
             </div>
           </div>
         </v-col>
-        <v-col cols="12" md="3" sm="12">
+        <v-col cols="12" sm="6" md="3">
           <div class="d-flex flex-column mr-4">
             <span class="text-subtitle-1">Staking</span>
             <span class="text-subtitle-2">{{ vm.userStakeBalance | formatNumber }} GLD</span>
           </div>
         </v-col>
-        <v-col cols="12" md="4" sm="12" :class="{ 'text-right': $vuetify.breakpoint.mdAndUp }">
-          <v-btn height="48" class="rounded-lg" depressed v-if="vm.voted" disabled>
+        <v-col cols="12" sm="12" md="4" :class="{ 'text-right': $vuetify.breakpoint.mdAndUp }">
+          <v-btn height="48" class="rounded-lg" depressed v-if="vm.voted" disabled width="100%">
             <span class="px-5">Voted</span>
           </v-btn>
           <v-btn
