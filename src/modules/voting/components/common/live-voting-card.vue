@@ -11,7 +11,7 @@
               </v-sheet>
               <div class="fill-height d-flex justify-center align-center mt-n6">
                 <v-fade-transition>
-                  <v-btn v-show="hover" class="rounded pa-2" @click="openDetail">
+                  <v-btn v-show="hover" class="rounded pa-2 neutral-100" @click="openDetail">
                     <v-icon class="mt-n1 mr-1">mdi-star-outline</v-icon>
                     <span class="font-weight-medium">VOTE NOW</span>
                   </v-btn>
