@@ -135,12 +135,12 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.afterEach((to, from) => {
-  const isAuthenticated = authStore.isAuthenticated
-  const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-  if (requiredAuth && !isAuthenticated) {
-    loginController.open({ message: 'This page required login. Please sign in to continue' })
-  }
-})
+// router.afterEach((to, from) => {
+//   const isAuthenticated = authStore.isAuthenticated
+//   const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+//   if (requiredAuth && !isAuthenticated) {
+//     loginController.open({ message: 'This page required login. Please sign in to continue' })
+//   }
+// })
 
 export default router
