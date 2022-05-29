@@ -12,7 +12,7 @@
       </v-card-text>
       <v-card-text>
         <span class="font-weight-bold">Your wallet address:</span>
-        <v-sheet class="rounded text-subtitle-1 text-truncate pa-3 text-center" outlined>{{
+        <v-sheet height="54" class="rounded text-subtitle-1 text-truncate pa-3 text-center" outlined>{{
           controller.account
         }}</v-sheet>
       </v-card-text>
