@@ -7,8 +7,8 @@ export default class AppTextField extends VTextField {
   @Prop({ default: true }) solo!: boolean
   @Prop({ default: true }) flat!: boolean
   @Prop({ default: true }) outlined!: boolean
-  @Prop({ default: false }) hideDetails!: boolean
   @Prop({ default: true }) dense!: boolean
+  @Prop({ default: '56' }) height!: string | number
 }
 </script>
 
