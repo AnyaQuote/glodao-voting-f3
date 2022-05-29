@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, IReactionDisposer, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { walletStore } from '@/stores/wallet-store'
 import { snackController } from '../snack-bar/snack-bar-controller'
@@ -13,8 +13,7 @@ export class LoginDialogController {
     message: '',
   }
   @observable show = false
-  @observable loading = false
-  wallet = walletStore;
+  @observable loading = false;
 
   @asyncAction *signAndLogin() {
     let res
@@ -40,6 +39,10 @@ export class LoginDialogController {
 
   @action.bound close() {
     if (!this.loading) this.show = false
+  }
+
+  @computed get account() {
+    return walletStore.account
   }
 }
 
