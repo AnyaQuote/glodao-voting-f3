@@ -120,6 +120,12 @@ export class AuthStore {
     }
   }
 
+  @action checkEmptyJwt() {
+    if (isEmpty(this.jwt)) {
+      loginController.open({ message: 'This step requires authentication. Please sign in to continue.' })
+    }
+  }
+
   @computed get isAuthenticated() {
     return !!this.jwt
   }
