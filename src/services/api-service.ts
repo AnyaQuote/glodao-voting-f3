@@ -208,6 +208,7 @@ export class ApiService {
         return response
       },
       (error) => {
+        authStore.checkEmptyJwt()
         if (get(error, 'response.status') === 401) {
           authStore.checkJwtExpiration()
         }
