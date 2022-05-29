@@ -11,8 +11,10 @@
         Remember that this wallet will be the pool owner's address. Only the pool owner can update pool information.
       </v-card-text>
       <v-card-text>
-        <strong>Your wallet address:</strong>
-        <app-text-field :value="controller.wallet.account" readonly />
+        <span class="font-weight-bold">Your wallet address:</span>
+        <v-sheet class="rounded text-subtitle-1 text-truncate pa-3 text-center" outlined>{{
+          controller.account
+        }}</v-sheet>
       </v-card-text>
       <v-card-actions>
         <v-btn
