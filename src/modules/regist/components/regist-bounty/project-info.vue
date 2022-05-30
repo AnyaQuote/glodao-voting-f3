@@ -22,14 +22,18 @@
       ></app-textarea>
 
       <div class="font-18 font-weight-bold">Project logo</div>
-      <image-upload-field
+      <app-file-upload
+        imageOnly
+        :rules="[$rules.required, $rules.maxSize(15000000)]"
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectLogo', $event)"
       />
 
       <div class="font-18 font-weight-bold mt-6">Project cover</div>
-      <image-upload-field
-        :value="$_get(vm.projectInfo, 'projectCover')"
+      <app-file-upload
+        imageOnly
+        :rules="[$rules.required, $rules.maxSize(15000000)]"
+        :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectCover', $event)"
       />
 
@@ -81,6 +85,7 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
   components: {
     'image-upload-field': () => import('@/components/image-upload-field.vue'),
     'app-socials-field': () => import('@/components/app-socials-field.vue'),
+    'app-file-upload': () => import('@/components/app-file-upload.vue'),
   },
 })
 export default class ProjectInfo extends Vue {
