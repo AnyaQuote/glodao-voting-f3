@@ -116,17 +116,23 @@
         @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
         class="mt-2"
       />
-      <div class="d-flex mt-6">
-        <span class="font-weight-bold">Document (fileName.md)</span>
-        <!-- <v-spacer />
-        <span class="app-blue--text">Download the quiz template</span> -->
-      </div>
+      <v-btn
+        v-if="$_get(vm.learnToEarn, 'setting.quizFile')"
+        class="mt-2 blue-diversity white--text"
+        @click="openQuizPreviewDialog"
+        depressed
+      >
+        Preview your quiz
+      </v-btn>
+
+      <div class="d-flex font-18 mt-6 font-weight-bold">Document (fileName.md)</div>
       <file-selector
         :rules="[$rules.required]"
         @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
         class="mt-2"
       />
     </switch-field>
+    <quiz-preview-dialog ref="quiz-preview-dialog" />
   </div>
 </template>
 
@@ -134,7 +140,6 @@
 import { Component, Vue, Inject, Ref } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
-import { loadingController } from '@/components/global-loading/global-loading-controller'
 
 @Observer
 @Component({
@@ -142,13 +147,20 @@ import { loadingController } from '@/components/global-loading/global-loading-co
     'switch-field': () => import('./common/switch-field.vue'),
     'file-selector': () => import('./file-selector.vue'),
     'image-upload-field': () => import('@/components/image-upload-field.vue'),
+    'quiz-preview-dialog': () => import('../new-mission/quiz-preview-dialog.vue'),
   },
 })
 export default class MissionSettingForm extends Vue {
+  @Ref('quiz-preview-dialog') dialog
   @Inject() vm!: NewMissionViewModel
 
   download() {
     window.location.href = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}quiz.csv`
+  }
+
+  async openQuizPreviewDialog() {
+    await this.vm.prepareQuizPreview()
+    this.dialog.open()
   }
 }
 </script>
