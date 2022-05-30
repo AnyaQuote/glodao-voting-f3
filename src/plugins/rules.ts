@@ -39,6 +39,8 @@ export const rules = {
   isAddress: (v: string) => web3.utils.isAddress(v.trim()) || 'Address not valid',
   maxSize: (size: number) => (value: any) =>
     !value || value.size < size || `File size should be less than ${formatFileSize(size)} MB!`,
+  isImageFile: (v: File) => !v || /\.(gif|jpe?g|tiff?|png|webp|bmp|png)$/i.test(v.name) || 'File is not an image.',
+  isTextFile: (v: File) => !v || /\.(csv|me|readme|te?xt|rtfd?|docx?)$/i.test(v.name) || 'Can not read this text file.',
 }
 
 export const appRules = {}
