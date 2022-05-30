@@ -1,5 +1,6 @@
 import web3 from 'web3'
 import moment from 'moment'
+import { formatFileSize } from '@/helpers'
 
 export const rules = {
   required: (v: string | number) =>
@@ -36,6 +37,8 @@ export const rules = {
     (/^[0-9]{2}:[0-9]{2}$/.test(v.trim()) && (moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid())) ||
     'Invalid time ',
   isAddress: (v: string) => web3.utils.isAddress(v.trim()) || 'Address not valid',
+  maxSize: (size: number) => (value: any) =>
+    !value || value.size < size || `File size should be less than ${formatFileSize(size)} MB!`,
 }
 
 export const appRules = {}
