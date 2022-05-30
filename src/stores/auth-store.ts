@@ -111,18 +111,25 @@ export class AuthStore {
     }
   }
 
-  @action checkJwtExpiration() {
+  @asyncAction *checkJwtExpiration() {
     const { exp } = jwtDecode(this.jwt) as any
     const isExpired = Date.now() >= exp * 1000
     if (isExpired) {
       this.logout()
-      loginController.open({ message: 'Your session has expired. Please login to continue.' })
+      const res = yield loginController.open({ message: 'Your session has expired. Please login to continue.' })
+      if (res) {
+        //
+      }
     }
   }
 
-  @action checkEmptyJwt() {
+  @asyncAction *checkEmptyJwt() {
     if (isEmpty(this.jwt)) {
-      loginController.open({ message: 'This step requires authentication. Please sign in to continue.' })
+      const res = yield loginController.open({
+        message: 'This step requires authentication. Please sign in to continue.',
+      })
+      // Check response is truthy, then execute right side
+      res && window.location.reload()
     }
   }
 
