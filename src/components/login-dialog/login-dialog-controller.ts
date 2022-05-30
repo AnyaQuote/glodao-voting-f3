@@ -13,18 +13,19 @@ export class LoginDialogController {
     message: '',
   }
   @observable show = false
-  @observable loading = false;
+  @observable loading = false
+
+  @observable resolver?: (value: any) => void;
 
   @asyncAction *signAndLogin() {
-    let res
     try {
       this.loading = true
-      res = yield authStore.login()
+      const res = yield authStore.login()
+      this.resolver && this.resolver(res)
     } catch (error) {
       snackController.commonError(error)
     } finally {
       this.loading = false
-      if (res) this.close()
     }
   }
 
@@ -32,13 +33,17 @@ export class LoginDialogController {
     this.signAndLogin()
   }
 
-  @action.bound open(config?: DialogConfig) {
+  @action open(config?: DialogConfig) {
     this.config = { ...this.config, ...config }
     this.show = true
+    return new Promise((resolve) => (this.resolver = resolve))
   }
 
   @action.bound close() {
-    if (!this.loading) this.show = false
+    if (!this.loading) {
+      this.show = false
+      this.resolver && this.resolver(null)
+    }
   }
 
   @computed get account() {
