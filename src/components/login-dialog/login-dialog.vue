@@ -3,7 +3,7 @@
     <v-card class="neutral100--bg" outlined>
       <v-card-title class="text-none">
         <v-spacer />
-        <v-icon @click="controller.close">mdi-close</v-icon>
+        <v-icon v-show="!controller.config.hideClose" @click="controller.close">mdi-close</v-icon>
       </v-card-title>
       <v-card-title> Please sign in with your wallet</v-card-title>
       <v-card-text class="red--text">{{ controller.config.message }}</v-card-text>
@@ -11,8 +11,10 @@
         Remember that this wallet will be the pool owner's address. Only the pool owner can update pool information.
       </v-card-text>
       <v-card-text>
-        <strong>Your wallet address:</strong>
-        <app-text-field :value="controller.wallet.account" readonly />
+        <span class="font-weight-bold">Your wallet address:</span>
+        <v-sheet height="54" class="rounded text-subtitle-1 text-truncate pa-3 text-center" outlined>{{
+          controller.address
+        }}</v-sheet>
       </v-card-text>
       <v-card-actions>
         <v-btn
@@ -35,6 +37,9 @@ import { loginController } from './login-dialog-controller'
 @Component
 export default class LoginDialog extends Vue {
   controller = loginController
+  beforeDestroy() {
+    this.controller.destroy()
+  }
 }
 </script>
 

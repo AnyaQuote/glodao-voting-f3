@@ -17,6 +17,7 @@ export enum RoutePaths {
   new_launchpad_application = '/new-project/launchpad',
   comming_soon = '/comming-soon',
   not_found = '/404',
+  unauthenticated = '/401',
 }
 
 const routes: Array<RouteConfig> = [
@@ -85,7 +86,7 @@ const routes: Array<RouteConfig> = [
     name: 'project-detail',
     component: () => import('@/modules/project/pages/project-detail.vue'),
     meta: {
-      auth: true,
+      auth: false,
       params: true,
       title: 'Project detail',
     },
@@ -116,6 +117,14 @@ const routes: Array<RouteConfig> = [
       title: 'Not found',
     },
   },
+  {
+    path: '/401',
+    name: 'unauthenticated',
+    component: () => import('@/modules/error/pages/401.vue'),
+    meta: {
+      title: 'Unauthenticated',
+    },
+  },
 ]
 
 const router = new VueRouter({
@@ -127,7 +136,7 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   if (!get(to, 'name', '')) {
     next(RoutePaths.not_found)
   } else {
@@ -135,11 +144,14 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.afterEach((to, from) => {
+router.afterEach(async (to, _) => {
   const isAuthenticated = authStore.isAuthenticated
   const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
   if (requiredAuth && !isAuthenticated) {
-    loginController.open({ message: 'This page required login. Please sign in to continue' })
+    const res = await loginController.open({ message: 'This page required login. Please sign in to continue' })
+    if (res) {
+      loginController.close()
+    }
   }
 })
 

@@ -1,10 +1,7 @@
 import { appProvider } from '@/app-providers'
-import { loadingController } from '@/components/global-loading/global-loading-controller'
-import { VotingPool } from '@/models/VotingModel'
 import { PoolStore } from '@/stores/pool-store'
 import { walletStore } from '@/stores/wallet-store'
-import { isEmpty } from 'lodash-es'
-import { observable, action, computed, IReactionDisposer, reaction, autorun, when } from 'mobx'
+import { observable, action, computed, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 export class ProjectListViewModel {
   _disposers: IReactionDisposer[] = []
@@ -19,34 +16,33 @@ export class ProjectListViewModel {
     this._disposers.push(
       reaction(
         () => walletStore.account,
-        () => {
-          this.fetchMyProject()
-        }
+        (account) => {
+          account && this.fetchMyProject()
+        },
+        { fireImmediately: true }
       )
     )
   }
 
   @asyncAction *fetchMyProject() {
-    if (walletStore.account) {
-      this.loading = true
-      try {
-        const pools = yield appProvider.api.voting.find(
-          {
-            ownerAddress: walletStore.account,
-          },
-          { _limit: -1 }
-        )
-        if (pools && pools.length) {
-          this.votingPools = pools.map((pool: any) => {
-            const poolStore = new PoolStore(pool)
-            return poolStore
-          })
-        }
-      } catch (error) {
-        appProvider.snackbar.commonError(error)
-      } finally {
-        this.loading = false
+    this.loading = true
+    try {
+      const pools = yield appProvider.api.voting.find(
+        {
+          ownerAddress: walletStore.account,
+        },
+        { _limit: -1 }
+      )
+      if (pools && pools.length) {
+        this.votingPools = pools.map((pool: any) => {
+          const poolStore = new PoolStore(pool)
+          return poolStore
+        })
       }
+    } catch (error) {
+      appProvider.snackbar.commonError(error)
+    } finally {
+      this.loading = false
     }
   }
 

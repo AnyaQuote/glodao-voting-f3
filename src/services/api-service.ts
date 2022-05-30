@@ -186,9 +186,9 @@ export class ApiService {
   axios = Axios.create({ baseURL: process.env.VUE_APP_API_STRAPI_ENDPOINT })
 
   users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
-  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks')
+  tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false })
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
-  quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes')
+  quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes', { find: false, count: false })
 
   constructor() {
     this.setupAuthInjection()
@@ -208,6 +208,7 @@ export class ApiService {
         return response
       },
       (error) => {
+        authStore.checkEmptyJwt()
         if (get(error, 'response.status') === 401) {
           authStore.checkJwtExpiration()
         }
