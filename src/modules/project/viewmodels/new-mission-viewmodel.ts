@@ -1,7 +1,7 @@
 import { appProvider } from '@/app-providers'
-import { getApiFileUrl, getJSONFromFile } from '@/helpers/file-helper'
+import { getApiFileUrl, getJSONFromFile, getSamplePreviewJSONFromFile } from '@/helpers/file-helper'
 import { Data } from '@/models/MissionModel'
-import { Quiz, LearnToEarn } from '@/models/QuizModel'
+import { Quiz, LearnToEarn, PreviewQuiz } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
 import { action, observable } from 'mobx'
@@ -88,6 +88,10 @@ export class NewMissionViewModel {
   @observable learnToEarn = learnToEarnDefault
   @observable pageLoading = false
   @observable btnLoading = false
+
+  // PREVIEW QUIZ VARIABLES
+  @observable previewQuiz: PreviewQuiz[] = []
+  previewSampleSize = 10
 
   constructor(unicodeName: string) {
     this.fetchProjectByUnicode(unicodeName)
@@ -245,6 +249,21 @@ export class NewMissionViewModel {
       appProvider.snackbar.commonError(error)
     } finally {
       this.btnLoading = false
+    }
+  }
+
+  /**
+   * Process file and return JSON data of preview quiz
+   */
+  @asyncAction *prepareQuizPreview() {
+    try {
+      const { quizFile } = this.learnToEarn.setting!
+      if (quizFile) {
+        const data = yield quizFile.text()
+        this.previewQuiz = getSamplePreviewJSONFromFile(data, this.previewSampleSize)
+      }
+    } catch (error) {
+      appProvider.snackbar.commonError(error)
     }
   }
 }
