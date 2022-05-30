@@ -118,7 +118,7 @@ export class AuthStore {
       this.logout()
       const res = yield loginController.open({ message: 'Your session has expired. Please login to continue.' })
       if (res) {
-        //
+        loginController.close()
       }
     }
   }
@@ -128,8 +128,9 @@ export class AuthStore {
       const res = yield loginController.open({
         message: 'This step requires authentication. Please sign in to continue.',
       })
-      // Check response is truthy, then execute right side
-      res && window.location.reload()
+      if (res) {
+        loginController.close()
+      }
     }
   }
 
