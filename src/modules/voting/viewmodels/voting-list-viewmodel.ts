@@ -1,10 +1,8 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { VotingPool } from '@/models/VotingModel'
 import { apiService } from '@/services/api-service'
 import { PoolStore } from '@/stores/pool-store'
-import { action, computed, observable } from 'mobx'
+import { computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import moment from 'moment'
 
 export class VotingListViewModel {
   @observable voteList: PoolStore[] = []
@@ -27,11 +25,10 @@ export class VotingListViewModel {
           return poolStore
         })
       }
-      this.loading = false
     } catch (error) {
       snackController.commonError(error)
     } finally {
-      //
+      this.loading = false
     }
   }
   @computed get approvedList() {
