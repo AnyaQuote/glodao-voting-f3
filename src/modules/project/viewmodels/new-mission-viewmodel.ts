@@ -92,11 +92,10 @@ export class NewMissionViewModel {
 
   _disposer: IReactionDisposer
   constructor(unicodeName: string) {
-    this.pageLoading = true
     this._disposer = reaction(
       () => walletStore.account,
       (account) => {
-        this.fetchProjectByUnicode({ unicodeName, ownerAddress: account })
+        account && this.fetchProjectByUnicode({ unicodeName, ownerAddress: account })
       },
       { fireImmediately: true }
     )
@@ -108,12 +107,12 @@ export class NewMissionViewModel {
 
   @asyncAction *fetchProjectByUnicode(query: { unicodeName: string; ownerAddress: string }) {
     try {
+      this.pageLoading = true
       const res = yield appProvider.api.voting.find(query, { _limit: 1 })
       if (isEmpty(res)) {
         appProvider.router.replace(RoutePaths.not_found)
       }
       this.pool = res[0]
-      console.log(this.pool)
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -220,8 +219,7 @@ export class NewMissionViewModel {
       status,
       chainId: pool.chain,
       tokenBasePrice,
-      // rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
-      rewardAmount: '10',
+      rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
       startTime: toISO(missionInfo.startDate),
       endTime: toISO(missionInfo.endDate),
       maxParticipant: toNumber(missionInfo.maxParticipants),
