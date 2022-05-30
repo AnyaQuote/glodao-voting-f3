@@ -1,5 +1,5 @@
 <template>
-  <v-dialog persistent max-width="500" :value="show" @click:outside="close">
+  <v-dialog persistent :max-width="maxWidth" :value="show" @click:outside="close">
     <slot :close="close"></slot>
   </v-dialog>
 </template>
@@ -9,6 +9,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppDialog extends Vue {
+  @Prop({ default: '500' }) maxWidth!: string | number
   private show = false
   private request = 0
 
