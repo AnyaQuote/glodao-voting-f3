@@ -4,12 +4,13 @@ import { Data } from '@/models/MissionModel'
 import { Quiz, LearnToEarn } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
-import { action, observable } from 'mobx'
+import { action, IReactionDisposer, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { toISO } from '@/helpers/date-helper'
 import { FixedNumber } from '@ethersproject/bignumber'
+import { walletStore } from '@/stores/wallet-store'
 
 const missionInfoDefault = {
   name: '',
@@ -89,24 +90,30 @@ export class NewMissionViewModel {
   @observable pageLoading = false
   @observable btnLoading = false
 
+  _disposer: IReactionDisposer
   constructor(unicodeName: string) {
-    this.fetchProjectByUnicode(unicodeName)
+    this.pageLoading = true
+    this._disposer = reaction(
+      () => walletStore.account,
+      (account) => {
+        this.fetchProjectByUnicode({ unicodeName, ownerAddress: account })
+      },
+      { fireImmediately: true }
+    )
   }
 
-  @asyncAction *fetchProjectByUnicode(query: string) {
+  destroy() {
+    this._disposer()
+  }
+
+  @asyncAction *fetchProjectByUnicode(query: { unicodeName: string; ownerAddress: string }) {
     try {
-      this.pageLoading = true
-      const res = yield appProvider.api.voting.find(
-        {
-          unicodeName: query,
-          ownerAddress: appProvider.authStore.username,
-        },
-        { _limit: 1 }
-      )
+      const res = yield appProvider.api.voting.find(query, { _limit: 1 })
       if (isEmpty(res)) {
         appProvider.router.replace(RoutePaths.not_found)
       }
       this.pool = res[0]
+      console.log(this.pool)
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -213,7 +220,8 @@ export class NewMissionViewModel {
       status,
       chainId: pool.chain,
       tokenBasePrice,
-      rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
+      // rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
+      rewardAmount: '10',
       startTime: toISO(missionInfo.startDate),
       endTime: toISO(missionInfo.endDate),
       maxParticipant: toNumber(missionInfo.maxParticipants),

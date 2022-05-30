@@ -75,6 +75,9 @@ export default class MissionForm extends Vue {
   submit() {
     this.form.validate() && this.vm.submit()
   }
+  beforeDestroy() {
+    this.vm.destroy()
+  }
 }
 </script>
 
