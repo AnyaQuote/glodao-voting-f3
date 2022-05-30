@@ -111,6 +111,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
 import { FixedNumber } from '@ethersproject/bignumber'
+import { Zero } from '@/constants'
 
 @Observer
 @Component({
@@ -122,7 +123,11 @@ export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
 
   get rewardPerMission() {
-    return FixedNumber.from(this.vm.pool?.totalMission).divUnsafe(FixedNumber.from(this.vm.pool?.totalMission))
+    try {
+      return FixedNumber.from(this.vm.pool?.totalMission).divUnsafe(FixedNumber.from(this.vm.pool?.totalMission))
+    } catch (error) {
+      return Zero
+    }
   }
 }
 </script>
