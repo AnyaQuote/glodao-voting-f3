@@ -1,8 +1,7 @@
 import { appProvider } from '@/app-providers'
-import { VotingPool } from '@/models/VotingModel'
-import { observable, computed, action, IReactionDisposer, reaction, toJS } from 'mobx'
+import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { clone, get, isEmpty, kebabCase, set } from 'lodash-es'
+import { get, isEmpty, kebabCase } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
@@ -35,9 +34,7 @@ export class ProjectDetailViewModel {
       reaction(
         () => walletStore.account,
         (account) => {
-          if (!isEmpty(account)) {
-            this.fetchProjectDetail({ unicodeName, ownerAddress: account })
-          }
+          account && this.fetchProjectDetail({ unicodeName, ownerAddress: account })
         },
         { fireImmediately: true }
       ),
@@ -66,7 +63,6 @@ export class ProjectDetailViewModel {
         this.missions = res || []
       }
     } catch (error) {
-      console.log(error)
       appProvider.snackbar.commonError(error)
     } finally {
       this.loading = false
