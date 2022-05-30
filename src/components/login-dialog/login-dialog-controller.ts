@@ -1,4 +1,4 @@
-import { action, IReactionDisposer, observable, computed } from 'mobx'
+import { action, IReactionDisposer, observable, computed, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { walletStore } from '@/stores/wallet-store'
 import { snackController } from '../snack-bar/snack-bar-controller'
@@ -6,16 +6,37 @@ import { authStore } from '@/stores/auth-store'
 
 interface DialogConfig {
   message?: string
+  hideClose?: boolean
+}
+
+const defaultConfig = {
+  message: '',
+  hideClose: true,
 }
 
 export class LoginDialogController {
-  @observable config: DialogConfig = {
-    message: '',
-  }
+  @observable config: DialogConfig = defaultConfig
   @observable show = false
   @observable loading = false
+  @observable address = ''
 
-  @observable resolver?: (value: any) => void;
+  @observable resolver?: (value: any) => void
+
+  _disposer: IReactionDisposer
+
+  constructor() {
+    // Because UI cannot keep up account data, must reaction to follow its update
+    this._disposer = reaction(
+      () => walletStore.account,
+      (account) => {
+        if (account) this.address = account
+      }
+    )
+  }
+
+  destroy() {
+    this._disposer()
+  }
 
   @asyncAction *signAndLogin() {
     try {
@@ -33,7 +54,7 @@ export class LoginDialogController {
     this.signAndLogin()
   }
 
-  @action open(config?: DialogConfig) {
+  @action open(config: DialogConfig = defaultConfig) {
     this.config = { ...this.config, ...config }
     this.show = true
     return new Promise((resolve) => (this.resolver = resolve))
@@ -44,10 +65,6 @@ export class LoginDialogController {
       this.show = false
       this.resolver && this.resolver(null)
     }
-  }
-
-  @computed get account() {
-    return walletStore.account
   }
 }
 
