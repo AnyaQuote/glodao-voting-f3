@@ -1,4 +1,4 @@
-export interface Data {
+export interface QuizData {
   id?: string
   type?: string
   question?: string
@@ -19,7 +19,7 @@ export interface Quiz {
   name?: string
   learningInformation?: string
   description?: string
-  data?: Data[]
+  data?: QuizData[]
   answer?: Answer[]
   metadata?: MetaData
 }
@@ -33,4 +33,11 @@ export interface LearnToEarn {
     quizFile?: File | null
     learningFile?: File | null
   }
+}
+
+export interface PreviewQuiz {
+  id?: string
+  question?: string
+  answer?: number
+  choices?: { text?: string; value?: string }[]
 }

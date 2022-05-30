@@ -1,5 +1,5 @@
-import { Answer, Data } from '@/models/QuizModel'
-import { get } from 'lodash'
+import { Answer, QuizData, PreviewQuiz } from '@/models/QuizModel'
+import { get, sampleSize } from 'lodash'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
 export const getApiFileUrl = (model: any) => {
@@ -26,7 +26,7 @@ export const convertBytes = (bytes, decimals = 2) => {
 
 export const getJSONFromFile = (data: any) => {
   if (data) {
-    const quiz: Data[] = []
+    const quiz: QuizData[] = []
     const answer: Answer[] = []
     const lines = data.split(/\r?\n/)
     lines.forEach((line, index) => {
@@ -52,4 +52,25 @@ export const getJSONFromFile = (data: any) => {
     return [quiz, answer]
   }
   return []
+}
+
+export const getSamplePreviewJSONFromFile = (data: any, sample: number) => {
+  const previewData: PreviewQuiz[] = []
+  const lines = data.split(/\r?\n/)
+  sampleSize(lines, sample).forEach((line, index) => {
+    const sentences = line.split('|')
+    const question = sentences[0]
+    const choices = sentences.slice(1, 5).map((choice, index) => ({
+      text: choice,
+      value: `${index + 1}`,
+    }))
+    const answer = sentences[5]
+    previewData.push({
+      id: `${index + 1}`,
+      question,
+      choices,
+      answer,
+    })
+  })
+  return previewData
 }
