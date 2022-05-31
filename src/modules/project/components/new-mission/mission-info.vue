@@ -93,7 +93,7 @@ import { Zero } from '@/constants'
 @Observer
 @Component({
   components: {
-    'image-upload-field': () => import('@/components/image-upload-field.vue'),
+    'app-file-upload': () => import('@/components/app-file-upload.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
 })

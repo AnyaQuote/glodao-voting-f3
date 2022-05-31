@@ -1,5 +1,6 @@
 import web3 from 'web3'
 import moment from 'moment'
+import { formatFileSize } from '@/helpers'
 
 export const rules = {
   required: (v: string | number) =>

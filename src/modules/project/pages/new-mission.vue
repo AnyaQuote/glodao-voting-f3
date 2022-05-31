@@ -32,14 +32,16 @@
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
-          <v-form ref="form" class="pa-7">
+          <v-form v-model="valid" class="pa-7">
             <!-- MISSION, REWARD AND TIME INFORMATION -->
             <mission-info />
             <!-- MISSION SETTING -->
             <mission-setting />
             <v-btn
-              class="linear-blue--bg white--text text-none mt-7"
+              class="text-none mt-7"
+              :class="valid && 'linear-blue--bg white--text'"
               :loading="vm.btnLoading"
+              :disabled="!valid"
               @click="submit"
               height="40"
               depressed
@@ -68,12 +70,14 @@ import { get } from 'lodash-es'
 })
 export default class MissionForm extends Vue {
   @Provide() vm = new NewMissionViewModel(get(this.$route, 'params.code'))
-  @Ref('form') form
+
+  valid = false
+
   goBack() {
     this.$router.go(-1)
   }
   submit() {
-    this.form.validate() && this.vm.submit()
+    this.vm.submit()
   }
   beforeDestroy() {
     this.vm.destroy()

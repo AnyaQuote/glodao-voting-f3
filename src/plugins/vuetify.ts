@@ -15,6 +15,9 @@ export default new Vuetify({
       // settings: settingsSvg,
     },
   },
+  breakpoint: {
+    mobileBreakpoint: 700,
+  },
   theme: {
     dark: !localData.lightmode,
     options: {
