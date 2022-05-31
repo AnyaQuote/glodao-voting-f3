@@ -105,16 +105,20 @@
         placeholder="Enter short description that describes the mission"
       />
       <div class="font-18 font-weight-bold mt-6">Quiz cover</div>
-      <image-upload-field @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)" class="mt-2" />
+      <app-file-upload
+        imageOnly
+        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImageFile]"
+        @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
+        class="mt-2"
+      />
       <div class="font-18 mt-6 d-flex">
         <span class="font-weight-bold">Quiz file (fileName.csv)</span>
         <v-spacer />
         <span class="app-blue--text cursor-pointer" @click="download">Download the quiz template</span>
       </div>
-      <file-selector
-        :rules="[$rules.required]"
+      <app-file-upload
+        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isTextFile]"
         @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
-        class="mt-2"
       />
       <v-btn
         v-if="$_get(vm.learnToEarn, 'setting.quizFile')"
@@ -126,10 +130,9 @@
       </v-btn>
 
       <div class="d-flex font-18 mt-6 font-weight-bold">Document (fileName.md)</div>
-      <file-selector
-        :rules="[$rules.required]"
+      <app-file-upload
+        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isTextFile]"
         @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
-        class="mt-2"
       />
     </switch-field>
     <quiz-preview-dialog ref="quiz-preview-dialog" />
@@ -145,9 +148,8 @@ import { Observer } from 'mobx-vue'
 @Component({
   components: {
     'switch-field': () => import('./common/switch-field.vue'),
-    'file-selector': () => import('./file-selector.vue'),
-    'image-upload-field': () => import('@/components/image-upload-field.vue'),
     'quiz-preview-dialog': () => import('../new-mission/quiz-preview-dialog.vue'),
+    'app-file-upload': () => import('@/components/app-file-upload.vue'),
   },
 })
 export default class MissionSettingForm extends Vue {
