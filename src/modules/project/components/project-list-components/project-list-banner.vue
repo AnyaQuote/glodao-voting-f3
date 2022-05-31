@@ -1,27 +1,26 @@
 <template>
-  <div v-if="!$vuetify.breakpoint.mdAndUp" class="d-flex justify-space-between align-center py-6 px-4">
+  <div
+    v-if="!$vuetify.breakpoint.mdAndUp"
+    class="d-flex justify-space-between align-center py-6 px-4 mx-auto"
+    :class="$vuetify.breakpoint.xs && 'container-custom'"
+  >
     <div class="text-h5 neutral-0--text font-weight-black">Your project</div>
-    <div v-if="!walletStore.account">
-      <connect-wallet :height="37" btnClass="font-weight-bold" />
+    <div v-if="vm.votingPools.length">
+      <connect-wallet v-if="!walletStore.account" :height="37" btnClass="font-weight-bold" />
+      <v-btn v-else height="37" class="linear-blue--bg white--text font-weight-bold" @click="goToNewProject()">
+        New application
+      </v-btn>
     </div>
-    <v-btn
-      v-else-if="vm.votingPools.length"
-      height="37"
-      class="linear-blue--bg white--text font-weight-bold"
-      @click="goToNewProject()"
-    >
-      New application
-    </v-btn>
   </div>
-  <v-img v-else class="mb-12" height="216" src="@/assets/images/project/banner.png">
+  <v-img v-else height="216" src="@/assets/images/project/banner.png">
     <v-container class="fill-height pb-12 d-flex justify-space-between align-end">
       <div class="font-weight-600 white--text text-h3">Your project</div>
-      <div v-if="!walletStore.account">
-        <connect-wallet btnClass="font-18 font-weight-bold" />
+      <div v-if="vm.votingPools.length">
+        <connect-wallet v-if="!walletStore.account" btnClass="font-18 font-weight-bold" />
+        <v-btn v-else class="linear-blue--bg" height="55" depressed @click="goToNewProject()">
+          <span class="white--text font-weight-bold font-18">New application</span>
+        </v-btn>
       </div>
-      <v-btn v-else class="linear-blue--bg px-6 flex-shrink-0" height="55" depressed @click="goToNewProject()">
-        <span class="white--text font-weight-bold font-18">New application</span>
-      </v-btn>
     </v-container>
   </v-img>
 </template>
@@ -46,10 +45,8 @@ export default class ProjectBanner extends Vue {
 
 <style lang="scss" scoped>
 @import '@/styles/breakpoint-custom.scss';
-.custom-left-margin {
-  margin-left: 20px;
-  @include breakpoint(desktop) {
-    transform: translate(40%);
-  }
+.container-custom {
+  padding: 0 16px;
+  max-width: 392px;
 }
 </style>
