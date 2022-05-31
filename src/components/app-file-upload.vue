@@ -25,7 +25,7 @@
     >
       <template v-slot:label>
         <span class="font-weight-bold">
-          {{ preview.text ? preview.text : `Upload your ${config.type}` }}
+          {{ preview.name ? preview.name : `Upload your ${config.type}` }}
         </span>
       </template>
     </v-file-input>
@@ -38,7 +38,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { isNil } from 'lodash-es'
 
 type AppFile = File | string | null
 
@@ -56,12 +55,22 @@ export default class AppUploadField extends Vue {
 
   data: AppFile = null
   config = defaultConfig
-  preview = { text: '', value: '' }
+  preview = { name: '', value: '' }
 
   mounted() {
-    this.config = { ...this.config, isEdit: typeof this.value === 'string' }
-    this.preview.value = this.getSource(this.value)
-    this.preview.text = this.preview.value.substring(this.preview.value.lastIndexOf('/') + 1)
+    this.config = { ...this.config, isEdit: !!this.value }
+    if (typeof this.value === 'string') {
+      this.preview = {
+        value: this.getSource(this.value),
+        name: this.value.split('/').pop() || '',
+      }
+    } else if (this.value instanceof File) {
+      this.data = this.value
+      if (/^(image)\/.*$/.test(this.value.type)) {
+        this.preview = { ...this.preview, value: this.getSource(this.value) }
+      }
+    }
+
     this.config = this.imageOnly
       ? { ...this.config, hint: 'Allow file types: png, jpg, svg', accept: '.png,.jpg,.svg', type: 'image' }
       : this.config
@@ -69,13 +78,17 @@ export default class AppUploadField extends Vue {
 
   onChange(value: any) {
     this.data = value
-    if (this.preview.text) this.preview.text = ''
+    if (this.preview.name) this.preview.name = ''
     this.preview.value = this.getSource(value)
     this.$emit('change', value)
   }
 
   getSource(value: AppFile) {
-    return !isNil(value) ? (typeof value === 'string' ? value : URL.createObjectURL(value)) : ''
+    if (value && value instanceof File && /^(image)\/.*$/.test(value.type)) return URL.createObjectURL(value)
+    else if (value && typeof value === 'string') {
+      return value
+    }
+    return ''
   }
 }
 </script>
