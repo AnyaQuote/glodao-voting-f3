@@ -8,7 +8,6 @@ import { action, IReactionDisposer, observable, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
-import { toISO } from '@/helpers/date-helper'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { walletStore } from '@/stores/wallet-store'
 
@@ -218,8 +217,8 @@ export class NewMissionViewModel {
       chainId: pool.chain,
       tokenBasePrice,
       rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
-      startTime: toISO(missionInfo.startDate),
-      endTime: toISO(missionInfo.endDate),
+      startTime: missionInfo.startDate,
+      endTime: missionInfo.endDate,
       maxParticipant: toNumber(missionInfo.maxParticipants),
       priorityRewardAmount: missionInfo.priorityAmount,
       data: setting,

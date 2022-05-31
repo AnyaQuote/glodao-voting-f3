@@ -11,7 +11,6 @@ import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RoutePaths } from '@/router'
-import { toISO } from '@/helpers/date-helper'
 import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
@@ -153,8 +152,8 @@ export class BountyApplyViewModel {
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
-        startDate: moment().toISOString(),
-        endDate: moment().add(3, 'days').toISOString(),
+        startDate: this.projectInfo.startDate,
+        endDate: this.projectInfo.endDate,
         data: {
           shortDescription: this.projectInfo.shortDescription,
           fields: this.projectInfo.fields,
