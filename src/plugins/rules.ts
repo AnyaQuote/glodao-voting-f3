@@ -36,6 +36,15 @@ export const rules = {
     (/^[0-9]{2}:[0-9]{2}$/.test(v.trim()) && (moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid())) ||
     'Invalid time ',
   isAddress: (v: string) => web3.utils.isAddress(v.trim()) || 'Address not valid',
+  maxSize: (size: number) => (value: any) =>
+    !value || value.size < size || `File size should be less than ${formatFileSize(size)} MB!`,
+  isImage: (v: File) => {
+    console.log('test::', /\.(gif|jpe?g|tiff?|png|webp|bmp|png)$/i.test(v.name))
+    return /\.(gif|jpe?g|tiff?|png|webp|bmp|png)$/i.test(v.name) || 'File is not an image.'
+  },
+  isTextFile: (v: File) =>
+    !v || !/\.(csv|me|readme|te?xt|rtfd?|docx?)$/i.test(v.name) || 'Can not read this text file.',
+  fileRequired: (v: File) => (!!v && v instanceof File && v.size > 0) || 'File is required',
 }
 
 export const appRules = {}

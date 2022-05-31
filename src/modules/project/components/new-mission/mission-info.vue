@@ -18,16 +18,19 @@
         placeholder="Enter short description to describe the mission"
       />
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
-      <image-upload-field @change="vm.changeMissionInfo('missionCover', $event)" />
+      <app-file-upload
+        imageOnly
+        :rules="[$rules.fileRequired, $rules.maxSize(15000000), $rules.isImageFile]"
+        @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
+        class="mt-2"
+      />
     </div>
 
     <!-- REWARD INFORMATION -->
     <div class="d-flex flex-column mt-7">
       <div class="title font-weight-bold bluePrimary--text">Reward information</div>
       <div class="font-18 font-weight-bold mt-4">
-        <!-- rewardAmount is hard coded start -->
-        <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName', 'HWD') }}</span>
-        <!-- rewardAmount is hard coded end -->
+        <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
       </div>
       <div class="mt-4 d-flex">
         <div class="flex-grow-1">
