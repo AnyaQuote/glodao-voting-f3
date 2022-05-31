@@ -58,50 +58,24 @@
     <!-- MISSION TIME -->
     <div class="mt-7">
       <div class="title font-weight-bold bluePrimary--text">Mision time</div>
-      <div class="d-flex mt-4">
-        <div class="flex-grow-1 mr-4">
-          <span class="font-18 font-weight-bold">Start date</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.yyyymmdd]"
-            :value="$_get(vm.missionInfo, 'startDate.date')"
-            @change="vm.changeMissionInfo('startDate.date', $event)"
-            placeholder="DD/MM/YYYY"
-          />
-        </div>
-        <div class="flex-grow-1">
-          <span class="font-18 font-weight-bold">Start time</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.hhmm]"
-            :value="$_get(vm.missionInfo, 'startDate.time')"
-            @change="vm.changeMissionInfo('startDate.time', $event)"
-            placeholder="hh:mm"
-          />
-        </div>
-      </div>
-      <div class="d-flex">
-        <div class="flex-grow-1 mr-4 mt-4">
-          <span class="font-18 font-weight-bold">End date</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.yyyymmdd]"
-            :value="$_get(vm.missionInfo, 'endDate.date')"
-            @change="vm.changeMissionInfo('endDate.date', $event)"
-            placeholder="DD/MM/YYYY"
-          />
-        </div>
-        <div class="flex-grow-1 mt-4">
-          <span class="font-18 font-weight-bold">End time</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.hhmm]"
-            :value="$_get(vm.missionInfo, 'endDate.time')"
-            @change="vm.changeMissionInfo('endDate.time', $event)"
-            placeholder="hh:mm"
-          />
-        </div>
-      </div>
+      <app-datetime-picker
+        class="mt-7"
+        dateLabel="Start date"
+        timeLabel="Start time"
+        :rules="[$rules.required]"
+        :maxDate="$_get(vm.missionInfo, 'endDate')"
+        :value="$_get(vm.missionInfo, 'startDate')"
+        @change="vm.changeMissionInfo('startDate', $event)"
+      />
+      <app-datetime-picker
+        dateLabel="End date"
+        timeLabel="End time"
+        :rules="[$rules.required]"
+        :disabled="!vm.missionInfo.startDate"
+        :minDate="$_get(vm.missionInfo, 'startDate')"
+        :value="$_get(vm.missionInfo, 'endDate')"
+        @change="vm.changeMissionInfo('endDate', $event)"
+      />
     </div>
   </div>
 </template>
@@ -117,6 +91,7 @@ import { Zero } from '@/constants'
 @Component({
   components: {
     'image-upload-field': () => import('@/components/image-upload-field.vue'),
+    'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
 })
 export default class MissionInfoForm extends Vue {
