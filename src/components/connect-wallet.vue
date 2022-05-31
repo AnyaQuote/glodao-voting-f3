@@ -13,7 +13,6 @@
           depressed
           class="rounded linear-blue--bg white--text"
           large
-          :block="$vuetify.breakpoint.xs"
           :class="$attrs.btnClass"
           :height="height"
         >
