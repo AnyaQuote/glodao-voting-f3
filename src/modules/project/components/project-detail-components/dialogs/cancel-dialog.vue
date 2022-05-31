@@ -3,7 +3,7 @@
     <div class="rounded-lg pa-6 neutral-100">
       <!-- HEADER -->
       <div class="d-flex justify-space-between align-center mb-4">
-        <div class="font-weight-bold font-18">Withdraw token</div>
+        <div class="font-weight-bold font-18">Cancel project</div>
         <v-icon size="18" :disabled="vm.cancelling" @click="vm.changeCancelDialog(false)">mdi-close</v-icon>
       </div>
 
