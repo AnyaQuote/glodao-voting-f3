@@ -1,37 +1,40 @@
 <template>
-  <v-dialog :value="vm.cancelDialog" v-if="vm.poolStore" persistent max-width="500">
-    <v-sheet class="rounded-lg pa-6 neutral-100">
-      <div class="d-flex mb-4">
-        <v-spacer class="font-weight-bold neutral-0--text" style="font-size: 18px">Cancel project</v-spacer>
+  <v-dialog :value="vm.cancelDialog" v-if="vm.poolStore" persistent max-width="438">
+    <div class="rounded-lg pa-6 neutral-100">
+      <!-- HEADER -->
+      <div class="d-flex justify-space-between align-center mb-4">
+        <div class="font-weight-bold font-18">Withdraw token</div>
         <v-icon size="18" :disabled="vm.cancelling" @click="vm.changeCancelDialog(false)">mdi-close</v-icon>
       </div>
-      <div class="neutral-0--text mb-4">
-        Are you sure cancel this pool! You will only withdraw total token, the creating pool fee can not be pay back.
-      </div>
-      <div style="font-size: 18px" class="mb-6">
-        <div class="d-flex justify-space-between">
-          <div class="neutral10--text">Total sent</div>
-          <div class="font-weight-bold neutral-0--text">
-            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
-          </div>
-        </div>
-        <div class="d-flex justify-space-between">
-          <div class="neutral10--text">Withdraw amount:</div>
-          <div class="font-weight-bold neutral-0--text">
-            {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
-          </div>
+
+      <!-- CAPTION -->
+      <div class="mb-6">Your project is rejected for launch so you can withdraw the total amount of tokens sent!</div>
+
+      <!-- TOTAL SENT -->
+      <div class="d-flex justify-space-between mb-4">
+        <div class="font-18 neutral-10--text">Total sent</div>
+        <div class="font-18 font-weight-bold">
+          {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
         </div>
       </div>
+
+      <!-- WITHDRAW AMOUNT -->
+      <div class="rounded-lg text-center py-4 mb-6" style="border: 1px solid var(--v-neutral-20-base)">
+        <div class="font-18 neutral-10--text">Withdraw amount</div>
+        <div class="text-h5 font-weight-600">{{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}</div>
+      </div>
+
+      <!-- BUTTON -->
       <v-btn
-        elevation="0"
+        depressed
         block
-        class="linear-blue--bg text-none text-subtitle-1 rounded white--text"
+        class="linear-blue--bg rounded text-subtitle-1 app-blue--text text--lighten-1"
         :loading="vm.cancelling"
         @click="vm.cancelAndWithdraw()"
       >
-        Cancel and withdraw
+        Withdraw all
       </v-btn>
-    </v-sheet>
+    </div>
   </v-dialog>
 </template>
 
