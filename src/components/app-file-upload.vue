@@ -1,7 +1,7 @@
 <template>
   <v-sheet outlined v-ripple class="d-flex align-center rounded px-5">
-    <div v-if="imageOnly" class="flex-shrink-0 py-5 pr-5">
-      <v-img v-if="preview.value" :src="preview.value" class="rounded" max-height="50" max-width="50"></v-img>
+    <div v-if="imageOnly" class="flex-shrink-0 py-5 mr-5">
+      <v-img v-if="preview.value" :src="preview.value" class="rounded" max-with="50" aspect-ratio="1"></v-img>
       <v-img
         v-else
         :src="require('@/assets/icons/file-logo.svg')"
@@ -50,7 +50,7 @@ const defaultConfig = {
 
 @Component
 export default class AppUploadField extends Vue {
-  @Prop({ required: true }) value!: AppFile
+  @Prop({ default: null }) value!: AppFile
   @Prop(Boolean) imageOnly!: boolean
 
   data: AppFile = null
@@ -59,12 +59,12 @@ export default class AppUploadField extends Vue {
 
   mounted() {
     this.config = { ...this.config, isEdit: !!this.value }
-    if (typeof this.value === 'string') {
+    if (this.value && typeof this.value === 'string') {
       this.preview = {
         value: this.getSource(this.value),
         name: this.value.split('/').pop() || '',
       }
-    } else if (this.value instanceof File) {
+    } else if (this.value && this.value instanceof File) {
       this.data = this.value
       if (/^(image)\/.*$/.test(this.value.type)) {
         this.preview = { ...this.preview, value: this.getSource(this.value) }
