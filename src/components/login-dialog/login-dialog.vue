@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="controller.show" max-width="480px" persistent>
+  <v-dialog :value="controller.show" max-width="480px">
     <v-card class="neutral100--bg" outlined>
       <v-card-title class="text-none">
         <v-spacer />

@@ -41,7 +41,6 @@ export default class QuizPreviewDialog extends Vue {
   open() {
     this.dialog.open()
   }
-  //
 }
 </script>
 

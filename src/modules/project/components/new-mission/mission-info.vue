@@ -18,7 +18,12 @@
         placeholder="Enter short description to describe the mission"
       />
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
-      <image-upload-field @change="vm.changeMissionInfo('missionCover', $event)" />
+      <app-file-upload
+        imageOnly
+        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImageFile]"
+        @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
+        class="mt-2"
+      />
     </div>
 
     <!-- REWARD INFORMATION -->
@@ -116,7 +121,7 @@ import { Zero } from '@/constants'
 @Observer
 @Component({
   components: {
-    'image-upload-field': () => import('@/components/image-upload-field.vue'),
+    'app-file-upload': () => import('@/components/app-file-upload.vue'),
   },
 })
 export default class MissionInfoForm extends Vue {
