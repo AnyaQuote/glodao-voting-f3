@@ -18,14 +18,8 @@ const missionInfoDefault = {
   missionCover: '',
   priorityAmount: '',
   maxParticipants: '',
-  startDate: {
-    date: '',
-    time: '',
-  },
-  endDate: {
-    date: '',
-    time: '',
-  },
+  startDate: '',
+  endDate: '',
 }
 
 const learnToEarnDefault: LearnToEarn = {
@@ -125,7 +119,7 @@ export class NewMissionViewModel {
   }
 
   @action.bound changeMissionInfo(property: string, value: string) {
-    set(this.missionInfo, property, value)
+    this.missionInfo = set(this.missionInfo, property, value)
   }
   @action.bound changeJoinTelegramSetting(property, value) {
     set(this.joinTelegram, property, value)
