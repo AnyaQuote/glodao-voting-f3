@@ -51,6 +51,10 @@
             <div class="text-subtitle-2">We want the project to launch</div>
           </div>
           <progress-bar :value="pool.votedPercent" />
+          <div class="d-flex justify-space-between neutral-0--text text-subtitle-2 mt-2">
+            <div>---</div>
+            <div>{{ pool.votedPercent | formatNumber(2, 2) }} %</div>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -65,7 +69,6 @@
 
 <script lang="ts">
 import { PoolStore } from '@/stores/pool-store'
-import { get } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -73,14 +76,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 @Component
 export default class extends Vue {
   @Prop({ required: true }) pool!: PoolStore
-
-  upvoteCount = Math.floor(Math.random() * 1000) + 500
-  downvoteCount = Math.floor(Math.random() * 500)
-  totalVoteCount = this.upvoteCount + this.downvoteCount
-
-  get upvote() {
-    return (this.upvoteCount / this.totalVoteCount) * 100
-  }
 
   get statusReport() {
     if (this.pool.onVoting)
@@ -108,10 +103,6 @@ export default class extends Vue {
       color: 'app-grey',
       text: this.pool.status,
     }
-  }
-
-  get projectLogo() {
-    return get(this.pool, 'data.projectLogo', '')
   }
 }
 </script>

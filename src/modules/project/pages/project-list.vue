@@ -2,7 +2,7 @@
   <div>
     <project-list-banner />
 
-    <div class="spacing px-sm-4 mx-auto">
+    <div class="spacing mx-auto">
       <div v-if="vm.loading" class="px-3 py-3">
         <div class="d-flex mb-3">
           <v-skeleton-loader class="mr-3" type="chip" />
@@ -21,7 +21,7 @@
 
       <div
         v-else
-        class="neutral-100 pt-6 pb-4 py-sm-0 my-md-12"
+        class="neutral-100 pt-6 pb-4 mx-4 py-sm-0 my-md-12"
         :class="$vuetify.breakpoint.smAndUp && 'rounded-lg overflow-hidden'"
       >
         <!--------------------------  HEADER -------------------------->
@@ -81,7 +81,6 @@
 <script lang="ts">
 import ConnectWallet from '@/components/connect-wallet.vue'
 import { RoutePaths } from '@/router'
-import { walletStore } from '@/stores/wallet-store'
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
@@ -96,9 +95,6 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 })
 export default class ProjectListPage extends Vue {
   @Provide() vm = new ProjectListViewModel()
-
-  walletStore = walletStore
-  chainId = process.env.VUE_APP_CHAIN_ID
 
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)
