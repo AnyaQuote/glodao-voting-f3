@@ -1,7 +1,7 @@
 <template>
   <div class="project-card-form overflow-hidden">
     <v-row no-gutters dense align="stretch">
-      <v-col :cols="$vuetify.breakpoint.mobile ? 12 : 6" style="border-bottom: 1px solid var(--v-neutral-20-base)">
+      <v-col :cols="$vuetify.breakpoint.mobile ? 12 : 6" :class="!$vuetify.breakpoint.mobile && 'border-right'">
         <div class="project-info pa-4 pa-sm-6 d-flex align-stretch blue-2">
           <div class="project-logo neutral-100 rounded d-flex justify-center align-center pa-2 mr-4">
             <v-img :src="pool.projectLogo" />
@@ -11,8 +11,8 @@
             <div class="text-subtitle-1 text-sm-h6 neutral10--text font-weight-medium">$SB</div>
           </div>
         </div>
-        <div style="border-bottom: 1px solid var(--v-neutral-20-base)"></div>
-        <div class="pa-4 text-subtitle-1">
+        <div class="border-bottom"></div>
+        <div class="pa-4 text-subtitle-1" :class="$vuetify.breakpoint.mobile && 'border-bottom'">
           <div>
             <span class="neutral-10--text font-weight-medium">Voting start: </span>
             <span class="font-weight-600">{{ pool.startDate | ddmmyyyyhhmma }}</span>
@@ -38,7 +38,7 @@
             {{ statusReport.text }}
           </div>
         </div>
-        <div style="border-bottom: 1px solid var(--v-neutral-20-base)"></div>
+        <div class="border-bottom"></div>
 
         <div class="pa-4">
           <div class="d-flex align-baseline">
@@ -54,11 +54,9 @@
         </div>
       </v-col>
     </v-row>
+    <div class="border-bottom"></div>
     <router-link :to="`/projects/${pool.unicodeName}`">
-      <div
-        class="d-flex align-center justify-center blue-2 blue-diversity--text font-weight-600"
-        style="height: 56px; border-top: 1px solid var(--v-neutral-20-base)"
-      >
+      <div class="d-flex align-center justify-center blue-2 blue-diversity--text font-weight-600" style="height: 56px">
         View detail
       </div>
     </router-link>
@@ -136,5 +134,13 @@ export default class extends Vue {
     height: 76px;
     width: 76px;
   }
+}
+
+.border-right {
+  border-right: 1px solid var(--v-neutral-20-base);
+}
+
+.border-bottom {
+  border-bottom: 1px solid var(--v-neutral-20-base);
 }
 </style>
