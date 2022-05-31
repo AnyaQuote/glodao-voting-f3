@@ -1,6 +1,6 @@
 <template>
   <div>
-    <project-list-header />
+    <project-list-banner />
 
     <div class="spacing px-sm-4 mx-auto">
       <div v-if="vm.loading" class="px-3 py-3">
@@ -89,8 +89,7 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
 @Observer
 @Component({
   components: {
-    'project-list-header': () => import('../components/project-list-components/project-list-banner.vue'),
-    'project-list-card': () => import('../components/project-list-components/project-list-card.vue'),
+    'project-list-banner': () => import('../components/project-list-components/project-list-banner.vue'),
     'empty-list': () => import('../components/project-list-components/empty-project.vue'),
     'project-card': () => import('../components/project-list-components/project-card.vue'),
   },
