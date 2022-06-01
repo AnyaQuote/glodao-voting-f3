@@ -4,13 +4,13 @@ import { Data } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
-import { action, IReactionDisposer, observable, reaction } from 'mobx'
+import { action, IReactionDisposer, observable, reaction, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
-import { toISO } from '@/helpers/date-helper'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { walletStore } from '@/stores/wallet-store'
+import moment from 'moment'
 
 const missionInfoDefault = {
   name: '',
@@ -18,14 +18,8 @@ const missionInfoDefault = {
   missionCover: '',
   priorityAmount: '',
   maxParticipants: '',
-  startDate: {
-    date: '',
-    time: '',
-  },
-  endDate: {
-    date: '',
-    time: '',
-  },
+  startDate: '',
+  endDate: '',
 }
 
 const learnToEarnDefault: LearnToEarn = {
@@ -109,6 +103,22 @@ export class NewMissionViewModel {
     this._disposer()
   }
 
+  @computed get missionStart() {
+    return this.missionInfo.startDate
+  }
+
+  @computed get missionEnd() {
+    return this.missionInfo.endDate
+  }
+
+  @computed get missionMaxDate() {
+    return this.pool?.endDate
+  }
+
+  @computed get missionMinDate() {
+    return this.pool?.startDate
+  }
+
   @asyncAction *fetchProjectByUnicode(query: { unicodeName: string; ownerAddress: string }) {
     try {
       this.pageLoading = true
@@ -125,7 +135,7 @@ export class NewMissionViewModel {
   }
 
   @action.bound changeMissionInfo(property: string, value: string) {
-    set(this.missionInfo, property, value)
+    this.missionInfo = set(this.missionInfo, property, value)
   }
   @action.bound changeJoinTelegramSetting(property, value) {
     set(this.joinTelegram, property, value)
@@ -224,8 +234,8 @@ export class NewMissionViewModel {
       chainId: pool.chain,
       tokenBasePrice,
       rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
-      startTime: toISO(missionInfo.startDate),
-      endTime: toISO(missionInfo.endDate),
+      startTime: missionInfo.startDate,
+      endTime: missionInfo.endDate,
       maxParticipant: toNumber(missionInfo.maxParticipants),
       priorityRewardAmount: missionInfo.priorityAmount,
       data: setting,

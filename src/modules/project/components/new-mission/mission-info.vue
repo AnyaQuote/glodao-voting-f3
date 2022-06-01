@@ -20,7 +20,7 @@
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
       <app-file-upload
         imageOnly
-        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImageFile]"
+        :rules="[$rules.fileRequired, $rules.maxSize(15000000), $rules.isImageFile]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
@@ -30,9 +30,7 @@
     <div class="d-flex flex-column mt-7">
       <div class="title font-weight-bold bluePrimary--text">Reward information</div>
       <div class="font-18 font-weight-bold mt-4">
-        <!-- rewardAmount is hard coded start -->
-        <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName', 'HWD') }}</span>
-        <!-- rewardAmount is hard coded end -->
+        <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
       </div>
       <div class="mt-4 d-flex">
         <div class="flex-grow-1">
@@ -62,51 +60,30 @@
 
     <!-- MISSION TIME -->
     <div class="mt-7">
-      <div class="title font-weight-bold bluePrimary--text">Mision time</div>
-      <div class="d-flex mt-4">
-        <div class="flex-grow-1 mr-4">
-          <span class="font-18 font-weight-bold">Start date</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.yyyymmdd]"
-            :value="$_get(vm.missionInfo, 'startDate.date')"
-            @change="vm.changeMissionInfo('startDate.date', $event)"
-            placeholder="DD/MM/YYYY"
-          />
-        </div>
-        <div class="flex-grow-1">
-          <span class="font-18 font-weight-bold">Start time</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.hhmm]"
-            :value="$_get(vm.missionInfo, 'startDate.time')"
-            @change="vm.changeMissionInfo('startDate.time', $event)"
-            placeholder="hh:mm"
-          />
-        </div>
+      <div>
+        <span class="title font-weight-bold blue-diversity--text">Mision time</span>
+        <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
-      <div class="d-flex">
-        <div class="flex-grow-1 mr-4 mt-4">
-          <span class="font-18 font-weight-bold">End date</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.yyyymmdd]"
-            :value="$_get(vm.missionInfo, 'endDate.date')"
-            @change="vm.changeMissionInfo('endDate.date', $event)"
-            placeholder="DD/MM/YYYY"
-          />
-        </div>
-        <div class="flex-grow-1 mt-4">
-          <span class="font-18 font-weight-bold">End time</span>
-          <app-text-field
-            class="mt-2"
-            :rules="[$rules.required, $rules.hhmm]"
-            :value="$_get(vm.missionInfo, 'endDate.time')"
-            @change="vm.changeMissionInfo('endDate.time', $event)"
-            placeholder="hh:mm"
-          />
-        </div>
-      </div>
+      <app-datetime-picker
+        class="mt-7"
+        dateLabel="Start date"
+        timeLabel="Start time"
+        :rules="[$rules.required]"
+        :minDate="vm.missionMinDate"
+        :maxDate="vm.missionMaxDate"
+        :value="vm.missionStart"
+        @change="vm.changeMissionInfo('startDate', $event)"
+      />
+      <app-datetime-picker
+        dateLabel="End date"
+        timeLabel="End time"
+        :rules="[$rules.required, $rules.validDateRange(vm.missionStart, vm.missionEnd)]"
+        :disabled="!vm.missionStart"
+        :maxDate="vm.missionMaxDate"
+        :minDate="vm.missionStart"
+        :value="vm.missionEnd"
+        @change="vm.changeMissionInfo('endDate', $event)"
+      />
     </div>
   </div>
 </template>
@@ -122,6 +99,7 @@ import { Zero } from '@/constants'
 @Component({
   components: {
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
+    'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
 })
 export default class MissionInfoForm extends Vue {

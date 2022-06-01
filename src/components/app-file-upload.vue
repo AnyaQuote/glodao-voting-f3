@@ -84,10 +84,9 @@ export default class AppUploadField extends Vue {
   }
 
   getSource(value: AppFile) {
-    if (value && value instanceof File && /^(image)\/.*$/.test(value.type)) return URL.createObjectURL(value)
-    else if (value && typeof value === 'string') {
-      return value
-    }
+    if (value && value instanceof File && /^(image)\/.*$/.test(value.type)) {
+      return URL.createObjectURL(value)
+    } else if (value && typeof value === 'string') return value
     return ''
   }
 }

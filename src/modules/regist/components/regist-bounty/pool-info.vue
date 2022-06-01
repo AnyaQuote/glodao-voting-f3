@@ -36,48 +36,31 @@
         </div>
       </div>
 
-      <div class="blue--text font-18 font-weight-bold">Campaign Information</div>
-      <div class="d-flex flex-column flex-sm-row mt-3">
-        <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Start date</div>
-          <app-text-field
-            :value="$_get(vm.projectInfo, 'startDate.date')"
-            @input="vm.changeProjectInfo('startDate.date', $event)"
-            placeholder="dd/mm/yyyy"
-          ></app-text-field>
-        </div>
-        <div class="pl-0 pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Start time</div>
-          <app-text-field
-            :value="$_get(vm.projectInfo, 'startDate.time')"
-            @input="vm.changeProjectInfo('startDate.time', $event)"
-            placeholder="hh:mm"
-          ></app-text-field>
-        </div>
+      <div>
+        <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
+        <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
-
-      <div class="d-flex flex-column flex-sm-row">
-        <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">End date</div>
-          <app-text-field
-            :value="$_get(vm.projectInfo, 'endDate.date')"
-            @input="vm.changeProjectInfo('endDate.date', $event)"
-            placeholder="dd/mm/yyyy"
-          ></app-text-field>
-        </div>
-        <div class="pl-0 pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">End time</div>
-          <app-text-field
-            :value="$_get(vm.projectInfo, 'endDate.time')"
-            @input="vm.changeProjectInfo('endDate.time', $event)"
-            placeholder="hh:mm"
-          ></app-text-field>
-        </div>
-      </div>
+      <app-datetime-picker
+        class="mt-7"
+        dateLabel="Start date"
+        timeLabel="Start time"
+        :rules="[$rules.required]"
+        :maxDate="$_get(vm.projectInfo, 'endDate')"
+        :value="$_get(vm.projectInfo, 'startDate')"
+        @change="vm.changeProjectInfo('startDate', $event)"
+      />
+      <app-datetime-picker
+        dateLabel="End date"
+        timeLabel="End time"
+        :rules="[$rules.required, $rules.validDateRange(vm.projectInfo.startDate, vm.projectInfo.endDate)]"
+        :disabled="!vm.projectInfo.startDate"
+        :minDate="$_get(vm.projectInfo, 'startDate')"
+        :value="$_get(vm.projectInfo, 'endDate')"
+        @change="vm.changeProjectInfo('endDate', $event)"
+      />
 
       <div class="font-18 flex-grow-1 mb-2">
         <span class="font-weight-bold">Total missions</span>
-        <!-- <span class="ml-1">(Max is 10 mission)</span> -->
       </div>
       <app-text-field
         :rules="[$rules.required, $rules.integer, $rules.min(1)]"
@@ -110,6 +93,7 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 @Component({
   components: {
     'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
+    'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
 })
 export default class RaisingInfo extends Vue {
