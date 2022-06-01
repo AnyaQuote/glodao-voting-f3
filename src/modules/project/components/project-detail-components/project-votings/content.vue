@@ -21,7 +21,7 @@
         </v-row>
       </v-col>
     </v-row>
-    <update-project-dialog ref="update-dialog" />
+    <!-- <update-project-dialog ref="update-dialog" /> -->
   </div>
 </template>
 
@@ -43,11 +43,11 @@ import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
-  @Ref('update-dialog') dialog: any
+  // @Ref('update-dialog') dialog: any
 
-  open() {
-    this.dialog.open()
-  }
+  // open() {
+  //   this.dialog.open()
+  // }
 }
 </script>
 

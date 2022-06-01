@@ -6,10 +6,14 @@
           <div class="project-logo neutral-100 rounded d-flex justify-center align-center pa-2 mr-4">
             <v-img :src="pool.projectLogo" />
           </div>
-          <div class="spacer">
-            <div class="text-h6 text-sm-h5 font-weight-bold">{{ pool.projectName }}</div>
+          <div class="spacer text-truncate">
+            <div class="text-h6 text-sm-h5 font-weight-bold text-truncate">{{ pool.projectName }}</div>
             <div class="text-subtitle-1 text-sm-h6 neutral10--text font-weight-medium">$SB</div>
           </div>
+        </div>
+        <div class="border-bottom"></div>
+        <div class="pa-4 text-subtitle-2 text-md-subtitle-1 neutral-10--text font-weight-regular">
+          {{ pool.shortDescription }}
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-1" :class="$vuetify.breakpoint.mobile && 'border-bottom'">
@@ -43,15 +47,32 @@
         <div class="pa-4">
           <div class="d-flex align-baseline">
             <div
-              class="app-green lighten-1 app-blue--text text--lighten-1 text-subtitle-2 rounded-lg d-flex justify-center align-center mr-4 mb-2"
+              class="app-blue--text text--lighten-1 text-subtitle-2 rounded-lg d-flex justify-center align-center mr-4 mb-2 app-green lighten-1"
               style="height: 27px; width: 59px"
             >
               👍 YES
             </div>
-            <div class="text-subtitle-2">We want the project to launch</div>
+            <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We want the project to launch</div>
           </div>
           <progress-bar :value="pool.votedPercent" />
-          <div class="d-flex justify-space-between neutral-0--text text-subtitle-2 mt-2">
+          <div class="d-flex justify-space-between text-subtitle-2 mt-2">
+            <div>---</div>
+            <div>{{ pool.votedPercent | formatNumber(2, 2) }} %</div>
+          </div>
+        </div>
+
+        <div class="pa-4">
+          <div class="d-flex align-baseline">
+            <div
+              class="app-blue--text text--lighten-1 text-subtitle-2 rounded-lg d-flex justify-center align-center mr-4 mb-2 app-red"
+              style="height: 27px; width: 59px"
+            >
+              👍 NO
+            </div>
+            <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We don't want the project to launch</div>
+          </div>
+          <progress-bar :value="pool.votedPercent" />
+          <div class="d-flex justify-space-between text-subtitle-2 mt-2">
             <div>---</div>
             <div>{{ pool.votedPercent | formatNumber(2, 2) }} %</div>
           </div>

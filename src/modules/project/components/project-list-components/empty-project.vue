@@ -1,5 +1,5 @@
 <template>
-  <v-row dense no-gutter>
+  <v-row dense no-gutters>
     <v-col cols="12" sm="8" class="text-center text-sm-start pr-md-4 mb-16 mb-md-0">
       <div class="text-h5 text-md-h3 font-weight-bold neutral-0--text mb-6 mb-md-9">Create the first application</div>
       <div class="text-subtitle-2 text-md-h6 neutral-10--text mb-6 mb-md-9">
