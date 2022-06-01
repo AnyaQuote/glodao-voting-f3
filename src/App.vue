@@ -268,4 +268,13 @@ a {
 .input-min-height .v-input__control {
   min-height: 18px !important;
 }
+
+.v-picker {
+  .v-picker__body {
+    background: var(--v-neutral100-base) !important;
+  }
+  .v-time-picker-clock {
+    background: var(--v-neutral100-base) !important;
+  }
+}
 </style>
