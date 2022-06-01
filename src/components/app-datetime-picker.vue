@@ -1,6 +1,6 @@
 <template>
   <v-sheet class="row ma-0">
-    <div class="col-12 col-sm-6 pa-0 pr-4">
+    <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
       <div class="font-weight-bold mb-2">
         <slot name="date-label">{{ dateLabel }}</slot>
       </div>
@@ -26,7 +26,7 @@
         />
       </v-menu>
     </div>
-    <div class="col-12 col-sm-6 pa-0">
+    <div class="col-12 col-md-6 pa-0">
       <div class="font-weight-bold mb-2">
         <slot name="time-label">{{ timeLabel }}</slot>
       </div>
