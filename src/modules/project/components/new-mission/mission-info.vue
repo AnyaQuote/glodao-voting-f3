@@ -32,18 +32,18 @@
       <div class="font-18 font-weight-bold mt-4">
         <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
       </div>
-      <div class="mt-4 d-flex">
-        <div class="flex-grow-1">
+      <div class="mt-4 row ma-0">
+        <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
           <span class="font-18 font-weight-bold">Priority amount</span>
           <app-text-field
             class="mt-2"
-            :rules="[$rules.required, $rules.floatNumberOnly]"
+            :rules="[$rules.required, $rules.floatNumberOnly, $rules.max(rewardPerMission)]"
             :value="$_get(vm.missionInfo, 'priorityAmount')"
             @change="vm.changeMissionInfo('priorityAmount', $event)"
             placeholder="Enter amount"
           />
         </div>
-        <div class="flex-grow-1 ml-4">
+        <div class="col-12 col-md-6 pa-0">
           <span class="font-18 font-weight-bold">Max participant in priority pool</span>
           <app-text-field
             class="mt-2"
