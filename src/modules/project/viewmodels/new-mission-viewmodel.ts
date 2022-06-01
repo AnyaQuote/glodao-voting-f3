@@ -10,7 +10,6 @@ import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { walletStore } from '@/stores/wallet-store'
-import moment from 'moment'
 
 const missionInfoDefault = {
   name: '',
@@ -74,7 +73,7 @@ const commentTweetDef = {
 }
 
 export class NewMissionViewModel {
-  @observable pool?: VotingPool
+  @observable pool: VotingPool = {}
   @observable missionInfo = missionInfoDefault
   @observable joinTelegram = joinTelegramDef
   @observable followTwitter = followTwitterDef
@@ -101,22 +100,6 @@ export class NewMissionViewModel {
 
   destroy() {
     this._disposer()
-  }
-
-  @computed get missionStart() {
-    return this.missionInfo.startDate
-  }
-
-  @computed get missionEnd() {
-    return this.missionInfo.endDate
-  }
-
-  @computed get missionMaxDate() {
-    return this.pool?.endDate
-  }
-
-  @computed get missionMinDate() {
-    return this.pool?.startDate
   }
 
   @asyncAction *fetchProjectByUnicode(query: { unicodeName: string; ownerAddress: string }) {
