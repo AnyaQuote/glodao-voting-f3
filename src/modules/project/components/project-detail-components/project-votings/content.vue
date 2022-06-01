@@ -1,182 +1,26 @@
 <template>
-  <div class="d-flex">
-    <!-------------------------- LEFT ------------------------>
-    <div style="max-width: 700px" class="pr-6">
-      <v-sheet class="rounded-lg pa-6 mb-6 app-blue lighten-1" elevation="3">
-        <div class="d-flex align-stretch mb-6">
-          <v-sheet height="76" width="76" class="white pa-1 rounded-lg d-flex justify-center mr-6">
-            <img :src="vm.poolStore.projectLogo" height="100%" />
-          </v-sheet>
-          <div class="d-flex flex-column justify-center">
-            <div class="text-h5 font-weight-bold neutral0--text font-weight-bold mb-1">
-              {{ vm.poolStore.projectName }}
-            </div>
-            <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
+  <div class="container-custom mx-auto">
+    <v-row no-gutters dense>
+      <v-col cols="12">
+        <div class="d-flex layout-custom">
+          <div class="spacer pr--custom mb-6">
+            <project-voting-time class="mb-6" />
+            <bounty-pool-info-setting />
           </div>
-          <div></div>
-        </div>
-        <div>
-          <div class="mb-2">
-            <span class="neutral10--text">Voting starts: </span>
-            <span class="neutral0--text font-weight-bold">{{ vm.poolStore.startDate | ddmmyyyyhhmma }} </span>
-          </div>
-          <div>
-            <span class="neutral10--text">Voting end: </span>
-            <span class="neutral0--text font-weight-bold">{{ vm.poolStore.endDate | ddmmyyyyhhmma }} </span>
+          <div class="layout-item-custom pl--custom mb-6">
+            <voting-info />
           </div>
         </div>
-      </v-sheet>
-
-      <v-sheet class="rounded-lg pa-6 mb-6" elevation="2">
-        <div class="text-h5 font-weight-regular mb-6">Bounty pool information setting</div>
-        <v-row no-gutters dense class="mb-6">
-          <v-col cols="4">
-            <div class="neutral10--text mb-1">Reward amount</div>
-            <div class="neutral0--text font-weight-bold">
-              {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
-            </div>
+      </v-col>
+      <v-col cols="12">
+        <v-row no-gutters dense>
+          <v-col cols="12" md="8" class="pr-md-10">
+            <project-info-detail />
           </v-col>
-          <v-col cols="4">
-            <div class="neutral10--text mb-1">Total mission</div>
-            <div class="neutral0--text font-weight-bold">{{ vm.poolStore.totalMission }}</div>
-          </v-col>
-          <v-col cols="4">
-            <div class="neutral10--text mb-1">Reward per mission</div>
-            <div class="neutral0--text font-weight-bold">
-              {{ vm.poolStore.rewardPerMission | formatNumber }} {{ vm.poolStore.tokenName }}
-            </div>
-          </v-col>
+          <v-col cols="12" md="4"></v-col>
         </v-row>
-        <v-divider class="mb-6"></v-divider>
-        <div class="d-flex align-center">
-          <span class="neutral0--text pr-6">Campaign time:</span>
-          <span class="font-weight-bold">Jan 21st, 10:00 pm</span>
-          <span style="width: 4px; height: 4px; background: #d9d9d9 !important" class="rounded-circle mx-2"> </span>
-          <span class="font-weight-bold">Jan 21st, 10:00 pm</span>
-        </div>
-      </v-sheet>
-
-      <v-sheet class="rounded-lg pa-6" elevation="2">
-        <!-- title -->
-        <div class="mb-7">
-          <div class="d-flex align-baseline justify-space-between mb-2">
-            <div class="font-weight-600 text-h5 neutral0--text mr-5">Project information detail</div>
-            <div class="font-weight-600 text-subtitle-1 blue--text d-flex" v-if="vm.poolStore.status === 'voting'">
-              Edit infomation<v-icon size="17" color="blue" class="ml-2" @click="open()">mdi-pencil</v-icon>
-            </div>
-          </div>
-          <v-icon size="17" class="mr-2">mdi-information-outline</v-icon>
-          <span class="text-subtitle-1 font-italic">You can only edit pool information before voting time ended.</span>
-        </div>
-
-        <v-row class="mb-6">
-          <v-col cols="6">
-            <div class="d-flex align-stretch mb-4">
-              <v-sheet height="76" width="76" class="white pa-1 rounded-lg d-flex align-center mr-6">
-                <img :src="vm.poolStore.projectLogo" height="100%" />
-              </v-sheet>
-              <div class="d-flex flex-column">
-                <div class="text-h5 font-weight-bold neutral0--text mb-1">{{ vm.poolStore.projectName }}</div>
-                <div class="text-h6 font-weight-bold neutral10--text">${{ vm.poolStore.tokenName }}</div>
-              </div>
-            </div>
-            <div class="d-flex flex-wrap">
-              <div
-                v-for="(field, i) in vm.poolStore.fields"
-                :key="i"
-                class="pa-2 text-caption neutral20 neutral10--text rounded-pill mr-2 text-uppercase"
-              >
-                {{ field }}
-              </div>
-            </div>
-          </v-col>
-          <v-col cols="6">
-            <v-hover v-slot="{ hover }">
-              <v-img :src="vm.poolStore.projectCover" class="rounded-lg">
-                <div v-if="hover" class="fill-height d-flex align-center justify-center">
-                  <v-btn
-                    height="24"
-                    width="100"
-                    color="text-none text-subtitle-2 neutral100--text"
-                    style="background: rgba(255, 255, 255, 0.3)"
-                    class="pa-2"
-                  >
-                    <v-icon right size="13" color="white" class="ma-0 mr-2">mdi-pencil</v-icon>
-                    Change
-                  </v-btn>
-                </div>
-              </v-img>
-            </v-hover>
-          </v-col>
-        </v-row>
-
-        <!-- description -->
-        <div class="neutral10--text mb-6">{{ vm.poolStore.shortDescription }}</div>
-        <!-- web social link -->
-        <div class="mb-7">
-          <div class="mb-4 font-weight-bold">Website and social link</div>
-          <div class="">
-            <a
-              v-for="(key, i) in $_keys(vm.poolStore.socialLinks)"
-              :key="i"
-              :href="$_get(vm.poolStore.socialLinks, key)"
-              :class="i !== $_keys(vm.poolStore.socialLinks).length - 1 && 'mb-2'"
-              target="_blank"
-              class="text-decoration-none d-block"
-            >
-              <v-row no-gutters dense align="center" class="text-subtitle-1">
-                <img :src="require(`@/assets/socials/${key}.light.svg`)" width="24" height="24" class="mr-2" />
-                <span class="neutral10--text text-capitalize mr-1">{{ key }}</span>
-                <span class="blue--text">{{ vm.poolStore.socialLinks[key] }}</span>
-              </v-row>
-            </a>
-          </div>
-        </div>
-      </v-sheet>
-    </div>
-
-    <!-------------------------- RIGHT ------------------------>
-    <div class="spacer" v-if="!vm.poolRejected">
-      <v-sheet class="rounded-lg" elevation="3">
-        <v-sheet
-          height="40"
-          class="rounded-t-lg d-flex align-center justify-center white--text cursor-pointer"
-          :color="vm.poolStore.onVoting ? 'red' : 'blue'"
-          @click="vm.changeCancelDialog(true)"
-          v-if="!vm.poolCancelled"
-        >
-          {{ vm.poolStore.onVoting ? 'Cancel project' : 'Withdraw' }}
-        </v-sheet>
-
-        <v-sheet class="pa-6">
-          <div class="font-weight-bold neutral0--text mb-3">Final result</div>
-          <v-sheet
-            height="40"
-            class="mt-2 d-flex justify-center align-center rounded white--text font-weight-600 text-subtitle-1"
-            :class="statusReport.color"
-          >
-            {{ statusReport.text }}
-          </v-sheet>
-        </v-sheet>
-        <div class="pa-6">
-          <v-sheet class="d-flex align-baseline mb-2">
-            <v-sheet
-              height="27"
-              width="60"
-              class="d-flex justify-center align-center rounded-lg white--text subtitle-2 font-weight-400 mr-3 green lighten-2"
-            >
-              👍 YES
-            </v-sheet>
-            <v-sheet class="text-subtitle-1">We want the project to launch </v-sheet>
-          </v-sheet>
-          <progress-bar :value="vm.poolStore.votedPercent" />
-          <v-sheet class="d-flex justify-space-between text-subtitle-2 font-weight-600">
-            <!-- <v-sheet>100 votes</v-sheet> -->
-            <v-sheet>{{ vm.poolStore.votedPercent }}%</v-sheet>
-          </v-sheet>
-        </div>
-      </v-sheet>
-    </div>
+      </v-col>
+    </v-row>
     <update-project-dialog ref="update-dialog" />
   </div>
 </template>
@@ -189,6 +33,10 @@ import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 @Observer
 @Component({
   components: {
+    'project-voting-time': () => import('./common/project-voting-time.vue'),
+    'bounty-pool-info-setting': () => import('./common/bounty-pool-info-setting.vue'),
+    'project-info-detail': () => import('./common/project-info-detail.vue'),
+    'voting-info': () => import('./common/voting-info.vue'),
     'update-project-dialog': () => import('../dialogs/update-project-dialog.vue'),
   },
 })
@@ -200,35 +48,63 @@ export default class extends Vue {
   open() {
     this.dialog.open()
   }
-
-  get statusReport() {
-    if (this.vm.poolStore?.onVoting)
-      return {
-        color: 'blue',
-        text: 'Your project is opening for vote',
-      }
-    if (this.vm.poolStore?.status === 'approved')
-      return {
-        color: 'green',
-        text: 'Project is approved',
-      }
-    if (this.vm.poolStore?.status === 'cancelled')
-      return {
-        color: 'red',
-        text: 'Project is cancelled',
-      }
-    if (this.vm.poolStore?.voteEnded)
-      return {
-        color: 'red',
-        text: 'Project is ended',
-      }
-
-    return {
-      color: 'app-grey',
-      text: this.vm.poolStore?.status,
-    }
-  }
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@import '@/styles/breakpoint-custom.scss';
+.container-custom {
+  max-width: 360px;
+
+  @include breakpoint(700) {
+    max-width: 700px;
+  }
+
+  @include breakpoint(desktop) {
+    max-width: 1090px;
+  }
+}
+
+.pl--custom {
+  @include breakpoint(700) {
+    padding-left: 8px;
+  }
+
+  @include breakpoint(desktop) {
+    padding-left: 12px;
+  }
+}
+
+.pr--custom {
+  @include breakpoint(700) {
+    padding-right: 8px;
+  }
+
+  @include breakpoint(desktop) {
+    padding-right: 12px;
+  }
+}
+
+.layout-custom {
+  flex-direction: column;
+
+  @include breakpoint(700) {
+    flex-direction: row;
+  }
+}
+
+.layout-item-custom {
+  @include breakpoint(700) {
+    width: 50%;
+  }
+  @include breakpoint(desktop) {
+    width: 36%;
+  }
+}
+
+.project-info-detail {
+  @include breakpoint(desktop) {
+    padding-right: 40px;
+  }
+}
+</style>
