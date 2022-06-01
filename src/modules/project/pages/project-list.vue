@@ -21,7 +21,7 @@
 
       <div
         v-else
-        class="neutral-100 pt-6 pb-4 mx-4 py-sm-0 my-md-12"
+        class="neutral-100 pt-6 pb-4 mx-sm-4 py-sm-0 my-md-12"
         :class="$vuetify.breakpoint.smAndUp && 'rounded-lg overflow-hidden'"
       >
         <!--------------------------  HEADER -------------------------->
