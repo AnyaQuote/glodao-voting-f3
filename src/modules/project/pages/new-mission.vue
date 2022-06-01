@@ -12,23 +12,24 @@
       <!-- ---------------- SKELETON LOADER ---------------- -->
       <v-col v-if="vm.pageLoading" cols="10">
         <v-sheet class="neutral100--bg rounded-lg pb-7" outlined
-          ><div class="blue lighten-4 py-6 text-center rounded-lg rounded-b-0">
+          ><div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
-          <v-skeleton-loader class="mt-7" type="list-item-two-line" />
-          <v-skeleton-loader type="list-item" />
-          <v-skeleton-loader type="image" class="mx-4" height="80" />
-          <v-skeleton-loader class="mt-7" type="list-item" />
-          <v-skeleton-loader type="image" class="mx-4" height="100" />
-          <v-skeleton-loader type="list-item-two-line" />
+          <div class="px-4 mt-7">
+            <v-skeleton-loader class="mb-7" type="image" height="80" />
+            <v-skeleton-loader class="mb-7" type="image" height="120" />
+            <v-skeleton-loader class="mb-7" type="image" height="80" />
+            <v-skeleton-loader class="mb-7" type="image" height="80" />
+            <v-skeleton-loader type="image" height="80" />
+          </div>
         </v-sheet>
       </v-col>
 
       <!-- ---------------- FORM CONTENT ---------------- -->
       <v-col v-else cols="10">
         <v-sheet class="neutral100--bg rounded-lg" outlined>
-          <div class="blue lighten-4 py-6 text-center rounded-lg rounded-b-0">
+          <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
@@ -58,7 +59,7 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue, Provide, Ref } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../viewmodels/new-mission-viewmodel'
 import { get } from 'lodash-es'
 @Observer

@@ -111,10 +111,10 @@
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
-      <div class="font-18 mt-6 d-flex">
+      <div class="font-18 mt-6 d-flex mb-2">
         <span class="font-weight-bold">Quiz file (fileName.csv)</span>
         <v-spacer />
-        <span class="app-blue--text cursor-pointer" @click="download">Download the quiz template</span>
+        <span class="app-blue--text cursor-pointer text-subtitle-2" @click="download">Download the quiz template</span>
       </div>
       <app-file-upload
         :rules="[$rules.required, $rules.maxSize(15000000), $rules.isTextFile]"
@@ -129,7 +129,7 @@
         Preview your quiz
       </v-btn>
 
-      <div class="d-flex font-18 mt-6 font-weight-bold">Document (fileName.md)</div>
+      <div class="d-flex font-18 mt-6 font-weight-bold mb-2">Document (fileName.md)</div>
       <app-file-upload
         :rules="[$rules.required, $rules.maxSize(15000000), $rules.isTextFile]"
         @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"

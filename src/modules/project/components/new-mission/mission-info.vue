@@ -20,7 +20,7 @@
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
       <app-file-upload
         imageOnly
-        :rules="[$rules.fileRequired, $rules.maxSize(15000000), $rules.isImageFile]"
+        :rules="[$rules.fileRequired, $rules.maxSize(15000000)]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
@@ -32,18 +32,18 @@
       <div class="font-18 font-weight-bold mt-4">
         <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
       </div>
-      <div class="mt-4 d-flex">
-        <div class="flex-grow-1">
+      <div class="mt-4 row ma-0">
+        <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
           <span class="font-18 font-weight-bold">Priority amount</span>
           <app-text-field
             class="mt-2"
-            :rules="[$rules.required, $rules.floatNumberOnly]"
+            :rules="[$rules.required, $rules.floatNumberOnly, $rules.max(rewardPerMission)]"
             :value="$_get(vm.missionInfo, 'priorityAmount')"
             @change="vm.changeMissionInfo('priorityAmount', $event)"
             placeholder="Enter amount"
           />
         </div>
-        <div class="flex-grow-1 ml-4">
+        <div class="col-12 col-md-6 pa-0">
           <span class="font-18 font-weight-bold">Max participant in priority pool</span>
           <app-text-field
             class="mt-2"
@@ -69,19 +69,19 @@
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
-        :minDate="vm.pool.startDate"
-        :maxDate="vm.missionInfo.endDate || vm.pool.endDate"
-        :value="vm.missionInfo.startDate"
+        :minDate="$_get(vm.pool, 'startDate')"
+        :maxDate="$_get(vm.missionInfo, 'endDate') || $_get(vm.pool, 'endDate')"
+        :value="$_get(vm.missionInfo, 'startDate')"
         @change="vm.changeMissionInfo('startDate', $event)"
       />
       <app-datetime-picker
         dateLabel="End date"
         timeLabel="End time"
         :rules="[$rules.required]"
-        :disabled="!vm.missionInfo.startDate"
-        :minDate="vm.missionInfo.startDate"
-        :maxDate="vm.pool.endDate"
-        :value="vm.missionInfo.endDate"
+        :disabled="!$_get(vm.missionInfo, 'startDate')"
+        :minDate="$_get(vm.missionInfo, 'startDate')"
+        :maxDate="$_get(vm.pool, 'endDate')"
+        :value="$_get(vm.missionInfo, 'endDate')"
         @change="vm.changeMissionInfo('endDate', $event)"
       />
     </div>

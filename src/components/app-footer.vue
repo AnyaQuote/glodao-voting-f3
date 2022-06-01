@@ -3,7 +3,10 @@
     <v-container class="px-6 py-4">
       <v-row>
         <v-col cols="12" sm="6">
-          <div class="d-flex align-center cursor-pointer" @click="openLink('https://glodao.io/')">
+          <div
+            class="d-flex align-center justify-center justify-sm-start cursor-pointer"
+            @click="openLink('https://glodao.io/')"
+          >
             <v-img
               alt="Vuetify Logo"
               class="shrink mr-2"
@@ -12,14 +15,14 @@
               width="75"
               contain
             />
-            <div class="neutral10--text text-caption">
+            <div class="neutral10--text text-caption text-capitalize">
               Global Decentralized <br />
               autonomous organization
             </div>
           </div>
         </v-col>
         <v-col cols="12" sm="6">
-          <div class="d-flex align-center justify-start justify-sm-end fill-height">
+          <div class="d-flex align-center justify-center justify-sm-end fill-height">
             <v-btn icon href="https://medium.com/@glodao-official">
               <v-icon> fab fa-medium-m </v-icon>
             </v-btn>

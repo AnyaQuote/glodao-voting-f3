@@ -1,24 +1,29 @@
 <template>
   <v-sheet class="row ma-0">
-    <div class="col-12 col-sm-6 pa-0 pr-4">
+    <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
       <div class="font-weight-bold mb-2">
-        <slot name="date-label">{{ dateLabel }}</slot>
+        {{ dateLabel }}
       </div>
-      <v-menu min-width="auto" offset-y>
-        <template v-slot:activator="{ on }">
-          <app-text-field
-            readonly
-            v-on="on"
-            :disabled="disabled"
-            :rules="rules"
-            :value="formattedDate"
-            :error-messages="invalidDateRange"
-            placeholder="DD/MM/YYYY"
-          />
-        </template>
+      <app-text-field
+        readonly
+        :rules="rules"
+        :disabled="disabled"
+        :value="formattedDate"
+        :error-messages="invalidDateRange"
+        placeholder="DD/MM/YYYY"
+        @click="show('datePickerConfig', $event)"
+      />
+      <v-menu
+        absolute
+        offset-y
+        min-width="auto"
+        v-model="datePickerConfig.show"
+        :position-x="datePickerConfig.x"
+        :position-y="datePickerConfig.y"
+      >
         <v-date-picker
           reactive
-          color="blue-diversity"
+          :color="pickerBackground"
           :min="minDate"
           :max="maxDate"
           :value="data.date"
@@ -26,25 +31,31 @@
         />
       </v-menu>
     </div>
-    <div class="col-12 col-sm-6 pa-0">
+    <div class="col-12 col-md-6 pa-0">
       <div class="font-weight-bold mb-2">
-        <slot name="time-label">{{ timeLabel }}</slot>
+        {{ timeLabel }}
       </div>
-      <v-menu min-width="auto" offset-y :close-on-content-click="false">
-        <template v-slot:activator="{ on }">
-          <app-text-field
-            readonly
-            v-on="on"
-            :disabled="disabled"
-            :rules="rules"
-            :value="data.time"
-            :errorMessages="invalidDateRange"
-            placeholder="HH:mm (24 hrs)"
-          />
-        </template>
+      <app-text-field
+        readonly
+        :rules="rules"
+        :disabled="disabled"
+        :value="data.time"
+        :error-messages="invalidDateRange"
+        placeholder="HH:mm (24 hrs)"
+        @click="show('timePickerConfig', $event)"
+      />
+      <v-menu
+        absolute
+        offset-y
+        min-width="auto"
+        v-model="timePickerConfig.show"
+        :position-x="timePickerConfig.x"
+        :position-y="timePickerConfig.y"
+        :close-on-content-click="false"
+      >
         <v-time-picker
           format="24hr"
-          color="blue-diversity"
+          :color="pickerBackground"
           :value="data.time"
           @change="onDateTimeChange('time', $event)"
         />
@@ -71,6 +82,8 @@ export default class AppDateTimePicker extends Vue {
   @Prop({ default: () => [] }) rules!: any[]
 
   data = { date: '', time: '' }
+  datePickerConfig = { show: false, x: 0, y: 0 }
+  timePickerConfig = { show: false, x: 0, y: 0 }
 
   mounted() {
     if (this.value) {
@@ -81,6 +94,25 @@ export default class AppDateTimePicker extends Vue {
     }
   }
 
+  /**
+   * Get pointer position on screen and set it as show position for v-menu
+   * @param config config name
+   * @param event
+   */
+  show(config: string, event: any) {
+    event.preventDefault()
+    this[config].show = false
+    this[config].x = event.clientX
+    this[config].y = event.clientY
+    this.$nextTick(() => {
+      this[config].show = true
+    })
+  }
+
+  /**
+   * Check if all values in object is not empty string
+   * @param value object
+   */
   checkPropNotEmpty(value: { [key: string]: string }) {
     return Object.values(value).every((x) => x !== '')
   }
@@ -101,6 +133,10 @@ export default class AppDateTimePicker extends Vue {
       if (!isDateInRange(toISO(this.data), this.minDate, this.maxDate)) return 'Invalid date range'
     }
     return ''
+  }
+
+  get pickerBackground() {
+    return this.$vuetify.theme.dark ? 'blue-2' : 'blue-diversity'
   }
 }
 </script>
