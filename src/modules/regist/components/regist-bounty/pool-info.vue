@@ -52,8 +52,8 @@
       <app-datetime-picker
         dateLabel="End date"
         timeLabel="End time"
-        :rules="[$rules.required, $rules.validDateRange(vm.projectInfo.startDate, vm.projectInfo.endDate)]"
-        :disabled="!vm.projectInfo.startDate"
+        :rules="[$rules.required]"
+        :disabled="!$_get(vm.projectInfo, 'startDate')"
         :minDate="$_get(vm.projectInfo, 'startDate')"
         :value="$_get(vm.projectInfo, 'endDate')"
         @change="vm.changeProjectInfo('endDate', $event)"
