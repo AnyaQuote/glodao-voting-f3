@@ -52,44 +52,41 @@
       </div>
     </v-col> -->
         <!-- --------------------------------------------------------------------------------------------------- -->
-        <v-col cols="12" v-else>
+        <v-col cols="12" v-else class="mt-12">
           <div class="text-h6 text-center mb-9">What type of project do you want to launch on GLoDAO?</div>
-          <v-col class="row">
-            <div class="col-6">
-              <v-sheet
-                class="d-flex flex-column px-6 pb-6 rounded-lg pt-72"
-                v-ripple
-                elevation="3"
-                @click.stop="openBountyForm"
-              >
-                <v-avatar>
-                  <v-img src="@/assets/icons/bulleyes.svg" />
-                </v-avatar>
-                <div class="text-h6">Bounty Hunter</div>
-                <div class="text-subtitle-1 font-weight-thin">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
-                  enim velit mollit.
-                </div>
-              </v-sheet>
-            </div>
-            <div class="col-6">
-              <v-sheet
-                class="d-flex flex-column px-6 pb-6 rounded-lg pt-72"
-                v-ripple
-                elevation="3"
-                @click.stop="openLaunchpadForm"
-              >
-                <v-avatar>
-                  <v-img src="@/assets/icons/bulleyes.svg" />
-                </v-avatar>
-                <div class="text-h6">Launchpad Hunter</div>
-                <div class="text-subtitle-1 font-weight-thin">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
-                  enim velit mollit.
-                </div>
-              </v-sheet>
-            </div>
-          </v-col>
+          <div class="d-flex justify-center">
+            <v-sheet
+              class="d-flex flex-column justify-space-between pa-6 mr-6 rounded-lg"
+              height="241"
+              width="441"
+              v-ripple
+              elevation="3"
+              @click.stop="openBountyForm"
+            >
+              <v-img max-height="50" max-width="50" src="@/assets/icons/bulleyes.svg" />
+              <div class="text-h6">Bounty Hunter</div>
+              <div class="text-subtitle-1 font-weight-thin">
+                Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
+                enim velit mollit.
+              </div>
+            </v-sheet>
+
+            <v-sheet
+              class="d-flex flex-column justify-space-between pa-6 rounded-lg"
+              height="241"
+              width="441"
+              v-ripple
+              elevation="3"
+              @click.stop="openLaunchpadForm"
+            >
+              <v-img max-height="50" max-width="50" :src="require('@/assets/icons/new-project-rocket-icon.svg')" />
+              <div class="text-h6">Launchpad Hunter</div>
+              <div class="text-subtitle-1 font-weight-thin">
+                Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
+                enim velit mollit.
+              </div>
+            </v-sheet>
+          </div>
         </v-col>
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-row>
