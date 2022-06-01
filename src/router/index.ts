@@ -22,6 +22,11 @@ export enum RoutePaths {
 
 const routes: Array<RouteConfig> = [
   { path: '/', redirect: '/voting' },
+  {
+    path: '/twitter-auth',
+    name: 'TwitterAuthentication',
+    component: () => import('@/modules/auth/pages/twitter-auth.vue'),
+  },
   // -------------------- VOTING ROUTER SECTION ---------------------
   {
     path: '/voting',

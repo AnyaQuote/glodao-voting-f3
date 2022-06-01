@@ -32,10 +32,6 @@ export class AuthStore {
   @action.bound resetJwt() {
     this.jwt = ''
   }
-  @action.bound changeUser(user: any) {
-    this.user = user
-    localdata.user = user
-  }
   @action.bound resetUser() {
     this.user = {}
   }
@@ -111,6 +107,27 @@ export class AuthStore {
     }
   }
 
+  @asyncAction *fetchUser(access_token: string, access_secret: string) {
+    try {
+      const res = yield apiService.fetchUser(access_token, access_secret, localdata.referralCode)
+      let user = res.user
+      const jwt = res.jwt
+      if (!user.projectOwner) {
+        user = yield apiService.users.findOne(user.id, jwt)
+      }
+      this.changeJwt(jwt)
+      this.changeUser(user)
+      this.changeTwitterLoginDialog(false)
+      localdata.referralCode = ''
+    } catch (error) {
+      snackController.error(get(error, 'response.data.message', '') || (error as string))
+    } finally {
+      router.push('/voting').catch(() => {
+        //
+      })
+    }
+  }
+
   @asyncAction *checkJwtExpiration() {
     const { exp } = jwtDecode(this.jwt) as any
     const isExpired = Date.now() >= exp * 1000
@@ -132,6 +149,49 @@ export class AuthStore {
         loginController.close()
       }
     }
+  }
+
+  @action.bound changeUser(user: any) {
+    this.user = user
+    localdata.user = user
+    if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
+  }
+
+  @action.bound changeWalletDialogInput(value: string) {
+    this.walletDialogInput = value
+  }
+
+  @asyncAction *saveAttachWallet() {
+    try {
+      this.isWalletUpdating = true
+      const signature = yield this.signMessage(walletStore.account, 'bsc', get(this.user, 'projectOwner.nonce', 0))
+      const updatedProjectOwner = yield apiService.updateProjectOwnerAddress(
+        walletStore.account,
+        signature,
+        'bsc',
+        get(this.user, 'projectOwner.id', '')
+      )
+      this.changeUser({ ...this.user, projectOwner: updatedProjectOwner })
+      snackController.updateSuccess()
+      this.changeAttachWalletDialog(false)
+    } catch (error) {
+      console.error(error)
+      snackController.error(get(error, 'response.data.message', '') || get(error, 'message', '') || (error as string))
+    } finally {
+      this.isWalletUpdating = false
+    }
+  }
+
+  @action.bound changeAttachWalletDialog(value: boolean) {
+    if (!value && !this.user.projectOwner.address) {
+      snackController.error('You need to set your main wallet')
+      return
+    }
+    this.attachWalletDialog = value
+  }
+
+  @action.bound changeTwitterLoginDialog(value: boolean) {
+    this.twitterLoginDialog = value
   }
 
   @computed get isAuthenticated() {

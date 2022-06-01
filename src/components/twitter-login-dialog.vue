@@ -2,7 +2,7 @@
   <v-dialog v-model="authStore.twitterLoginDialog" class="rounded-lg overflow-hidden" max-width="450" persistent>
     <v-sheet
       outlined
-      class="position-relative pa-8 rounded-lg text-center dialog-normal-text position-relative overflow-hidden neutral100--bg"
+      class="position-relative pa-8 rounded-lg text-center dialog-normal-text overflow-hidden neutral100--bg"
     >
       <v-sheet min-height="300" class="d-flex align-center justify-center neutral100--bg" v-if="!logined">
         <v-sheet class="neutral100--bg">
@@ -100,7 +100,7 @@ export default class TwitterLoginDialog extends Vue {
 
 <style lang="scss" scoped>
 .close-icon {
-  position: absolute;
+  position: absolute !important;
   top: 0;
   right: 0;
 }

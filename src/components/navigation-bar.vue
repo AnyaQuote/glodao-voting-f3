@@ -169,7 +169,7 @@
 
         <v-col class="d-flex justify-end align-center col-auto">
           <connect-wallet class="fill-width" />
-          <!-- <div class="ml-6 d-flex align-center justify-end pr-6">
+          <div class="ml-6 d-flex align-center justify-end pr-6">
             <v-btn
               depressed
               outlined
@@ -192,7 +192,7 @@
                   <v-avatar size="32">
                     <img :src="authStore.user.avatar" alt="Avatar" />
                   </v-avatar>
-                  <div class="ml-3 font-weight-600">{{ authStore.user.hunter.name }}</div>
+                  <div class="ml-3 font-weight-600">{{ authStore.user.projectOwner.name }}</div>
                 </v-sheet>
                 <v-divider></v-divider>
                 <v-sheet class="neutral100--bg">
@@ -222,7 +222,7 @@
                 </v-sheet>
               </v-sheet>
             </v-menu>
-          </div> -->
+          </div>
           <div class="ml-4">
             <v-btn icon @click="changeTheme" class="rounded-circle change-theme-btn" width="40" height="40" outlined>
               <v-icon color="bluePrimary">

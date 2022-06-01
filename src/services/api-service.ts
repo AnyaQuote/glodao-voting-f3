@@ -194,6 +194,31 @@ export class ApiService {
     this.setupAuthInjection()
   }
 
+  async fetchUser(access_token: string, access_secret: string, referrerCode?) {
+    const res = await this.axios.get('auth/twitter/callback', {
+      params: { access_token: access_token, access_secret: access_secret, referrerCode, userType: 'voting' },
+    })
+    return res.data
+  }
+
+  async updateProjectOwnerAddress(walletAddress: string, signature: string, chain: string, id: string) {
+    const res = await this.axios.patch(
+      'project-owners/updateProjectOwnerAddress',
+      {
+        walletAddress,
+        signature,
+        chain,
+        id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.jwt}`,
+        },
+      }
+    )
+    return res.data
+  }
+
   setupAuthInjection() {
     this.axios.interceptors.request.use((config) => {
       config.paramsSerializer = (params) => {

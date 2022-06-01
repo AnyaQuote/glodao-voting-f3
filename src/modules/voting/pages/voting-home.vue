@@ -43,16 +43,16 @@
         </v-row>
         <!-- --------------------------------------- CONTENT -------------------------------------------- -->
         <v-row v-else>
-          <v-scale-transition v-if="!vm.filteredVotingList.length" leave-absolute>
+          <div v-if="!vm.filteredVotingList.length" leave-absolute>
             <v-col class="d-flex justify-center">
               <div class="text-h6 pa-8">No nominated project of this type right now</div>
             </v-col>
-          </v-scale-transition>
-          <v-scale-transition v-else leave-absolute>
+          </div>
+          <div v-else>
             <v-col cols="12" sm="6" md="4" v-for="(pool, index) in vm.filteredVotingList" :key="index">
               <live-voting-card :pool="pool" />
             </v-col>
-          </v-scale-transition>
+          </div>
         </v-row>
         <!-- -------------------------------------------------------------------------------------------- -->
       </v-col>

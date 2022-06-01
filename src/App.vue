@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <twitter-login-dialog />
+    <attach-wallet-dialog />
     <navigation-drawer v-model="drawer" />
     <navigation-bar v-if="$vuetify.breakpoint.mdAndUp" />
     <mobile-navigation-bar v-if="$vuetify.breakpoint.smAndDown" v-model="drawer" />
@@ -21,7 +23,12 @@ import { Component, Provide, Vue } from 'vue-property-decorator'
 import { AppProvider } from './app-providers'
 
 @Observer
-@Component({})
+@Component({
+  components: {
+    'twitter-login-dialog': () => import('@/components/twitter-login-dialog.vue'),
+    'attach-wallet-dialog': () => import('@/components/attach-wallet-dialog.vue'),
+  },
+})
 export default class App extends Vue {
   @Provide() providers = new AppProvider(this.$router)
   wallet = this.providers.wallet
@@ -47,6 +54,9 @@ a {
 .container {
   padding: 0 16px !important;
   max-width: 1123px !important;
+}
+.position-relative {
+  position: relative !important;
 }
 
 .header-title {
