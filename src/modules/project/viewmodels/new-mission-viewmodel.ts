@@ -4,12 +4,13 @@ import { Data } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
-import { action, IReactionDisposer, observable, reaction } from 'mobx'
+import { action, IReactionDisposer, observable, reaction, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { walletStore } from '@/stores/wallet-store'
+import moment from 'moment'
 
 const missionInfoDefault = {
   name: '',
@@ -100,6 +101,22 @@ export class NewMissionViewModel {
 
   destroy() {
     this._disposer()
+  }
+
+  @computed get missionStart() {
+    return this.missionInfo.startDate
+  }
+
+  @computed get missionEnd() {
+    return this.missionInfo.endDate
+  }
+
+  @computed get missionMaxDate() {
+    return this.pool?.endDate
+  }
+
+  @computed get missionMinDate() {
+    return this.pool?.startDate
   }
 
   @asyncAction *fetchProjectByUnicode(query: { unicodeName: string; ownerAddress: string }) {
