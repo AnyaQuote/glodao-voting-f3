@@ -36,7 +36,10 @@
         </div>
       </div>
 
-      <div class="blue--text font-18 font-weight-bold">Campaign Information</div>
+      <div>
+        <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
+        <i class="neutral-10--text ml-2">(Locale time)</i>
+      </div>
       <app-datetime-picker
         class="mt-7"
         dateLabel="Start date"
@@ -49,7 +52,7 @@
       <app-datetime-picker
         dateLabel="End date"
         timeLabel="End time"
-        :rules="[$rules.required]"
+        :rules="[$rules.required, $rules.validDateRange(vm.projectInfo.startDate, vm.projectInfo.endDate)]"
         :disabled="!vm.projectInfo.startDate"
         :minDate="$_get(vm.projectInfo, 'startDate')"
         :value="$_get(vm.projectInfo, 'endDate')"
