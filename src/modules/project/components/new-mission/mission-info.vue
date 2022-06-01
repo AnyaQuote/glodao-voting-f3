@@ -20,7 +20,7 @@
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
       <app-file-upload
         imageOnly
-        :rules="[$rules.fileRequired, $rules.maxSize(15000000), $rules.isImageFile]"
+        :rules="[$rules.fileRequired, $rules.maxSize(15000000)]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
@@ -69,19 +69,19 @@
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
-        :minDate="vm.pool.startDate"
-        :maxDate="vm.missionInfo.endDate || vm.pool.endDate"
-        :value="vm.missionInfo.startDate"
+        :minDate="$_get(vm.pool, 'startDate')"
+        :maxDate="$_get(vm.missionInfo, 'endDate') || $_get(vm.pool, 'endDate')"
+        :value="$_get(vm.missionInfo, 'startDate')"
         @change="vm.changeMissionInfo('startDate', $event)"
       />
       <app-datetime-picker
         dateLabel="End date"
         timeLabel="End time"
         :rules="[$rules.required]"
-        :disabled="!vm.missionInfo.startDate"
-        :minDate="vm.missionInfo.startDate"
-        :maxDate="vm.pool.endDate"
-        :value="vm.missionInfo.endDate"
+        :disabled="!$_get(vm.missionInfo, 'startDate')"
+        :minDate="$_get(vm.missionInfo, 'startDate')"
+        :maxDate="$_get(vm.pool, 'endDate')"
+        :value="$_get(vm.missionInfo, 'endDate')"
         @change="vm.changeMissionInfo('endDate', $event)"
       />
     </div>
