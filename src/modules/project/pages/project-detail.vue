@@ -4,9 +4,11 @@
       <!-- ---------------------------- BREADCRUMBS --------------------------------------- -->
       <v-col cols="12" class="mt-4 mb-16">
         <div class="d-flex align-center font-weight-medium">
-          <span class="app-blue--text mr-5 cursor-pointer" @click="$router.push('/projects')">Your project</span>
+          <span class="app-blue--text mr-5 cursor-pointer text-truncate" @click="$router.push('/projects')"
+            >Your project</span
+          >
           <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-          <span class="neutral10--text">{{ vm.poolStore.projectName }}</span>
+          <span class="neutral10--text text-truncate">{{ vm.poolStore.projectName }}</span>
         </div>
       </v-col>
 
@@ -21,8 +23,8 @@
       <!--  ----------------------------Approved && Reject project ------------------------------>
 
       <v-col cols="12" v-else-if="vm.poolStore.status === 'approved'">
-        <others-header class="mb-8"></others-header>
-        <others-content></others-content>
+        <project-ended-header class="mb-8" />
+        <project-ended-content />
       </v-col>
 
       <!-- ----------------------------Voting project  ------------------------------>
@@ -45,8 +47,8 @@ import { Observer } from 'mobx-vue'
 @Observer
 @Component({
   components: {
-    'others-header': () => import('../components/project-detail-components/project-others/header.vue'),
-    'others-content': () => import('../components/project-detail-components/project-others/content.vue'),
+    'project-ended-header': () => import('../components/project-detail-components/project-ended/header.vue'),
+    'project-ended-content': () => import('../components/project-detail-components/project-ended/content.vue'),
     'voting-content': () => import('../components/project-detail-components/project-votings/content.vue'),
     'cancel-dialog': () => import('../components/project-detail-components/dialogs/cancel-dialog.vue'),
     'withdraw-dialog': () => import('../components/project-detail-components/dialogs/withdraw-dialog.vue'),
