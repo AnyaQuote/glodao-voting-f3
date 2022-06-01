@@ -57,7 +57,7 @@
           format="24hr"
           :color="pickerBackground"
           :value="data.time"
-          @change="onDateTimeChange('time', $event)"
+          @input="onDateTimeChange('time', $event)"
         />
       </v-menu>
     </div>
