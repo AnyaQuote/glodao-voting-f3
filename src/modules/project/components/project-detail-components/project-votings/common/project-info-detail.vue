@@ -75,7 +75,7 @@
           </v-icon>
           <div class="neutral-10--text text-capitalize mr-1">{{ key }}:</div>
           <a target="_blank" :href="vm.poolStore.socialLinks[key]" class="text-truncate blue--text text-truncate">
-            {{ vm.poolStore.socialLinks[key] }}asdfada
+            {{ vm.poolStore.socialLinks[key] }}
           </a>
         </div>
       </div>
