@@ -18,8 +18,8 @@
           <!-- ----------------------------------------------------------------------------------------------- -->
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <div class="text-none nav-btn-text d-flex align-center bluePrimary--text" v-on="on" v-bind="attrs">
-                Bounty Hunter <v-icon color="bluePrimary">mdi-chevron-down</v-icon>
+              <div class="text-none nav-btn-text d-flex align-center" v-on="on" v-bind="attrs">
+                Bounty Hunter <v-icon>mdi-chevron-down</v-icon>
               </div>
             </template>
             <v-sheet class="neutral100" width="250">
@@ -92,8 +92,8 @@
           <!-- ----------------------------------------------------------------------------------------------- -->
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <div class="text-none nav-btn-text d-flex align-center" v-on="on" v-bind="attrs">
-                DAO Voting <v-icon>mdi-chevron-down</v-icon>
+              <div class="text-none nav-btn-text d-flex align-center blue-diversity--text" v-on="on" v-bind="attrs">
+                DAO Voting <v-icon color="blue-diversity">mdi-chevron-down</v-icon>
               </div>
             </template>
             <v-sheet class="neutral100" width="250">
