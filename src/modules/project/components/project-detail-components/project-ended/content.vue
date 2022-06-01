@@ -1,17 +1,18 @@
 <template>
+  <!-- --------------------------------------- HAS MISSIONS --------------------------------------- -->
   <v-row v-if="vm.missions.length">
-    <v-col cols="4" v-for="(mission, index) in vm.missions" :key="index">
+    <v-col cols="12" md="4" sm="6" v-for="(mission, index) in vm.missions" :key="index">
       <v-sheet class="rounded-lg" elevation="3">
-        <v-img :src="$_get(mission, 'metadata.coverImage')" class="rounded-t-lg">
+        <v-img max-height="239" aspect-ratio="1" :src="$_get(mission, 'metadata.coverImage')" class="rounded-t-lg">
           <div
             class="d-inline-block rounded pa-2 mt-2 ml-2 text-subtitle-2 text-uppercase black--text"
-            :class="$_get(mission, 'status') === 'ended' ? 'neutral100' : 'green lighten-1'"
+            :class="$_get(mission, 'status') === 'ended' ? 'neutral-100' : 'app-green lighten-1'"
           >
             {{ $_get(mission, 'status') }}
           </div>
         </v-img>
         <div class="pa-6">
-          <div class="font-weight-600 text-h5 mb-2">
+          <div class="font-weight-600 text-h5 mb-2 text-truncate">
             {{ mission.name }} #<span>{{ index + 1 }}</span>
           </div>
           <div class="text-subtitle-1">
@@ -36,15 +37,17 @@
       </v-sheet>
     </v-col>
   </v-row>
-  <v-sheet v-else class="rounded-lg text-center" elevation="3">
-    <div style="padding: 115px 0" class="neutral0--text">
+  <!-- ------------------------------------- EMPTY MISSIONS --------------------------------------- -->
+  <v-sheet v-else height="320" class="d-flex rounded-lg" elevation="3">
+    <div class="ma-auto text-center">
       <div class="mb-4 text-h6 font-weight-bold">Congratulations! Your bounty project is approved.</div>
-      <div class="">
+      <p>
         Your project is voted by GloDAO investor successfully. So now<br />
         you can create and manage all missions for your project here!
-      </div>
+      </p>
     </div>
   </v-sheet>
+  <!-- -------------------------------------------------------------------------------------------- -->
 </template>
 
 <script lang="ts">
@@ -54,7 +57,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 
 @Observer
 @Component
-export default class extends Vue {
+export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 }
 </script>
