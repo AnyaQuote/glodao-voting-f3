@@ -16,12 +16,13 @@
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
-          <v-skeleton-loader class="mt-7" type="list-item-two-line" />
-          <v-skeleton-loader type="list-item" />
-          <v-skeleton-loader type="image" class="mx-4" height="80" />
-          <v-skeleton-loader class="mt-7" type="list-item" />
-          <v-skeleton-loader type="image" class="mx-4" height="100" />
-          <v-skeleton-loader type="list-item-two-line" />
+          <div class="px-4 mt-7">
+            <v-skeleton-loader class="mb-7" type="image" height="80" />
+            <v-skeleton-loader class="mb-7" type="image" height="120" />
+            <v-skeleton-loader class="mb-7" type="image" height="80" />
+            <v-skeleton-loader class="mb-7" type="image" height="80" />
+            <v-skeleton-loader type="image" height="80" />
+          </div>
         </v-sheet>
       </v-col>
 
