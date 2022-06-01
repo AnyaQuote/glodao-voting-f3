@@ -39,16 +39,11 @@ export const rules = {
   isAddress: (v: string) => web3.utils.isAddress(v.trim()) || 'Address not valid',
   maxSize: (size: number) => (value: any) =>
     !value || value.size < size || `File size should be less than ${formatFileSize(size)} MB!`,
-  isImage: (v: File) => {
-    return !v || /\.(gif|jpe?g|tiff?|png|webp|bmp|png)$/i.test(v.name) || 'File is not an image.'
-  },
+  isImage: (v: File) =>
+    !v || (v instanceof File && /\.(gif|jpe?g|tiff?|png|webp|bmp|png)$/i.test(v.name)) || 'File is not an image.',
   isTextFile: (v: File) =>
-    !v || !/\.(csv|me|readme|te?xt|rtfd?|docx?)$/i.test(v.name) || 'Can not read this text file.',
-  fileRequired: (v: any) => (!!v && v instanceof File && v.size > 0) || 'File is required',
-  validDateRange: (start: string, end: string) => () => {
-    if (!end) return true
-    else return moment(end).isAfter(moment(start)) || 'Invalid date range'
-  },
+    !v || (v instanceof File && /\.(csv|me|readme|te?xt|rtfd?|docx?)$/i.test(v.name)) || 'Can not read this text file.',
+  fileRequired: (v: any) => !!v || (v instanceof File && v.size > 0) || 'File is required',
 }
 
 export const appRules = {}
