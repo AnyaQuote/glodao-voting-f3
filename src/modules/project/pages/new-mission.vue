@@ -12,7 +12,7 @@
       <!-- ---------------- SKELETON LOADER ---------------- -->
       <v-col v-if="vm.pageLoading" cols="10">
         <v-sheet class="neutral100--bg rounded-lg pb-7" outlined
-          ><div class="blue lighten-4 py-6 text-center rounded-lg rounded-b-0">
+          ><div class="py-6 text-center rounded-lg rounded-b-0" :class="headerBackgroundColor">
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
@@ -28,7 +28,7 @@
       <!-- ---------------- FORM CONTENT ---------------- -->
       <v-col v-else cols="10">
         <v-sheet class="neutral100--bg rounded-lg" outlined>
-          <div class="blue lighten-4 py-6 text-center rounded-lg rounded-b-0">
+          <div class="py-6 text-center rounded-lg rounded-b-0" :class="headerBackgroundColor">
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue, Provide, Ref } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../viewmodels/new-mission-viewmodel'
 import { get } from 'lodash-es'
 @Observer
@@ -81,6 +81,10 @@ export default class MissionForm extends Vue {
   }
   beforeDestroy() {
     this.vm.destroy()
+  }
+
+  get headerBackgroundColor() {
+    return this.$vuetify.theme.dark ? 'blue-diversity' : 'blue lighten-4'
   }
 }
 </script>
