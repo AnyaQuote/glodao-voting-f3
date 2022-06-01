@@ -69,19 +69,19 @@
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
-        :minDate="vm.missionMinDate"
-        :maxDate="vm.missionMaxDate"
-        :value="vm.missionStart"
+        :minDate="vm.pool.startDate"
+        :maxDate="vm.missionInfo.endDate || vm.pool.endDate"
+        :value="vm.missionInfo.startDate"
         @change="vm.changeMissionInfo('startDate', $event)"
       />
       <app-datetime-picker
         dateLabel="End date"
         timeLabel="End time"
-        :rules="[$rules.required, $rules.validDateRange(vm.missionStart, vm.missionEnd)]"
-        :disabled="!vm.missionStart"
-        :maxDate="vm.missionMaxDate"
-        :minDate="vm.missionStart"
-        :value="vm.missionEnd"
+        :rules="[$rules.required]"
+        :disabled="!vm.missionInfo.startDate"
+        :minDate="vm.missionInfo.startDate"
+        :maxDate="vm.pool.endDate"
+        :value="vm.missionInfo.endDate"
         @change="vm.changeMissionInfo('endDate', $event)"
       />
     </div>
