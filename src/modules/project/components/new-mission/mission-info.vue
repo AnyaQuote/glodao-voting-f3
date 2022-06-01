@@ -60,23 +60,28 @@
 
     <!-- MISSION TIME -->
     <div class="mt-7">
-      <div class="title font-weight-bold bluePrimary--text">Mision time</div>
+      <div>
+        <span class="title font-weight-bold blue-diversity--text">Mision time</span>
+        <i class="neutral-10--text ml-2">(Locale time)</i>
+      </div>
       <app-datetime-picker
         class="mt-7"
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
-        :maxDate="$_get(vm.missionInfo, 'endDate')"
-        :value="$_get(vm.missionInfo, 'startDate')"
+        :minDate="vm.missionMinDate"
+        :maxDate="vm.missionMaxDate"
+        :value="vm.missionStart"
         @change="vm.changeMissionInfo('startDate', $event)"
       />
       <app-datetime-picker
         dateLabel="End date"
         timeLabel="End time"
-        :rules="[$rules.required]"
-        :disabled="!vm.missionInfo.startDate"
-        :minDate="$_get(vm.missionInfo, 'startDate')"
-        :value="$_get(vm.missionInfo, 'endDate')"
+        :rules="[$rules.required, $rules.validDateRange(vm.missionStart, vm.missionEnd)]"
+        :disabled="!vm.missionStart"
+        :maxDate="vm.missionMaxDate"
+        :minDate="vm.missionStart"
+        :value="vm.missionEnd"
         @change="vm.changeMissionInfo('endDate', $event)"
       />
     </div>
