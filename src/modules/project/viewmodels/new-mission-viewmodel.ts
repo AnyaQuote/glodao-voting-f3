@@ -1,9 +1,9 @@
 import { appProvider } from '@/app-providers'
-import { getApiFileUrl, getJSONFromFile, getSamplePreviewJSONFromFile } from '@/helpers/file-helper'
+import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile } from '@/helpers/file-helper'
 import { Data } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
+import { isEqual, set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
 import { action, IReactionDisposer, observable, reaction, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
@@ -156,13 +156,15 @@ export class NewMissionViewModel {
     } else {
       coverUrl = this.pool?.data?.projectCover
     }
+
     if (quizFile) {
-      const textData = yield quizFile.text()
-      ;[quizJSON, answerJSON] = getJSONFromFile(textData)
-    } else throw new Error('Missing quiz file')
+      ;[quizJSON, answerJSON] = yield getDataFromQuizFile(quizFile)
+    }
+
     if (learningFile) {
-      learningInformation = yield learningFile.text()
-    } else throw new Error('Missing learning file')
+      learningInformation = (yield learningFile.text()).trim()
+    }
+
     const quiz: Quiz = {
       name,
       description,
@@ -209,29 +211,29 @@ export class NewMissionViewModel {
     const tokenBasePrice = '1'
     // =========
     return {
-      ownerAddress: appProvider.wallet.account,
-      poolId: pool.id,
-      name: missionInfo.name,
-      type: pool.type,
-      status,
-      chainId: pool.chain,
-      tokenBasePrice,
       rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
-      startTime: missionInfo.startDate,
-      endTime: missionInfo.endDate,
       maxParticipant: toNumber(missionInfo.maxParticipants),
       priorityRewardAmount: missionInfo.priorityAmount,
+      ownerAddress: appProvider.wallet.account,
+      startTime: missionInfo.startDate,
+      endTime: missionInfo.endDate,
+      name: missionInfo.name,
+      chainId: pool.chain,
+      type: pool.type,
+      tokenBasePrice,
+      poolId: pool.id,
       data: setting,
+      status,
       metadata: {
         shortDescription: missionInfo.shortDescription,
-        decimals: pool.data?.decimals,
         projectLogo: pool.data?.projectLogo,
-        tokenLogo,
         coverImage: pool.data?.projectCover,
         caption: missionInfo.shortDescription,
+        decimals: pool.data?.decimals,
         rewardToken: pool.tokenName,
-        socialLinks,
-        website,
+        socialLinks: socialLinks || [],
+        website: website || '',
+        tokenLogo,
       },
     }
   }
@@ -256,13 +258,13 @@ export class NewMissionViewModel {
    */
   @asyncAction *prepareQuizPreview() {
     try {
-      const { quizFile } = this.learnToEarn.setting!
-      if (quizFile) {
-        const data = yield quizFile.text()
-        this.previewQuiz = getSamplePreviewJSONFromFile(data, this.previewSampleSize)
-      }
+      if (!this.learnToEarn.setting?.quizFile) return false
+      const res = yield getPreviewFromQuizFile(this.learnToEarn.setting?.quizFile)
+      this.previewQuiz = sampleSize(res, 10)
+      return true
     } catch (error) {
       appProvider.snackbar.commonError(error)
     }
+    return false
   }
 }
