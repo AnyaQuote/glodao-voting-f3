@@ -125,8 +125,6 @@ export const checkQuizFile = async (file?: File | null) => {
       return errorMessage(file.name, index + 1, 'Error reading line')
     }
 
-    console.log(extractedArr.at(-1), extractedArr.slice(1, -1).length)
-
     if (+extractedArr[extractedArr.length - 1] > extractedArr.slice(1, -1).length) {
       return errorMessage(file.name, index + 1, 'Number of answers do not match')
     }
