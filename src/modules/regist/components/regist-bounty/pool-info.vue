@@ -60,7 +60,7 @@
       />
 
       <div class="flex-grow-1 mb-2">
-        <span class="font-weight-bold font-18 mr-1">Total missions</span> <span>(Max is 10 missons)</span>
+        <span class="font-weight-bold font-18 mr-1">Total missions</span>
       </div>
       <app-text-field
         :rules="[$rules.required, $rules.integer, $rules.min(1)]"
