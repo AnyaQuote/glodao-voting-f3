@@ -65,7 +65,7 @@
             >
               <v-img max-height="50" max-width="50" src="@/assets/icons/bulleyes.svg" />
               <div class="text-h6">Bounty Hunter</div>
-              <div class="text-subtitle-1 font-weight-thin">
+              <div class="text-subtitle-1">
                 Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
                 enim velit mollit.
               </div>
@@ -81,7 +81,7 @@
             >
               <v-img max-height="50" max-width="50" :src="require('@/assets/icons/new-project-rocket-icon.svg')" />
               <div class="text-h6">Launchpad Hunter</div>
-              <div class="text-subtitle-1 font-weight-thin">
+              <div class="text-subtitle-1">
                 Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis
                 enim velit mollit.
               </div>
