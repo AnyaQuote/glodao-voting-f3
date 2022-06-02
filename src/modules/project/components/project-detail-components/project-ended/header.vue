@@ -9,8 +9,8 @@
         <div class="d-flex flex-column justify-center text-truncate">
           <div class="text-h5 font-weight-bold mb-1 text-truncate">{{ $_get(vm.poolStore, 'projectName') }}</div>
           <div class="d-flex align-center">
-            <span class="text-h6 font-weight-bold">{{ $_get(vm.poolStore, 'tokenName') }}</span>
-            <v-chip class="text-capitalize ml-2" color="app-green lighten-1">{{
+            <span class="text-h6 font-weight-bold">${{ $_get(vm.poolStore, 'tokenName') }}</span>
+            <v-chip class="text-capitalize ml-2 white--text" color="app-green lighten-1">{{
               $_get(vm.poolStore, 'status')
             }}</v-chip>
           </div>
@@ -25,7 +25,7 @@
       </v-col>
       <v-col cols="6" sm="4" md="2">
         <div class="text-subtitle-1 neutral-10--text">Total mission</div>
-        <div class="text-h6 font-weight-bold">{{ $_get(vm.poolStore, 'totalMission', '0') }}</div>
+        <div class="text-h6 font-weight-bold">{{ $_get(vm.poolStore, 'totalMission') }}</div>
       </v-col>
       <v-col cols="6" sm="4" md="2">
         <div class="text-subtitle-1 neutral-10--text">Reward/mission</div>
@@ -53,7 +53,7 @@
       <v-col cols="6" sm="4" md="2">
         <div class="text-subtitle-1 neutral-10--text">Remaining</div>
         <div class="text-h6 font-weight-bold">
-          {{ remainingMission }} {{ remainingMission > 0 ? 'missions' : 'mission' }}
+          {{ remainingMission }} {{ remainingMission > 1 ? 'missions' : 'mission' }}
         </div>
       </v-col>
       <v-col cols="6" sm="4" md="2" align-self="center">

@@ -111,7 +111,7 @@
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
-      <div class="font-18 mt-6 d-flex mb-2">
+      <div class="font-18 mt-6 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
         <span class="font-weight-bold">Quiz file (fileName.csv)</span>
         <v-spacer />
         <span class="app-blue--text cursor-pointer text-subtitle-2" @click="download">Download the quiz template</span>

@@ -3,7 +3,7 @@
     <v-row justify="center" class="mb-100">
       <!-- ---------------- BREADCRUMBS ---------------- -->
       <v-col cols="12">
-        <div class="d-flex align-center justify-start" @click="goBack">
+        <div class="d-flex align-center justify-start mt-4" @click="goBack">
           <v-icon>mdi-arrow-left</v-icon>
           <span class="text-h6 bluePrimary--text cursor-pointer ml-7">Back to project</span>
         </div>
