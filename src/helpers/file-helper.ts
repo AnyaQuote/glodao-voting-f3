@@ -3,8 +3,8 @@ import { Answer, QuizData, PreviewQuiz } from '@/models/QuizModel'
 import { get } from 'lodash'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
-const extractRegex = /(?:([^\s|\|].+?)(?=\s*\|\s*))|(?<=\n?)([1-6]{1})(?!\s*\|\s*)/g
-const validateRegex = /^\s*.+(\s*\|\s*[^\s|\|]+){2,6}(\s*\|\s*[1-6]){1}$/
+const extractRegex = /(?:([^\s|\|].+?)(?=\s*\|\s*))|(?<=\n?)(\d)(?!\s*\|\s*)/g
+const validateRegex = /^\s*.+(\s*\|\s*[^\s|\|]+){2,6}(\s*\|\s*\d){1}$/
 
 export const getApiFileUrl = (model: any) => {
   if (typeof model === 'string') {
@@ -124,6 +124,9 @@ export const checkQuizFile = async (file?: File | null) => {
     if (!extractedArr || !extractedArr.length) {
       return errorMessage(file.name, index + 1, 'Error reading line')
     }
+
+    console.log(extractedArr.at(-1), extractedArr.slice(1, -1).length)
+
     if (+extractedArr[extractedArr.length - 1] > extractedArr.slice(1, -1).length) {
       return errorMessage(file.name, index + 1, 'Number of answers do not match')
     }
