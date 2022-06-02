@@ -5,7 +5,7 @@
       <div class="text-subtitle-2 text-md-h6 neutral-10--text mb-6 mb-md-9">
         Your interested projects should create a profile using this website, create and submit an application. GloDAO
         investors will review and vote for your project on Voting. If your project has enough votes, it will be launched
-        on Bounty Huter or Launchpad.
+        on Bounty Hunter or Launchpad.
       </div>
       <connect-wallet
         :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
