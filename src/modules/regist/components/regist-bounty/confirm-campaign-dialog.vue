@@ -1,45 +1,45 @@
 <template>
   <app-dialog ref="dialog">
     <v-card class="neutral-100">
-      <v-card-title>
-        Confirm campaign dialog
+      <v-card-title class="font-weight-bold">
+        Confirm campaign information
         <v-spacer />
         <v-icon @click="close">mdi-close</v-icon>
       </v-card-title>
 
       <v-card-text>
         <div class="font-18 d-flex mt-4 mb-2">
-          <span>Total reward:</span>
+          <span class="font-weight-600">Total reward:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral0--text"
+          <span class="font-weight-bold neutral-0--text"
             >{{ $_get(vm.projectInfo, 'rewardAmount') }} {{ $_get(vm.projectInfo, 'tokenName') }}</span
           >
         </div>
 
         <div class="font-18 d-flex mb-2">
-          <span>Total missions:</span>
+          <span class="font-weight-600">Total missions:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral0--text">{{ $_get(vm.projectInfo, 'totalMissions') }}</span>
+          <span class="font-weight-bold neutral-0--text">{{ $_get(vm.projectInfo, 'totalMissions') }}</span>
         </div>
 
         <div class="font-18 d-flex mb-2">
-          <span>Reward per mission:</span>
+          <span class="font-weight-600">Reward per mission:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral0--text"
-            >{{ vm.rewardPerMission | formatNumber }} {{ $_get(vm.projectInfo, 'tokenName') }}</span
-          >
+          <span class="font-weight-bold neutral-0--text">
+            {{ vm.rewardPerMission | formatNumber }} {{ $_get(vm.projectInfo, 'tokenName') }}
+          </span>
         </div>
 
         <div class="font-18 d-flex mb-2">
-          <span>Start in:</span>
+          <span class="font-weight-600">Start in:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral0--text">{{ startDate | MMDoYYYY }}</span>
+          <span class="font-weight-bold neutral-0--text">{{ startDate | MMDoYYYY }}</span>
         </div>
 
         <div class="font-18 d-flex mb-4">
-          <span>End in:</span>
+          <span class="font-weight-600">End in:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral0--text">{{ endDate | MMDoYYYY }}</span>
+          <span class="font-weight-bold neutral-0--text">{{ endDate | MMDoYYYY }}</span>
         </div>
       </v-card-text>
       <v-card-actions>
