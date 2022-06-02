@@ -1,5 +1,6 @@
 <template>
-  <v-dialog v-model="authStore.attachWalletDialog" content-class="rounded overflow-hidden" max-width="500" persistent>
+  <!-- v-model="authStore.attachWalletDialog" -->
+  <v-dialog content-class="rounded overflow-hidden" max-width="500" persistent>
     <v-sheet
       outlined
       class="position-relative pa-8 text-center dialog-normal-text overflow-hidden rounded neutral100--bg"
