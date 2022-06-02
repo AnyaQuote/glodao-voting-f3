@@ -13,7 +13,7 @@
         >
           1
         </v-sheet>
-        <span class="text-h5 font-weight-bold">Application</span>
+        <span class="text-h6 font-weight-bold">Application</span>
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
@@ -46,7 +46,7 @@
         >
           2
         </v-sheet>
-        <span class="text-h5 font-weight-bold">Confirm</span>
+        <span class="text-h6 font-weight-bold">Confirm</span>
       </div>
       <div class="d-flex mt-3">
         <v-sheet class="transparent d-flex justify-center" width="35">
