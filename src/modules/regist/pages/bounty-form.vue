@@ -4,7 +4,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <v-sheet class="d-flex justify-center align-center py-6 app-blue lighten-1 lighten-4 mt-6">
+          <v-sheet class="d-flex justify-center align-center py-6 blue-2 lighten-1 lighten-4 mt-6">
             <v-avatar size="48" class="mr-4">
               <v-img src="@/assets/icons/bulleyes.svg" />
             </v-avatar>
