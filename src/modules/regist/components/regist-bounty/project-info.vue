@@ -23,7 +23,7 @@
 
       <div class="font-18 font-weight-bold">Project logo</div>
       <app-file-upload
-        imageOnly
+        isImageFile
         :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImageFile]"
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectLogo', $event)"
@@ -31,7 +31,7 @@
 
       <div class="font-18 font-weight-bold mt-6">Project cover</div>
       <app-file-upload
-        imageOnly
+        isImageFile
         :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImageFile]"
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectCover', $event)"
