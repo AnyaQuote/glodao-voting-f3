@@ -16,11 +16,13 @@
             v-for="choice in quiz.choices"
             :key="choice.value"
             class="pa-2 rounded-lg"
-            :class="choice.value === quiz.answer && 'green lighten-5'"
+            :class="choice.value === quiz.answer && 'green lighten-4'"
           >
             <v-radio color="success" :value="choice.value">
               <template v-slot:label>
-                <span :class="choice.value === quiz.answer && 'font-weight-bold'">{{ choice.text }} </span>
+                <span class="neutral-10--text" :class="choice.value === quiz.answer && 'font-weight-bold black--text'">
+                  {{ choice.text }}
+                </span>
               </template>
             </v-radio>
           </div>
