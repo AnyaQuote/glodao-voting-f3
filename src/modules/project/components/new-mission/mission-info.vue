@@ -19,7 +19,7 @@
       />
       <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
       <app-file-upload
-        imageOnly
+        isImageFile
         :rules="[$rules.fileRequired, $rules.maxSize(15000000)]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"

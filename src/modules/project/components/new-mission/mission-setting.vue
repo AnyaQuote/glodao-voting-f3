@@ -106,8 +106,8 @@
       />
       <div class="font-18 font-weight-bold mt-6">Quiz cover</div>
       <app-file-upload
-        imageOnly
-        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImageFile]"
+        isImageFile
+        :rules="[$rules.required, $rules.maxSize(15000000)]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
@@ -117,7 +117,8 @@
         <span class="app-blue--text cursor-pointer text-subtitle-2" @click="download">Download the quiz template</span>
       </div>
       <app-file-upload
-        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isTextFile]"
+        isQuizFile
+        :rules="[$rules.required, $rules.maxSize(15000000)]"
         @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
       />
       <v-btn
@@ -131,7 +132,7 @@
 
       <div class="d-flex font-18 mt-6 font-weight-bold mb-2">Document (fileName.md)</div>
       <app-file-upload
-        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isTextFile]"
+        :rules="[$rules.required, $rules.maxSize(15000000)]"
         @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
       />
     </switch-field>
@@ -161,8 +162,10 @@ export default class MissionSettingForm extends Vue {
   }
 
   async openQuizPreviewDialog() {
-    await this.vm.prepareQuizPreview()
-    this.dialog.open()
+    const res = await this.vm.prepareQuizPreview()
+    if (res) {
+      this.dialog.open()
+    }
   }
 }
 </script>

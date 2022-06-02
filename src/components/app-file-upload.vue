@@ -1,6 +1,6 @@
 <template>
   <v-sheet outlined v-ripple class="d-flex align-center rounded px-5">
-    <div v-if="imageOnly" class="flex-shrink-0 py-5 mr-5">
+    <div v-if="isImageFile" class="flex-shrink-0 py-5 mr-5">
       <v-img v-if="preview.value" :src="preview.value" class="rounded" max-with="50" aspect-ratio="1"></v-img>
       <v-img
         v-else
@@ -16,16 +16,17 @@
       show-size
       prepend-icon=""
       persistent-hint
-      single-line
+      truncate-length="20"
+      :label="config.label"
       :hint="config.hint"
       :accept="config.accept"
       :value="data"
+      :error-messages="config.error"
       @change="onChange"
-      truncate-length="20"
     >
-      <template v-slot:label>
+      <template v-slot:selection="{ text }">
         <span class="font-weight-bold">
-          {{ preview.name ? preview.name : `Upload your ${config.type}` }}
+          {{ preview.name || text }}
         </span>
       </template>
     </v-file-input>
@@ -37,49 +38,60 @@
 </template>
 
 <script lang="ts">
+import { checkQuizFile } from '@/helpers/file-helper'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 type AppFile = File | string | null
 
-const defaultConfig = {
-  type: 'file',
-  hint: 'Allowed file types: csv, txt, markdown',
-  accept: '.csv,.md,.txt',
-  isEdit: false,
+interface FileConfig {
+  label?: string
+  hint?: string
+  accept?: string
+  isEdit?: boolean
+  error?: string
 }
 
 @Component
 export default class AppUploadField extends Vue {
   @Prop({ default: null }) value!: AppFile
-  @Prop(Boolean) imageOnly!: boolean
+  @Prop(Boolean) isImageFile!: boolean
+  @Prop(Boolean) isQuizFile!: boolean
 
   data: AppFile = null
-  config = defaultConfig
+  config: FileConfig = {}
   preview = { name: '', value: '' }
 
   mounted() {
-    this.config = { ...this.config, isEdit: !!this.value }
+    this.config = {
+      label: `Upload your ${this.isImageFile ? 'image' : 'file'}`,
+      hint: this.isImageFile ? 'Allow file types: png, jpg, svg' : 'Allowed file types: csv, txt, markdown',
+      accept: this.isImageFile ? '.png,.jpg,.svg' : '.csv,.md,.txt,.rtf',
+      isEdit: !!this.value,
+      error: '',
+    }
+
     if (this.value && typeof this.value === 'string') {
-      this.preview = {
-        value: this.getSource(this.value),
-        name: this.value.split('/').pop() || '',
-      }
+      this.preview = { value: this.getSource(this.value), name: this.value.split('/').pop() || '' }
     } else if (this.value && this.value instanceof File) {
       this.data = this.value
+
       if (/^(image)\/.*$/.test(this.value.type)) {
         this.preview = { ...this.preview, value: this.getSource(this.value) }
       }
     }
-
-    this.config = this.imageOnly
-      ? { ...this.config, hint: 'Allow file types: png, jpg, svg', accept: '.png,.jpg,.svg', type: 'image' }
-      : this.config
   }
 
-  onChange(value: any) {
-    this.data = value
-    if (this.preview.name) this.preview.name = ''
-    this.preview.value = this.getSource(value)
+  async onChange(event: any) {
+    let value = (this.data = event)
+    if (this.isQuizFile) {
+      this.config.error = await checkQuizFile(value)
+      value = this.config.error ? null : value
+    }
+
+    if (this.isImageFile) {
+      this.preview.name && (this.preview.name = '')
+      this.preview.value = this.getSource(value)
+    }
     this.$emit('change', value)
   }
 
