@@ -5,7 +5,7 @@
       <v-row justify="center">
         <!-- --------------------------------------------------------------------------------------------------- -->
         <v-col cols="8" v-if="!vm.isLoggedIn">
-          <v-sheet class="d-flex flex-column pa-8 rounded-lg" outlined>
+          <v-sheet color="neutral-100" class="d-flex flex-column pa-8 rounded-lg my-16" outlined>
             <div class="text-h6 font-weight-bold text-center mb-6">
               Please sign in with your wallet for applying project on DAO Voting
             </div>
@@ -20,9 +20,9 @@
                 walletStore.account
               }}</span>
             </v-sheet>
-            <v-btn class="linear-blue--bg white--text text-none" depressed @click="signMessage" :loading="vm.loading"
-              >Sign message</v-btn
-            >
+            <v-btn class="linear-blue--bg white--text text-none" depressed @click="signMessage" :loading="vm.loading">
+              Sign message
+            </v-btn>
           </v-sheet>
         </v-col>
         <!-- ---------------------------------------------------------------------------------------------------  -->

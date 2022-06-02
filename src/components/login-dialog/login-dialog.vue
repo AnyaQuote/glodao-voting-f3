@@ -5,7 +5,7 @@
         <v-spacer />
         <v-icon v-show="!controller.config.hideClose" @click="controller.close">mdi-close</v-icon>
       </v-card-title>
-      <v-card-title> Please sign in with your wallet</v-card-title>
+      <v-card-title class="word-no-wrap"> Please sign in with your wallet</v-card-title>
       <v-card-text class="red--text">{{ controller.config.message }}</v-card-text>
       <v-card-text>
         Remember that this wallet will be the pool owner's address. Only the pool owner can update pool information.
@@ -43,4 +43,8 @@ export default class LoginDialog extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.word-no-wrap {
+  word-break: initial;
+}
+</style>

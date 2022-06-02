@@ -16,8 +16,7 @@
               contain
             />
             <div class="neutral10--text text-caption text-capitalize">
-              Global Decentralized <br />
-              autonomous organization
+              Global Decentralized <br />Autonomous Organization
             </div>
           </div>
         </v-col>

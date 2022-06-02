@@ -1,11 +1,16 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip class="text-h6 font-weight-bold text-center ma-5 pa-6" color="bluePrimary" label outlined>
+    <v-chip
+      class="font-weight-bold text-center ma-5 pa-6 text-uppercase neutral-0--text font-18"
+      color="app-blue"
+      label
+      outlined
+    >
       Project information
     </v-chip>
 
     <v-form ref="project-info-form" v-model="valid" class="form pa-6">
-      <div class="font-18 font-weight-bold">Project name</div>
+      <div class="font-18 font-weight-bold">Project name<span class="app-red--text">*</span></div>
       <app-text-field
         :rules="[$rules.required]"
         :value="$_get(vm.projectInfo, 'projectName')"
@@ -13,7 +18,7 @@
         placeholder="Enter name of project"
       ></app-text-field>
 
-      <div class="font-18 font-weight-bold">Short description</div>
+      <div class="font-18 font-weight-bold">Short description<span class="app-red--text">*</span></div>
       <app-textarea
         :rules="[$rules.required]"
         :value="$_get(vm.projectInfo, 'shortDescription')"
@@ -63,7 +68,7 @@
       />
 
       <v-btn
-        class="white--text font-weight-bold text-none mt-6"
+        class="white--text font-weight-bold text-none text-subtitle-1 mt-6"
         :class="valid && 'linear-blue--bg'"
         :disabled="!valid"
         depressed

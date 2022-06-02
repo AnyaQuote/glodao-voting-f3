@@ -1,7 +1,7 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip class="text-h6 font-weight-bold text-uppercase text-center ma-5 pa-6" color="bluePrimary" label outlined>
-      Bounty pool Information
+    <v-chip class="font-18 font-weight-bold text-uppercase text-center ma-5 pa-6" color="app-blue" label outlined>
+      Bounty Pool Information
     </v-chip>
 
     <v-form ref="fund-info-form" v-model="valid" class="pa-6">
@@ -59,8 +59,8 @@
         @change="vm.changeProjectInfo('endDate', $event)"
       />
 
-      <div class="font-18 flex-grow-1 mb-2">
-        <span class="font-weight-bold">Total missions</span>
+      <div class="flex-grow-1 mb-2">
+        <span class="font-weight-bold font-18 mr-1">Total missions</span>
       </div>
       <app-text-field
         :rules="[$rules.required, $rules.integer, $rules.min(1)]"
@@ -70,7 +70,7 @@
       ></app-text-field>
 
       <v-btn
-        class="white--text font-weight-600 text-none elevation-0"
+        class="white--text font-weight-600 text-none elevation-0 text-subtitle-1"
         :class="valid && !vm.tokenInfoLoading && 'linear-blue--bg'"
         :disabled="!valid || vm.tokenInfoLoading"
         width="100%"

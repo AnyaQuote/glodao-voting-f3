@@ -3,8 +3,8 @@
     <v-row no-gutters dense align="stretch">
       <v-col :cols="$vuetify.breakpoint.mobile ? 12 : 6" :class="!$vuetify.breakpoint.mobile && 'border-right'">
         <div class="project-info pa-4 pa-sm-6 d-flex align-stretch blue-2">
-          <div class="project-logo neutral-100 rounded d-flex justify-center align-center pa-2 mr-4">
-            <v-img :src="pool.projectLogo" />
+          <div class="project-logo neutral-100 rounded d-flex justify-center align-center mr-4" style="padding: 6px">
+            <v-img :src="pool.projectLogo" contain max-height="100%" />
           </div>
           <div class="spacer text-truncate">
             <div class="text-h6 text-sm-h5 font-weight-bold text-truncate">{{ pool.projectName }}</div>

@@ -1,6 +1,13 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip font-18 outlined color="bluePrimary" class="ma-5 text-h6 font-weight-bold text-center pa-6">Confirm</v-chip>
+    <v-chip
+      label
+      outlined
+      color="app-blue"
+      class="ma-5 neutral-0--text font-18 font-weight-bold text-center pa-6 text-uppercase"
+    >
+      Confirm
+    </v-chip>
 
     <v-form ref="payment-form" class="pa-6">
       <div class="d-flex align-center">
@@ -10,7 +17,7 @@
         </div>
         <!-- <v-icon color="neutral10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">$HWD</div> -->
-        <v-icon color="neutral10">mdi-circle-small</v-icon>
+        <v-icon color="neutral-10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">
           {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
         </div>
@@ -19,10 +26,10 @@
       <div class="ma-7">
         <div class="mb-2 font-18 font-weight-bold">Please send full amount of reward token to create pool</div>
         <div class="mb-7">
-          <i
-            >After your application is submitted, create pool fee will be taken and not be refunded for any reason. You
-            can still edit pool information after that.</i
-          >
+          <i>
+            *Your token will be sent in contract and used for awarding to your all winning participant if your bounty
+            project is approved. Otherwise, you can withdraw anytime.
+          </i>
         </div>
 
         <div class="d-flex font-18 mb-2">
@@ -32,9 +39,9 @@
 
         <div class="font-18">
           <span class="mr-2">Reward Token Balance:</span>
-          <span class="font-weight-medium"
-            >{{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}</span
-          >
+          <span class="font-weight-medium">
+            {{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}
+          </span>
         </div>
 
         <v-sheet outlined class="pa-3 rounded-lg font-18 font-weight-600 mt-6">
@@ -44,9 +51,9 @@
           </div>
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total send:</span>
-            <span class="app-blue--text flex-grow-1 text-end"
-              >{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}</span
-            >
+            <span class="app-blue--text flex-grow-1 text-end">
+              {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
+            </span>
           </div>
           <div class="d-flex">
             <span class="neutral10--text">Creating pool fee:</span>
@@ -72,7 +79,7 @@
         </v-btn>
         <v-btn
           v-else
-          class="linear-blue--bg white--text font-weight-bold text-none mt-6"
+          class="linear-blue--bg white--text font-weight-bold text-none mt-6 text-subtitle-1"
           width="100%"
           height="40"
           depressed
