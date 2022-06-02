@@ -2,7 +2,7 @@ export interface QuizData {
   id?: string
   type?: string
   question?: string
-  data?: { text: string; value: string }[]
+  data?: { text: string; value: string | number }[]
 }
 
 export interface MetaData {
@@ -39,5 +39,5 @@ export interface PreviewQuiz {
   id?: string
   question?: string
   answer?: number
-  choices?: { text?: string; value?: string }[]
+  choices?: { text?: string; value?: number }[]
 }
