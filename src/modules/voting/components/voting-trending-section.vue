@@ -20,6 +20,7 @@
       </div>
     </v-col>
     <!-- --------------------------------------------- HAS PROJECTS ---------------------------------------------- -->
+    <!-- CAROUSEL ITEM START -->
     <v-row v-else class="overflow-hidden mx-1 mx-sm-0">
       <v-col cols="12" md="8">
         <v-carousel
@@ -49,7 +50,6 @@
             </v-sheet>
           </template>
           <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
-            <!-- CAROUSEL ITEM START -->
             <v-sheet class="rounded-lgn" :class="[carouselItemColor, customPadding]">
               <v-img
                 class="p-relative rounded-lg rounded-b-0 text-end"
@@ -63,19 +63,20 @@
                 <v-sheet class="blue-2 rounded-lg pa-3 ml-6" outlined :class="logoSize">
                   <v-img contain aspect-ratio="1" :src="$_get(item, 'projectLogo')" />
                 </v-sheet>
-                <div class="font-weight-bold ml-4 mb-sm-6 mb-3 text-sm-h4 text-subtitle-1">
+                <div class="font-weight-bold ml-4 mb-sm-6 mb-3 text-sm-h4 text-subtitle-1 text-truncate">
                   {{ $_get(item, 'projectName') }}
                 </div>
               </div>
             </v-sheet>
-            <!-- CAROUSEL ITEM END -->
           </v-carousel-item>
         </v-carousel>
       </v-col>
+      <!-- CAROUSEL ITEM END -->
+
+      <!-- PREVIEW SCROLL ITEM START -->
       <v-col cols="12" md="4">
         <div class="text-uppercase blue-diversity--text text-h6 mb-4">Trending now</div>
-        <v-sheet v-if="$vuetify.breakpoint.mdAndUp" height="480" class="rounded-lg pa-n4 overflow-scroll">
-          <!-- PREVIEW SCROLL ITEM START -->
+        <v-sheet v-if="$vuetify.breakpoint.mdAndUp" height="480" class="rounded-lg-y pa-n4 overflow-y-scroll">
           <!-- ------------------------------------ MOBILE SLIDER VERTICAL -------------------------------------- -->
           <div
             v-for="(item, index) in vm.votingList"
@@ -102,10 +103,9 @@
               </div>
             </v-hover>
           </div>
-          <!-- PREVIEW SCROLL ITEM END -->
         </v-sheet>
         <!-- ------------------------------------ MOBILE SLIDER HORIZONTAL ------------------------------------ -->
-        <v-sheet v-else class="d-flex pa-n1 rounded-lg" style="overflow-x: scroll">
+        <v-sheet v-else class="d-flex pa-n1 rounded-lg overflow-x-scroll">
           <div
             v-for="(item, index) in vm.votingList"
             class="pa-1 cursor-pointer"
@@ -120,6 +120,7 @@
             </v-hover>
           </div>
         </v-sheet>
+        <!-- PREVIEW SCROLL ITEM END -->
         <!-- --------------------------------------------------------- -------------------------------------- -->
       </v-col>
     </v-row>
@@ -174,8 +175,12 @@ export default class VotingTrendingSection extends Vue {
   border-radius: 8px;
 }
 
-.overflow-scroll {
+.overflow-y-scroll {
   overflow-y: scroll;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
 }
 
 .w-h-160 {
