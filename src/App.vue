@@ -287,4 +287,10 @@ a {
     background: var(--v-neutral100-base) !important;
   }
 }
+.v-autocomplete__content div div {
+  background: var(--v-neutral-20-base) !important;
+  .v-list-item__action .v-simple-checkbox {
+    background: transparent !important;
+  }
+}
 </style>
