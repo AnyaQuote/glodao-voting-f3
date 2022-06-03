@@ -54,7 +54,8 @@
         solo
         flat
         outlined
-      ></v-autocomplete>
+      >
+      </v-autocomplete>
 
       <!-- ===== SOCIAL LINKS FIELDS ===== -->
       <div class="d-flex flex-column flex-md-row align-md-center justify-space-between">
