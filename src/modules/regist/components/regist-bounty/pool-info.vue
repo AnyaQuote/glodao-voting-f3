@@ -21,7 +21,7 @@
       <div class="d-flex flex-column flex-sm-row">
         <div class="pl-0 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Total reward amount</div>
-          <v-select
+          <v-autocomplete
             :items="tokens"
             solo
             outlined
@@ -29,7 +29,7 @@
             :value="$_get(vm.projectInfo, 'rewardAmount')"
             :rules="[$rules.required]"
             @input="vm.changeProjectInfo('rewardAmount', $event)"
-          ></v-select>
+          ></v-autocomplete>
         </div>
         <div class="pl-sm-6 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
