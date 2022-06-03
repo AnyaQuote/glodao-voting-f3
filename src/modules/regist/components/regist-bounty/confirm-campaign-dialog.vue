@@ -33,13 +33,13 @@
         <div class="font-18 d-flex mb-2">
           <span class="font-weight-600">Start in:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral-0--text">{{ startDate | MMDoYYYY }}</span>
+          <span class="font-weight-bold neutral-0--text">{{ vm.projectInfo.startDate | MMDoYYYY }}</span>
         </div>
 
         <div class="font-18 d-flex mb-4">
           <span class="font-weight-600">End in:</span>
           <v-spacer />
-          <span class="font-weight-bold neutral-0--text">{{ endDate | MMDoYYYY }}</span>
+          <span class="font-weight-bold neutral-0--text">{{ vm.projectInfo.endDate | MMDoYYYY }}</span>
         </div>
       </v-card-text>
       <v-card-actions>
@@ -70,14 +70,6 @@ export default class ConfirmCampaignDialog extends Vue {
   }
   submit() {
     this.vm.nextStep(2.1)
-  }
-
-  get startDate() {
-    return ''
-  }
-
-  get endDate() {
-    return ''
   }
 }
 </script>
