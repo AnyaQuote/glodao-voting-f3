@@ -44,17 +44,19 @@
       <v-img max-height="244" class="rounded-t-lg" :src="vm.poolStore.projectCover" />
       <div class="pa-4 d-flex flex-column">
         <div class="font-18 font-weight-bold mb-2">Current result</div>
+        <!-- ==== yes vote progress circle ==== -->
         <v-sheet class="rounded-lg pa-4 mb-2 green lighten-4 d-flex align-baseline black--text" outlined>
           <span class="font-18 font-weight-bold mr-8">---%</span>
           <span class="text-subtitle-2 spacer">--- upvotes</span>
           <v-chip label color="green lighten-2" class="white--text rounded-lg px-6">👍 YES votes</v-chip>
         </v-sheet>
-
+        <!-- ==== no vote progress circle ==== -->
         <v-sheet class="rounded-lg pa-4 mb-2 red lighten-4 d-flex align-baseline black--text" outlined>
           <span class="font-18 font-weight-bold mr-8">---%</span>
           <span class="text-subtitle-2 spacer">--- downvotes</span>
           <v-chip label color="red lighten-2" class="white--text rounded-lg px-6">👍 NO votes</v-chip>
         </v-sheet>
+        <!-- ==================================== -->
       </div>
     </v-sheet>
     <!-- ------------------------------------- VOTE BUTTON  ------------------------------------------------------------------ -->
