@@ -167,6 +167,12 @@ a {
 .v-pagination__item {
   font-size: em(20) !important;
   background: var(--v-neutral-100-base) !important;
+  &.v-pagination__item--active {
+    color: var(--v-neutral20-base) !important;
+    &.primary {
+      background-color: var(--v-blue-diversity-base) !important;
+    }
+  }
 }
 .v-pagination__navigation {
   background: var(--v-neutral-100-base) !important;
@@ -237,6 +243,10 @@ a {
   display: list-item;
   list-style-type: disc;
   list-style-position: inside;
+}
+
+.black-opaque--bg {
+  background-color: rgba(#101010, 0.5) !important;
 }
 
 /* ----------------------------------------------------------------------------------------------- */
