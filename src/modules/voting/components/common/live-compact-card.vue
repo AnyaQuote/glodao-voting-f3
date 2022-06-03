@@ -1,7 +1,7 @@
 <template>
   <!-- ----------------------------------------------- DESKTOP CARD ------------------------------------------ -->
   <v-hover v-slot="{ hover }">
-    <v-sheet max-width="348" class="fill-height rounded-lg pa-thin overflow-hidden" :class="typeBorderColor">
+    <v-sheet width="348" class="fill-height rounded-lg pa-thin overflow-hidden" :class="typeBorderColor">
       <v-sheet class="d-flex flex-column">
         <div class="rounded-t-lg flex-shrink-0">
           <v-img max-height="234" aspect-ratio="1" :src="$_get(pool, 'data.projectCover')">
