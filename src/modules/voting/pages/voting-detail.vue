@@ -3,9 +3,11 @@
     <v-row class="mb-72">
       <v-col cols="12" class="mb-10">
         <div class="mt-5 d-flex align-center font-weight-medium">
-          <span class="bluePrimary--text mr-5 cursor-pointer" @click="goToVotingList">Your project</span>
+          <span class="bluePrimary--text mr-5 cursor-pointer font-weight-bold text-truncate" @click="goToVotingList"
+            >DAO Voting</span
+          >
           <v-icon class="mr-5" size="22">mdi-chevron-right</v-icon>
-          <span class="neutral-10--text">{{ $_get(vm.poolStore, 'projectName') }}</span>
+          <span class="neutral-10--text text-truncate">{{ $_get(vm.poolStore, 'projectName') }}</span>
         </div>
       </v-col>
 
@@ -19,28 +21,35 @@
 
       <v-col cols="12">
         <!-- ------------------------------------- HEADER -------------------------------------- -->
-        <div class="row mx-0 mt-72">
-          <v-sheet class="col-12 rounded-lg pa-4 d-flex align-center justify-space-between mb-6" outlined elevation="3">
-            <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ $_get(vm, 'votedUsers.length') }})</div>
-            <v-btn icon @click="openGuideDialog">
-              <v-icon large>mdi-information</v-icon>
-            </v-btn>
-          </v-sheet>
-          <!-- ------------------------------------ LOADING ------------------------------------ -->
-          <div v-if="vm.dataLoading" class="col-12 pa-0">
-            <v-skeleton-loader class="mb-3" v-for="index in 3" :key="index" height="80" type="image" />
-          </div>
-          <!-- ------------------------------------ EMPTY -------------------------------------- -->
-          <div v-else-if="!vm.dataLoading && !vm.votedUsers.length" class="col-12 text-h6 text-center rounded-lg">
-            No users has voted yet. Be the first to support this project
-          </div>
-          <!-- ------------------------------------ CONTENT ------------------------------------ -->
-          <div v-else class="row ma-0 justify-center">
-            <voting-list-item class="col-12 mb-3" v-for="address in vm.votedUsers" :address="address" :key="address" />
-            <v-pagination prev-icon="mdi-arrow-left" :length="4" next-icon="mdi-arrow-right" />
-          </div>
-          <!-- -------------------------------------------------------------------------------- -->
+        <v-sheet class="rounded-lg pa-4 d-flex align-center justify-space-between mb-6 mt-72" outlined elevation="3">
+          <div class="text-h5 neutral100--bg font-weight-bold">USER VOTE ({{ $_get(vm, 'votedUsers.length') }})</div>
+          <v-btn icon @click="openGuideDialog">
+            <v-icon large>mdi-information</v-icon>
+          </v-btn>
+        </v-sheet>
+        <!-- ------------------------------------ LOADING ------------------------------------ -->
+        <div v-if="vm.dataLoading">
+          <v-skeleton-loader class="mb-2" v-for="index in 3" :key="index" height="80" type="image" />
         </div>
+        <!-- ------------------------------------ EMPTY -------------------------------------- -->
+        <div v-else-if="!vm.dataLoading && !vm.votedUsers.length" class="text-h6 text-center rounded-lg">
+          No users has voted yet. Be the first to support this project
+        </div>
+
+        <!-- ------------------------------------ CONTENT ------------------------------------ -->
+        <v-sheet v-else class="d-flex flex-column transparent" height="576">
+          <v-slide-x-transition class="flex-grow-1" group hide-on-leave>
+            <voting-list-item v-for="address in vm.votedUserPagingList" :address="address" :key="address" />
+          </v-slide-x-transition>
+          <v-pagination
+            prev-icon="mdi-arrow-left"
+            next-icon="mdi-arrow-right"
+            :length="vm.votedUserPage.total"
+            :value="vm.votedUserPage.current"
+            @input="vm.handleVotedUserPaging"
+          />
+        </v-sheet>
+        <!-- -------------------------------------------------------------------------------- -->
       </v-col>
 
       <v-col cols="12">

@@ -3,7 +3,7 @@
     <v-icon large color="white" class="mt-n1 mr-1">mdi-star-outline</v-icon>
     <span class="text-h5 white--text">VOTE NOW</span>
   </v-sheet>
-  <v-sheet v-else class="pa-6 fill-height overflow-hidden" outlined :class="voteButtonBackgroundColor">
+  <v-sheet v-else class="pa-6 fill-height overflow-hidden blue-2" outlined>
     <v-row>
       <v-col cols="12" sm="6" md="5">
         <div class="mr-4">
@@ -58,10 +58,6 @@ export default class VotingDetailButton extends Vue {
   connected = false
   voted = true
   walletStore = walletStore
-
-  get voteButtonBackgroundColor() {
-    return !this.$vuetify.theme.dark && 'app-blue lighten-1'
-  }
 }
 </script>
 

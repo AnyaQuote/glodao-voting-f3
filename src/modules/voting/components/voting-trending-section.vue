@@ -14,13 +14,14 @@
     </v-row>
     <!-- --------------------------------------------- EMPTY ------------------------------------------------------ -->
     <v-col v-else-if="!vm.loading && !vm.votingList.length" cols="12">
-      <v-sheet class="pa-8 rounded-lg" outlined elevation="3">
-        <div class="blue-diversity--text text-h5 font-weight-bold">Trending</div>
-        <div class="text-h6">No projects avalible for voting right now</div>
-      </v-sheet>
+      <div class="py-8">
+        <div class="text-uppercase text-h4 font-weight-bold">Trending now</div>
+        <div class="text-h6 text-center mt-8">No projects avalible for voting right now</div>
+      </div>
     </v-col>
     <!-- --------------------------------------------- HAS PROJECTS ---------------------------------------------- -->
-    <v-row v-else>
+    <!-- CAROUSEL ITEM START -->
+    <v-row v-else class="overflow-hidden mx-1 mx-sm-0">
       <v-col cols="12" md="8">
         <v-carousel
           height="auto"
@@ -49,46 +50,43 @@
             </v-sheet>
           </template>
           <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
-            <!-- CAROUSEL ITEM START -->
-            <v-sheet class="rounded-lg" :class="[carouselItemColor, customPadding]">
+            <v-sheet class="rounded-lgn" :class="[carouselItemColor, customPadding]">
               <v-img
                 class="p-relative rounded-lg rounded-b-0 text-end"
-                max-height="435"
+                :max-height="$vuetify.breakpoint.smAndUp ? 435 : 234"
                 aspect-ratio="1"
                 :src="$_get(item, 'projectCover')"
               >
                 <voting-out-btn class="mt-7 mr-7" />
               </v-img>
               <div class="d-flex align-end p-absolute absolute-space">
-                <v-sheet class="neutral100--bg rounded-lg pa-3 ml-6" outlined :class="logoSize">
+                <v-sheet class="blue-2 rounded-lg pa-3 ml-6" outlined :class="logoSize">
                   <v-img contain aspect-ratio="1" :src="$_get(item, 'projectLogo')" />
                 </v-sheet>
-                <div class="font-weight-bold ml-4 mb-sm-6 mb-3 text-sm-h4 text-subtitle-1">
+                <div class="font-weight-bold ml-4 mb-sm-6 mb-3 text-sm-h4 text-subtitle-1 text-truncate">
                   {{ $_get(item, 'projectName') }}
                 </div>
               </div>
             </v-sheet>
-            <!-- CAROUSEL ITEM END -->
           </v-carousel-item>
         </v-carousel>
       </v-col>
+      <!-- CAROUSEL ITEM END -->
+
+      <!-- PREVIEW SCROLL ITEM START -->
       <v-col cols="12" md="4">
         <div class="text-uppercase blue-diversity--text text-h6 mb-4">Trending now</div>
-        <v-sheet class="d-flex flex-row flex-md-column transparent--bg" :class="carouselItemClass">
-          <!-- PREVIEW SCROLL ITEM START -->
+        <v-sheet v-if="$vuetify.breakpoint.mdAndUp" height="480" class="rounded-lg-y pa-n4 overflow-y-scroll">
+          <!-- ------------------------------------ MOBILE SLIDER VERTICAL -------------------------------------- -->
           <div
             v-for="(item, index) in vm.votingList"
-            class="mb-md-4 mr-md-0 mr-2 pa-1 cursor-pointer"
+            class="pa-4 cursor-pointer"
             @click="changeTab(index)"
             :key="index"
             v-ripple
           >
             <v-hover v-slot="{ hover }">
-              <div
-                v-if="$vuetify.breakpoint.mdAndUp"
-                class="d-flex transparent-border"
-                :class="{ 'active-border': hover }"
-              >
+              <div class="d-flex transparent-border" :class="{ 'active-border': hover }">
                 <v-img class="rounded-lg" max-width="163" max-height="99" :src="$_get(item, 'projectCover')" />
                 <div class="ml-4 d-flex flex-column justify-space-around align-start">
                   <v-sheet
@@ -103,13 +101,27 @@
                   </div>
                 </div>
               </div>
-              <div v-else class="transparent-border" :class="{ 'active-border': hover }">
+            </v-hover>
+          </div>
+        </v-sheet>
+        <!-- ------------------------------------ MOBILE SLIDER HORIZONTAL ------------------------------------ -->
+        <v-sheet v-else class="d-flex pa-n1 rounded-lg overflow-x-scroll">
+          <div
+            v-for="(item, index) in vm.votingList"
+            class="pa-1 cursor-pointer"
+            @click="changeTab(index)"
+            :key="index"
+            v-ripple
+          >
+            <v-hover v-slot="{ hover }">
+              <div class="transparent-border" :class="{ 'active-border': hover }">
                 <v-img class="rounded-lg" max-width="160" :src="$_get(item, 'projectCover')" />
               </div>
             </v-hover>
           </div>
-          <!-- PREVIEW SCROLL ITEM END -->
         </v-sheet>
+        <!-- PREVIEW SCROLL ITEM END -->
+        <!-- --------------------------------------------------------- -------------------------------------- -->
       </v-col>
     </v-row>
   </v-row>
@@ -129,14 +141,6 @@ export default class VotingTrendingSection extends Vue {
   tab = 1
   changeTab(index: number) {
     this.tab = index
-  }
-
-  get carouselItemHeight() {
-    return this.$vuetify.breakpoint.mdAndUp ? '480' : 'auto'
-  }
-
-  get carouselItemClass() {
-    return this.$vuetify.breakpoint.mdAndUp ? 'overflow-y-auto' : 'overflow-x-auto'
   }
 
   get carouselItemColor() {
@@ -171,17 +175,12 @@ export default class VotingTrendingSection extends Vue {
   border-radius: 8px;
 }
 
-.carousel-button {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
-.overflow-x-auto {
-  overflow-x: auto;
+.overflow-x-scroll {
+  overflow-x: scroll;
 }
 
 .w-h-160 {
