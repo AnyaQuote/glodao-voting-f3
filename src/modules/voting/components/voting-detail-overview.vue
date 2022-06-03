@@ -71,7 +71,7 @@
         </div>
         <!-- ==== COUNT DOWN AND STATUS ==== -->
         <div class="col-md-4 col-12">
-          <countdown :to="$_get(vm.poolStore, 'endDate')" v-if="$_get(vm.poolStore, 'onVoting')" class="text-h5" />
+          <countdown v-if="$_get(vm.poolStore, 'onVoting')" :to="$_get(vm.poolStore, 'endDate')" class="text-h5" />
           <v-sheet
             v-else
             height="40"
@@ -84,60 +84,60 @@
         </div>
         <!-- ==== CARDS ==== -->
         <div class="col-12">
-          <div class="row ma-0">
+          <div class="row no-gutters">
             <!-- Total reward card -->
             <v-sheet
-              class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
               elevation="3"
               outlined
             >
               <div class="font-weight-medium">Total reward</div>
               <div class="d-flex align-center">
-                <v-img src="@/assets/icons/crypto.svg" class="mr-1" max-width="24" max-height="24" />
                 <span class="text-h6 font-weight-bold"
                   >{{ $_get(vm.poolStore, 'amount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
                 </span>
+                <v-img src="@/assets/icons/crypto.svg" class="ml-2" max-width="24" max-height="24" />
               </div>
             </v-sheet>
             <!-- Total mission card -->
             <v-sheet
-              class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text mr-4 d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text mr-4 d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
               elevation="3"
               outlined
             >
               <div class="font-weight-medium">Total missions</div>
               <div class="d-flex align-center">
-                <v-img src="@/assets/icons/bulleyes.svg" class="mr-1" max-width="24" max-height="24" />
                 <span class="text-h6 font-weight-bold">{{ $_get(vm.poolStore, 'totalMission') }} </span>
+                <v-img src="@/assets/icons/bulleyes.svg" class="ml-2" max-width="24" max-height="24" />
               </div>
             </v-sheet>
             <!-- Mission reward card -->
             <v-sheet
-              class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
               elevation="3"
               outlined
             >
               <span class="font-weight-medium">Mission reward</span>
               <div class="d-flex align-center">
-                <v-img src="@/assets/icons/crypto.svg" class="mr-1" max-width="24" max-height="24" />
                 <span class="text-h6 font-weight-bold"
                   >{{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber }}
                   {{ $_get(vm.poolStore, 'tokenName') }}</span
                 >
+                <v-img src="@/assets/icons/crypto.svg" class="ml-2" max-width="24" max-height="24" />
               </div>
             </v-sheet>
             <!-- Total reward value item -->
             <v-sheet
-              class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
               elevation="3"
               outlined
             >
-              <span class="font-weight-medium">Mission reward</span>
+              <div class="font-weight-medium">Total reward value</div>
               <div class="d-flex align-center">
-                <v-img src="@/assets/icons/crypto.svg" class="mr-1" max-width="24" max-height="24" />
                 <span class="text-h6 font-weight-bold"
                   >{{ $_get(vm.poolStore, 'amount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}</span
                 >
+                <v-img src="@/assets/icons/crypto.svg" class="ml-2" max-width="24" max-height="24" />
               </div>
             </v-sheet>
             <v-tooltip top>
