@@ -1,7 +1,7 @@
 import { appProvider } from '@/app-providers'
 import { VotingPool } from '@/models/VotingModel'
-import { observable, computed, IReactionDisposer, when, reaction } from 'mobx'
-import { asyncAction } from 'mobx-utils'
+import { observable, computed, IReactionDisposer, action, reaction } from 'mobx'
+import { actionAsync, asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject, timer } from 'rxjs'
@@ -27,8 +27,16 @@ export class VotingDetailViewModel {
 
   @observable poolStore?: PoolStore
 
+  @observable votedUserPagingList = []
+  @observable votedUserPage = {
+    limit: 4,
+    current: 0,
+    total: 0,
+  }
+
   constructor(unicodeName: string) {
     this.loadData(unicodeName)
+    this.handleVotedUserPaging(1)
     this._disposers.push(
       reaction(
         () => walletStore.account,
@@ -37,6 +45,25 @@ export class VotingDetailViewModel {
         }
       )
     )
+  }
+
+  /**
+   * Assign current page value and calculate total page if it is empty
+   * Initalize userVotedPagingList from current page and votedUsers list
+   * @param value Can be a number represents page index or command 'next | prev' to decrease or increase current page
+   */
+  @action.bound handleVotedUserPaging(value: number) {
+    this.votedUserPage.current = value
+    if (!this.votedUserPage.total) {
+      this.votedUserPage.total = Math.ceil(this.votedUsers.length / this.votedUserPage.limit)
+    }
+
+    if (this.votedUsers.length) {
+      this.votedUserPagingList = this.votedUsers.slice(
+        (this.votedUserPage.current - 1) * this.votedUserPage.limit,
+        this.votedUserPage.current * this.votedUserPage.limit
+      )
+    }
   }
 
   destroy() {
@@ -61,11 +88,12 @@ export class VotingDetailViewModel {
     this.dataLoading = true
     try {
       yield this.fetchPoolDetail(unicodeName)
-
-      this.getStakeFee()
-      this.checkUserVotedPool()
-      this.getUserStakedBalance()
-      this.getVotedUsers()
+      yield Promise.all([
+        this.getStakeFee(),
+        this.checkUserVotedPool(),
+        this.getUserStakedBalance(),
+        this.getVotedUsers(),
+      ])
 
       timer(0, 10000)
         .pipe(takeUntil(this._unsubcrible))
@@ -101,6 +129,8 @@ export class VotingDetailViewModel {
   @asyncAction *getVotedUsers() {
     const users = yield this.poolStore?.contract?.getVotedUsers(this.poolStore.poolId)
     this.votedUsers = users
+
+    this.handleVotedUserPaging(1)
   }
 
   async vote() {
@@ -120,13 +150,7 @@ export class VotingDetailViewModel {
   }
 
   @computed get socialLinks() {
-    const arrs = get(this.poolStore, 'data.socialLinks', [])
-    return Object.keys(arrs)
-      .filter((x) => x !== 'website')
-      .map((key) => ({
-        icon: key,
-        link: get(this.poolStore, `data.socialLinks[${key}]`, ''),
-      }))
+    return Object.entries(get(this.poolStore, 'socialLinks')).filter((item) => item[0] !== 'website')
   }
 
   @computed get stakeBalanceInsufficient() {
