@@ -2,7 +2,7 @@
   <div>
     <banner />
     <v-container>
-      <v-row no-gutters justify="center">
+      <v-row no-gutters>
         <!-- --------------------------------------------------------------------------------------------------- -->
         <v-col cols="12" v-if="!vm.isLoggedIn">
           <v-sheet
@@ -32,38 +32,82 @@
         </v-col>
         <!-- ---------------------------------------------------------------------------------------------------  -->
         <!-- <v-col cols="12" v-if="signed && !save">
-      <v-sheet elevation="3" class="d-flex flex-column align-center py-9 rounded neutral100--bg">
-        <div class="text-h6 font-weight-bold mb-6">Are you applying your project using connected wallet address?</div>
-        <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
-          <span class="bluePrimary--text font-weight-bold mr fill-width">{{
-            walletStore.account
-          }}</span>
-        </v-sheet>
-        <v-btn class="linear-blue--bg text-none white--text mb-6 px-13" height="48" @click="saveWallet">
-          Confirm
-        </v-btn>
-        <div class="neutral10--text">If not, change your connected wallet you want to apply!</div>
-      </v-sheet>
-      <div class="mt-14">
-        <div class="font-weight-bold mb-4">Pool owner address has notes:</div>
-        <ul class="mb-4">
-          <li>Only pool owner address can update pool.</li>
-          <li>Pool owner address will send token and pay fee when creating pool.</li>
-        </ul>
-        <div>
-          <span class="bluePrimary--text">Learn more</span>
-          <v-icon>mdi-chevron-right</v-icon>
-        </div>
-      </div>
-    </v-col> -->
+          <v-sheet elevation="3" class="d-flex flex-column align-center py-9 rounded neutral100--bg">
+            <div class="text-h6 font-weight-bold mb-6">Are you applying your project using connected wallet address?</div>
+            <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
+              <span class="bluePrimary--text font-weight-bold mr fill-width">{{
+                walletStore.account
+              }}</span>
+            </v-sheet>
+            <v-btn class="linear-blue--bg text-none white--text mb-6 px-13" height="48" @click="saveWallet">
+              Confirm
+            </v-btn>
+            <div class="neutral10--text">If not, change your connected wallet you want to apply!</div>
+          </v-sheet>
+          <div class="mt-14">
+            <div class="font-weight-bold mb-4">Pool owner address has notes:</div>
+            <ul class="mb-4">
+              <li>Only pool owner address can update pool.</li>
+              <li>Pool owner address will send token and pay fee when creating pool.</li>
+            </ul>
+            <div>
+              <span class="bluePrimary--text">Learn more</span>
+              <v-icon>mdi-chevron-right</v-icon>
+            </div>
+          </div>
+        </v-col> -->
         <!-- --------------------------------------------------------------------------------------------------- -->
-        <v-col cols="12" v-else class="mt-12">
-          <div class="text-h6 text-center mb-9">What type of project do you want to launch on GLoDAO?</div>
-          <div class="d-flex justify-center">
+        <v-col cols="12" v-else class="my-8" :class="!$vuetify.breakpoint.mobile && 'my-15'">
+          <div :style="`max-width: ${$vuetify.breakpoint.mobile ? '360' : '906'}px`" class="mx-auto">
+            <div class="font-18 font-weight-bold text-center mb-9" :class="!$vuetify.breakpoint.mobile && 'text-h5'">
+              What type of project do you want to launch on GLODAO?
+            </div>
+            <v-row no-gutters>
+              <v-col
+                :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
+                :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
+              >
+                <div class="pa-6 neutral-100 rounded-lg" @click.stop="openBountyForm">
+                  <v-img
+                    :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
+                    :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
+                    src="@/assets/icons/bulleyes.svg"
+                  />
+                  <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
+                    Bounty Hunter
+                  </div>
+                  <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
+                    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
+                    duis enim velit mollit.
+                  </div>
+                </div>
+              </v-col>
+              <v-col
+                :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
+                :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
+              >
+                <div class="pa-6 neutral-100 rounded-lg" @click.stop="openLaunchpadForm">
+                  <v-img
+                    :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
+                    :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
+                    :src="require('@/assets/icons/new-project-rocket-icon.svg')"
+                  />
+                  <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
+                    Launchpad Hunter
+                  </div>
+                  <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
+                    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
+                    duis enim velit mollit.
+                  </div>
+                </div></v-col
+              >
+            </v-row>
+          </div>
+          <!-- <div class="d-flex" :class="$vuetify.breakpoint.mobile ? 'flex-column' : 'flex-row'">
             <v-sheet
-              class="d-flex flex-column justify-space-between pa-6 mr-6 rounded-lg"
+              class="d-flex flex-column justify-space-between pa-6 rounded-lg"
               height="241"
-              width="441"
+              max-width="441"
               v-ripple
               elevation="3"
               @click.stop="openBountyForm"
@@ -91,7 +135,7 @@
                 enim velit mollit.
               </div>
             </v-sheet>
-          </div>
+          </div> -->
         </v-col>
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-row>
