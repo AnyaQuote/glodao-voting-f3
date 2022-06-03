@@ -2,25 +2,23 @@
   <div>
     <banner />
     <v-container>
-      <v-row justify="center">
+      <v-row no-gutters justify="center">
         <!-- --------------------------------------------------------------------------------------------------- -->
-        <v-col cols="8" v-if="!vm.isLoggedIn">
-          <v-sheet color="neutral-100" class="d-flex flex-column pa-8 rounded-lg my-16" outlined>
-            <div class="text-h6 font-weight-bold text-center mb-6">
+        <v-col cols="12" v-if="!vm.isLoggedIn">
+          <v-sheet max-width="534" class="rounded-lg my-16 text-center pa-6 mx-auto">
+            <div class="text-h6 font-weight-bold mb-6">
               Please sign in with your wallet for applying project on DAO Voting
             </div>
-            <div class="text-subtitle-1 font-weight-400 mb-6 text-center">
-              Remember that this wallet will be the pool owner's address.
+            <div class="text-subtitle-1 font-weight-400 mb-6">
+              Remember that this wallet will be the pool owner's address. <br />
               <span class="font-weight-600">Only the pool</span> owner can
               <span class="font-weight-600">update pool information</span> and will
               <span class="font-weight-600">send the token and pay the fee</span> when creating the pool.
             </div>
-            <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
-              <span class="bluePrimary--text font-weight-bold mr-2 text-center fill-width">{{
-                walletStore.account
-              }}</span>
+            <v-sheet class="app-blue--text text-truncate py-6 px-4 mb-6 rounded font-weight-bold" outlined>
+              {{ walletStore.account }}
             </v-sheet>
-            <v-btn class="linear-blue--bg white--text text-none" depressed @click="signMessage" :loading="vm.loading">
+            <v-btn class="linear-blue--bg white--text" depressed @click="signMessage" :loading="vm.loading" block>
               Sign message
             </v-btn>
           </v-sheet>
@@ -30,7 +28,7 @@
       <v-sheet elevation="3" class="d-flex flex-column align-center py-9 rounded neutral100--bg">
         <div class="text-h6 font-weight-bold mb-6">Are you applying your project using connected wallet address?</div>
         <v-sheet class="py-6 px-16 mb-6 rounded d-flex align-center neutral100--bg" outlined>
-          <span class="bluePrimary--text font-weight-bold mr-2 text-h6 text-center fill-width">{{
+          <span class="bluePrimary--text font-weight-bold mr fill-width">{{
             walletStore.account
           }}</span>
         </v-sheet>
