@@ -5,17 +5,24 @@
       <v-row no-gutters justify="center">
         <!-- --------------------------------------------------------------------------------------------------- -->
         <v-col cols="12" v-if="!vm.isLoggedIn">
-          <v-sheet max-width="534" class="rounded-lg my-16 text-center pa-6 mx-auto">
-            <div class="text-h6 font-weight-bold mb-6">
+          <v-sheet
+            max-width="544"
+            class="rounded-lg my-16 text-center mx-auto"
+            :class="$vuetify.breakpoint.mobile ? 'pa-4' : 'pa-8'"
+          >
+            <div class="font-weight-600 mb-6" :class="$vuetify.breakpoint.mobile ? 'font-18' : 'text-h5'">
               Please sign in with your wallet for applying project on DAO Voting
             </div>
-            <div class="text-subtitle-1 font-weight-400 mb-6">
+            <div class="text-subtitle-2 text-sm-subtitle-1 font-weight-400 mb-6">
               Remember that this wallet will be the pool owner's address. <br />
               <span class="font-weight-600">Only the pool</span> owner can
               <span class="font-weight-600">update pool information</span> and will
               <span class="font-weight-600">send the token and pay the fee</span> when creating the pool.
             </div>
-            <v-sheet class="app-blue--text text-truncate py-6 px-4 mb-6 rounded font-weight-bold" outlined>
+            <v-sheet
+              class="app-blue--text text-truncate py-6 px-4 mb-6 rounded font-weight-bold text-subtitle-2 text-sm-subtitle-1"
+              outlined
+            >
               {{ walletStore.account }}
             </v-sheet>
             <v-btn class="linear-blue--bg white--text" depressed @click="signMessage" :loading="vm.loading" block>
