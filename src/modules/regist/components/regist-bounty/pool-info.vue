@@ -1,6 +1,11 @@
 <template>
   <v-sheet class="neutral100--bg rounded-lg" outlined>
-    <v-chip class="font-18 font-weight-bold text-uppercase text-center ma-5 pa-6" color="app-blue" label outlined>
+    <v-chip
+      class="font-18 font-weight-bold neutral-0--text text-uppercase text-center ma-5 pa-6"
+      color="app-blue"
+      label
+      outlined
+    >
       Bounty Pool Information
     </v-chip>
 
