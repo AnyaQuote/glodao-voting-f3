@@ -1,6 +1,7 @@
 <template>
   <v-sheet class="neutral100-bg rounded-lg" elevation="3" v-if="vm.poolStore" outlined>
     <!-- ------------------------------------- BANNER ------------------------------------------------------------------------ -->
+    <!-- desktop banner -->
     <v-img
       v-if="$vuetify.breakpoint.smAndUp"
       max-height="614"
@@ -9,27 +10,35 @@
       :src="$_get(vm.poolStore, 'projectCover')"
     >
       <div class="d-flex flex-column align-center fill-height">
-        <div class="fill-height d-flex align-center pb-16">
-          <div class="rounded-lg py-10 black-opaque--bg">
-            <v-sheet width="400" class="d-flex flex-column transparent white--text mx-16">
-              <div class="font-weight-bold text-h6 mb-2 text-center">Current result</div>
-              <div class="d-flex align-center justify-space-between">
-                <v-chip label color="app-green lighten-1" class="text-subtitle-2 white--text mb-2">👍 YES</v-chip>
-                <span class="font-weight-bold font-14"
-                  >{{ $_get(vm.poolStore, 'votedPercent') | formatNumber(4, 2) }} %</span
-                >
+        <div class="fill-height d-flex align-center">
+          <div class="rounded-lg py-8 black-opaque--bg">
+            <v-sheet class="row no-gutters transparent white--text mx-0 mx-md-16">
+              <div class="col-12 font-weight-bold mb-6 text-center" style="font-size: 2rem; line-height: 2.5rem">
+                Current result
               </div>
-              <v-progress-linear
-                :value="+$_get(vm.poolStore, 'votedPercent', 0)"
-                color="success"
-                height="25"
-              ></v-progress-linear>
+              <!-- ==== yes vote progress circle ==== -->
+              <div class="col-12 col-md-6 mb-6 mb-md-0 d-flex justify-center">
+                <voting-progress-circle class="flex-shrink-0" color="green lighten-1" value="--" />
+                <div class="d-flex flex-column justify-space-around ml-4">
+                  <div class="text-h5">👍 YES</div>
+                  <div class="text-h6 font-weight-bold">&nbsp;&nbsp;{{ 1000 | shortNumber }} votes</div>
+                </div>
+              </div>
+              <!-- ==== no vote progress circle ==== -->
+              <div class="col-12 col-md-6 d-flex justify-center">
+                <voting-progress-circle class="flex-shrink-0" color="red lighten-1" value="--" />
+                <div class="d-flex flex-column justify-space-around ml-4">
+                  <div class="text-h5">👍 NO</div>
+                  <div class="font-weight-bold text-h6">&nbsp;&nbsp;{{ 1000 | shortNumber }} votes</div>
+                </div>
+              </div>
             </v-sheet>
           </div>
         </div>
         <voting-out-btn class="align-self-start mb-8 ml-8" />
       </div>
     </v-img>
+    <!-- mobile banner -->
     <v-sheet v-else>
       <v-img max-height="244" class="rounded-t-lg" :src="vm.poolStore.projectCover" />
       <div class="pa-4 d-flex flex-column">
@@ -38,6 +47,12 @@
           <span class="font-18 font-weight-bold mr-8">---%</span>
           <span class="text-subtitle-2 spacer">--- upvotes</span>
           <v-chip label color="green lighten-2" class="white--text rounded-lg px-6">👍 YES votes</v-chip>
+        </v-sheet>
+
+        <v-sheet class="rounded-lg pa-4 mb-2 red lighten-4 d-flex align-baseline black--text" outlined>
+          <span class="font-18 font-weight-bold mr-8">---%</span>
+          <span class="text-subtitle-2 spacer">--- downvotes</span>
+          <v-chip label color="red lighten-2" class="white--text rounded-lg px-6">👍 NO votes</v-chip>
         </v-sheet>
       </div>
     </v-sheet>
@@ -165,6 +180,7 @@
 <script lang="ts">
 import { Component, Vue, Ref, Inject } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
+import VotingProgressCircle from './common/voting-progress-circle.vue'
 
 @Component({
   components: {
