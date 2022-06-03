@@ -14,10 +14,10 @@
     </v-row>
     <!-- --------------------------------------------- EMPTY ------------------------------------------------------ -->
     <v-col v-else-if="!vm.loading && !vm.votingList.length" cols="12">
-      <v-sheet class="pa-8 rounded-lg" outlined elevation="3">
-        <div class="blue-diversity--text text-h5 font-weight-bold">Trending</div>
-        <div class="text-h6">No projects avalible for voting right now</div>
-      </v-sheet>
+      <div class="py-8">
+        <div class="text-uppercase text-h4 font-weight-bold">Trending now</div>
+        <div class="text-h6 text-center mt-8">No projects avalible for voting right now</div>
+      </div>
     </v-col>
     <!-- --------------------------------------------- HAS PROJECTS ---------------------------------------------- -->
     <v-row v-else>
