@@ -110,7 +110,7 @@ export const getPreviewFromQuizFile = async (file: File, size = 0) => {
  */
 export const checkQuizFile = async (file?: File | null) => {
   if (!file) {
-    return 'File is empty'
+    return 'No file is selected'
   }
   const data = await file.text()
   const lines = data.trim().split(/\r?\n/)
@@ -125,7 +125,10 @@ export const checkQuizFile = async (file?: File | null) => {
       return errorMessage(file.name, index + 1, 'Error reading line')
     }
 
-    if (+extractedArr[extractedArr.length - 1] > extractedArr.slice(1, -1).length) {
+    if (
+      !+extractedArr[extractedArr.length - 1] ||
+      +extractedArr[extractedArr.length - 1] > extractedArr.slice(1, -1).length
+    ) {
       return errorMessage(file.name, index + 1, 'Number of answers do not match')
     }
   }

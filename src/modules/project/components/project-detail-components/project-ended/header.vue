@@ -3,8 +3,8 @@
     <!-- --------------------------------------------- TOP --------------------------------------------- -->
     <v-row dense class="blue-2 rounded-t-lg pa-6 ma-0">
       <v-col cols="12" md="6" class="d-flex align-center">
-        <v-sheet max-height="76" class="neutral-100 pa-1 rounded-lg mr-6">
-          <v-img :src="$_get(vm.poolStore, 'projectLogo')" max-height="76" aspect-ratio="1" />
+        <v-sheet max-width="80" max-height="80" class="neutral-100 rounded-lg pa-1 mr-4">
+          <v-img :src="$_get(vm.poolStore, 'projectLogo')" />
         </v-sheet>
         <div class="d-flex flex-column justify-center text-truncate">
           <div class="text-h5 font-weight-bold mb-1 text-truncate">{{ $_get(vm.poolStore, 'projectName') }}</div>
