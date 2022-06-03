@@ -37,8 +37,8 @@
         </div>
 
         <!-- ------------------------------------ CONTENT ------------------------------------ -->
-        <div v-else>
-          <v-slide-x-transition group hide-on-leave>
+        <v-sheet v-else class="d-flex flex-column transparent" height="576">
+          <v-slide-x-transition class="flex-grow-1" group hide-on-leave>
             <voting-list-item v-for="address in vm.votedUserPagingList" :address="address" :key="address" />
           </v-slide-x-transition>
           <v-pagination
@@ -48,7 +48,7 @@
             :value="vm.votedUserPage.current"
             @input="vm.handleVotedUserPaging"
           />
-        </div>
+        </v-sheet>
         <!-- -------------------------------------------------------------------------------- -->
       </v-col>
 
