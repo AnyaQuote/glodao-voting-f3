@@ -29,7 +29,7 @@ export class VotingDetailViewModel {
 
   @observable votedUserPagingList = []
   @observable votedUserPage = {
-    limit: 4,
+    limit: 6,
     current: 0,
     total: 0,
   }
