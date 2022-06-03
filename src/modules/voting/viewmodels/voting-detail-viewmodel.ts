@@ -36,7 +36,7 @@ export class VotingDetailViewModel {
 
   constructor(unicodeName: string) {
     this.loadData(unicodeName)
-    this.handleVotedUserPaging(1)
+
     this._disposers.push(
       reaction(
         () => walletStore.account,
