@@ -32,7 +32,7 @@
                   <div class="font-weight-bold text-h6">&nbsp;&nbsp;{{ 1000 | shortNumber }} votes</div>
                 </div>
               </div>
-              <!-- ==================================== -->
+              <!-- =================================== -->
             </v-sheet>
           </div>
         </div>
