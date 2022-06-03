@@ -10,12 +10,14 @@
     >
       <div class="d-flex flex-column align-center fill-height">
         <div class="fill-height d-flex align-center pb-16">
-          <div class="rounded-lg py-10 blur--bg">
+          <div class="rounded-lg py-10 black-opaque--bg">
             <v-sheet width="400" class="d-flex flex-column transparent white--text mx-16">
-              <div class="font-weight-bold mb-2 text-center">Current result</div>
+              <div class="font-weight-bold text-h6 mb-2 text-center">Current result</div>
               <div class="d-flex align-center justify-space-between">
                 <v-chip label color="app-green lighten-1" class="text-subtitle-2 white--text mb-2">👍 YES</v-chip>
-                <span class="font-weight-bold font-14">{{ $_get(vm.poolStore, 'votedPercent', 0) }} %</span>
+                <span class="font-weight-bold font-14"
+                  >{{ $_get(vm.poolStore, 'votedPercent') | formatNumber(4, 2) }} %</span
+                >
               </div>
               <v-progress-linear
                 :value="+$_get(vm.poolStore, 'votedPercent', 0)"
@@ -45,7 +47,8 @@
     <v-sheet class="pa-6 rounded-lg rounded-t-0">
       <div class="row">
         <!-- ==== PROJECT NAME ==== -->
-        <div class="col-md-8 col-12 text-h4 font-weight-bold">
+        <div class="col-md-8 col-12 d-flex align-center text-h4 font-weight-bold">
+          <v-img class="mr-6" max-width="64" aspect-ratio="1" :src="$_get(vm.poolStore, 'projectLogo')" />
           {{ $_get(vm.poolStore, 'projectName') }}
         </div>
         <!-- ==== COUNT DOWN AND STATUS ==== -->
@@ -66,35 +69,58 @@
           <div class="row ma-0">
             <!-- Total reward card -->
             <v-sheet
-              class="col-12 col-md-3 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
               elevation="3"
               outlined
             >
               <div class="font-weight-medium">Total reward</div>
-              <span class="text-h6 font-weight-bold"
-                >{{ $_get(vm.poolStore, 'amount') | formatNumber(2, 0) }} {{ $_get(vm.poolStore, 'tokenName') }}
-              </span>
+              <div class="d-flex align-center">
+                <v-img src="@/assets/icons/crypto.svg" class="mr-1" max-width="24" max-height="24" />
+                <span class="text-h6 font-weight-bold"
+                  >{{ $_get(vm.poolStore, 'amount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
+                </span>
+              </div>
             </v-sheet>
             <!-- Total mission card -->
             <v-sheet
-              class="col-12 col-md-3 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text mr-4 d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text mr-4 d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
               elevation="3"
               outlined
             >
               <div class="font-weight-medium">Total missions</div>
-              <span class="text-h6 font-weight-bold">{{ $_get(vm.poolStore, 'totalMission') | formatNumber(0) }} </span>
+              <div class="d-flex align-center">
+                <v-img src="@/assets/icons/bulleyes.svg" class="mr-1" max-width="24" max-height="24" />
+                <span class="text-h6 font-weight-bold">{{ $_get(vm.poolStore, 'totalMission') }} </span>
+              </div>
             </v-sheet>
             <!-- Mission reward card -->
             <v-sheet
-              class="col-12 col-md-3 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between"
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
               elevation="3"
               outlined
             >
               <span class="font-weight-medium">Mission reward</span>
-              <span class="text-h6 font-weight-bold"
-                >{{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber }}
-                {{ $_get(vm.poolStore, 'tokenName') }}</span
-              >
+              <div class="d-flex align-center">
+                <v-img src="@/assets/icons/crypto.svg" class="mr-1" max-width="24" max-height="24" />
+                <span class="text-h6 font-weight-bold"
+                  >{{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber }}
+                  {{ $_get(vm.poolStore, 'tokenName') }}</span
+                >
+              </div>
+            </v-sheet>
+            <!-- Total reward value item -->
+            <v-sheet
+              class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap"
+              elevation="3"
+              outlined
+            >
+              <span class="font-weight-medium">Mission reward</span>
+              <div class="d-flex align-center">
+                <v-img src="@/assets/icons/crypto.svg" class="mr-1" max-width="24" max-height="24" />
+                <span class="text-h6 font-weight-bold"
+                  >{{ $_get(vm.poolStore, 'amount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}</span
+                >
+              </div>
             </v-sheet>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -121,14 +147,8 @@
         </div>
         <!-- ==== SOCIAL LINKS ==== -->
         <div class="col-md-4 col-12 d-flex justify-md-end justify-start align-center">
-          <v-btn
-            v-for="(item, index) in vm.socialLinks"
-            :href="$_get(item, 'link')"
-            color="blue-diversity"
-            :key="index"
-            icon
-          >
-            <v-icon small>fab fa-{{ $_get(item, 'icon') }}</v-icon>
+          <v-btn v-for="([icon, link], index) in vm.socialLinks" :href="link" color="blue-diversity" :key="index" icon>
+            <v-icon small>fab fa-{{ icon }}</v-icon>
           </v-btn>
           <v-btn icon color="blue-diversity" :href="$_get(vm.poolStore, 'website')">
             <icon-git-book />
@@ -200,9 +220,4 @@ export default class VotingDetailOverview extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.blur--bg {
-  backdrop-filter: blur(8px);
-  background-color: rgba(0, 0, 0, 0.5) !important;
-}
-</style>
+<style lang="scss" scoped></style>
