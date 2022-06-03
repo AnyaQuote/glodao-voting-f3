@@ -26,7 +26,7 @@
         <!-- ------------------------------------- HEADER ----------------------------------------------- -->
         <div class="mb-4">
           <div class="d-flex flex-column flex-md-row align-md-center align-start">
-            <span class="mr-5 text-h4 font-weight-bold text-uppercase">Nominatied project</span>
+            <span class="mr-5 text-h4 font-weight-bold text-uppercase">Nominated project</span>
             <span class="neutral10--text text-h5 font-weight-medium">Vote for launch on GLODAO</span>
           </div>
         </div>
@@ -43,16 +43,13 @@
         </v-row>
         <!-- --------------------------------------- CONTENT -------------------------------------------- -->
         <v-row v-else>
-          <div v-if="!vm.filteredVotingList.length" leave-absolute>
-            <v-col class="d-flex justify-center">
-              <div class="text-h6 pa-8">No nominated project of this type right now</div>
-            </v-col>
-          </div>
-          <div v-else>
-            <v-col cols="12" sm="6" md="4" v-for="(pool, index) in vm.filteredVotingList" :key="index">
-              <live-voting-card :pool="pool" />
-            </v-col>
-          </div>
+          <v-col v-if="!vm.filteredVotingList.length" class="d-flex justify-center">
+            <div class="text-h6 pa-8">No nominated project of this type right now</div>
+          </v-col>
+
+          <v-col v-else cols="12" sm="6" md="4" v-for="(pool, index) in vm.filteredVotingList" :key="index">
+            <live-voting-card :pool="pool" />
+          </v-col>
         </v-row>
         <!-- -------------------------------------------------------------------------------------------- -->
       </v-col>
@@ -95,7 +92,7 @@
           </v-col>
           <v-col cols="12">
             <div class="text-center mb-9">
-              <v-btn class="text-none font-weight-bold" depressed color="blue" outlined>View all pools</v-btn>
+              <v-btn class="text-none font-weight-bold" depressed color="blue-diversity" outlined>View all pools</v-btn>
             </div>
           </v-col>
         </v-row>
