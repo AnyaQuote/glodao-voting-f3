@@ -11,40 +11,42 @@
           <div class="row justify-center mt-10">
             <div class="col-12 text-center">
               <div class="text-h3 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
-              <v-sheet width="500" class="mx-auto transparent--bg white--text mt-4 text-h5 two-line">
+              <v-sheet width="500" class="mx-auto transparent white--text mt-4 text-h5 two-line">
                 {{ $_get(pool, 'shortDescription') }}
               </v-sheet>
-              <v-sheet max-width="456" class="row mx-auto my-10 rounded-lg blur-bg">
+              <div class="row mx-auto my-10 pa-4 rounded-lg black-opaque--bg m-w-456">
                 <div class="col-6 text-center">
-                  <span class="text-subtitle-2 neutral-10--text">Total reward </span>
+                  <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1">{{ $_get(pool, 'amount') }} {{ $_get(pool, 'tokenName') }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'amount') | formatNumber }} {{ $_get(pool, 'tokenName') }}</span>
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
                 <div class="col-6 text-center">
-                  <span class="text-subtitle-2 neutral-10--text">Total missions </span>
+                  <span class="text-subtitle-2 white--text">Total missions </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1">{{ $_get(pool, 'totalMission') }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'totalMission', 0) }}</span>
                     <v-img src="@/assets/icons/bulleyes.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
                 <div class="col-6 text-center">
-                  <span class="text-subtitle-2 neutral-10--text">Total reward </span>
+                  <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1"> {{ $_get(pool, 'rewardPerMission') }} {{ $_get(pool, 'tokenName') }} </span>
+                    <span class="mr-1">
+                      {{ $_get(pool, 'rewardPerMission') | formatNumber }} {{ $_get(pool, 'tokenName') }}
+                    </span>
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
                 <div class="col-6 text-center">
-                  <span class="text-subtitle-2 neutral-10--text">Total reward </span>
+                  <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     <!-- TODO: Hard code rewardValue -->
-                    <span class="mr-1">{{ $_get(pool, 'amount') }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'amount') | formatNumber }}</span>
                     <v-img src="@/assets/icons/bsc-icon.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
-              </v-sheet>
+              </div>
             </div>
           </div>
         </div>
@@ -129,5 +131,8 @@ export default class VotingLaunchItem extends Vue {
 .blur-bg {
   backdrop-filter: blur(8px);
   background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.m-w-456 {
+  max-width: 456px;
 }
 </style>
