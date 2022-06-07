@@ -21,13 +21,15 @@
       <div class="d-flex flex-column flex-sm-row">
         <div class="pl-0 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Total reward amount</div>
-          <app-text-field
-            :rules="[$rules.required, $rules.floatNumberOnly]"
+          <v-autocomplete
+            :items="tokens"
+            solo
+            outlined
+            flat
             :value="$_get(vm.projectInfo, 'rewardAmount')"
+            :rules="[$rules.required]"
             @input="vm.changeProjectInfo('rewardAmount', $event)"
-            placeholder="Enter amount"
-            class="pb-0"
-          ></app-text-field>
+          ></v-autocomplete>
         </div>
         <div class="pl-sm-6 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
@@ -106,7 +108,7 @@ export default class RaisingInfo extends Vue {
   @Ref('confirm-dialog') dialog
   @Ref('fund-info-form') form
   valid = false
-  tokens = ['HWD', 'BNB']
+  tokens = ['GLD', 'BUSD', 'USDT']
   submit() {
     this.form.validate() && this.dialog.open()
   }
