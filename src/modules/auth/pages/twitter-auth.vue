@@ -1,15 +1,13 @@
 <template>
-  <v-row class="fill-height">
-    <v-col class="text-center flex-center-box fill-height">
-      <div>
-        <div class="flex-center-box">
-          <v-progress-circular indeterminate size="100" class="mb-8" color="bluePrimary"></v-progress-circular>
-        </div>
-        <div class="title-text font-weight-bold">Please wait a minute!</div>
-        <div class="title-text font-weight-bold">We are trying to sign you in</div>
-      </div>
-    </v-col>
-  </v-row>
+  <v-container class="fill-height">
+    <v-row>
+      <v-col class="d-flex flex-column align-center">
+        <v-progress-circular indeterminate size="100" class="mb-8" color="blue-diversity"></v-progress-circular>
+        <div class="text-h5 font-weight-bold">Please wait a minute!</div>
+        <div class="text-h5 font-weight-bold">We are trying to sign you in</div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -18,9 +16,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { authStore } from '@/stores/auth-store'
 
 @Observer
-@Component({
-  components: {},
-})
+@Component
 export default class TwitterAuthenticationPage extends Vue {
   authStore = authStore
 
@@ -34,8 +30,4 @@ export default class TwitterAuthenticationPage extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.title-text {
-  font-size: 30px;
-}
-</style>
+<style scoped lang="scss"></style>

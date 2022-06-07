@@ -277,6 +277,10 @@ export class ApiService {
     return res.data
   }
 
+  async createQuiz(model) {
+    //
+  }
+
   async createTask(model) {
     const res = await this.axios.post('createTask', model, {
       headers: {

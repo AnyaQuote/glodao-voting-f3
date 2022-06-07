@@ -12,26 +12,17 @@
         >
           Look likes you are trying to enter a page that requires login. Please sign in to continue.
         </div>
-        <v-btn class="linear-blue--bg white--text mt-6" depressed @click="openLoginDialog">Open sign in dialog</v-btn>
       </div>
     </div>
   </v-container>
 </template>
 
 <script lang="ts">
-import { loginController } from '@/components/login-dialog/login-dialog-controller'
 import { Observer } from 'mobx-vue'
 import { Component, Vue } from 'vue-property-decorator'
 @Observer
 @Component
-export default class NotAuthenticated extends Vue {
-  async openLoginDialog() {
-    const res = await loginController.open()
-    if (res) {
-      //
-    }
-  }
-}
+export default class NotAuthenticated extends Vue {}
 </script>
 
 <style scoped lang="scss"></style>

@@ -13,7 +13,6 @@
     <snack-bar />
     <alert />
     <global-loading />
-    <login-dialog />
   </v-app>
 </template>
 

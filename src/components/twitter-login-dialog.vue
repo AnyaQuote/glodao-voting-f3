@@ -1,11 +1,11 @@
 <template>
-  <v-dialog v-model="authStore.twitterLoginDialog" max-width="450" class="rounded-lg" persistent>
+  <v-dialog :value="controller.twitterLoginDialog" max-width="450" class="rounded-lg" persistent>
     <v-card>
-      <v-card-title class="text-none">
+      <v-card-title>
         <v-spacer />
-        <v-icon>mdi-close</v-icon>
+        <v-icon @click="controller.changeTwitterLoginDialog(false)">mdi-close</v-icon>
       </v-card-title>
-      <v-card-text tag="div" class="text-center" v-if="!logined">
+      <v-card-text tag="div" class="text-center">
         <div>
           <v-icon color="blue-diversity" size="30">fab fa-twitter</v-icon>
         </div>
@@ -25,7 +25,6 @@
           >
         </div>
       </v-card-text>
-      <v-card-text v-else></v-card-text>
     </v-card>
   </v-dialog>
 </template>
@@ -40,47 +39,12 @@ import { authStore } from '@/stores/auth-store'
   components: {},
 })
 export default class TwitterLoginDialog extends Vue {
-  dialog = true
-  logined = false
-  authStore = authStore
-
+  controller = authStore
   apiEndPoint = process.env.VUE_APP_API_STRAPI_ENDPOINT
-  changeLoginState() {
-    this.logined = !this.logined
+  created() {
+    console.log(this.apiEndPoint)
   }
 }
 </script>
 
-<style lang="scss" scoped>
-// .close-icon {
-//   position: absolute !important;
-//   top: 0;
-//   right: 0;
-// }
-// .dialog-normal-text {
-//   font-size: 14px;
-//   line-height: 20px;
-// }
-// .dialog-button {
-//   padding: 10px !important;
-// }
-// .neutral10--text {
-//   color: var(--v-neutral10-base);
-// }
-// .blue-diversity--text {
-//   color: var(--v-bluePrimary-base);
-// }
-// .dialog-small-text {
-//   font-size: 9px;
-//   line-height: 12px;
-// }
-// .background-twitter {
-//   background-color: var(--v-twitter-base);
-// }
-// .login-btn {
-//   font-size: 14px;
-//   line-height: 24px;
-//   border: 1px solid var(--v-bluePrimary-base);
-//   text-transform: unset;
-// }
-</style>
+<style lang="scss" scoped></style>

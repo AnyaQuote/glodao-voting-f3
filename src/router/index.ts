@@ -1,8 +1,7 @@
-import { authStore } from '@/stores/auth-store'
 import Vue from 'vue'
-import VueRouter, { RouteConfig, Route } from 'vue-router'
-import { get, isEmpty } from 'lodash'
-import { loginController } from '@/components/login-dialog/login-dialog-controller'
+import VueRouter, { RouteConfig } from 'vue-router'
+import { authStore } from '@/stores/auth-store'
+import { walletStore } from '@/stores/wallet-store'
 
 Vue.use(VueRouter)
 
@@ -34,6 +33,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/voting/pages/voting-home.vue'),
     meta: {
       auth: false,
+      wallet: true,
       title: 'Voting List',
     },
   },
@@ -42,8 +42,9 @@ const routes: Array<RouteConfig> = [
     name: 'voting-detail',
     component: () => import('@/modules/voting/pages/voting-detail.vue'),
     meta: {
-      auth: false,
+      auth: true,
       params: true,
+      wallet: true,
       title: 'Voting detail',
     },
   },
@@ -63,6 +64,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/regist/pages/launchpad-form.vue'),
     meta: {
       auth: true,
+      wallet: true,
       title: 'Launchpad Application',
     },
   },
@@ -72,6 +74,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
       auth: true,
+      wallet: true,
       title: 'Bounty Application',
     },
   },
@@ -82,7 +85,8 @@ const routes: Array<RouteConfig> = [
     name: 'project-list',
     component: () => import('@/modules/project/pages/project-list.vue'),
     meta: {
-      auth: false,
+      auth: true,
+      wallet: true,
       title: 'Projects',
     },
   },
@@ -91,8 +95,9 @@ const routes: Array<RouteConfig> = [
     name: 'project-detail',
     component: () => import('@/modules/project/pages/project-detail.vue'),
     meta: {
-      auth: false,
+      auth: true,
       params: true,
+      wallet: true,
       title: 'Project detail',
     },
   },
@@ -103,6 +108,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       auth: true,
       params: true,
+      wallet: true,
       title: 'Mission Form',
     },
   },
@@ -142,22 +148,24 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, _, next) => {
-  if (!get(to, 'name', '')) {
+  if (!to.name) {
     next(RoutePaths.not_found)
   } else {
+    const isAuthenticated = authStore.isAuthenticated
+    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+    console.log(to.name, `required: ${requiredAuth}`, `isAuthed: ${isAuthenticated}`)
+    const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
+    if (requiredAuth && !isAuthenticated) {
+      authStore.changeTwitterLoginDialog(true)
+    } else if (requiredWallet && !walletStore.account) {
+      authStore.changeAttachWalletDialog(true)
+    }
     next()
   }
 })
 
-router.afterEach(async (to, _) => {
-  const isAuthenticated = authStore.isAuthenticated
-  const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-  // if (requiredAuth && !isAuthenticated) {
-  //   const res = await loginController.open({ message: 'This page required login. Please sign in to continue' })
-  //   if (res) {
-  //     loginController.close()
-  //   }
-  // }
+router.afterEach((to, from) => {
+  //
 })
 
 export default router

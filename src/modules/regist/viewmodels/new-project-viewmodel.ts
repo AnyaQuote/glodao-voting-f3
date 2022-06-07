@@ -32,10 +32,9 @@ export class NewProjectViewModel {
     //
   }
 
-  @asyncAction *signAndLogin() {
+  @asyncAction signAndLogin() {
     try {
       this.loading = true
-      const res = yield authStore.login()
     } catch (error) {
       console.error(error)
       snackController.commonError(error)
