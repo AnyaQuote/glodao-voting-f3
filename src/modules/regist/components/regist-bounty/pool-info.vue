@@ -11,33 +11,69 @@
 
     <v-form ref="fund-info-form" v-model="valid" class="pa-6">
       <div class="blue--text font-18 font-weight-bold">Reward Information</div>
-      <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+      <!-- <div class="font-18 font-weight-bold mb-2">Token reward address</div>
       <app-text-field
         :rules="[$rules.required, $rules.isAddress]"
         :value="$_get(vm.projectInfo, 'tokenAddress')"
         @input="vm.changeProjectInfo('tokenAddress', $event)"
         placeholder="Enter address"
-      ></app-text-field>
+      ></app-text-field> -->
       <div class="d-flex flex-column flex-sm-row">
-        <div class="pl-0 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Total reward amount</div>
+        <div class="flex-grow-1">
+          <div class="font-18 font-weight-bold mb-2">Reward amount</div>
+          <app-text-field
+            :rules="[$rules.required, $rules.floatNumberOnly]"
+            :value="$_get(vm.projectInfo, 'rewardAmount')"
+            @input="vm.changeProjectInfo('rewardAmount', $event)"
+            placeholder="Enter amount"
+            class="pb-0"
+          ></app-text-field>
+        </div>
+        <div class="pl-sm-6 flex-grow-1">
+          <div class="font-18 font-weight-bold mb-2">Token reward</div>
           <v-autocomplete
-            :items="tokens"
+            item-text="tokenName"
+            item-value="tokenAddress"
+            :items="vm.tokenList"
             solo
             outlined
             flat
-            :value="$_get(vm.projectInfo, 'rewardAmount')"
+            :value="$_get(vm.projectInfo, 'tokenAddress')"
             :rules="[$rules.required]"
-            @input="vm.changeProjectInfo('rewardAmount', $event)"
+            @input="vm.changeProjectInfo('tokenAddress', $event)"
           ></v-autocomplete>
+        </div>
+      </div>
+
+      <div>
+        <span class="font-18 font-weight-bold blue-diversity--text">Project reward</span>
+        <i class="neutral-10--text ml-2">(optional)</i>
+      </div>
+      <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+      <app-text-field
+        :rules="[$rules.isAddress]"
+        :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
+        @input="vm.changeProjectInfo('optionalTokenAddress', $event)"
+        placeholder="Enter address"
+      ></app-text-field>
+      <div class="d-flex flex-column flex-sm-row">
+        <div class="flex-grow-1">
+          <div class="font-18 font-weight-bold mb-2">Reward amount</div>
+          <app-text-field
+            :rules="[$rules.floatNumberOnly]"
+            :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
+            @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
+            placeholder="Enter amount"
+            class="pb-0"
+          ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
           <app-text-field
-            :value="$_get(vm.projectInfo, 'tokenName')"
+            :value="$_get(vm.projectInfo, 'optionalTokenName')"
             :loading="vm.tokenInfoLoading"
             disabled
-            placeholder="Reward token symbol"
+            placeholder="Token symbol"
             class="pb-0"
           />
         </div>

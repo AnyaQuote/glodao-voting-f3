@@ -4,7 +4,9 @@
     <v-row no-gutters dense class="my-4 my-md-6">
       <v-col cols="12" md="4" class="d-flex flex-md-column justify-space-between mb-2 mb-md-0">
         <div class="neutral-10--text mb-md-1">Total reward amount</div>
-        <div class="font-weight-bold">{{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}</div>
+        <div class="font-weight-bold">
+          {{ vm.poolStore.requiredAmount | formatNumber }} {{ vm.poolStore.tokenName }}
+        </div>
       </v-col>
       <v-col cols="12" md="4" class="d-flex flex-md-column justify-space-between mb-2 mb-md-0">
         <div class="neutral-10--text mb-md-1">Total mission</div>

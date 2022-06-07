@@ -16,7 +16,7 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
 
-class ProjectInfo {
+export class ProjectInfo {
   projectName?: string
   shortDescription?: string
   projectCover?: any
@@ -27,6 +27,11 @@ class ProjectInfo {
   tokenName?: string
   rewardAmount?: string
   tokenAddress?: string
+
+  optionalTokenName?: string
+  optionalRewardAmount?: string
+  optionalTokenAddress?: string
+
   startDate?: string
   endDate?: string
   totalMissions?: string
@@ -35,6 +40,25 @@ class ProjectInfo {
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
+  tokenTestnetList = [
+    {
+      tokenName: 'GLD',
+      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
+      decimals: 18,
+    },
+    {
+      tokenName: 'BUSD',
+      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
+      decimals: 18,
+    },
+    {
+      tokenName: 'USDT',
+      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
+      decimals: 18,
+    },
+  ]
+
+  tokenList = this.tokenTestnetList
 
   @observable step = 1.1
   @observable unlockedStep = 1.1
@@ -42,11 +66,15 @@ export class BountyApplyViewModel {
   @observable creating = false
 
   @observable approved = false
+  @observable optionalApproved = false
   @observable approving = false
+  @observable optionalApproving = false
 
   @observable bnbFee = Zero
   @observable rewardTokenBalance = Zero
   @observable rewardTokenDecimals = 18
+  @observable optionalRewardTokenBalance = Zero
+  @observable optionalRewardTokenDecimals = 18
 
   @observable tokenInfoLoading = false
   @observable approveChecking = false
@@ -75,7 +103,7 @@ export class BountyApplyViewModel {
       const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(walletStore.chainId)!)
       this.votingHandler = votingHandler
       await this.votingHandler.getPoolType()
-      this.bnbFee = this.votingHandler.poolType.fee!
+      this.bnbFee = this.votingHandler.poolType.creationFee!
       this._disposers.push(
         when(
           () => walletStore.walletConnected,
@@ -87,15 +115,37 @@ export class BountyApplyViewModel {
     }
   }
 
-  async loadConfirmData() {
-    this.approveChecking = true
-    await this.checkApproved()
-    this.approveChecking = false
+  @asyncAction *loadConfirmData() {
+    try {
+      this.approveChecking = true
+      yield Promise.all([this.getRewardTokenInfo(), this.checkApproved(), this.checkOptionalApproved()])
+    } catch (error) {
+      console.error(error)
+      snackController.commonError(error)
+    } finally {
+      this.approveChecking = false
+    }
+  }
+
+  @asyncAction *getRewardTokenInfo() {
+    const tokenInfo = yield this.votingHandler!.getTokenInfo(
+      walletStore.web3,
+      this.projectInfo.tokenAddress,
+      walletStore.account
+    )
+    this.rewardTokenBalance = tokenInfo.balance
   }
 
   @asyncAction *checkApproved() {
     const approved = yield this.votingHandler!.approved(this.projectInfo.tokenAddress, walletStore.account)
     this.approved = approved
+  }
+
+  @asyncAction *checkOptionalApproved() {
+    if (this.projectInfo.optionalTokenAddress && web3.utils.isAddress(this.projectInfo.optionalTokenAddress)) {
+      const approved = yield this.votingHandler!.approved(this.projectInfo.optionalTokenAddress, walletStore.account)
+      this.optionalApproved = approved
+    }
   }
 
   @asyncAction *approve() {
@@ -110,15 +160,27 @@ export class BountyApplyViewModel {
       this.approving = false
     }
   }
+  @asyncAction *optionalApprove() {
+    this.optionalApproving = true
+    try {
+      yield this.votingHandler?.approve(this.projectInfo.optionalTokenAddress, walletStore.account)
+      this.optionalApproved = true
+    } catch (error) {
+      this.optionalApproved = false
+      snackController.commonError(error)
+    } finally {
+      this.optionalApproving = false
+    }
+  }
 
   @asyncAction *submit() {
     this.creating = true
     try {
       const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
-        this.projectInfo.tokenAddress!,
-        this.projectInfo.rewardAmount!,
+        this.projectInfo,
         walletStore.account,
-        this.rewardTokenDecimals
+        this.rewardTokenDecimals,
+        this.optionalRewardTokenDecimals
       )
 
       // upload image
@@ -162,6 +224,10 @@ export class BountyApplyViewModel {
           projectCover: images ? getApiFileUrl(images[1]) : null,
           poolType,
           decimals: this.rewardTokenDecimals,
+          optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
+          optionalTokenAddress: this.projectInfo.optionalTokenAddress,
+          optionalRewardAmount: this.projectInfo.optionalRewardAmount,
+          optionalTokenName: this.projectInfo.optionalTokenName,
         },
       }
       const pool = yield apiService.createOrUpdateVotingPool(data)
@@ -181,21 +247,25 @@ export class BountyApplyViewModel {
   }
 
   @action.bound changeProjectInfo(property: string, value: any) {
-    if (property === 'tokenAddress') {
+    if (property === 'optionalTokenAddress') {
       if (web3.utils.isAddress(value)) {
         this.tokenInfoLoading = true
         value = web3.utils.toChecksumAddress(value)
-        this.votingHandler!.getRewardTokenInfo(walletStore.web3, value, walletStore.account).then((tokenInfo) => {
+        this.votingHandler!.getTokenInfo(walletStore.web3, value, walletStore.account).then((tokenInfo) => {
           runInAction(() => {
-            this.projectInfo = { ...this.projectInfo, tokenName: tokenInfo.symbol as string }
-            this.rewardTokenBalance = tokenInfo.balance
-            this.rewardTokenDecimals = toNumber(tokenInfo.decimals)
+            this.projectInfo = { ...this.projectInfo, optionalTokenName: tokenInfo.symbol as string }
+            this.optionalRewardTokenBalance = tokenInfo.balance
+            this.optionalRewardTokenDecimals = toNumber(tokenInfo.decimals)
             this.tokenInfoLoading = false
           })
         })
       } else {
         runInAction(() => (this.projectInfo = { ...this.projectInfo, tokenName: '' }))
       }
+    } else if (property === 'tokenAddress') {
+      const token = this.tokenList.find((item) => item.tokenAddress == value)
+      set(this.projectInfo, 'tokenName', token?.tokenName)
+      this.rewardTokenDecimals = token?.decimals || 18
     }
 
     set(this.projectInfo, property, value)

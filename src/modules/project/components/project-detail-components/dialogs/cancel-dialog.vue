@@ -14,14 +14,16 @@
       <div class="d-flex justify-space-between mb-4">
         <div class="font-18 neutral-10--text">Total sent</div>
         <div class="font-18 font-weight-bold">
-          {{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}
+          {{ vm.poolStore.requiredAmount | formatNumber }} {{ vm.poolStore.tokenName }}
         </div>
       </div>
 
       <!-- WITHDRAW AMOUNT -->
       <div class="rounded-lg text-center py-4 mb-6" style="border: 1px solid var(--v-neutral-20-base)">
         <div class="font-18 neutral-10--text">Withdraw amount</div>
-        <div class="text-h5 font-weight-600">{{ vm.poolStore.amount | formatNumber }} {{ vm.poolStore.tokenName }}</div>
+        <div class="text-h5 font-weight-600">
+          {{ vm.poolStore.requiredAmount | formatNumber }} {{ vm.poolStore.tokenName }}
+        </div>
       </div>
 
       <!-- BUTTON -->

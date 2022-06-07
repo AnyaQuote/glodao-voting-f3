@@ -27,7 +27,7 @@
           </div>
           <div>
             <span class="neutral-10--text font-weight-medium">Total reward amount: </span>
-            <span class="font-weight-600">{{ pool.amount | formatNumber }} {{ pool.tokenName }}</span>
+            <span class="font-weight-600">{{ pool.requiredAmount | formatNumber }} {{ pool.tokenName }}</span>
           </div>
         </div>
       </v-col>

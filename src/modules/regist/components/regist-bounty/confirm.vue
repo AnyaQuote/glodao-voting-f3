@@ -75,7 +75,18 @@
           :loading="vm.approving || vm.approveChecking"
           @click="vm.approve()"
         >
-          <span class="btn-font">Approve</span>
+          <span class="btn-font">{{ vm.projectInfo.tokenName }} approve contract</span>
+        </v-btn>
+        <v-btn
+          v-else-if="$_get(vm.projectInfo, 'optionalTokenAddress') && !vm.optionalApproved"
+          class="linear-blue--bg white--text font-weight-bold text-none mt-6"
+          block
+          height="40"
+          depressed
+          :loading="vm.optionalApproving || vm.approveChecking"
+          @click="vm.optionalApprove()"
+        >
+          <span class="btn-font">{{ vm.projectInfo.optionalTokenName }} approve contract</span>
         </v-btn>
         <v-btn
           v-else

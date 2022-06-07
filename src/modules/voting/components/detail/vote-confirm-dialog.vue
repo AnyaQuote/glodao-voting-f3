@@ -20,26 +20,12 @@
           <v-chip label class="rounded-lg white--text" color="green">👍 YES</v-chip>
           <span class="ml-2 text-body-1 font-weight-bold">We want the project to launch </span>
         </div>
-        <!-- <div class="d-flex align-center" v-else>
+        <div class="d-flex align-center" v-else>
           <v-chip label class="rounded-lg white--text" color="error">👎NO</v-chip>
           <span class="ml-2 text-body-1 font-weight-bold">We don't want the project to launch </span>
-        </div> -->
-      </div>
-      <div v-if="staked" class="d-flex flex-column">
-        <span>GLD burn amount</span>
-        <div class="d-flex align-center">
-          <v-avatar size="24" class="mr-1">
-            <v-img src="@/assets/icons/icon-glodao.svg" />
-          </v-avatar>
-          <span class="font-weight-bold text-h5">{{ vm.stakeFee | formatNumber }} GLD</span>
         </div>
       </div>
-      <v-sheet v-else outlined class="error-border pa-4 rounded-lg d-flex align-start">
-        <v-icon color="error" class="mr-2 mt-1">mdi-information-outline</v-icon>
-        <div class="font-weight-bold">
-          Stake some GLD in your wallet at the snapshot block to get voting power for projects.
-        </div>
-      </v-sheet>
+
       <div v-if="vm.stakeBalanceInsufficient" class="error--text text-center">Stake Balance insufficient!</div>
       <div class="d-flex flex-column">
         <v-btn

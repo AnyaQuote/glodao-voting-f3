@@ -2,7 +2,10 @@ import { FixedNumber } from '@ethersproject/bignumber'
 
 export class PoolInfo {
   owner?: string
-  amount?: FixedNumber
+  requiredAmount?: FixedNumber
+  optionalAmount?: FixedNumber
+  requiredErc20?: string
+  optionalErc20?: string
   poolType?: string
   votedWeight?: FixedNumber
   votedPercent?: FixedNumber
@@ -22,6 +25,4 @@ export interface IVotingContract {
   getPoolType(): Promise<any>
   cancelPool(id, account): Promise<any>
   getUserStakeBalance(account): Promise<any>
-  checkUserVotedPool(account, poolId)
-  getVotedUsers(poolId)
 }

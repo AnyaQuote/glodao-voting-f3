@@ -15,7 +15,8 @@ import { takeUntil, takeWhile } from 'rxjs/operators'
 export class PoolStore {
   @observable poolData: VotingPool
   @observable participants = 0
-  @observable amount = Zero
+  @observable requiredAmount = Zero
+  @observable optionalAmount = Zero
   @observable votedWeight = Zero
   @observable votedPercent = Zero
   @observable completed = false
@@ -79,12 +80,14 @@ export class PoolStore {
   @action.bound syncState() {
     const contract = this.contract
     if (contract) {
-      const { owner, amount, poolType, votedWeight, votedPercent, createdAt, completed, cancelled } = contract.poolInfo!
+      const { owner, requiredAmount, optionalAmount, poolType, votedWeight, votedPercent, completed, cancelled } =
+        contract.poolInfo!
       this.votedWeight = votedWeight!
       this.votedPercent = votedPercent!
       this.completed = completed!
       this.cancelled = cancelled!
-      this.amount = amount!
+      this.requiredAmount = requiredAmount!
+      this.optionalAmount = optionalAmount!
     }
   }
 
@@ -135,7 +138,7 @@ export class PoolStore {
   }
   @computed get rewardPerMission() {
     try {
-      return this.amount.divUnsafe(FixedNumber.from(this.totalMission))
+      return this.requiredAmount.divUnsafe(FixedNumber.from(this.totalMission))
     } catch (error) {
       return Zero
     }
