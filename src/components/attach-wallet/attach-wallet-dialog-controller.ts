@@ -1,7 +1,7 @@
 import { appProvider } from '@/app-providers'
+import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
 import { action, computed, observable } from 'mobx'
-import { asyncAction } from 'mobx-utils'
 
 export class AttachWalletDialogController {
   @observable show = false
@@ -19,11 +19,11 @@ export class AttachWalletDialogController {
     this.show = false
   }
 
-  @asyncAction *setAddress() {
+  @action.bound async setAddress() {
     try {
-      //   this.isUpdating = true
+      this.isUpdating = true
 
-      const res = yield appProvider.authStore.saveAttachWallet(this.connectedAddress)
+      const res = await appProvider.authStore.saveAttachWallet(this.connectedAddress)
 
       if (res) {
         this._resolver && this._resolver(res)
@@ -32,7 +32,7 @@ export class AttachWalletDialogController {
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
-      //   this.isUpdating = false
+      this.isUpdating = false
     }
   }
 
@@ -42,6 +42,10 @@ export class AttachWalletDialogController {
 
   @computed get connectedAddress() {
     return walletStore.account
+  }
+
+  @computed get compareWalletOrigin() {
+    return authStore.user.projectOwner.address || ''
   }
 }
 

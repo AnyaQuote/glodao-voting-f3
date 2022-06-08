@@ -160,12 +160,8 @@ router.beforeEach((to, _, next) => {
 })
 
 router.afterEach(async (to, _) => {
-  const isConnected = walletStore.walletConnected
-  const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
-  // if (requiredWallet && !isConnected) {
-  const res = await attachWalletDialogController.open()
-  if (res) attachWalletDialogController.close()
-  // }
+  // const res = await attachWalletDialogController.open()
+  // if (res) attachWalletDialogController.close()
 })
 
 export default router
