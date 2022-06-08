@@ -48,7 +48,13 @@
           </div>
 
           <!-- checkbox -->
-          <v-checkbox dense hide-details color="app-blue" class="ma-0 mr-md-6 px-3 py-6 px-md-0 py-md-0">
+          <v-checkbox
+            dense
+            hide-details
+            color="app-blue"
+            v-model="vm.filterRejected"
+            class="ma-0 mr-md-6 px-3 py-6 px-md-0 py-md-0"
+          >
             <template v-slot:label>
               <span class="text-subtitle-2">Hide rejected project</span>
             </template>
@@ -57,21 +63,22 @@
 
         <!--------------------------  BODY -------------------------->
         <div style="max-width: 960px" class="mx-auto px-4">
-          <v-scale-transition leave-absolute v-if="!vm.filteredStatusProjects.length">
-            <div class="d-flex flex-column align-center justify-center" style="height: 300px">
-              <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
-              <div class="font-weight-bold text-h6">You have no {{ vm.filterType }} projects</div>
-              <div class="text-subtitle-1 neutral10--text mb-4">Ready to apply for a new project?</div>
-              <v-btn class="linear-blue--bg text-none" height="40" depressed @click="goToNewProject">
-                <span class="white--text font-weight-bold">New {{ vm.filterType }} application</span>
-              </v-btn>
-            </div>
-          </v-scale-transition>
-          <v-scale-transition leave-absolute v-else>
-            <div class="spacing-card py-md-12">
-              <project-card v-for="(pool, index) in vm.filteredStatusProjects" :key="index" :pool="pool"></project-card>
-            </div>
-          </v-scale-transition>
+          <div
+            v-if="!vm.filteredStatusProjects.length"
+            class="d-flex flex-column align-center justify-center"
+            style="height: 300px"
+          >
+            <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
+            <div class="font-weight-bold text-h6">You have no {{ vm.filterType }} projects</div>
+            <div class="text-subtitle-1 neutral10--text mb-4">Ready to apply for a new project?</div>
+            <v-btn class="linear-blue--bg text-none" height="40" depressed @click="goToNewProject">
+              <span class="white--text font-weight-bold">New {{ vm.filterType }} application</span>
+            </v-btn>
+          </div>
+
+          <div v-else class="spacing-card py-md-12">
+            <project-card v-for="(pool, index) in vm.filteredStatusProjects" :key="index" :pool="pool"></project-card>
+          </div>
         </div>
       </div>
     </div>
@@ -79,7 +86,6 @@
 </template>
 
 <script lang="ts">
-import ConnectWallet from '@/components/connect-wallet.vue'
 import { RoutePaths } from '@/router'
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Provide } from 'vue-property-decorator'
