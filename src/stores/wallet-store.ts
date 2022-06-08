@@ -59,13 +59,6 @@ export class WalletStore {
   @observable selectedWallet: Wallet | null = null
   @observable selectedAdapter: WalletAdapter | SignerWalletAdapter | MessageSignerWalletAdapter | null = null
 
-  //TODO: remove this
-  @observable telegramLoginDialog = false
-  @observable isLoggingInTelegram = false
-  @observable jwt = ''
-
-  @observable navigationDrawer = false
-
   private _bnbBalanceSubscription: Subscription | undefined
 
   constructor() {
@@ -83,20 +76,6 @@ export class WalletStore {
       this.requestingChain = undefined
     }
   }
-  @action.bound changeTelegramLoginDialog(value: boolean) {
-    this.telegramLoginDialog = value
-  }
-  @action.bound changeJwt(value: string) {
-    this.jwt = value
-  }
-  @action.bound resetJwt() {
-    this.jwt = ''
-  }
-
-  @action.bound setNavigationDrawer(val: boolean) {
-    this.navigationDrawer = val
-  }
-
   @asyncAction *start() {
     try {
       if (this.chainType === 'bsc' || this.chainType === 'eth') {
