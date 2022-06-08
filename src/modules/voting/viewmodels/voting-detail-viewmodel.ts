@@ -88,12 +88,9 @@ export class VotingDetailViewModel {
     this.dataLoading = true
     try {
       yield this.fetchPoolDetail(unicodeName)
-      yield Promise.all([
-        this.getStakeFee(),
-        this.checkUserVotedPool(),
-        this.getUserStakedBalance(),
-        this.getVotedUsers(),
-      ])
+
+      this.getStakeFee()
+      this.getUserStakedBalance()
 
       timer(0, 10000)
         .pipe(takeUntil(this._unsubcrible))
@@ -112,13 +109,6 @@ export class VotingDetailViewModel {
     this.stakeFee = poolType.stakeFee
   }
 
-  @asyncAction *checkUserVotedPool() {
-    if (walletStore.account && this.poolStore?.contract) {
-      const voted = yield this.poolStore.contract!.checkUserVotedPool(walletStore.account, this.poolStore.poolId)
-      this.voted = voted
-    }
-  }
-
   @asyncAction *getUserStakedBalance() {
     if (walletStore.account) {
       const userStakeBalance = yield this.poolStore?.contract!.getUserStakeBalance(walletStore.account)
@@ -126,17 +116,9 @@ export class VotingDetailViewModel {
     }
   }
 
-  @asyncAction *getVotedUsers() {
-    const users = yield this.poolStore?.contract?.getVotedUsers(this.poolStore.poolId)
-    this.votedUsers = users
-
-    this.handleVotedUserPaging(1)
-  }
-
   async vote() {
     const { completed } = await this.poolStore?.contract!.vote(this.poolStore!.poolId, walletStore.account)
     this.voted = true
-    this.getVotedUsers()
     this.poolStore?.fetchPoolInfo()
 
     if (completed) {

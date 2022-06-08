@@ -60,7 +60,7 @@
       </div>
     </v-sheet>
     <!-- ------------------------------------- VOTE BUTTON  ------------------------------------------------------------------ -->
-    <voting-detail-button @buttonClick="openConfirmDialog" />
+    <voting-detail-button @buttonClick="openDialog" />
     <!-- ------------------------------------- OVERVIEW ---------------------------------------------------------------------- -->
     <v-sheet class="pa-6 rounded-lg rounded-t-0">
       <div class="row">
@@ -175,8 +175,8 @@
       </div>
     </v-sheet>
     <!-- ------------------------------------------------------------------------------------------------------------------- -->
-    <!-- <vote-prep-dialog ref="vote-prep-dialog" @openConfirmDialog="openConfirmDialog" /> -->
-    <vote-confirm-dialog ref="vote-confirm-dialog" :voteResult="voteResult" />
+    <vote-prep-dialog ref="vote-prep-dialog" />
+    <!-- <vote-confirm-dialog ref="vote-confirm-dialog" :voteResult="voteResult" /> -->
   </v-sheet>
 </template>
 
@@ -193,23 +193,24 @@ import VotingProgressCircle from './common/voting-progress-circle.vue'
     'icon-git-book': () => import('@/assets/icons/icon-git-book.vue'),
     'voting-detail-button': () => import('../components/detail/voting-detail-button.vue'),
     'vote-confirm-dialog': () => import('../components/detail/vote-confirm-dialog.vue'),
+    'vote-prep-dialog': () => import('@/modules/voting/components/detail/vote-prep-dialog.vue'),
   },
 })
 export default class VotingDetailOverview extends Vue {
-  // @Ref('vote-prep-dialog') votePrepDialog
-  @Ref('vote-confirm-dialog') voteConfirmDialog
+  @Ref('vote-prep-dialog') votePrepDialog
+  // @Ref('vote-confirm-dialog') voteConfirmDialog
   @Inject() vm!: VotingDetailViewModel
 
   voteResult = ''
 
-  // openDialog() {
-  //   this.votePrepDialog.open()
-  // }
-
-  openConfirmDialog(voteResult) {
-    this.voteResult = voteResult
-    this.voteConfirmDialog.open()
+  openDialog() {
+    this.votePrepDialog.open()
   }
+
+  // openConfirmDialog(voteResult) {
+  //   this.voteResult = voteResult
+  //   this.voteConfirmDialog.open()
+  // }
 
   get typeColor() {
     return this.vm.poolStore?.type === 'bounty' ? 'orange' : 'green'

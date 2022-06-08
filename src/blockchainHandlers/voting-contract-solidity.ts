@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Zero } from '@/constants'
+import { ETHER_ZERO_ADDRESS, Zero } from '@/constants'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { ProjectInfo } from '@/modules/regist/viewmodels/bounty-apply-viewmodel'
 import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { chunk, toNumber } from 'lodash-es'
 import Web3 from 'web3'
 import { blockchainHandler } from '.'
-import { IVotingContract } from './ido-contract-interface'
+import { IVotingContract, PoolInfo } from './ido-contract-interface'
 
 class PoolType {
-  fee?: FixedNumber
+  creationFee?: FixedNumber
+  cancelationFeePercent?: FixedNumber
   minTime?: string
-  requiredErc20?: string
-  stakeFee?: FixedNumber
+  maxTime?: string
   targetPercentShare?: FixedNumber
 }
 
@@ -24,7 +25,8 @@ export class VotingHandler implements IVotingContract {
   web3: any
 
   _owner = ''
-  _amount = Zero
+  _requiredAmount = Zero
+  _optionalAmount = Zero
   _poolType = '0'
   _votedWeight = Zero
   _votedPercent = Zero
@@ -62,10 +64,8 @@ export class VotingHandler implements IVotingContract {
   async getPoolType() {
     const poolType = await this.votingContract.methods.poolTypeInfos(0).call()
     this.poolType = {
-      fee: bnHelper.fromDecimals(poolType.fee),
+      creationFee: bnHelper.fromDecimals(poolType.creationFee),
       minTime: poolType.minTime,
-      requiredErc20: poolType.requiredErc20,
-      stakeFee: bnHelper.fromDecimals(poolType.stakeFee),
       targetPercentShare: bnHelper.fromDecimals(poolType.targetPercentShare),
     }
     return this.poolType
@@ -93,22 +93,27 @@ export class VotingHandler implements IVotingContract {
 
     const totalStaked = bnHelper.fromDecimals((stakePoolInfo as any).amount)
     this._owner = (votingPoolInfo as any).owner
-    this._amount = bnHelper.fromDecimals((votingPoolInfo as any).amount)
-    this._poolType = (votingPoolInfo as any).poolType
-    this._votedWeight = bnHelper.fromDecimals((votingPoolInfo as any).votedWeight)
+    this._requiredAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).requiredAmount)
+    this._optionalAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).optionalAmount)
+    this._poolType = (votingPoolInfo as PoolInfo).poolType!
+    this._votedWeight = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedWeight)
     this._votedPercent = this._votedWeight.divUnsafe(totalStaked).mulUnsafe(FixedNumber.from('100'))
-    this._createdAt = (votingPoolInfo as any).createdAt
-    this._completed = (votingPoolInfo as any).completed
-    this._cancelled = (votingPoolInfo as any).cancelled
+    this._createdAt = (votingPoolInfo as PoolInfo).createdAt!
+    this._completed = (votingPoolInfo as PoolInfo).completed!
+    this._cancelled = (votingPoolInfo as PoolInfo).cancelled!
   }
 
-  async createPool(rewardTokenAddress: string, rewardAmount: FixedNumber | string, account: string, decimals: number) {
-    if (this.poolType.fee) {
-      const bnbFee = bnHelper.toDecimalString(this.poolType.fee)
+  async createPool(poolInfo: ProjectInfo, account: string, requiredTokenDecimals = 18, optionalTokenDecimals = 18) {
+    if (this.poolType.creationFee) {
+      const bnbFee = bnHelper.toDecimalString(this.poolType.creationFee)
       const f = this.votingContract.methods.createPool(
         0,
-        rewardTokenAddress,
-        bnHelper.toDecimalString(rewardAmount.toString(), decimals)
+        poolInfo.tokenAddress,
+        bnHelper.toDecimalString(poolInfo.rewardAmount!.toString(), requiredTokenDecimals),
+        poolInfo.optionalTokenAddress ? poolInfo.optionalTokenAddress : ETHER_ZERO_ADDRESS,
+        poolInfo.optionalTokenAddress
+          ? bnHelper.toDecimalString(poolInfo.optionalRewardAmount!.toString(), optionalTokenDecimals)
+          : 0
       )
       const res = await sendRequest(f, account, bnbFee)
 
@@ -159,20 +164,11 @@ export class VotingHandler implements IVotingContract {
     await sendRequest(f, account)
   }
 
-  async checkUserVotedPool(account, poolId) {
-    const voted = await this.votingContract.methods.userVotedPools(account, poolId).call()
-    return voted
-  }
-
-  async getVotedUsers(poolId) {
-    const users = await this.votingContract.methods.getVotedUsers(poolId).call()
-    return users
-  }
-
   get poolInfo() {
     return {
       owner: this._owner,
-      amount: this._amount,
+      requiredAmount: this._requiredAmount,
+      optionalAmount: this._optionalAmount,
       poolType: this._poolType,
       votedWeight: this._votedWeight,
       votedPercent: this._votedPercent,
@@ -182,7 +178,7 @@ export class VotingHandler implements IVotingContract {
     }
   }
 
-  async getRewardTokenInfo(web3, address, account) {
+  async getTokenInfo(web3, address, account) {
     const contract = new web3.eth.Contract(require('./abis/erc20.abi.json'), address)
     const [symbol, decimals, balance] = await blockchainHandler.etherBatchRequest(web3, [
       contract.methods.symbol(),
