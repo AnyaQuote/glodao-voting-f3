@@ -1,18 +1,17 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { localdata } from '@/helpers/local-data'
+import { promiseHelper } from '@/helpers/promise-helper'
+import router, { RoutePaths } from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
 import { get, isEmpty } from 'lodash-es'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { walletStore } from './wallet-store'
 
 export class AuthStore {
   @observable attachWalletDialog = false
-  @observable walletDialogInput = ''
   @observable isWalletUpdating = false
   @observable twitterLoginDialog = false
-  @observable isLoggingInTwitter = false
   @observable jwt = ''
   @observable user: any = {}
 
@@ -70,10 +69,10 @@ export class AuthStore {
       this.changeUser(user)
       this.changeTwitterLoginDialog(false)
       localdata.referralCode = ''
+      router.go(-1)
     } catch (error) {
       snackController.commonError(error)
-    } finally {
-      //
+      router.push(RoutePaths.not_found)
     }
   }
 
@@ -82,21 +81,16 @@ export class AuthStore {
     const isExpired = Date.now() >= exp * 1000
     if (isExpired) {
       this.logout()
-      // const res = yield loginController.open({ message: 'Your session has expired. Please login to continue.' })
-      // if (res) {
-      //   loginController.close()
-      // }
+      // Cons: if user is in any form pages.
+      // This login will redirect the user to new page,
+      // resulting in the user has to do the form again
+      this.changeTwitterLoginDialog(true)
     }
   }
 
   @asyncAction checkEmptyJwt() {
     if (isEmpty(this.jwt)) {
-      // const res = yield loginController.open({
-      //   message: 'This step requires authentication. Please sign in to continue.',
-      // })
-      // if (res) {
-      //   loginController.close()
-      // }
+      this.changeTwitterLoginDialog(true)
     }
   }
 
@@ -106,36 +100,29 @@ export class AuthStore {
     if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
   }
 
-  @action.bound changeWalletDialogInput(value: string) {
-    this.walletDialogInput = value
-  }
+  @asyncAction *saveAttachWallet(addressInput: string) {
+    let [err, res] = yield promiseHelper.handle(
+      this.signMessage(addressInput, 'bsc', get(this.user, 'projectOwner.nonce', 0))
+    )
 
-  @asyncAction *saveAttachWallet() {
-    try {
-      this.isWalletUpdating = true
-      const signature = yield this.signMessage(walletStore.account, 'bsc', get(this.user, 'projectOwner.nonce', 0))
-      const updatedProjectOwner = yield apiService.updateProjectOwnerAddress(
-        walletStore.account,
-        signature,
-        'bsc',
-        get(this.user, 'projectOwner.id', '')
-      )
-      this.changeUser({ ...this.user, projectOwner: updatedProjectOwner })
-      snackController.updateSuccess()
-      this.changeAttachWalletDialog(false)
-    } catch (error) {
-      console.error(error)
-      snackController.commonError(error)
-    } finally {
-      this.isWalletUpdating = false
-    }
+    if (err) throw err
+
+    const signature = res
+    ;[err, res] = yield promiseHelper.handle(
+      apiService.updateProjectOwnerAddress(addressInput, signature, 'bsc', get(this.user, 'projectOwner.id', ''))
+    )
+
+    if (err) throw err
+
+    this.changeUser({ ...this.user, projectOwner: res })
+    return 'success'
   }
 
   @action.bound changeAttachWalletDialog(value: boolean) {
-    // if (!value && !this.user.projectOwner.address) {
-    //   snackController.error('You need to set your main wallet')
-    //   return
-    // }
+    if (!value && !this.user.projectOwner.address) {
+      snackController.error('You need to set your main wallet')
+      return
+    }
     this.attachWalletDialog = value
   }
 
