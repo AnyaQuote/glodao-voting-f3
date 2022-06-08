@@ -97,7 +97,7 @@ export class AuthStore {
   @action.bound changeUser(user: any) {
     this.user = user
     localdata.user = user
-    if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
+    // if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
   }
 
   @asyncAction *saveAttachWallet(addressInput: string) {
@@ -118,13 +118,13 @@ export class AuthStore {
     return 'success'
   }
 
-  @action.bound changeAttachWalletDialog(value: boolean) {
-    if (!value && !this.user.projectOwner.address) {
-      snackController.error('You need to set your main wallet')
-      return
-    }
-    this.attachWalletDialog = value
-  }
+  // @action.bound changeAttachWalletDialog(value: boolean) {
+  //   if (!value && !this.user.projectOwner.address) {
+  //     snackController.error('You need to set your main wallet')
+  //     return
+  //   }
+  //   this.attachWalletDialog = value
+  // }
 
   @action.bound changeTwitterLoginDialog(value: boolean) {
     this.twitterLoginDialog = value
