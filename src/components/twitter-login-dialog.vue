@@ -3,7 +3,6 @@
     <v-card>
       <v-card-title>
         <v-spacer />
-        <v-icon @click="controller.changeTwitterLoginDialog(false)">mdi-close</v-icon>
       </v-card-title>
       <v-card-text tag="div" class="text-center">
         <div>
@@ -12,7 +11,7 @@
         <div class="mt-2 font-weight-bold">Connect twitter</div>
         <div class="mt-1">To vote projects</div>
         <div class="mt-4">
-          <v-btn depressed outlined color="blue-diversity" class="rounded-pill" :href="`${apiEndPoint}connect/twitter`">
+          <v-btn depressed outlined color="blue-diversity" class="rounded-pill" :href="twitterLoginRedirect">
             Login with twitter
           </v-btn>
         </div>
@@ -40,10 +39,7 @@ import { authStore } from '@/stores/auth-store'
 })
 export default class TwitterLoginDialog extends Vue {
   controller = authStore
-  apiEndPoint = process.env.VUE_APP_API_STRAPI_ENDPOINT
-  created() {
-    console.log(this.apiEndPoint)
-  }
+  twitterLoginRedirect = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}connect/twitter`
 }
 </script>
 
