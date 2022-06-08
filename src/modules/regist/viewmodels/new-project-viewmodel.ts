@@ -31,19 +31,4 @@ export class NewProjectViewModel {
   async loadData() {
     //
   }
-
-  @asyncAction signAndLogin() {
-    try {
-      this.loading = true
-    } catch (error) {
-      console.error(error)
-      snackController.commonError(error)
-    } finally {
-      this.loading = false
-    }
-  }
-
-  @computed get isLoggedIn() {
-    return authStore.isAuthenticated
-  }
 }
