@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
+import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
 
 Vue.use(VueRouter)
 
@@ -33,7 +34,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/voting/pages/voting-home.vue'),
     meta: {
       auth: false,
-      wallet: true,
+      wallet: false,
       title: 'Voting List',
     },
   },
@@ -42,9 +43,8 @@ const routes: Array<RouteConfig> = [
     name: 'voting-detail',
     component: () => import('@/modules/voting/pages/voting-detail.vue'),
     meta: {
-      auth: true,
-      params: true,
-      wallet: true,
+      auth: false,
+      wallet: false,
       title: 'Voting detail',
     },
   },
@@ -54,7 +54,8 @@ const routes: Array<RouteConfig> = [
     name: 'new-project',
     component: () => import('@/modules/regist/pages/new-project.vue'),
     meta: {
-      auth: false,
+      auth: true,
+      wallet: true,
       title: 'New Application',
     },
   },
@@ -96,7 +97,6 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/project/pages/project-detail.vue'),
     meta: {
       auth: true,
-      params: true,
       wallet: true,
       title: 'Project detail',
     },
@@ -107,7 +107,6 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/project/pages/new-mission.vue'),
     meta: {
       auth: true,
-      params: true,
       wallet: true,
       title: 'Mission Form',
     },
@@ -153,19 +152,20 @@ router.beforeEach((to, _, next) => {
   } else {
     const isAuthenticated = authStore.isAuthenticated
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    console.log(to.name, `required: ${requiredAuth}`, `isAuthed: ${isAuthenticated}`)
-    const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
     if (requiredAuth && !isAuthenticated) {
       authStore.changeTwitterLoginDialog(true)
-    } else if (requiredWallet && !walletStore.account) {
-      authStore.changeAttachWalletDialog(true)
     }
     next()
   }
 })
 
-router.afterEach((to, from) => {
-  //
+router.afterEach(async (to, _) => {
+  const isConnected = walletStore.walletConnected
+  const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
+  // if (requiredWallet && !isConnected) {
+  const res = await attachWalletDialogController.open()
+  if (res) attachWalletDialogController.close()
+  // }
 })
 
 export default router
