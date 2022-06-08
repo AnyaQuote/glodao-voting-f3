@@ -25,7 +25,7 @@ import { AppProvider } from './app-providers'
 @Component({
   components: {
     'twitter-login-dialog': () => import('@/components/twitter-login-dialog.vue'),
-    'attach-wallet-dialog': () => import('@/components/attach-wallet-dialog.vue'),
+    'attach-wallet-dialog': () => import('@/components/attach-wallet/attach-wallet-dialog.vue'),
   },
 })
 export default class App extends Vue {
