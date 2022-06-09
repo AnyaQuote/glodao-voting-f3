@@ -7,12 +7,13 @@
         investors will review and vote for your project on Voting. If your project has enough votes, it will be launched
         on Bounty Hunter or Launchpad.
       </div>
-      <!-- <connect-wallet
-        :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
+      <connect-wallet
         v-if="!wallet.account"
+        :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
-      ></connect-wallet> -->
+      ></connect-wallet>
       <v-btn
+        v-else
         :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         elevation="0"
         class="linear-blue--bg white--text font-weight-bold text-none"
