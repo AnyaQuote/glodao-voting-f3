@@ -1,6 +1,7 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { localdata } from '@/helpers/local-data'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { User } from '@/models/UserModel'
 import router, { RoutePaths } from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
@@ -13,7 +14,7 @@ export class AuthStore {
   @observable isWalletUpdating = false
   @observable twitterLoginDialog = false
   @observable jwt = ''
-  @observable user: any = {}
+  @observable user: User = {}
 
   constructor() {
     if (localdata.jwt) this.changeJwt(localdata.jwt)
@@ -132,14 +133,6 @@ export class AuthStore {
 
   @computed get isAuthenticated() {
     return !!this.jwt
-  }
-
-  @computed get userAvatar() {
-    return this.user.avatar || ''
-  }
-
-  @computed get ownerAttachedAddress() {
-    return this.user.projectOwner.address || ''
   }
 }
 export const authStore = new AuthStore()
