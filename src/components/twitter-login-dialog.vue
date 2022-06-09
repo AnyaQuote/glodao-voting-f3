@@ -1,5 +1,6 @@
 <template>
-  <v-dialog :value="controller.twitterLoginDialog" max-width="450" class="rounded-lg" persistent>
+  <div></div>
+  <!-- <v-dialog :value="controller.twitterLoginDialog" max-width="450" class="rounded-lg" persistent>
     <v-card>
       <v-card-title>
         <v-spacer />
@@ -25,7 +26,7 @@
         </div>
       </v-card-text>
     </v-card>
-  </v-dialog>
+  </v-dialog> -->
 </template>
 
 <script lang="ts">
