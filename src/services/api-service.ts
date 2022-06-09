@@ -290,6 +290,15 @@ export class ApiService {
     return res.data
   }
 
+  // async getOwnerVotingPools(query) {
+  //   const res = await this.axios.get('getOwnerVotingPools/' + query, {
+  //     headers: {
+  //       Authorization: `Bearer ${authStore.jwt}`,
+  //     },
+  //   })
+  //   return res.data
+  // }
+
   async getFile(id: any) {
     const res = await this.axios.get(`upload/files/${id}`)
     return res.data
