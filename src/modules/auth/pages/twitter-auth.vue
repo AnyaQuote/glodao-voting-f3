@@ -12,19 +12,24 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue } from 'vue-property-decorator'
-import { authStore } from '@/stores/auth-store'
+import { Component, Vue, Inject } from 'vue-property-decorator'
+import { get } from 'lodash-es'
+import { AppProvider } from '@/app-providers'
 
 @Observer
 @Component
 export default class TwitterAuthenticationPage extends Vue {
-  authStore = authStore
+  @Inject() providers!: AppProvider
 
-  mounted() {
-    const access_token = this.$route.query.access_token as string
-    const access_secret = this.$route.query.access_secret as string
-    if (access_token && access_secret) {
-      this.authStore.fetchUser(access_token, access_secret)
+  async mounted() {
+    try {
+      const access_token = get(this.$route, 'query.access_token')
+      const access_secret = get(this.$route, 'query.access_secret')
+      const res = await this.providers.authStore.fetchUser(access_token, access_secret)
+
+      if (res) window.close()
+    } catch (error) {
+      this.providers.snackbar.commonError(error)
     }
   }
 }
