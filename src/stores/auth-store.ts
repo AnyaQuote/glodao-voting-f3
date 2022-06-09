@@ -1,8 +1,8 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
 import { localdata } from '@/helpers/local-data'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { User } from '@/models/UserModel'
-import router, { RoutePaths } from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
 import { get, isEmpty } from 'lodash-es'
@@ -10,9 +10,6 @@ import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
 export class AuthStore {
-  @observable attachWalletDialog = false
-  @observable isWalletUpdating = false
-  @observable twitterLoginDialog = false
   @observable jwt = ''
   @observable user: User = {}
 
@@ -25,9 +22,17 @@ export class AuthStore {
     this.jwt = value
     localdata.jwt = value
   }
+
+  @action.bound changeUser(user: any) {
+    this.user = user
+    localdata.user = user
+    // if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
+  }
+
   @action.bound resetJwt() {
     this.jwt = ''
   }
+
   @action.bound resetUser() {
     this.user = {}
   }
@@ -36,6 +41,7 @@ export class AuthStore {
     this.resetJwt()
     this.resetUser()
     localdata.resetAuth()
+    location.reload()
   }
 
   @asyncAction *signMessage(account, chainType, nonce, selectedAdapter: any = null) {
@@ -58,23 +64,34 @@ export class AuthStore {
     }
   }
 
+  /**
+   * Get user data and jwt from twitter access code and secret
+   * @param access_token access token retrieved from twitter login api
+   * @param access_secret  access secret retrieved from twitter login api
+   * @returns 'success', else throw if error
+   */
   @asyncAction *fetchUser(access_token: string, access_secret: string) {
-    try {
-      const res = yield apiService.fetchUser(access_token, access_secret, localdata.referralCode)
-      let user = res.user
-      const jwt = res.jwt
-      if (!user.projectOwner) {
-        user = yield apiService.users.findOne(user.id, jwt)
-      }
-      this.changeJwt(jwt)
-      this.changeUser(user)
-      this.changeTwitterLoginDialog(false)
-      localdata.referralCode = ''
-      router.go(-1)
-    } catch (error) {
-      snackController.commonError(error)
-      router.push(RoutePaths.not_found)
+    if (!access_token || !access_secret) {
+      throw new Error('Invalid access code. Please try again.')
     }
+    let [err, res] = yield promiseHelper.handle(
+      apiService.fetchUser(access_token, access_secret, localdata.referralCode)
+    )
+    if (err) throw err
+
+    let user = res.user
+    const jwt = res.jwt
+    if (isEmpty(user.projectOwner)) {
+      ;[err, res] = yield promiseHelper.handle(apiService.users.findOne(user.id, jwt))
+      if (err) throw err
+      else user = res
+    }
+
+    this.changeJwt(jwt)
+    this.changeUser(user)
+    localdata.referralCode = ''
+
+    return 'success'
   }
 
   @asyncAction checkJwtExpiration() {
@@ -85,54 +102,34 @@ export class AuthStore {
       // Cons: if user is in any form pages.
       // This login will redirect the user to new page,
       // resulting in the user has to do the form again
-      this.changeTwitterLoginDialog(true)
+      twitterLoginDialogController.open()
     }
   }
 
   @asyncAction checkEmptyJwt() {
     if (isEmpty(this.jwt)) {
-      this.changeTwitterLoginDialog(true)
+      twitterLoginDialogController.open()
     }
-  }
-
-  @action.bound changeUser(user: any) {
-    this.user = user
-    localdata.user = user
-    // if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
   }
 
   @asyncAction *saveAttachWallet(addressInput: string) {
     let [err, res] = yield promiseHelper.handle(
       this.signMessage(addressInput, 'bsc', get(this.user, 'projectOwner.nonce', 0))
     )
-
     if (err) throw err
 
     const signature = res
     ;[err, res] = yield promiseHelper.handle(
       apiService.updateProjectOwnerAddress(addressInput, signature, 'bsc', get(this.user, 'projectOwner.id', ''))
     )
-
     if (err) throw err
 
     this.changeUser({ ...this.user, projectOwner: res })
     return 'success'
   }
 
-  // @action.bound changeAttachWalletDialog(value: boolean) {
-  //   if (!value && !this.user.projectOwner.address) {
-  //     snackController.error('You need to set your main wallet')
-  //     return
-  //   }
-  //   this.attachWalletDialog = value
+  // @action.bound changeTwitterLoginDialog(value: boolean) {
+  //   this.twitterLoginDialog = value
   // }
-
-  @action.bound changeTwitterLoginDialog(value: boolean) {
-    this.twitterLoginDialog = value
-  }
-
-  @computed get isAuthenticated() {
-    return !!this.jwt
-  }
 }
 export const authStore = new AuthStore()
