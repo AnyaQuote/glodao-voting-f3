@@ -177,7 +177,7 @@
               height="40"
               width="110"
               v-if="!authStore.jwt"
-              @click="authStore.changeTwitterLoginDialog(true)"
+              @click="openTwitterLoginDialog"
             >
               <v-icon class="mr-2">mdi-twitter</v-icon> Log in
             </v-btn>
@@ -235,6 +235,7 @@ import { authStore } from '@/stores/auth-store'
 import { AppProvider } from '@/app-providers'
 import { Observer } from 'mobx-vue'
 import { attachWalletDialogController } from './attach-wallet/attach-wallet-dialog-controller'
+import { twitterLoginDialogController } from './twitter-login/twitter-login-dialog-controller'
 
 @Observer
 @Component({
@@ -257,6 +258,11 @@ export default class NavigationBar extends Vue {
   }
   openAttachWalletDialog() {
     attachWalletDialogController.open({
+      canClose: true,
+    })
+  }
+  openTwitterLoginDialog() {
+    twitterLoginDialogController.open({
       canClose: true,
     })
   }
