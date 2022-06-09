@@ -1,6 +1,7 @@
-import { appProvider } from '@/app-providers'
+import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable } from 'mobx'
+import { snackController } from '../snack-bar/snack-bar-controller'
 
 interface Config {
   message?: string
@@ -17,27 +18,27 @@ export class AttachWalletDialogController {
   @observable isUpdating = false
   @observable config = defaultConfig
 
-  @action.bound shouldOpenOnComparison() {
-    // Wait for wallet account value not empty
-    // And compare previous attached wallet
-    // with current connected wallet
-    const disposer = reaction(
-      () => this.connectedAddress,
-      (value) => {
-        if (!value) return
-        // User hasn't attached any wallet yet
-        if (!appProvider.authStore.ownerAttachedAddress) {
-          this.config.message = 'Please set your main wallet to continue'
-          this.show = true
-        }
-        // User connected to a wallet that is different from previous attached wallet
-        else if (appProvider.authStore.ownerAttachedAddress !== value) {
-          this.config.message = 'Different wallet account detected. Please set your main wallet.'
-          this.show = true
-        }
-        disposer()
-      }
-    )
+  @action.bound async shouldOpenOnComparison() {
+    // User hasn't attached any wallet yet
+    if (!this.attachedAddress) {
+      this.config.message = 'Please set your main wallet to continue.'
+      this.show = true
+      return
+    }
+
+    // Check reload browser case, wait for the wallet until its value is assigned again
+    const res = await new Promise((resolve) => {
+      ;(function check() {
+        if (walletStore.account) resolve(walletStore.account)
+        else setTimeout(check, 30)
+      })()
+    })
+
+    // User connected to a wallet that is different from previous attached wallet
+    if (this.attachedAddress !== res) {
+      this.config.message = 'Different wallet account detected. Update your main wallet to continue.'
+      this.show = true
+    }
   }
 
   @action.bound open(config: Config) {
@@ -46,24 +47,31 @@ export class AttachWalletDialogController {
   }
 
   @action.bound close() {
+    this.config = defaultConfig
     this.show = false
   }
 
   @action.bound async setAddress() {
     try {
       this.isUpdating = true
-
-      const res = await appProvider.authStore.saveAttachWallet(this.connectedAddress)
-
+      const res = await authStore.saveAttachWallet(walletStore.account)
       if (res) {
-        appProvider.snackbar.updateSuccess()
+        snackController.updateSuccess()
         this.close()
       }
     } catch (error) {
-      appProvider.snackbar.commonError(error)
+      snackController.commonError(error)
     } finally {
       this.isUpdating = false
     }
+  }
+
+  @computed get attachedAddress() {
+    return authStore.user.projectOwner?.address || ''
+  }
+
+  @computed get userAvatar() {
+    return authStore.user.avatar
   }
 
   @computed get connectedAddress() {

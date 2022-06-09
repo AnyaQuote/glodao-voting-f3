@@ -8,7 +8,7 @@
 
       <v-card-text tag="div" class="text-center">
         <v-avatar size="64">
-          <v-img class="neutral-20" :src="controller.authUser" alt="Avatar" />
+          <v-img class="neutral-20" :src="controller.userAvatar" alt="Avatar" />
         </v-avatar>
         <div class="font-weight-600 mt-6">Set the attached wallet</div>
         <div>Connect your wallet to continue:</div>
