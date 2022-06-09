@@ -12,7 +12,6 @@ export class ProjectListViewModel {
   @observable loading = false
 
   constructor() {
-    this.fetchMyProject()
     this._disposers.push(
       reaction(
         () => walletStore.account,
