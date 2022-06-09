@@ -196,17 +196,10 @@
                 </v-sheet>
                 <v-divider></v-divider>
                 <v-sheet class="neutral100--bg">
-                  <v-btn
-                    plain
-                    block
-                    class="menu-btn"
-                    height="40"
-                    depressed
-                    @click="authStore.changeAttachWalletDialog(true)"
-                  >
+                  <v-btn plain block class="menu-btn" height="40" depressed @click="openAttachWalletDialog">
                     <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
                   </v-btn>
-                  <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen()">
+                  <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen">
                     <v-img
                       :src="require('@/assets/icons/crown-mini.svg')"
                       max-height="22"
@@ -241,6 +234,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { authStore } from '@/stores/auth-store'
 import { AppProvider } from '@/app-providers'
 import { Observer } from 'mobx-vue'
+import { attachWalletDialogController } from './attach-wallet/attach-wallet-dialog-controller'
 
 @Observer
 @Component({
@@ -260,6 +254,14 @@ export default class NavigationBar extends Vue {
   }
   get logoImg() {
     return this.$vuetify.theme.dark ? 'glodao-logo-dark' : 'glodao-logo'
+  }
+  openAttachWalletDialog() {
+    attachWalletDialogController.open({
+      canClose: true,
+    })
+  }
+  goToHuntingHistoryScreen() {
+    //
   }
 }
 </script>
