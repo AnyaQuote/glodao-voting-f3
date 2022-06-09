@@ -18,7 +18,7 @@ export class AttachWalletDialogController {
   @observable isUpdating = false
   @observable config = defaultConfig
 
-  @action.bound async shouldOpenOnComparison() {
+  @action.bound async shouldOpenOnValidation() {
     // User hasn't attached any wallet yet
     if (!this.attachedAddress) {
       this.config.message = 'Please set your main wallet to continue.'
@@ -26,16 +26,16 @@ export class AttachWalletDialogController {
       return
     }
 
-    // Check reload browser case, wait for the wallet until its value is assigned again
-    const res = await new Promise((resolve) => {
+    // Incase browser reload, wait for the wallet until its value is reassigned again
+    await new Promise<void>((resolve) => {
       ;(function check() {
-        if (walletStore.account) resolve(walletStore.account)
+        if (walletStore.account) resolve()
         else setTimeout(check, 30)
       })()
     })
 
     // User connected to a wallet that is different from previous attached wallet
-    if (this.attachedAddress !== res) {
+    if (this.attachedAddress !== this.connectedAddress) {
       this.config.message = 'Different wallet account detected. Update your main wallet to continue.'
       this.show = true
     }
