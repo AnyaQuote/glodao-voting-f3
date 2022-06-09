@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
-import { walletStore } from '@/stores/wallet-store'
 import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
+import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
 
 Vue.use(VueRouter)
 
@@ -150,13 +150,13 @@ router.beforeEach((to, _, next) => {
   if (!to.name) {
     next(RoutePaths.not_found)
   } else {
-    const isAuthenticated = authStore.isAuthenticated
+    const isAuthenticated = !!authStore.jwt
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
     const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
     if (requiredAuth && !isAuthenticated) {
-      authStore.changeTwitterLoginDialog(true)
+      twitterLoginDialogController.open()
     } else if (requiredWallet) {
-      attachWalletDialogController.shouldOpenOnComparison()
+      attachWalletDialogController.shouldOpenOnValidation()
     }
     next()
   }
