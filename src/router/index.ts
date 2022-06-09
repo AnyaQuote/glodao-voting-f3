@@ -152,16 +152,14 @@ router.beforeEach((to, _, next) => {
   } else {
     const isAuthenticated = authStore.isAuthenticated
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+    const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
     if (requiredAuth && !isAuthenticated) {
       authStore.changeTwitterLoginDialog(true)
+    } else if (requiredWallet) {
+      attachWalletDialogController.shouldOpenOnComparison()
     }
     next()
   }
-})
-
-router.afterEach((to, _) => {
-  const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
-  if (requiredWallet) attachWalletDialogController.shouldOpenOnComparison()
 })
 
 export default router
