@@ -1,21 +1,45 @@
 import { appProvider } from '@/app-providers'
 import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, reaction } from 'mobx'
+
+interface Config {
+  message?: string
+  canClose?: boolean
+}
+
+const defaultConfig = {
+  message: '',
+  canClose: false,
+}
 
 export class AttachWalletDialogController {
   @observable show = false
   @observable isUpdating = false
+  @observable config = defaultConfig
 
-  _resolver?: (args: any) => void
+  @action.bound shouldOpen() {
+    // Wait for wallet account value not empty
+    // And compare previous attached wallet
+    // with current connected wallet
+    const disposer = reaction(
+      () => this.connectedAddress,
+      (value) => {
+        if (value && authStore.user.projectOwner.address !== value) {
+          this.config.message = 'Different wallet account detected. Please set your main wallet.'
+          this.show = true
+          disposer()
+        }
+      }
+    )
+  }
 
-  @action.bound open() {
+  @action.bound open(config: Config) {
+    this.config = { ...this.config, ...config }
     this.show = true
-    return new Promise((resolve) => (this._resolver = resolve))
   }
 
   @action.bound close() {
-    this._resolver && this._resolver(null)
     this.show = false
   }
 
@@ -26,8 +50,8 @@ export class AttachWalletDialogController {
       const res = await appProvider.authStore.saveAttachWallet(this.connectedAddress)
 
       if (res) {
-        this._resolver && this._resolver(res)
-        appProvider.snackbar.addSuccess()
+        appProvider.snackbar.updateSuccess()
+        this.close()
       }
     } catch (error) {
       appProvider.snackbar.commonError(error)
@@ -42,10 +66,6 @@ export class AttachWalletDialogController {
 
   @computed get connectedAddress() {
     return walletStore.account
-  }
-
-  @computed get compareWalletOrigin() {
-    return authStore.user.projectOwner.address || ''
   }
 }
 
