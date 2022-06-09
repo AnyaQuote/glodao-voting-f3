@@ -133,5 +133,13 @@ export class AuthStore {
   @computed get isAuthenticated() {
     return !!this.jwt
   }
+
+  @computed get userAvatar() {
+    return this.user.avatar || ''
+  }
+
+  @computed get ownerAttachedAddress() {
+    return this.user.projectOwner.address || ''
+  }
 }
 export const authStore = new AuthStore()

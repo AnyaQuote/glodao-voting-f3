@@ -1,5 +1,4 @@
 import { appProvider } from '@/app-providers'
-import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
 import { action, computed, observable, reaction } from 'mobx'
 
@@ -25,11 +24,18 @@ export class AttachWalletDialogController {
     const disposer = reaction(
       () => this.connectedAddress,
       (value) => {
-        if (value && authStore.user.projectOwner.address !== value) {
+        if (!value) return
+        // User hasn't attached any wallet yet
+        if (!appProvider.authStore.ownerAttachedAddress) {
+          this.config.message = 'Please set your main wallet to continue'
+          this.show = true
+        }
+        // User connected to a wallet that is different from previous attached wallet
+        else if (appProvider.authStore.ownerAttachedAddress !== value) {
           this.config.message = 'Different wallet account detected. Please set your main wallet.'
           this.show = true
-          disposer()
         }
+        disposer()
       }
     )
   }
@@ -58,10 +64,6 @@ export class AttachWalletDialogController {
     } finally {
       this.isUpdating = false
     }
-  }
-
-  @computed get authUser() {
-    return appProvider.authStore.user.avatar || ''
   }
 
   @computed get connectedAddress() {
