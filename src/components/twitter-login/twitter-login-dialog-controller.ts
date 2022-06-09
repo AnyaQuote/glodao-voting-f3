@@ -1,5 +1,5 @@
 import { URL_ENDPOINT } from '@/constants'
-import { localdata } from '@/helpers/local-data'
+import { promiseHelper } from '@/helpers/promise-helper'
 import { delay } from 'lodash-es'
 import { action, observable } from 'mobx'
 
@@ -34,16 +34,8 @@ export class TwitterLoginDialogController {
     // Watch values in local storage real time using interval
     // This help letting dialog know when will the login process finished
     // by watching localStorage value being populated
-    const intervalId = await new Promise<NodeJS.Timer>((resolve) => {
-      const id = setInterval(() => {
-        // Resolve promise with populated local storage value
-        if (localdata.jwt && localdata.user) {
-          resolve(id)
-        }
-      }, 1000)
-    })
+    await promiseHelper.waitForLocalStorage()
 
-    clearInterval(intervalId)
     this.isProcessing = false
     this.show = false
 

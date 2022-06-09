@@ -1,3 +1,4 @@
+import { promiseHelper } from '@/helpers/promise-helper'
 import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
 import { action, computed, observable } from 'mobx'
@@ -27,12 +28,7 @@ export class AttachWalletDialogController {
     }
 
     // Incase browser reload, wait for the wallet until its value is reassigned again
-    await new Promise<void>((resolve) => {
-      ;(function check() {
-        if (walletStore.account) resolve()
-        else setTimeout(check, 30)
-      })()
-    })
+    await promiseHelper.waitForWalletAccount()
 
     // User connected to a wallet that is different from previous attached wallet
     if (this.attachedAddress !== this.connectedAddress) {
