@@ -159,9 +159,9 @@ router.beforeEach((to, _, next) => {
   }
 })
 
-router.afterEach(async (to, _) => {
-  // const res = await attachWalletDialogController.open()
-  // if (res) attachWalletDialogController.close()
+router.afterEach((to, _) => {
+  const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
+  if (requiredWallet) attachWalletDialogController.shouldOpenOnComparison()
 })
 
 export default router

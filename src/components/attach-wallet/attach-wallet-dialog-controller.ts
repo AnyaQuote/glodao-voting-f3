@@ -18,7 +18,7 @@ export class AttachWalletDialogController {
   @observable isUpdating = false
   @observable config = defaultConfig
 
-  @action.bound shouldOpen() {
+  @action.bound shouldOpenOnComparison() {
     // Wait for wallet account value not empty
     // And compare previous attached wallet
     // with current connected wallet
