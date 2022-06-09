@@ -1,8 +1,9 @@
 <template>
-  <v-dialog :value="controller.twitterLoginDialog" max-width="450" class="rounded-lg" persistent>
+  <v-dialog :value="controller.show" max-width="450" class="rounded-lg" persistent>
     <v-card>
       <v-card-title>
         <v-spacer />
+        <v-icon v-if="controller.config.canClose" @click="controller.close">mdi-close</v-icon>
       </v-card-title>
       <v-card-text tag="div" class="text-center">
         <div>
@@ -11,7 +12,14 @@
         <div class="mt-2 font-weight-bold">Connect twitter</div>
         <div class="mt-1">To vote projects</div>
         <div class="mt-4">
-          <v-btn depressed outlined color="blue-diversity" class="rounded-pill" :href="twitterLoginRedirect">
+          <v-btn
+            depressed
+            outlined
+            class="rounded-pill"
+            color="blue-diversity"
+            :loading="controller.isProcessing"
+            @click="controller.handleTwitterLogin"
+          >
             Login with twitter
           </v-btn>
         </div>
@@ -31,15 +39,12 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Vue } from 'vue-property-decorator'
-import { authStore } from '@/stores/auth-store'
+import { twitterLoginDialogController } from './twitter-login-dialog-controller'
 
 @Observer
-@Component({
-  components: {},
-})
+@Component
 export default class TwitterLoginDialog extends Vue {
-  controller = authStore
-  twitterLoginRedirect = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}connect/twitter`
+  controller = twitterLoginDialogController
 }
 </script>
 
