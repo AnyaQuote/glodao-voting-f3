@@ -59,6 +59,7 @@
 
 <script lang="ts">
 import { AppProvider } from '@/app-providers'
+import { RoutePaths } from '@/router'
 import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Inject, Provide } from 'vue-property-decorator'
 import { NewProjectViewModel } from '../viewmodels/new-project-viewmodel'
@@ -75,11 +76,11 @@ export default class ProjectRegist extends Vue {
   walletStore = walletStore
 
   openBountyForm() {
-    this.providers.router.push({ name: 'bounty-apply' })
+    this.providers.router.push(RoutePaths.new_bounty_application)
   }
 
   openLaunchpadForm() {
-    this.providers.router.push({ name: 'launchpad-apply' })
+    this.providers.router.push(RoutePaths.new_launchpad_application)
   }
 }
 </script>
