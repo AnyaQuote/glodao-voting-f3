@@ -76,6 +76,16 @@ export class SnackBarController {
   @action close() {
     this.show = false
   }
+
+  @action info(message: string) {
+    this.config = {
+      icon: 'mdi-account-alert-outline',
+      message,
+      color: 'warning',
+      timeout: 5000,
+    }
+    this.show = true
+  }
 }
 
 export const snackController = new SnackBarController()
