@@ -171,12 +171,13 @@ export class NewMissionViewModel {
       learningInformation,
       data: quizJSON,
       answer: answerJSON,
+      ownerAddress: appProvider.wallet.account,
       metadata: {
         coverImage: coverUrl,
         tags: this.pool?.data?.fields,
       },
     }
-    const res = yield appProvider.api.quizzes.create(quiz)
+    const res = yield appProvider.api.createQuiz(quiz)
     return res.id
   }
 
