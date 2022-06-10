@@ -243,15 +243,14 @@ export default class NavigationDrawer extends Vue {
   handleChange(state: boolean) {
     this.$emit('input', state)
   }
-  openAttachWalletDialog() {
-    attachWalletDialogController.open({
-      canClose: true,
-    })
+  async openAttachWalletDialog() {
+    attachWalletDialogController.open()
   }
-  openTwitterLoginDialog() {
-    twitterLoginDialogController.open({
-      canClose: true,
-    })
+  async openTwitterLoginDialog() {
+    const res = await twitterLoginDialogController.open()
+    if (res) {
+      twitterLoginDialogController.close()
+    }
   }
 }
 </script>

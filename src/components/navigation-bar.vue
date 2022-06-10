@@ -261,10 +261,11 @@ export default class NavigationBar extends Vue {
       canClose: true,
     })
   }
-  openTwitterLoginDialog() {
-    twitterLoginDialogController.open({
-      canClose: true,
-    })
+  async openTwitterLoginDialog() {
+    const res = await twitterLoginDialogController.open()
+    if (res) {
+      twitterLoginDialogController.close()
+    }
   }
   goToHuntingHistoryScreen() {
     //
