@@ -146,19 +146,27 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach((to, _, next) => {
+router.beforeEach(async (to, _, next) => {
   if (!to.name) {
     next(RoutePaths.not_found)
   } else {
-    const isAuthenticated = !!authStore.jwt
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
-    if (requiredAuth && !isAuthenticated) {
-      twitterLoginDialogController.open({ message: 'Please sign in to continue to this page.' })
-    } else if (requiredWallet) {
-      attachWalletDialogController.shouldOpenOnValidation()
+
+    if (requiredAuth && !authStore.jwt) {
+      const res = await twitterLoginDialogController.open({ message: 'Please sign in to continue to this page.' })
+      twitterLoginDialogController.close()
+
+      // If user denied sign in, redirect to 401 page
+      !res && next(RoutePaths.unauthenticated)
     }
     next()
+  }
+})
+
+router.afterEach((to, _) => {
+  const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
+  if (requiredWallet) {
+    attachWalletDialogController.shouldOpenOnValidation()
   }
 })
 
