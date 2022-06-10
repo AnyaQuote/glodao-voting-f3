@@ -42,7 +42,7 @@ export class TwitterLoginDialogController {
     // Perfom current tab
     delay(() => {
       location.reload()
-    }, 500)
+    }, 200)
   }
 }
 
