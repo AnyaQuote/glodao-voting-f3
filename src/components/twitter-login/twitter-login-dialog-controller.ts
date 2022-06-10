@@ -39,7 +39,7 @@ export class TwitterLoginDialogController {
     this.isProcessing = false
     this.show = false
 
-    // Perfom current tab
+    // Perfom current tab reload
     delay(() => {
       location.reload()
     }, 200)
