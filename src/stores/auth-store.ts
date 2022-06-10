@@ -1,5 +1,6 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
+import { SUCCESS_STATUS } from '@/constants'
 import { localdata } from '@/helpers/local-data'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { User } from '@/models/UserModel'
@@ -93,7 +94,7 @@ export class AuthStore {
     this.changeUser(user)
     localdata.referralCode = ''
 
-    return 'success'
+    return SUCCESS_STATUS
   }
 
   @asyncAction checkJwtExpiration() {
@@ -127,7 +128,7 @@ export class AuthStore {
     if (err) throw err
 
     this.changeUser({ ...this.user, projectOwner: res })
-    return 'success'
+    return SUCCESS_STATUS
   }
 }
 export const authStore = new AuthStore()
