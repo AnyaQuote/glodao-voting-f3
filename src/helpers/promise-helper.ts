@@ -1,4 +1,5 @@
 import { walletStore } from '@/stores/wallet-store'
+import { isEmpty } from 'lodash-es'
 import { localdata } from './local-data'
 
 export const promiseHelper = {
@@ -7,12 +8,12 @@ export const promiseHelper = {
   /**
    * Watch for localStorage changes
    * Use to notify when sign in with completed
-   * @returns resolve promise
+   * @returns resolve value [jwt, user]
    */
   waitForLocalStorage: () =>
-    new Promise<void>((resolve) => {
+    new Promise<Array<any>>((resolve) => {
       ;(function checkLocalStorage() {
-        if (localdata.jwt && localdata.user) resolve()
+        if (localdata.jwt && !isEmpty(localdata.user)) resolve([localdata.jwt, localdata.user])
         else setTimeout(checkLocalStorage, 1000)
       })()
     }),
