@@ -1,6 +1,7 @@
 import { appProvider } from '@/app-providers'
-import { URL_ENDPOINT } from '@/constants'
-import { promiseHelper } from '@/helpers/promise-helper'
+import { SUCCESS_STATUS, URL_ENDPOINT } from '@/constants'
+import { waitForLocalStorage } from '@/helpers/promise-helper'
+
 import { action, observable } from 'mobx'
 
 interface Config {
@@ -35,21 +36,20 @@ export class TwitterLoginDialogController {
   }
 
   @action.bound async handleTwitterLogin() {
-    this.isProcessing = true
+    try {
+      this.isProcessing = true
 
-    const twitterLoginPage = `${URL_ENDPOINT}connect/twitter`
-    window.open(twitterLoginPage, '_blank')
+      window.open(`${URL_ENDPOINT}connect/twitter`, '_blank')
 
-    // Watch values in local storage real time using interval
-    // This help letting dialog know when will the login process finished
-    // by watching localStorage value being populated
-    const res = await promiseHelper.waitForLocalStorage()
-
-    appProvider.authStore.changeJwt(res[0])
-    appProvider.authStore.changeUser(res[1])
-
-    this.isProcessing = false
-    this.resolver && this.resolver('loggedIn')
+      const res = await waitForLocalStorage()
+      appProvider.authStore.changeJwt(res[0])
+      appProvider.authStore.changeUser(res[1])
+      this.resolver && this.resolver(SUCCESS_STATUS)
+    } catch (error) {
+      appProvider.snackbar.commonError(error)
+    } finally {
+      this.isProcessing = false
+    }
   }
 }
 

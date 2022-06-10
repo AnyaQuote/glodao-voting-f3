@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { promiseHelper } from '@/helpers/promise-helper'
+import { waitForWalletAccount } from '@/helpers/promise-helper'
 import { PoolStore } from '@/stores/pool-store'
 import { observable, action, computed, IReactionDisposer } from 'mobx'
 export class ProjectListViewModel {
@@ -18,10 +18,9 @@ export class ProjectListViewModel {
     try {
       this.loading = true
 
-      await promiseHelper.waitForWalletAccount()
+      await waitForWalletAccount()
 
       const pools = await appProvider.api.voting.find({ ownerAddress: appProvider.wallet.account }, { _limit: -1 })
-
       if (pools && pools.length) {
         this.votingPools = pools.map((pool: any) => {
           const poolStore = new PoolStore(pool)
