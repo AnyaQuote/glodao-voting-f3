@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
 import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
+import { ERROR_MSG_LOGIN_TO_CONTINUE } from '@/constants'
 
 Vue.use(VueRouter)
 
@@ -153,7 +154,7 @@ router.beforeEach(async (to, _, next) => {
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
 
     if (requiredAuth && !authStore.jwt) {
-      const res = await twitterLoginDialogController.open({ message: 'Please sign in to continue to this page.' })
+      const res = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
       twitterLoginDialogController.close()
 
       // If user denied sign in, redirect to 401 page
