@@ -154,7 +154,7 @@ router.beforeEach((to, _, next) => {
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
     const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
     if (requiredAuth && !isAuthenticated) {
-      twitterLoginDialogController.open()
+      twitterLoginDialogController.open({ message: 'Please sign in to continue to this page.' })
     } else if (requiredWallet) {
       attachWalletDialogController.shouldOpenOnValidation()
     }

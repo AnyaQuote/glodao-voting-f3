@@ -32,6 +32,9 @@
           >
         </div>
       </v-card-text>
+      <v-card-text tag="div" v-if="controller.config.message" class="error--text text-center">
+        {{ controller.config.message }}
+      </v-card-text>
     </v-card>
   </v-dialog>
 </template>

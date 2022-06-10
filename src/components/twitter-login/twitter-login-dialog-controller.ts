@@ -1,20 +1,24 @@
+import { appProvider } from '@/app-providers'
 import { URL_ENDPOINT } from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { RoutePaths } from '@/router'
 import { delay } from 'lodash-es'
 import { action, observable } from 'mobx'
 
 interface Config {
   canClose?: boolean
+  message?: string
 }
 
 const defaultConfig = {
-  canClose: false,
+  canClose: true,
+  message: '',
 }
 
 export class TwitterLoginDialogController {
   @observable show = false
   @observable isProcessing = false
-  @observable config = defaultConfig
+  @observable config: Config = defaultConfig
 
   @action.bound open(config?: Config) {
     this.config = { ...this.config, ...(config || {}) }
@@ -28,6 +32,7 @@ export class TwitterLoginDialogController {
 
   @action.bound async handleTwitterLogin() {
     this.isProcessing = true
+
     const twitterLoginPage = `${URL_ENDPOINT}connect/twitter`
     window.open(twitterLoginPage, '_blank')
 
