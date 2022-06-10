@@ -1,8 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { URL_ENDPOINT } from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { RoutePaths } from '@/router'
-import { delay } from 'lodash-es'
 import { action, observable } from 'mobx'
 
 interface Config {
@@ -20,14 +18,20 @@ export class TwitterLoginDialogController {
   @observable isProcessing = false
   @observable config: Config = defaultConfig
 
-  @action.bound open(config?: Config) {
+  @observable resolver?: (args: any) => void
+
+  @action open(config?: Config) {
     this.config = { ...this.config, ...(config || {}) }
     this.show = true
+    return new Promise((resolve) => (this.resolver = resolve))
   }
 
   @action.bound close() {
-    this.config = defaultConfig
-    this.show = false
+    this.resolver && this.resolver(null)
+    if (!this.isProcessing) {
+      this.config = defaultConfig
+      this.show = false
+    }
   }
 
   @action.bound async handleTwitterLogin() {
@@ -39,15 +43,13 @@ export class TwitterLoginDialogController {
     // Watch values in local storage real time using interval
     // This help letting dialog know when will the login process finished
     // by watching localStorage value being populated
-    await promiseHelper.waitForLocalStorage()
+    const res = await promiseHelper.waitForLocalStorage()
+
+    appProvider.authStore.changeJwt(res[0])
+    appProvider.authStore.changeUser(res[1])
 
     this.isProcessing = false
-    this.show = false
-
-    // Perfom current tab reload
-    delay(() => {
-      location.reload()
-    }, 200)
+    this.resolver && this.resolver('loggedIn')
   }
 }
 
