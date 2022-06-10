@@ -26,7 +26,7 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class NotFound extends Vue {
   goToVotingList() {
-    this.$router.push(RoutePaths.voting_list)
+    this.$router.replace(RoutePaths.voting_list)
   }
 }
 </script>
