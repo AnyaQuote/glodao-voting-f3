@@ -19,7 +19,7 @@ export class ProjectListViewModel {
       this.loading = true
 
       if (!appProvider.authStore.jwt) {
-        appProvider.snackbar.info('Please login to continue')
+        appProvider.snackbar.warning('Please login to continue')
         return
       }
 

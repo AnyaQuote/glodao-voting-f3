@@ -77,7 +77,7 @@ export class SnackBarController {
     this.show = false
   }
 
-  @action info(message: string) {
+  @action warning(message: string) {
     this.config = {
       icon: 'mdi-account-alert-outline',
       message,
