@@ -40,8 +40,8 @@
         </div>
 
         <div class="neutral-10--text mt-3 font-italic">
-          *This wallet is used to get reward when participating in Bounty Hunter. And you can edit this address for any
-          bounty project!
+          *This wallet is used to burn token when creating your projects and missions. Make sure to use the correct
+          wallet to perform these actions.
         </div>
       </v-card-text>
       <v-card-text tag="div" v-if="controller.config.message" class="error--text text-center">
