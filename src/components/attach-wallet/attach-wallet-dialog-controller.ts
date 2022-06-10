@@ -1,3 +1,4 @@
+import { appProvider } from '@/app-providers'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
@@ -37,41 +38,43 @@ export class AttachWalletDialogController {
     }
   }
 
-  @action.bound open(config: Config) {
-    this.config = { ...this.config, ...config }
+  @action.bound open(config?: Config) {
+    this.config = { ...this.config, ...(config || {}) }
     this.show = true
   }
 
   @action.bound close() {
-    this.config = defaultConfig
-    this.show = false
+    if (!this.isUpdating) {
+      this.config = defaultConfig
+      this.show = false
+    }
   }
 
   @action.bound async setAddress() {
     try {
       this.isUpdating = true
-      const res = await authStore.saveAttachWallet(walletStore.account)
+      const res = await appProvider.authStore.saveAttachWallet(appProvider.wallet.account)
       if (res) {
-        snackController.updateSuccess()
-        this.close()
+        appProvider.snackbar.updateSuccess()
+        this.show = false
       }
     } catch (error) {
-      snackController.commonError(error)
+      appProvider.snackbar.commonError(error)
     } finally {
       this.isUpdating = false
     }
   }
 
   @computed get attachedAddress() {
-    return authStore.user.projectOwner?.address || ''
+    return appProvider.authStore.user.projectOwner?.address || ''
   }
 
   @computed get userAvatar() {
-    return authStore.user.avatar
+    return appProvider.authStore.user.avatar
   }
 
   @computed get connectedAddress() {
-    return walletStore.account
+    return appProvider.wallet.account
   }
 }
 
