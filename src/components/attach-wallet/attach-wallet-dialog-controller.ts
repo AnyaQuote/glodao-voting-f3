@@ -1,9 +1,7 @@
 import { appProvider } from '@/app-providers'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { authStore } from '@/stores/auth-store'
-import { walletStore } from '@/stores/wallet-store'
+
 import { action, computed, observable } from 'mobx'
-import { snackController } from '../snack-bar/snack-bar-controller'
 
 interface Config {
   message?: string
