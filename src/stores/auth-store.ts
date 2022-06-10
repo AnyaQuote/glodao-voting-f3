@@ -3,6 +3,7 @@ import { twitterLoginDialogController } from '@/components/twitter-login/twitter
 import { localdata } from '@/helpers/local-data'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { User } from '@/models/UserModel'
+import router, { RoutePaths } from '@/router'
 import { apiService } from '@/services/api-service'
 import jwtDecode from 'jwt-decode'
 import { get, isEmpty } from 'lodash-es'
@@ -41,7 +42,8 @@ export class AuthStore {
     this.resetJwt()
     this.resetUser()
     localdata.resetAuth()
-    location.reload()
+
+    router.push(RoutePaths.voting_list)
   }
 
   @asyncAction *signMessage(account, chainType, nonce, selectedAdapter: any = null) {
@@ -127,9 +129,5 @@ export class AuthStore {
     this.changeUser({ ...this.user, projectOwner: res })
     return 'success'
   }
-
-  // @action.bound changeTwitterLoginDialog(value: boolean) {
-  //   this.twitterLoginDialog = value
-  // }
 }
 export const authStore = new AuthStore()
