@@ -248,7 +248,7 @@ export class ApiService {
 
   async createOrUpdateVotingPool(data) {
     const res = await this.axios.post(
-      'createOrUpdateVotingPool',
+      'voting-pools/createOrUpdateVotingPool',
       {
         ...data,
       },
@@ -263,17 +263,18 @@ export class ApiService {
   }
 
   async updateStatusToApproved(data) {
-    const res = await this.axios.put('updateStatusToApproved', data)
+    const res = await this.axios.put('voting-pools/updateStatusToApproved', data)
     return res.data
   }
 
   async cancelVotingPool(data) {
-    const res = await this.axios.put('cancelVotingPool', data)
+    const res = await this.axios.put('voting-pools/cancelVotingPool', data)
     return res.data
   }
 
+  // MARK FOR REMOVAL
   async updateVotingPoolInfo(model) {
-    const res = await this.axios.post('updateVotingPoolInfo', model, {
+    const res = await this.axios.post('voting-pools/updateVotingPoolInfo', model, {
       headers: {
         Authorization: `Bearer ${authStore.jwt}`,
       },
@@ -282,11 +283,7 @@ export class ApiService {
   }
 
   async createQuiz(model) {
-    //
-  }
-
-  async createTask(model) {
-    const res = await this.axios.post('createTask', model, {
+    const res = await this.axios.post('quizzes/createQuiz', model, {
       headers: {
         Authorization: `Bearer ${authStore.jwt}`,
       },
@@ -294,14 +291,14 @@ export class ApiService {
     return res.data
   }
 
-  // async getOwnerVotingPools(query) {
-  //   const res = await this.axios.get('getOwnerVotingPools/' + query, {
-  //     headers: {
-  //       Authorization: `Bearer ${authStore.jwt}`,
-  //     },
-  //   })
-  //   return res.data
-  // }
+  async createTask(model) {
+    const res = await this.axios.post('tasks/createTask', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
 
   async getFile(id: any) {
     const res = await this.axios.get(`upload/files/${id}`)
