@@ -8,7 +8,7 @@
       height="40"
       block
       v-if="!authStore.jwt"
-      @click="authStore.changeTwitterLoginDialog(true)"
+      @click="openTwitterLoginDialog"
     >
       <v-icon class="mr-2">mdi-twitter</v-icon> Log in
     </v-btn>
@@ -21,14 +21,7 @@
       </v-sheet> -->
       <v-divider></v-divider>
       <v-sheet class="neutral100">
-        <v-btn
-          plain
-          block
-          class="menu-btn neutral10--text"
-          height="40"
-          depressed
-          @click="authStore.changeAttachWalletDialog(true)"
-        >
+        <v-btn plain block class="menu-btn neutral10--text" height="40" depressed @click="openAttachWalletDialog">
           <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
         </v-btn>
         <v-btn plain block class="menu-btn neutral10--text" height="40" depressed>
@@ -227,6 +220,8 @@
 import { Component, Inject, Vue, Prop } from 'vue-property-decorator'
 import { Observer } from 'mobx-vue'
 import { AppProvider } from '@/app-providers'
+import { twitterLoginDialogController } from './twitter-login/twitter-login-dialog-controller'
+import { attachWalletDialogController } from './attach-wallet/attach-wallet-dialog-controller'
 
 @Observer
 @Component({
@@ -247,6 +242,15 @@ export default class NavigationDrawer extends Vue {
   }
   handleChange(state: boolean) {
     this.$emit('input', state)
+  }
+  async openAttachWalletDialog() {
+    attachWalletDialogController.open()
+  }
+  async openTwitterLoginDialog() {
+    const res = await twitterLoginDialogController.open()
+    if (res) {
+      twitterLoginDialogController.close()
+    }
   }
 }
 </script>

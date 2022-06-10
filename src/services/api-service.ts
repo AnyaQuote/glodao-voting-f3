@@ -141,11 +141,15 @@ export class ApiHandlerJWT<T> {
     return res.data
   }
 
-  async find<T>(params?: any, settings: { _sort?: string; _limit?: number; _start?: number } = {}): Promise<T[]> {
+  async find<T>(
+    params?: any,
+    settings: { _sort?: string; _limit?: number; _start?: number } = {},
+    overrideJwtUsage = false
+  ): Promise<T[]> {
     let headers = this.headers
     const settingDefault = { _sort: 'createdAt:DESC', _limit: 25, _start: 0 }
     params = { ...settingDefault, ...settings, ...(params ?? {}) }
-    if (this.jwtOptions.find) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
+    if (this.jwtOptions.find || overrideJwtUsage) headers = { ...headers, Authorization: `Bearer ${authStore.jwt}` }
     const res = await this.axios.get(this.route, {
       params,
       headers,
@@ -277,6 +281,10 @@ export class ApiService {
     return res.data
   }
 
+  async createQuiz(model) {
+    //
+  }
+
   async createTask(model) {
     const res = await this.axios.post('createTask', model, {
       headers: {
@@ -285,6 +293,15 @@ export class ApiService {
     })
     return res.data
   }
+
+  // async getOwnerVotingPools(query) {
+  //   const res = await this.axios.get('getOwnerVotingPools/' + query, {
+  //     headers: {
+  //       Authorization: `Bearer ${authStore.jwt}`,
+  //     },
+  //   })
+  //   return res.data
+  // }
 
   async getFile(id: any) {
     const res = await this.axios.get(`upload/files/${id}`)

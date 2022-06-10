@@ -1,8 +1,9 @@
-import { authStore } from '@/stores/auth-store'
 import Vue from 'vue'
-import VueRouter, { RouteConfig, Route } from 'vue-router'
-import { get, isEmpty } from 'lodash'
-import { loginController } from '@/components/login-dialog/login-dialog-controller'
+import VueRouter, { RouteConfig } from 'vue-router'
+import { authStore } from '@/stores/auth-store'
+import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
+import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
+import { ERROR_MSG_LOGIN_TO_CONTINUE } from '@/constants'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/voting/pages/voting-home.vue'),
     meta: {
       auth: false,
+      wallet: false,
       title: 'Voting List',
     },
   },
@@ -43,7 +45,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/voting/pages/voting-detail.vue'),
     meta: {
       auth: false,
-      params: true,
+      wallet: false,
       title: 'Voting detail',
     },
   },
@@ -53,7 +55,8 @@ const routes: Array<RouteConfig> = [
     name: 'new-project',
     component: () => import('@/modules/regist/pages/new-project.vue'),
     meta: {
-      auth: false,
+      auth: true,
+      wallet: true,
       title: 'New Application',
     },
   },
@@ -63,6 +66,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/regist/pages/launchpad-form.vue'),
     meta: {
       auth: true,
+      wallet: true,
       title: 'Launchpad Application',
     },
   },
@@ -72,6 +76,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
       auth: true,
+      wallet: true,
       title: 'Bounty Application',
     },
   },
@@ -82,7 +87,8 @@ const routes: Array<RouteConfig> = [
     name: 'project-list',
     component: () => import('@/modules/project/pages/project-list.vue'),
     meta: {
-      auth: false,
+      auth: true,
+      wallet: true,
       title: 'Projects',
     },
   },
@@ -91,8 +97,8 @@ const routes: Array<RouteConfig> = [
     name: 'project-detail',
     component: () => import('@/modules/project/pages/project-detail.vue'),
     meta: {
-      auth: false,
-      params: true,
+      auth: true,
+      wallet: true,
       title: 'Project detail',
     },
   },
@@ -102,7 +108,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/project/pages/new-mission.vue'),
     meta: {
       auth: true,
-      params: true,
+      wallet: true,
       title: 'Mission Form',
     },
   },
@@ -141,23 +147,28 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach((to, _, next) => {
-  if (!get(to, 'name', '')) {
+router.beforeEach(async (to, _, next) => {
+  if (!to.name) {
     next(RoutePaths.not_found)
   } else {
+    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+
+    if (requiredAuth && !authStore.jwt) {
+      const res = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
+      twitterLoginDialogController.close()
+
+      // If user denied sign in, redirect to 401 page
+      !res && next(RoutePaths.unauthenticated)
+    }
     next()
   }
 })
 
-router.afterEach(async (to, _) => {
-  const isAuthenticated = authStore.isAuthenticated
-  const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-  // if (requiredAuth && !isAuthenticated) {
-  //   const res = await loginController.open({ message: 'This page required login. Please sign in to continue' })
-  //   if (res) {
-  //     loginController.close()
-  //   }
-  // }
+router.afterEach((to, _) => {
+  const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
+  if (requiredWallet) {
+    attachWalletDialogController.shouldOpenOnValidation()
+  }
 })
 
 export default router

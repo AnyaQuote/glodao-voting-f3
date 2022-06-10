@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isNumber, isEmpty, keys, get } from 'lodash'
 import Vue from 'vue'
 import { appRules, rules } from './rules'
 
@@ -8,13 +8,13 @@ export const pluginsRegister = () => {
       Vue.prototype.$rules = rules
       Vue.prototype.$appRules = appRules
       Vue.prototype.$_empty = (any: any) => {
-        return !_.isNumber(any) && (!any || _.isEmpty(any))
+        return !isNumber(any) && (!any || isEmpty(any))
       }
       Vue.prototype.$_get = (any: any, path: string, defaultValue = '') => {
-        return _.get(any, path, defaultValue)
+        return get(any, path, defaultValue)
       }
       Vue.prototype.$_keys = (any: any) => {
-        return _.keys(any)
+        return keys(any)
       }
     },
   })

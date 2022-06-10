@@ -82,11 +82,11 @@ export class BountyApplyViewModel {
   @observable votingHandler?: VotingHandler
 
   constructor() {
-    if (authStore.isAuthenticated) {
-      this.loadData()
-    } else {
-      appProvider.router.push(RoutePaths.project_list)
-    }
+    // if (authStore.isAuthenticated) {
+    this.loadData()
+    // } else {
+    //   appProvider.router.push(RoutePaths.project_list)
+    // }
   }
 
   destroy() {

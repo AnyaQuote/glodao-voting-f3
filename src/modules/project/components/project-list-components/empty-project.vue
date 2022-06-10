@@ -8,8 +8,8 @@
         on Bounty Hunter or Launchpad.
       </div>
       <connect-wallet
-        :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         v-if="!wallet.account"
+        :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
       ></connect-wallet>
       <v-btn

@@ -12,13 +12,7 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 
 Vue.config.productionTip = false
-Vue.use(vuescroll, {
-  ops: {
-    bar: {
-      background: '#FFC10766',
-    },
-  },
-})
+Vue.use(vuescroll)
 // app configs
 pluginsRegister()
 componentRegister()

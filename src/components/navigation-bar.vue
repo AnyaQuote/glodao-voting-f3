@@ -177,7 +177,7 @@
               height="40"
               width="110"
               v-if="!authStore.jwt"
-              @click="authStore.changeTwitterLoginDialog(true)"
+              @click="openTwitterLoginDialog"
             >
               <v-icon class="mr-2">mdi-twitter</v-icon> Log in
             </v-btn>
@@ -196,17 +196,10 @@
                 </v-sheet>
                 <v-divider></v-divider>
                 <v-sheet class="neutral100--bg">
-                  <v-btn
-                    plain
-                    block
-                    class="menu-btn"
-                    height="40"
-                    depressed
-                    @click="authStore.changeAttachWalletDialog(true)"
-                  >
+                  <v-btn plain block class="menu-btn" height="40" depressed @click="openAttachWalletDialog">
                     <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
                   </v-btn>
-                  <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen()">
+                  <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen">
                     <v-img
                       :src="require('@/assets/icons/crown-mini.svg')"
                       max-height="22"
@@ -241,6 +234,8 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { authStore } from '@/stores/auth-store'
 import { AppProvider } from '@/app-providers'
 import { Observer } from 'mobx-vue'
+import { attachWalletDialogController } from './attach-wallet/attach-wallet-dialog-controller'
+import { twitterLoginDialogController } from './twitter-login/twitter-login-dialog-controller'
 
 @Observer
 @Component({
@@ -260,6 +255,20 @@ export default class NavigationBar extends Vue {
   }
   get logoImg() {
     return this.$vuetify.theme.dark ? 'glodao-logo-dark' : 'glodao-logo'
+  }
+  openAttachWalletDialog() {
+    attachWalletDialogController.open({
+      canClose: true,
+    })
+  }
+  async openTwitterLoginDialog() {
+    const res = await twitterLoginDialogController.open()
+    if (res) {
+      twitterLoginDialogController.close()
+    }
+  }
+  goToHuntingHistoryScreen() {
+    //
   }
 }
 </script>

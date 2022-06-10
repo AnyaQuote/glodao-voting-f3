@@ -17,6 +17,5 @@ export const componentRegister = () => {
   Vue.component('app-select', () => import('@/components/form/app-select.vue'))
   Vue.component('app-icon', () => import('@/components/app-icon.vue'))
   Vue.component('progress-bar', () => import('@/components/progress/progress.vue'))
-  Vue.component('login-dialog', () => import('@/components/login-dialog/login-dialog.vue'))
   Vue.component('connect-wallet', () => import('@/components/connect-wallet.vue'))
 }

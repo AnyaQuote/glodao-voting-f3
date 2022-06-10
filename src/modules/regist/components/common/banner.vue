@@ -1,5 +1,5 @@
 <template>
-  <v-img :src="require(`@/assets/images/regist/banner.${$vuetify.theme.dark ? 'dark' : 'light'}.png`)">
+  <v-img max-height="330" :src="require(`@/assets/images/regist/banner.${$vuetify.theme.dark ? 'dark' : 'light'}.png`)">
     <div class="container-custom mx-auto fill-height text-center py-13 py-md-16 px-4">
       <div class="font-weight-bold mb-2" :class="$vuetify.breakpoint.mobile ? 'text-h5' : 'font-64'">
         Apply your project
