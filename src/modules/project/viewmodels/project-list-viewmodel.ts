@@ -1,8 +1,7 @@
 import { appProvider } from '@/app-providers'
+import { promiseHelper } from '@/helpers/promise-helper'
 import { PoolStore } from '@/stores/pool-store'
-import { walletStore } from '@/stores/wallet-store'
-import { observable, action, computed, IReactionDisposer, reaction } from 'mobx'
-import { asyncAction } from 'mobx-utils'
+import { observable, action, computed, IReactionDisposer } from 'mobx'
 export class ProjectListViewModel {
   _disposers: IReactionDisposer[] = []
 
@@ -12,26 +11,26 @@ export class ProjectListViewModel {
   @observable loading = false
 
   constructor() {
-    this._disposers.push(
-      reaction(
-        () => walletStore.account,
-        (account) => {
-          account && this.fetchMyProject()
-        },
-        { fireImmediately: true }
-      )
-    )
+    this.fetchMyProject()
   }
 
-  @asyncAction *fetchMyProject() {
-    this.loading = true
+  @action async fetchMyProject() {
     try {
-      const pools = yield appProvider.api.voting.find(
-        {
-          ownerAddress: walletStore.account,
-        },
-        { _limit: -1 }
+      this.loading = true
+
+      if (!appProvider.authStore.jwt) {
+        appProvider.snackbar.info('Please login to continue')
+        return
+      }
+
+      await promiseHelper.waitForWalletAccount()
+
+      const pools = await appProvider.api.voting.find(
+        { ownerAddress: appProvider.wallet.account },
+        { _limit: -1 },
+        true
       )
+
       if (pools && pools.length) {
         this.votingPools = pools.map((pool: any) => {
           const poolStore = new PoolStore(pool)
