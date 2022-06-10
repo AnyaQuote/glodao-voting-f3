@@ -18,18 +18,9 @@ export class ProjectListViewModel {
     try {
       this.loading = true
 
-      if (!appProvider.authStore.jwt) {
-        appProvider.snackbar.warning('Please login to continue')
-        return
-      }
-
       await promiseHelper.waitForWalletAccount()
 
-      const pools = await appProvider.api.voting.find(
-        { ownerAddress: appProvider.wallet.account },
-        { _limit: -1 },
-        true
-      )
+      const pools = await appProvider.api.voting.find({ ownerAddress: appProvider.wallet.account }, { _limit: -1 })
 
       if (pools && pools.length) {
         this.votingPools = pools.map((pool: any) => {
