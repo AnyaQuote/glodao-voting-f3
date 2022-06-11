@@ -18,7 +18,7 @@
         >
           Connect Wallet
         </v-btn>
-        <div v-else class="d-flex address-container align-center justify-center" :class="$attrs.btnClass">
+        <div v-else class="d-flex address-container align-center justify-center" :class="btnClass">
           <img width="24" :src="require(`@/assets/icons/${walletStore.chainIcon}`)" />
           <div class="align-center ml-2 caption py-1 primary--text font-weight-medium">
             {{ walletStore.shortAccount }}
