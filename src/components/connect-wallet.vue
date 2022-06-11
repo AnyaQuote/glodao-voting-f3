@@ -13,7 +13,7 @@
           depressed
           class="rounded linear-blue--bg white--text"
           large
-          :class="$attrs.btnClass"
+          :class="btnClass"
           :height="height"
         >
           Connect Wallet
@@ -141,6 +141,7 @@ export default class extends Vue {
   private readonly SOLLET_WALLET_NAME = 'Sollet'
 
   @Prop({ default: 55 }) height!: number
+  @Prop({ default: '' }) btnClass!: string
 
   copyAddress() {
     navigator.clipboard.writeText(this.walletStore?.account || '')
