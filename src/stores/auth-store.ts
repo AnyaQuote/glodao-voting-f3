@@ -28,7 +28,6 @@ export class AuthStore {
   @action.bound changeUser(user: any) {
     this.user = user
     localdata.user = user
-    // if (this.user.id && !get(user, 'projectOwner.address', '')) this.changeAttachWalletDialog(true)
   }
 
   @action.bound resetJwt() {
@@ -129,6 +128,10 @@ export class AuthStore {
 
     this.changeUser({ ...this.user, projectOwner: res })
     return SUCCESS_STATUS
+  }
+
+  @computed get attachedAddress() {
+    return get(this.user, 'projectOwner.address', '')
   }
 }
 export const authStore = new AuthStore()
