@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="controller.show" content-class="rounded" max-width="500">
+  <v-dialog :value="controller.show" content-class="rounded" max-width="500" persistent>
     <v-card>
       <v-card-title>
         <v-spacer />
@@ -15,7 +15,7 @@
 
         <div class="d-flex align-center mt-6">
           <app-text-field
-            class="rounded-r-0"
+            class="rounded-r-0 flex-grow-1"
             placeholder="...Waiting wallet to connect"
             hide-details
             height="45"
@@ -23,11 +23,11 @@
             readonly
           />
           <v-btn
-            class="px-8 rounded-l-0"
-            :class="controller.connectedAddress && 'linear-blue--bg white--text'"
-            @click="controller.setAddress"
+            :class="controller.config.allowSetter && 'linear-blue--bg white--text'"
+            :disabled="!controller.config.allowSetter"
             :loading="controller.isUpdating"
-            :disabled="!controller.connectedAddress"
+            @click="controller.setAddress"
+            class="px-8 rounded-l-0"
             height="45"
             depressed
           >
