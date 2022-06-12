@@ -19,7 +19,7 @@ interface Config {
   allowSetter?: boolean
 }
 
-type Resolver = (args: any) => void
+type Resolver = (args?: any) => void
 
 const defaultConfig = {
   message: '',
@@ -36,26 +36,17 @@ export class AttachWalletDialogController {
   _resolver?: Resolver
 
   /**
-   * Verify if wallet account is connected
-   * This function should call before openToValidateWallet
-   * See usage in router/index.ts
-   * @returns void | resolved string
-   */
-  @action.bound async openToVerifyWalletConnected() {
-    await waitForGlobalLoadingFinished()
-    if (!this.connectedAddress) {
-      this.prepareReaction()
-      return this.open({ message: ERROR_MSG_NO_WALLET_CONNECTED, allowSetter: false }, true)
-    }
-  }
-
-  /**
    * Validate connected wallet from metamask matched with project owner address in database
-   * This function should called after openToVerifyWalletConnected is resolved
-   * See usage in router/index.ts
+   * Will toggle dialog to ask user to connect wallet
    * @returns resolved string
    */
-  @action.bound async openToValidateWallet() {
+  @action async openToValidateWallet() {
+    await waitForGlobalLoadingFinished()
+    // Require user to connect wallet via metamask first
+    if (!this.connectedAddress) {
+      this.prepareReaction()
+      await this.open({ message: ERROR_MSG_NO_WALLET_CONNECTED, allowSetter: false }, true)
+    }
     // User hasn't attached any wallet yet
     if (!authStore.attachedAddress) {
       return this.open({ message: ERROR_MSG_MISSING_ATTACHED_WALLET, allowSetter: true }, true)
@@ -75,7 +66,7 @@ export class AttachWalletDialogController {
     this._disposer = reaction(
       () => this.connectedAddress,
       (value) => {
-        value && this._resolver && this._resolver(WALLET_CONNECTED_SUCCESSFUL)
+        value && this._resolver && this._resolver()
       }
     )
   }

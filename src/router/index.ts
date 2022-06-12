@@ -168,7 +168,6 @@ router.beforeEach(async (to, _, next) => {
 router.afterEach(async (to, _) => {
   const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
   if (requiredWallet) {
-    await attachWalletDialogController.openToVerifyWalletConnected()
     const status = await attachWalletDialogController.openToValidateWallet()
     if (status === WALLET_ATTACHED_SUCCESSFUL) {
       attachWalletDialogController.close()
