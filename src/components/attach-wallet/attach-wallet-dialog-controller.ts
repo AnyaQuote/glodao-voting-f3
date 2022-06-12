@@ -93,8 +93,8 @@ export class AttachWalletDialogController {
 
   @action.bound close() {
     if (!this.isUpdating) {
-      this.config = defaultConfig
       this.show = false
+      this.config = defaultConfig
     }
   }
 
