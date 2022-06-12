@@ -3,7 +3,8 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
 import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
-import { ERROR_MSG_LOGIN_TO_CONTINUE } from '@/constants'
+import { ERROR_MSG_LOGIN_TO_CONTINUE, WALLET_ATTACHED_SUCCESSFUL, WALLET_CONNECTED_SUCCESSFUL } from '@/constants'
+import { promiseHelper } from '@/helpers/promise-helper'
 
 Vue.use(VueRouter)
 
@@ -164,10 +165,19 @@ router.beforeEach(async (to, _, next) => {
   }
 })
 
-router.afterEach((to, _) => {
+router.afterEach(async (to, _) => {
   const requiredWallet = to.matched.some((m) => m.meta?.wallet === true)
   if (requiredWallet) {
-    attachWalletDialogController.shouldOpenOnValidation()
+    await attachWalletDialogController.openToVerifyWalletConnected()
+    const status = await attachWalletDialogController.openToValidateWallet()
+    if (status === WALLET_ATTACHED_SUCCESSFUL) {
+      attachWalletDialogController.close()
+      promiseHelper.delay(500)
+      location.reload()
+    } else if (status === WALLET_CONNECTED_SUCCESSFUL) {
+      attachWalletDialogController.disposeReaction()
+      attachWalletDialogController.revealCloseButton()
+    }
   }
 })
 
