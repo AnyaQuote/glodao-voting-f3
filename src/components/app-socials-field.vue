@@ -55,49 +55,77 @@ import { set } from 'lodash-es'
 interface LinkInput {
   type?: string
   link?: string
+  required?: boolean
 }
+
+const defaultLinks = {
+  website: '',
+  telegram: '',
+  twitter: '',
+  discord: '',
+  whitepaper: '',
+}
+
+const INPUT_MODE = 'input'
+const OUTPUT_MODE = 'output'
 
 @Observer
 @Component
 export default class SocialLinkFields extends Vue {
   @Prop({ required: true }) value!: any
-  readonly platforms = ['website', 'reddit', 'facebook', 'twitter', 'discord', 'telegram']
+  readonly platforms = [
+    'website',
+    'reddit',
+    'facebook',
+    'twitter',
+    'discord',
+    'youtube',
+    'telegram',
+    'whitepaper',
+    'others',
+  ]
   readonly icons = {
-    website: 'mdi-web',
+    website: 'fas fa-globe',
     reddit: 'fab fa-reddit',
     facebook: 'fab fa-facebook',
     twitter: 'fab fa-twitter',
     discord: 'fab fa-discord',
     telegram: 'fab fa-telegram',
+    youtube: 'fab fa-youtube',
+    whitepaper: 'fas fa-file-alt',
+    others: 'fas fa-link',
   }
 
   data: LinkInput[] = []
 
   mounted() {
-    this.data = this.mapping('input', this.value || { website: '' })
+    this.data = this.mapping(INPUT_MODE, this.value || defaultLinks, true)
   }
 
-  mapping(mode: string, obj: any) {
-    return mode === 'input'
-      ? Object.entries(obj).reduce((acc: any, current) => [...acc, { type: current[0], link: current[1] }], [])
+  mapping(mode: string, obj: any, required = false) {
+    return mode === INPUT_MODE
+      ? Object.entries(obj).reduce(
+          (acc: any, current) => [...acc, { type: current[0], link: current[1], required }],
+          []
+        )
       : obj.reduce((acc: any, current: LinkInput) => {
           return current.type ? { ...acc, [current.type]: current.link } : acc
         }, {})
   }
 
-  onChange(index, property: 'type' | 'link', value: string) {
+  onChange(index, property: string, value: string) {
     set(this.data[index], property, value)
-    this.$emit('change', this.mapping('output', this.data))
+    this.$emit('change', this.mapping(OUTPUT_MODE, this.data))
   }
 
   add() {
     if (this.data.length < 6) {
-      this.data = [...this.data, { type: '', link: '' }]
+      this.data = [...this.data, { type: '', link: '', required: false }]
     }
   }
 
   remove(position: number) {
-    if (this.data.length > 1) {
+    if (this.data.length > 1 && !this.data[position].required) {
       this.data = this.data.filter((_, index) => index !== position)
     }
   }
