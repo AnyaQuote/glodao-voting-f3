@@ -42,10 +42,12 @@ export class AttachWalletDialogController {
    */
   @action async openToValidateWallet() {
     await waitForGlobalLoadingFinished()
+
+    let res = ''
     // Require user to connect wallet via metamask first
     if (!this.connectedAddress) {
       this.prepareReaction()
-      await this.open({ message: ERROR_MSG_NO_WALLET_CONNECTED, allowSetter: false }, true)
+      res = await this.open({ message: ERROR_MSG_NO_WALLET_CONNECTED, allowSetter: false }, true)
     }
     // User hasn't attached any wallet yet
     if (!authStore.attachedAddress) {
@@ -55,7 +57,7 @@ export class AttachWalletDialogController {
     else if (authStore.attachedAddress !== this.connectedAddress) {
       return this.open({ message: ERROR_MSG_DIFFERENT_WALLET_DETECTED, allowSetter: false })
     }
-    return WALLET_CONNECTED_SUCCESSFUL
+    return res
   }
 
   disposeReaction() {
@@ -66,7 +68,7 @@ export class AttachWalletDialogController {
     this._disposer = reaction(
       () => this.connectedAddress,
       (value) => {
-        value && this._resolver && this._resolver()
+        value && this._resolver && this._resolver(WALLET_CONNECTED_SUCCESSFUL)
       }
     )
   }
@@ -79,7 +81,7 @@ export class AttachWalletDialogController {
   @action.bound open(config?: Config, isPromise = false) {
     this.config = { ...this.config, ...(config || {}) }
     !this.show && (this.show = true)
-    if (isPromise) return new Promise<string>((resovle) => (this._resolver = resovle))
+    return isPromise ? new Promise<string>((resovle) => (this._resolver = resovle)) : ''
   }
 
   @action.bound close() {
