@@ -93,7 +93,7 @@ export class PoolStore {
 
   @computed get onVoting() {
     const onVoting =
-      this.poolData.status === 'voting' && moment().isBetween(moment(this.startDate), moment(this.endDate))
+      this.poolData.status === 'voting' && moment().isBetween(moment(this.votingStart), moment(this.votingEnd))
     return onVoting
   }
 
@@ -101,7 +101,7 @@ export class PoolStore {
     const ended =
       this.status === 'rejected' ||
       this.status === 'approved' ||
-      (this.status === 'voting' && this.endDate && moment().isAfter(moment(this.endDate)))
+      (this.status === 'voting' && this.votingEnd && moment().isAfter(moment(this.votingEnd)))
 
     return ended
   }
@@ -166,5 +166,13 @@ export class PoolStore {
   }
   @computed get website() {
     return this.poolData.data?.socialLinks?.website
+  }
+
+  @computed get votingStart() {
+    return this.poolData.votingStart
+  }
+
+  @computed get votingEnd() {
+    return this.poolData.votingEnd
   }
 }

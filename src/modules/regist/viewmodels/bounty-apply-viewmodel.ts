@@ -1,11 +1,10 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
-import { set, kebabCase, toNumber } from 'lodash'
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
+import { set, kebabCase, toNumber, get } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
-import { authStore } from '@/stores/auth-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { Zero } from '@/constants'
@@ -15,27 +14,6 @@ import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
-
-export class ProjectInfo {
-  projectName?: string
-  shortDescription?: string
-  projectCover?: any
-  projectLogo?: any
-  fields?: any[]
-  socialLinks?: any
-
-  tokenName?: string
-  rewardAmount?: string
-  tokenAddress?: string
-
-  optionalTokenName?: string
-  optionalRewardAmount?: string
-  optionalTokenAddress?: string
-
-  startDate?: string
-  endDate?: string
-  totalMissions?: string
-}
 
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
@@ -62,7 +40,10 @@ export class BountyApplyViewModel {
 
   @observable step = 1.1
   @observable unlockedStep = 1.1
-  @observable projectInfo: ProjectInfo = {}
+  @observable projectInfo: ProjectInfo = {
+    votingStart: moment().toISOString(),
+    votingEnd: moment().add(3, 'd').toISOString(),
+  }
   @observable creating = false
 
   @observable approved = false
@@ -82,11 +63,7 @@ export class BountyApplyViewModel {
   @observable votingHandler?: VotingHandler
 
   constructor() {
-    // if (authStore.isAuthenticated) {
     this.loadData()
-    // } else {
-    //   appProvider.router.push(RoutePaths.project_list)
-    // }
   }
 
   destroy() {
@@ -214,6 +191,8 @@ export class BountyApplyViewModel {
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
+        votingStart: moment().toISOString(),
+        votingEnd: moment().add(3, 'd').toISOString(),
         startDate: this.projectInfo.startDate,
         endDate: this.projectInfo.endDate,
         data: {
@@ -267,8 +246,7 @@ export class BountyApplyViewModel {
       set(this.projectInfo, 'tokenName', token?.tokenName)
       this.rewardTokenDecimals = token?.decimals || 18
     }
-
-    set(this.projectInfo, property, value)
+    this.projectInfo = set(this.projectInfo, property, value)
   }
 
   @action nextStep(value: number) {
@@ -284,4 +262,28 @@ export class BountyApplyViewModel {
       return Zero
     }
   }
+}
+
+export class ProjectInfo {
+  projectName?: string
+  shortDescription?: string
+  projectCover?: any
+  projectLogo?: any
+  fields?: any[]
+  socialLinks?: any
+
+  tokenName?: string
+  rewardAmount?: string
+  tokenAddress?: string
+
+  optionalTokenName?: string
+  optionalRewardAmount?: string
+  optionalTokenAddress?: string
+
+  votingStart?: string
+  votingEnd?: string
+
+  startDate?: string
+  endDate?: string
+  totalMissions?: string
 }

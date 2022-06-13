@@ -42,7 +42,7 @@
           <v-spacer />
           <div class="card-content-bottom">
             <v-divider />
-            <countdown class="text-h5 my-3" :to="$_get(pool, 'endDate')"> </countdown>
+            <countdown class="text-h5 my-3" :to="$_get(pool, 'votingEnd')"> </countdown>
             <v-divider />
             <div class="d-flex mb-4 mx-6 mt-3">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
@@ -108,7 +108,7 @@
             </div>
           </div>
         </v-img>
-        <countdown class="my-2 font-weight-bold text-subtitle-1" :to="$_get(pool, 'endDate')"> </countdown>
+        <countdown class="my-2 font-weight-bold text-subtitle-1" :to="$_get(pool, 'votingEnd')"> </countdown>
         <v-divider></v-divider>
         <div class="pa-4 d-flex align-center">
           <v-icon class="mr-2">mdi-star-outline</v-icon>
