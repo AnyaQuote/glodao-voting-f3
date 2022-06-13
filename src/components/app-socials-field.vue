@@ -50,12 +50,13 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { set } from 'lodash-es'
+import { max, set } from 'lodash-es'
 
 interface LinkInput {
   type?: string
   link?: string
   required?: boolean
+  id?: number
 }
 
 const defaultLinks = {
@@ -105,22 +106,30 @@ export default class SocialLinkFields extends Vue {
   mapping(mode: string, obj: any, required = false) {
     return mode === INPUT_MODE
       ? Object.entries(obj).reduce(
-          (acc: any, current) => [...acc, { type: current[0], link: current[1], required }],
+          (acc: any, current) => [...acc, { type: current[0], link: current[1], id: 1, required }],
           []
         )
       : obj.reduce((acc: any, current: LinkInput) => {
-          return current.type ? { ...acc, [current.type]: current.link } : acc
+          return current.type ? { ...acc, [`${current.type}-${current.id}`]: current.link } : acc
         }, {})
   }
 
-  onChange(index, property: string, value: string) {
-    set(this.data[index], property, value)
+  getLinkInputId(position: number, property: string) {
+    let id = max(this.data.filter(({ type }, index) => type === property || index === position).map(({ id }) => id))
+    return id ? id + 1 : 1
+  }
+
+  onChange(position: number, property: string, value: string) {
+    // Get lastest id for this property
+    const id = this.getLinkInputId(position, property)
+    set(this.data[position], property, value)
+    set(this.data[position], 'id', id)
     this.$emit('change', this.mapping(OUTPUT_MODE, this.data))
   }
 
   add() {
     if (this.data.length < 6) {
-      this.data = [...this.data, { type: '', link: '', required: false }]
+      this.data = [...this.data, { type: '', link: '', required: false, id: 0 }]
     }
   }
 
