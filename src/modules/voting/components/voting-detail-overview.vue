@@ -174,6 +174,7 @@
             {{ link }}
           </v-tooltip>
 
+          <!-- ==== WEBSITE LINKS ==== -->
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn v-bind="attrs" v-on="on" icon color="blue-diversity" :href="$_get(vm.poolStore, 'website')">
