@@ -27,7 +27,7 @@
       ></app-textarea>
 
       <div class="d-flex mt-6 mb-2 align-end">
-        <span class="font-18 font-weight-bold">Project logo</span>
+        <span class="font-18 font-weight-bold">Project logo<span class="app-red--text">*</span></span>
         <v-spacer />
         <i class="text-subtitle-2 neutral-10--text font-weight-regular">
           *Recommend resolution 1:1 (48x48, 64x64, 80x80, 256x256)
@@ -41,7 +41,7 @@
       />
 
       <div class="d-flex mt-6 mb-2 align-end">
-        <span class="font-18 font-weight-bold">Project cover</span>
+        <span class="font-18 font-weight-bold">Project cover<span class="app-red--text">*</span></span>
         <v-spacer />
         <i class="text-subtitle-2 neutral-10--text font-weight-regular"
           >*Recommend resolution 3:2 (2160×1440, 2560×1700)</i
@@ -71,7 +71,7 @@
 
       <!-- ===== SOCIAL LINKS FIELDS ===== -->
       <div class="d-flex flex-column flex-md-row align-md-center justify-space-between">
-        <span class="font-18 font-weight-bold"> Website and social link</span>
+        <span class="font-18 font-weight-bold"> Website and social link<span class="app-red--text">*</span></span>
         <i class="text-subtitle-2 font-weight-regular">*Select a link for each types</i>
       </div>
       <app-socials-field
