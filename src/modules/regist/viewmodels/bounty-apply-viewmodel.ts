@@ -16,30 +16,6 @@ import moment from 'moment'
 import web3 from 'web3'
 import { getAddedDateISO } from '@/helpers/date-helper'
 
-export class ProjectInfo {
-  projectName?: string
-  shortDescription?: string
-  projectCover?: any
-  projectLogo?: any
-  fields?: any[]
-  socialLinks?: any
-
-  tokenName?: string
-  rewardAmount?: string
-  tokenAddress?: string
-
-  optionalTokenName?: string
-  optionalRewardAmount?: string
-  optionalTokenAddress?: string
-
-  votingStart?: string
-  votingEnd?: string
-
-  startDate?: string
-  endDate?: string
-  totalMissions?: string
-}
-
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
@@ -291,4 +267,28 @@ export class BountyApplyViewModel {
       return Zero
     }
   }
+}
+
+export class ProjectInfo {
+  projectName?: string
+  shortDescription?: string
+  projectCover?: any
+  projectLogo?: any
+  fields?: any[]
+  socialLinks?: any
+
+  tokenName?: string
+  rewardAmount?: string
+  tokenAddress?: string
+
+  optionalTokenName?: string
+  optionalRewardAmount?: string
+  optionalTokenAddress?: string
+
+  votingStart?: string
+  votingEnd?: string
+
+  startDate?: string
+  endDate?: string
+  totalMissions?: string
 }
