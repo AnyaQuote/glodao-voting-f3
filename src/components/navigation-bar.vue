@@ -259,6 +259,7 @@ export default class NavigationBar extends Vue {
   openAttachWalletDialog() {
     attachWalletDialogController.open({
       allowSetter: !authStore.attachedAddress,
+      canClose: true,
     })
   }
   async openTwitterLoginDialog() {

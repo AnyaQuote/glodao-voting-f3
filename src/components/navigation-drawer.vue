@@ -246,6 +246,7 @@ export default class NavigationDrawer extends Vue {
   async openAttachWalletDialog() {
     attachWalletDialogController.open({
       allowSetter: !this.authStore.attachedAddress,
+      canClose: true,
     })
   }
   async openTwitterLoginDialog() {
