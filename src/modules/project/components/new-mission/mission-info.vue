@@ -101,8 +101,6 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
-import { FixedNumber } from '@ethersproject/bignumber'
-import { Zero } from '@/constants'
 
 @Observer
 @Component({
