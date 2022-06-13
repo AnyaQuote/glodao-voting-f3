@@ -81,17 +81,17 @@
         <span class="font-18 font-weight-bold blue-diversity--text">Voting duration</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
-      <app-datetime-picker
-        dateLabel="Voting start date"
-        timeLabel="Voting start time"
-        :rules="[$rules.required]"
-        :value="$_get(vm.projectInfo, 'votingStart')"
-        @change="vm.changeProjectInfo('votingStart', $event)"
-      />
-      <div class="font-italic neutral-10--text">*Voting duration is 3 days counting from the voting start date</div>
-      <div class="mb-7">
-        <span class="font-weight-bold">Your project voting ends in: </span>
-        <span class="font-18">{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyyhhmma }}</span>
+      <div class="font-italic text-subtitle-1 neutral-10--text mb-2">
+        *Voting duration is 3 days counting from the project creation date. The time is mark when you begin creating
+        this project.
+      </div>
+      <div class="mb-1 font-18">
+        <span class="font-weight-bold">Your project voting will start in: </span>
+        <span>{{ $_get(vm.projectInfo, 'votingStart') | ddmmyyyy }}</span>
+      </div>
+      <div class="mb-7 font-18">
+        <span class="font-weight-bold">Your project voting will ends in: </span>
+        <span>{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
       </div>
 
       <div>
@@ -99,6 +99,7 @@
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
       <app-datetime-picker
+        class="font-18"
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
@@ -107,6 +108,7 @@
         @change="vm.changeProjectInfo('startDate', $event)"
       />
       <app-datetime-picker
+        class="font-18"
         dateLabel="End date"
         timeLabel="End time"
         :rules="[$rules.required]"
@@ -120,6 +122,7 @@
         <span class="font-weight-bold font-18 mr-1">Total missions</span>
       </div>
       <app-text-field
+        class="font-18"
         :rules="[$rules.required, $rules.integer, $rules.min(1)]"
         :value="$_get(vm.projectInfo, 'totalMissions')"
         @input="vm.changeProjectInfo('totalMissions', $event)"
