@@ -17,10 +17,11 @@
         @change="vm.changeMissionInfo('shortDescription', $event)"
         placeholder="Enter short description to describe the mission"
       />
-      <span class="font-18 font-weight-bold mt-3 mb-1">Mission cover</span>
+
+      <div class="font-18 font-weight-bold mt-3 mb-1">Mission cover</div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.fileRequired, $rules.maxSize(15000000)]"
+        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImage]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
