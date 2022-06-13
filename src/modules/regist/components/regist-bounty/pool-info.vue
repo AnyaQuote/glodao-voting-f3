@@ -64,7 +64,6 @@
             :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
             @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
             placeholder="Enter amount"
-            class="pb-0"
           ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
@@ -74,17 +73,30 @@
             :loading="vm.tokenInfoLoading"
             disabled
             placeholder="Token symbol"
-            class="pb-0"
           />
         </div>
       </div>
+
+      <div>
+        <span class="font-18 font-weight-bold blue-diversity--text">Voting duration</span>
+        <i class="neutral-10--text ml-2">(Locale time)</i>
+      </div>
+      <app-datetime-picker
+        dateLabel="Voting start date"
+        timeLabel="Voting start time"
+        :rules="[$rules.required]"
+        :value="$_get(vm.projectInfo, 'votingStart')"
+        @change="vm.changeProjectInfo('votingStart', $event)"
+      />
+      <span class="font-weight-bold">Your project voting ends in: </span>
+      <span class="font-18">{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyyhhmma }}</span>
+      <div class="mb-7 font-italic neutral-10--text">*Voting duration ends in 3 days counting from the start date</div>
 
       <div>
         <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
       <app-datetime-picker
-        class="mt-7"
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
