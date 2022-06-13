@@ -37,7 +37,7 @@
     <div class="d-flex flex-column mt-7">
       <div class="title font-weight-bold blue-diversity--text">Reward information</div>
       <div class="font-18 font-weight-bold mt-4">
-        <span>Reward mission: {{ rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
+        <span>Reward mission: {{ vm.rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
       </div>
       <div class="mt-4 row ma-0">
         <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
@@ -45,8 +45,7 @@
           <app-text-field
             readonly
             class="mt-2"
-            :rules="[$rules.required, $rules.floatNumberOnly, $rules.max(rewardPerMission)]"
-            :value="$_get(vm.missionInfo, 'priorityAmount')"
+            :value="`${vm.priorityAmount} ${$_get(vm.pool, 'tokenName')}`"
             placeholder="Enter amount"
           />
         </div>
@@ -74,7 +73,7 @@
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
       <app-datetime-picker
-        class="mt-7"
+        class="mt-4"
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
@@ -114,14 +113,6 @@ import { Zero } from '@/constants'
 })
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
-
-  get rewardPerMission() {
-    try {
-      return FixedNumber.from(this.vm.pool?.totalMission).divUnsafe(FixedNumber.from(this.vm.pool?.totalMission))
-    } catch (error) {
-      return Zero
-    }
-  }
 }
 </script>
 

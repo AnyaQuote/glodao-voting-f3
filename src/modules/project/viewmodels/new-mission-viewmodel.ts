@@ -10,67 +10,7 @@ import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { walletStore } from '@/stores/wallet-store'
-
-const missionInfoDefault = {
-  name: '',
-  shortDescription: '',
-  missionCover: '',
-  priorityAmount: '',
-  maxParticipants: '',
-  startDate: '',
-  endDate: '',
-}
-
-const learnToEarnDefault: LearnToEarn = {
-  enabled: false,
-  setting: {
-    name: '',
-    description: '',
-    imageCover: null,
-    quizFile: null,
-    learningFile: null,
-  },
-}
-
-const joinTelegramDef = {
-  enabled: false,
-  setting: {
-    type: 'follow',
-    link: '',
-    page: 'GloDAO Chanel',
-    required: true,
-  },
-}
-
-const followTwitterDef = {
-  enabled: false,
-  setting: { type: 'follow', page: 'GloDAO', required: true, link: '' },
-}
-
-const quoteTweetDef = {
-  enabled: false,
-  setting: {
-    type: 'quote',
-    content: 'GloDAO',
-    page: 'GloDAO',
-    hashtag: '',
-    link: '',
-    embedLink: '',
-    required: true,
-  },
-}
-
-const commentTweetDef = {
-  enabled: false,
-  setting: {
-    type: 'comment',
-    page: 'GloDAO',
-    content: 'GloDAO',
-    embedLink: '',
-    link: '',
-    required: true,
-  },
-}
+import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
 export class NewMissionViewModel {
   @observable pool: VotingPool = {}
@@ -184,7 +124,6 @@ export class NewMissionViewModel {
   @asyncAction *getMissionSetting() {
     const missionSetting = {}
     if (this.joinTelegram.enabled) {
-      // set(missionSetting, 'telegram', [...get(missionSetting, 'telegram', []), this.joinTelegram.setting])
       set(missionSetting, 'telegram', [{ ...this.joinTelegram.setting }])
     }
     if (this.followTwitter.enabled) {
@@ -198,7 +137,6 @@ export class NewMissionViewModel {
     }
     if (this.learnToEarn.enabled) {
       const quizId = yield this.getQuizId()
-      // set(missionSetting, 'quiz', [...get(missionSetting, 'quiz', []), { type: 'quiz', quizId: quiz.id }])
       set(missionSetting, 'quiz', [{ type: 'quiz', quizId }])
     }
     return missionSetting
@@ -214,7 +152,7 @@ export class NewMissionViewModel {
     return {
       rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
       maxParticipant: toNumber(missionInfo.maxParticipants),
-      priorityRewardAmount: missionInfo.priorityAmount,
+      priorityRewardAmount: this.priorityAmount.toString(),
       ownerAddress: appProvider.wallet.account,
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
@@ -233,7 +171,7 @@ export class NewMissionViewModel {
         decimals: pool.data?.decimals,
         rewardToken: pool.tokenName,
         socialLinks: socialLinks || [],
-        website: website || '',
+        website: website || '#',
         tokenLogo,
       },
     }
@@ -268,4 +206,81 @@ export class NewMissionViewModel {
     }
     return false
   }
+
+  @computed get rewardPerMission() {
+    try {
+      return FixedNumber.from(this.pool?.totalMission).divUnsafe(FixedNumber.from(this.pool?.totalMission))
+    } catch (error) {
+      return Zero
+    }
+  }
+
+  @computed get priorityAmount() {
+    try {
+      return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
+    } catch (error) {
+      return Zero
+    }
+  }
+}
+
+const missionInfoDefault = {
+  name: '',
+  shortDescription: '',
+  missionCover: '',
+  priorityAmount: '',
+  maxParticipants: '',
+  startDate: '',
+  endDate: '',
+}
+
+const learnToEarnDefault: LearnToEarn = {
+  enabled: false,
+  setting: {
+    name: '',
+    description: '',
+    imageCover: null,
+    quizFile: null,
+    learningFile: null,
+  },
+}
+
+const joinTelegramDef = {
+  enabled: false,
+  setting: {
+    type: 'follow',
+    link: '',
+    page: 'GloDAO Chanel',
+    required: true,
+  },
+}
+
+const followTwitterDef = {
+  enabled: false,
+  setting: { type: 'follow', page: 'GloDAO', required: true, link: '' },
+}
+
+const quoteTweetDef = {
+  enabled: false,
+  setting: {
+    type: 'quote',
+    content: 'GloDAO',
+    page: 'GloDAO',
+    hashtag: '',
+    link: '',
+    embedLink: '',
+    required: true,
+  },
+}
+
+const commentTweetDef = {
+  enabled: false,
+  setting: {
+    type: 'comment',
+    page: 'GloDAO',
+    content: 'GloDAO',
+    embedLink: '',
+    link: '',
+    required: true,
+  },
 }
