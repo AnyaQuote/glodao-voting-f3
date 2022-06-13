@@ -92,6 +92,7 @@ export default class SocialLinkFields extends Vue {
     'twitter',
     'discord',
     'youtube',
+    'github',
     'telegram',
     'whitepaper',
     'others',
@@ -104,6 +105,7 @@ export default class SocialLinkFields extends Vue {
     discord: { icon: 'fab fa-discord', id: 0 },
     telegram: { icon: 'fab fa-telegram', id: 0 },
     youtube: { icon: 'fab fa-youtube', id: 0 },
+    github: { icon: 'fab fa-github', id: 0 },
     whitepaper: { icon: 'fas fa-file-alt', id: 0 },
     others: { icon: 'fas fa-link', id: 0 },
   }
