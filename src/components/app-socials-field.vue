@@ -12,11 +12,11 @@
         placeholder="Choose platform"
       >
         <template v-slot:selection="{ item }">
-          <v-icon color="blue-diversity" class="mr-3">{{ $_get(icons, item) }}</v-icon>
+          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referenceData, `${item}.icon`) }}</v-icon>
           <span class="text-truncate text-subtitle-1 neutral-10--text text-capitalize">{{ item }}</span>
         </template>
         <template v-slot:item="{ item }">
-          <v-icon color="blue-diversity" class="mr-3">{{ $_get(icons, item) }}</v-icon>
+          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referenceData, `${item}.icon`) }}</v-icon>
           <span class="text-subtitle-1 neutral10--text text-capitalize">{{ item }}</span>
         </template>
       </app-select>
@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { max, set } from 'lodash-es'
+import { set } from 'lodash-es'
 
 interface LinkInput {
   type?: string
@@ -69,6 +69,17 @@ const defaultLinks = {
 
 const INPUT_MODE = 'input'
 const OUTPUT_MODE = 'output'
+const mapSocialLinks = (mode: string, obj: LinkInput[], required = false) => {
+  return mode === INPUT_MODE
+    ? Object.entries(obj).reduce(
+        (acc: any, current) => [...acc, { type: current[0], link: current[1], id: 0, required }],
+        []
+      )
+    : obj.reduce((acc: any, current: LinkInput) => {
+        const typeName = current.id ? `${current.type}-${current.id}` : `${current.type}`
+        return current.type ? { ...acc, [typeName]: current.link } : acc
+      }, {})
+}
 
 @Observer
 @Component
@@ -85,56 +96,39 @@ export default class SocialLinkFields extends Vue {
     'whitepaper',
     'others',
   ]
-  readonly icons = {
-    website: 'fas fa-globe',
-    reddit: 'fab fa-reddit',
-    facebook: 'fab fa-facebook',
-    twitter: 'fab fa-twitter',
-    discord: 'fab fa-discord',
-    telegram: 'fab fa-telegram',
-    youtube: 'fab fa-youtube',
-    whitepaper: 'fas fa-file-alt',
-    others: 'fas fa-link',
+  referenceData = {
+    website: { icon: 'fas fa-globe', id: 0 },
+    reddit: { icon: 'fab fa-reddit', id: 0 },
+    facebook: { icon: 'fab fa-facebook', id: 0 },
+    twitter: { icon: 'fab fa-twitter', id: 0 },
+    discord: { icon: 'fab fa-discord', id: 0 },
+    telegram: { icon: 'fab fa-telegram', id: 0 },
+    youtube: { icon: 'fab fa-youtube', id: 0 },
+    whitepaper: { icon: 'fas fa-file-alt', id: 0 },
+    others: { icon: 'fas fa-link', id: 0 },
   }
 
   data: LinkInput[] = []
 
   mounted() {
-    this.data = this.mapping(INPUT_MODE, this.value || defaultLinks, true)
-  }
-
-  mapping(mode: string, obj: any, required = false) {
-    return mode === INPUT_MODE
-      ? Object.entries(obj).reduce(
-          (acc: any, current) => [...acc, { type: current[0], link: current[1], id: 1, required }],
-          []
-        )
-      : obj.reduce((acc: any, current: LinkInput) => {
-          return current.type ? { ...acc, [`${current.type}-${current.id}`]: current.link } : acc
-        }, {})
-  }
-
-  getLinkInputId(position: number, property: string) {
-    let id = max(this.data.filter(({ type }, index) => type === property || index === position).map(({ id }) => id))
-    return id ? id + 1 : 1
+    this.data = mapSocialLinks(INPUT_MODE, this.value || defaultLinks, true)
   }
 
   onChange(position: number, property: string, value: string) {
-    // Get lastest id for this property
-    const id = this.getLinkInputId(position, property)
+    property === 'type' && (this.data[position].id = ++this.referenceData[value].id)
+
     set(this.data[position], property, value)
-    set(this.data[position], 'id', id)
-    this.$emit('change', this.mapping(OUTPUT_MODE, this.data))
+    this.$emit('change', mapSocialLinks(OUTPUT_MODE, this.data))
   }
 
   add() {
-    if (this.data.length < 6) {
+    if (this.data.length < 10) {
       this.data = [...this.data, { type: '', link: '', required: false, id: 0 }]
     }
   }
 
   remove(position: number) {
-    if (this.data.length > 1 && !this.data[position].required) {
+    if (!this.data[position].required) {
       this.data = this.data.filter((_, index) => index !== position)
     }
   }
