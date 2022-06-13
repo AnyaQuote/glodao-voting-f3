@@ -90,7 +90,7 @@
         <span>{{ $_get(vm.projectInfo, 'votingStart') | ddmmyyyy }}</span>
       </div>
       <div class="mb-7 font-18">
-        <span class="font-weight-bold">Your project voting will ends in: </span>
+        <span class="font-weight-bold">Your project voting will end in: </span>
         <span>{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
       </div>
 
