@@ -12,11 +12,11 @@
         placeholder="Choose platform"
       >
         <template v-slot:selection="{ item }">
-          <v-icon color="blue-diversity" class="mr-3">{{ $_get(icons, item) }}</v-icon>
+          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referenceData, `${item}.icon`) }}</v-icon>
           <span class="text-truncate text-subtitle-1 neutral-10--text text-capitalize">{{ item }}</span>
         </template>
         <template v-slot:item="{ item }">
-          <v-icon color="blue-diversity" class="mr-3">{{ $_get(icons, item) }}</v-icon>
+          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referenceData, `${item}.icon`) }}</v-icon>
           <span class="text-subtitle-1 neutral10--text text-capitalize">{{ item }}</span>
         </template>
       </app-select>
@@ -55,49 +55,82 @@ import { set } from 'lodash-es'
 interface LinkInput {
   type?: string
   link?: string
+  required?: boolean
+  id?: number
+}
+
+const defaultLinks = {
+  website: '',
+  telegram: '',
+  twitter: '',
+  discord: '',
+  whitepaper: '',
+}
+
+const INPUT_MODE = 'input'
+const OUTPUT_MODE = 'output'
+const mapSocialLinks = (mode: string, obj: LinkInput[], required = false) => {
+  return mode === INPUT_MODE
+    ? Object.entries(obj).reduce(
+        (acc: any, current) => [...acc, { type: current[0], link: current[1], id: 0, required }],
+        []
+      )
+    : obj.reduce((acc: any, current: LinkInput) => {
+        const typeName = current.id ? `${current.type}-${current.id}` : `${current.type}`
+        return current.type ? { ...acc, [typeName]: current.link } : acc
+      }, {})
 }
 
 @Observer
 @Component
 export default class SocialLinkFields extends Vue {
   @Prop({ required: true }) value!: any
-  readonly platforms = ['website', 'reddit', 'facebook', 'twitter', 'discord', 'telegram']
-  readonly icons = {
-    website: 'mdi-web',
-    reddit: 'fab fa-reddit',
-    facebook: 'fab fa-facebook',
-    twitter: 'fab fa-twitter',
-    discord: 'fab fa-discord',
-    telegram: 'fab fa-telegram',
+  readonly platforms = [
+    'website',
+    'reddit',
+    'facebook',
+    'twitter',
+    'discord',
+    'youtube',
+    'github',
+    'telegram',
+    'whitepaper',
+    'others',
+  ]
+  referenceData = {
+    website: { icon: 'fas fa-globe', id: 0 },
+    reddit: { icon: 'fab fa-reddit', id: 0 },
+    facebook: { icon: 'fab fa-facebook', id: 0 },
+    twitter: { icon: 'fab fa-twitter', id: 0 },
+    discord: { icon: 'fab fa-discord', id: 0 },
+    telegram: { icon: 'fab fa-telegram', id: 0 },
+    youtube: { icon: 'fab fa-youtube', id: 0 },
+    github: { icon: 'fab fa-github', id: 0 },
+    whitepaper: { icon: 'fas fa-file-alt', id: 0 },
+    others: { icon: 'fas fa-link', id: 0 },
   }
 
   data: LinkInput[] = []
 
   mounted() {
-    this.data = this.mapping('input', this.value || { website: '' })
+    this.data = mapSocialLinks(INPUT_MODE, this.value || defaultLinks, true)
   }
 
-  mapping(mode: string, obj: any) {
-    return mode === 'input'
-      ? Object.entries(obj).reduce((acc: any, current) => [...acc, { type: current[0], link: current[1] }], [])
-      : obj.reduce((acc: any, current: LinkInput) => {
-          return current.type ? { ...acc, [current.type]: current.link } : acc
-        }, {})
-  }
+  onChange(position: number, property: string, value: string) {
+    property === 'type' && (this.data[position].id = ++this.referenceData[value].id)
 
-  onChange(index, property: 'type' | 'link', value: string) {
-    set(this.data[index], property, value)
-    this.$emit('change', this.mapping('output', this.data))
+    set(this.data[position], property, value)
+    this.$emit('change', mapSocialLinks(OUTPUT_MODE, this.data))
   }
 
   add() {
-    if (this.data.length < 6) {
-      this.data = [...this.data, { type: '', link: '' }]
+    if (this.data.length < 10) {
+      this.data = [...this.data, { type: '', link: '', required: false, id: 0 }]
     }
   }
 
   remove(position: number) {
-    if (this.data.length > 1) {
+    if (!this.data[position].required) {
       this.data = this.data.filter((_, index) => index !== position)
     }
   }

@@ -165,12 +165,24 @@
         </div>
         <!-- ==== SOCIAL LINKS ==== -->
         <div class="col-md-4 col-12 d-flex justify-md-end justify-start align-center">
-          <v-btn v-for="([icon, link], index) in vm.socialLinks" :href="link" color="blue-diversity" :key="index" icon>
-            <v-icon small>fab fa-{{ icon }}</v-icon>
-          </v-btn>
-          <v-btn icon color="blue-diversity" :href="$_get(vm.poolStore, 'website')">
-            <icon-git-book />
-          </v-btn>
+          <v-tooltip top v-for="([icon, link], index) in vm.socialLinks" :key="index">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn :href="link" color="blue-diversity" v-bind="attrs" v-on="on" icon>
+                <v-icon small>{{ getDisplayIcon(icon) }}</v-icon>
+              </v-btn>
+            </template>
+            {{ link }}
+          </v-tooltip>
+
+          <!-- ==== WEBSITE LINKS ==== -->
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" icon color="blue-diversity" :href="$_get(vm.poolStore, 'website')">
+                <icon-git-book />
+              </v-btn>
+            </template>
+            {{ $_get(vm.poolStore, 'website') }}
+          </v-tooltip>
         </div>
       </div>
     </v-sheet>
@@ -183,7 +195,6 @@
 <script lang="ts">
 import { Component, Vue, Ref, Inject } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
-import VotingProgressCircle from './common/voting-progress-circle.vue'
 
 @Component({
   components: {
@@ -205,6 +216,16 @@ export default class VotingDetailOverview extends Vue {
 
   openDialog() {
     this.votePrepDialog.open()
+  }
+
+  getDisplayIcon(iconKey: string) {
+    const iconName = iconKey.split('-')[0]
+    if (iconName === 'whitepaper') {
+      return 'fas fa-file-alt'
+    } else if (iconName === 'others') {
+      return 'fas fa-link'
+    }
+    return `fab fa-${iconName}`
   }
 
   // openConfirmDialog(voteResult) {
