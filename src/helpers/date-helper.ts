@@ -63,13 +63,3 @@ export const isDateInRange = (isoCheckDate: string, isoStartDate: string, isoEnd
     return false
   }
 }
-
-/**
- * Get the datetime after added days in ISO string date
- * @param iso ISO 8061 format YYYY-MM-DDTHH:mm:ss000z
- * @param days number of days to add to origin date
- * @returns added date in ISO format
- */
-export const getAddedDateISO = (iso: string, days: number) => {
-  return iso ? moment(iso).add(days, 'd').toISOString() : ''
-}
