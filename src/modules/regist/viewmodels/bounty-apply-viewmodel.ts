@@ -14,7 +14,6 @@ import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
-import { getAddedDateISO } from '@/helpers/date-helper'
 
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
@@ -39,9 +38,12 @@ export class BountyApplyViewModel {
 
   tokenList = this.tokenTestnetList
 
-  @observable step = 1.1
-  @observable unlockedStep = 1.1
-  @observable projectInfo: ProjectInfo = {}
+  @observable step = 1.2
+  @observable unlockedStep = 1.2
+  @observable projectInfo: ProjectInfo = {
+    votingStart: moment().toISOString(),
+    votingEnd: moment().add(3, 'd').toISOString(),
+  }
   @observable creating = false
 
   @observable approved = false
@@ -189,8 +191,8 @@ export class BountyApplyViewModel {
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
-        votingStart: this.projectInfo.votingStart,
-        votingEnd: this.projectInfo.votingEnd,
+        votingStart: moment().toISOString(),
+        votingEnd: moment().add(3, 'd').toISOString(),
         startDate: this.projectInfo.startDate,
         endDate: this.projectInfo.endDate,
         data: {
@@ -245,13 +247,6 @@ export class BountyApplyViewModel {
       this.rewardTokenDecimals = token?.decimals || 18
     }
     this.projectInfo = set(this.projectInfo, property, value)
-    if (property === 'votingStart') {
-      this.projectInfo = set(
-        this.projectInfo,
-        'votingEnd',
-        getAddedDateISO(get(this.projectInfo, 'votingStart', ''), 3)
-      )
-    }
   }
 
   @action nextStep(value: number) {
