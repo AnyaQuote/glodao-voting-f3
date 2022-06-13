@@ -1,11 +1,10 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
-import { action, autorun, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
-import { set, kebabCase, toNumber } from 'lodash'
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
+import { set, kebabCase, toNumber, get } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
-import { authStore } from '@/stores/auth-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { Zero } from '@/constants'
@@ -15,6 +14,7 @@ import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
+import { getAddedDateISO } from '@/helpers/date-helper'
 
 export class ProjectInfo {
   projectName?: string
@@ -31,6 +31,9 @@ export class ProjectInfo {
   optionalTokenName?: string
   optionalRewardAmount?: string
   optionalTokenAddress?: string
+
+  votingStart?: string
+  votingEnd?: string
 
   startDate?: string
   endDate?: string
@@ -60,8 +63,8 @@ export class BountyApplyViewModel {
 
   tokenList = this.tokenTestnetList
 
-  @observable step = 1.1
-  @observable unlockedStep = 1.1
+  @observable step = 1.2
+  @observable unlockedStep = 1.2
   @observable projectInfo: ProjectInfo = {}
   @observable creating = false
 
@@ -82,11 +85,7 @@ export class BountyApplyViewModel {
   @observable votingHandler?: VotingHandler
 
   constructor() {
-    // if (authStore.isAuthenticated) {
     this.loadData()
-    // } else {
-    //   appProvider.router.push(RoutePaths.project_list)
-    // }
   }
 
   destroy() {
@@ -214,6 +213,8 @@ export class BountyApplyViewModel {
         unicodeName: kebabCase(this.projectInfo.projectName),
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
+        votingStart: this.projectInfo.votingStart,
+        votingEnd: this.projectInfo.votingEnd,
         startDate: this.projectInfo.startDate,
         endDate: this.projectInfo.endDate,
         data: {
@@ -267,8 +268,14 @@ export class BountyApplyViewModel {
       set(this.projectInfo, 'tokenName', token?.tokenName)
       this.rewardTokenDecimals = token?.decimals || 18
     }
-
-    set(this.projectInfo, property, value)
+    this.projectInfo = set(this.projectInfo, property, value)
+    if (property === 'votingStart') {
+      this.projectInfo = set(
+        this.projectInfo,
+        'votingEnd',
+        getAddedDateISO(get(this.projectInfo, 'votingStart', ''), 3)
+      )
+    }
   }
 
   @action nextStep(value: number) {
