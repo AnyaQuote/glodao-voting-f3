@@ -64,8 +64,10 @@
         <!-- ==================================== -->
       </div>
     </v-sheet>
+
     <!-- ------------------------------------- VOTE BUTTON  ------------------------------------------------------------------ -->
     <voting-detail-button @buttonClick="openDialog" />
+
     <!-- ------------------------------------- OVERVIEW ---------------------------------------------------------------------- -->
     <v-sheet class="pa-6 rounded-lg rounded-t-0">
       <div class="row">
@@ -76,7 +78,7 @@
         </div>
         <!-- ==== COUNT DOWN AND STATUS ==== -->
         <div class="col-md-4 col-12">
-          <countdown v-if="$_get(vm.poolStore, 'onVoting')" :to="$_get(vm.poolStore, 'endDate')" class="text-h5" />
+          <countdown v-if="$_get(vm.poolStore, 'onVoting')" :to="$_get(vm.poolStore, 'votingEnd')" class="text-h5" />
           <voting-status v-else />
         </div>
         <!-- ==== CARDS ==== -->
@@ -119,6 +121,7 @@
             </template>
             {{ $_get(vm.poolStore, 'website') }}
           </v-tooltip>
+          <!-- ======================= -->
         </div>
       </div>
     </v-sheet>
