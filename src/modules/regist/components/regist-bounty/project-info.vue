@@ -30,7 +30,7 @@
         <span class="font-18 font-weight-bold">Project logo</span>
         <v-spacer />
         <i class="text-subtitle-2 neutral-10--text font-weight-regular">
-          *Recommend resolution 1:1 (48x48, 64x64, 256x256)
+          *Recommend resolution 1:1 (48x48, 64x64, 80x80, 256x256)
         </i>
       </div>
       <app-file-upload
