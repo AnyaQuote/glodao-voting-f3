@@ -1,9 +1,7 @@
 <template>
   <v-sheet class="row ma-0">
     <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
-      <div class="font-weight-bold mb-2">
-        {{ dateLabel }}
-      </div>
+      <div class="font-weight-bold mb-2">{{ dateLabel }}<span class="app-red--text">*</span></div>
       <app-text-field
         readonly
         :rules="rules"
@@ -32,9 +30,7 @@
       </v-menu>
     </div>
     <div class="col-12 col-md-6 pa-0">
-      <div class="font-weight-bold mb-2">
-        {{ timeLabel }}
-      </div>
+      <div class="font-weight-bold mb-2">{{ timeLabel }}<span class="app-red--text">*</span></div>
       <app-text-field
         readonly
         :rules="rules"
