@@ -88,9 +88,11 @@
         :value="$_get(vm.projectInfo, 'votingStart')"
         @change="vm.changeProjectInfo('votingStart', $event)"
       />
-      <span class="font-weight-bold">Your project voting ends in: </span>
-      <span class="font-18">{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyyhhmma }}</span>
-      <div class="mb-7 font-italic neutral-10--text">*Voting duration ends in 3 days counting from the start date</div>
+      <div class="font-italic neutral-10--text">*Voting duration is 3 days counting from the voting start date</div>
+      <div class="mb-7">
+        <span class="font-weight-bold">Your project voting ends in: </span>
+        <span class="font-18">{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyyhhmma }}</span>
+      </div>
 
       <div>
         <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
