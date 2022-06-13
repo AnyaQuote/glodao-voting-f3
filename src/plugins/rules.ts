@@ -3,8 +3,8 @@ import moment from 'moment'
 import { formatFileSize } from '@/helpers'
 
 export const rules = {
-  required: (v: string | number) =>
-    (!!v && (typeof v !== 'string' || !!v.trim())) || v === 0 || 'This is required field',
+  required: (v: any) =>
+    (!!v && (typeof v !== 'string' || !!v.trim())) || (!!v && v instanceof File) || v === 0 || 'This is required field',
   maxLength: (length: number) => (v: string) => (v && v.length <= length) || !v || `Max ${length} characters`,
   minLength: (length: number) => (v: string) => (v && v.length >= length) || !v || `Min ${length} characters`,
   max: (number: number) => (v: number) => v <= number || `Must be lower than or equal to ${number}`,
@@ -38,12 +38,10 @@ export const rules = {
     'Invalid time ',
   isAddress: (v: string) => !v || web3.utils.isAddress(v.trim()) || 'Address not valid',
   maxSize: (size: number) => (value: any) =>
-    !value || value.size < size || `File size should be less than ${formatFileSize(size)} MB!`,
-  isImage: (v: File) =>
-    !v || (v instanceof File && /\.(gif|jpe?g|tiff?|png|webp|bmp|png)$/i.test(v.name)) || 'File is not an image.',
+    !value || value.size < size || `File size should be less than ${formatFileSize(size)}`,
+  isImage: (v: File) => !v || (v instanceof File && /^(image)\/.*$/.test(v.type)) || 'File is not an image.',
   isTextFile: (v: File) =>
     !v || (v instanceof File && /\.(csv|me|readme|te?xt|rtfd?|docx?)$/i.test(v.name)) || 'Can not read this text file.',
-  fileRequired: (v: any) => !!v || (v instanceof File && v.size > 0) || 'File is required',
 }
 
 export const appRules = {}
