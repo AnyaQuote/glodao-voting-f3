@@ -26,18 +26,30 @@
         placeholder="Enter project's short description"
       ></app-textarea>
 
-      <div class="font-18 font-weight-bold">Project logo</div>
+      <div class="d-flex mt-6 mb-2 align-end">
+        <span class="font-18 font-weight-bold">Project logo</span>
+        <v-spacer />
+        <i class="text-subtitle-2 neutral-10--text font-weight-regular">
+          *Recommend resolution 1:1 (48x48, 64x64, 256x256)
+        </i>
+      </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.required, $rules.maxSize(15000000)]"
+        :rules="[$rules.maxSize(15000000), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectLogo', $event)"
       />
 
-      <div class="font-18 font-weight-bold mt-6">Project cover</div>
+      <div class="d-flex mt-6 mb-2 align-end">
+        <span class="font-18 font-weight-bold">Project cover</span>
+        <v-spacer />
+        <i class="text-subtitle-2 neutral-10--text font-weight-regular"
+          >*Recommend resolution 3:2 (2160×1440, 2560×1700)</i
+        >
+      </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.required, $rules.maxSize(15000000)]"
+        :rules="[$rules.maxSize(15000000), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'projectLogo')"
         @change="vm.changeProjectInfo('projectCover', $event)"
       />
@@ -99,6 +111,7 @@ export default class ProjectInfo extends Vue {
   @Ref('project-info-form') form
   valid = false
   fields = ['Gaming', 'NFT', 'Finance']
+
   submit() {
     this.form.validate() && this.vm.nextStep(1.2)
   }
