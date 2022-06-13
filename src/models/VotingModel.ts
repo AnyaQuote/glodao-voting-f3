@@ -24,5 +24,7 @@ export interface VotingPool {
   chain?: string
   chainId?: string
   rewardAmount?: string
+  votingStart?: string
+  votingEnd?: string
   data?: Metadata
 }
