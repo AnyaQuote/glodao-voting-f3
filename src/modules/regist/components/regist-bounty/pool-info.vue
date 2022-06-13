@@ -10,7 +10,8 @@
     </v-chip>
 
     <v-form ref="fund-info-form" v-model="valid" class="pa-6">
-      <div class="blue--text font-18 font-weight-bold">Reward Information</div>
+      <!-- ----------------------------------- REWARD INFORMATION ----------------------------------------- -->
+      <div class="blue-diversity--text font-18 font-weight-bold">Reward Information</div>
       <!-- <div class="font-18 font-weight-bold mb-2">Token reward address</div>
       <app-text-field
         :rules="[$rules.required, $rules.isAddress]"
@@ -20,7 +21,7 @@
       ></app-text-field> -->
       <div class="d-flex flex-column flex-sm-row">
         <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward amount</div>
+          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
           <app-text-field
             :rules="[$rules.required, $rules.floatNumberOnly]"
             :value="$_get(vm.projectInfo, 'rewardAmount')"
@@ -30,7 +31,7 @@
           ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Token reward</div>
+          <div class="font-18 font-weight-bold mb-2">Token reward<span class="app-red--text">*</span></div>
           <v-autocomplete
             item-text="tokenName"
             item-value="tokenAddress"
@@ -45,11 +46,12 @@
         </div>
       </div>
 
-      <div>
+      <!-- ----------------------------------- PROJECT REWARD --------------------------------------------- -->
+      <div class="mt-2">
         <span class="font-18 font-weight-bold blue-diversity--text">Project reward</span>
         <i class="neutral-10--text ml-2">(optional)</i>
       </div>
-      <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+      <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
       <app-text-field
         :rules="[$rules.isAddress]"
         :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
@@ -58,7 +60,7 @@
       ></app-text-field>
       <div class="d-flex flex-column flex-sm-row">
         <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward amount</div>
+          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
           <app-text-field
             :rules="[$rules.floatNumberOnly]"
             :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
@@ -67,7 +69,7 @@
           ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
+          <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
           <app-text-field
             :value="$_get(vm.projectInfo, 'optionalTokenName')"
             :loading="vm.tokenInfoLoading"
@@ -77,7 +79,8 @@
         </div>
       </div>
 
-      <div>
+      <!-- ----------------------------------- VOTING DURATION --------------------------------------------- -->
+      <div class="mt-2">
         <span class="font-18 font-weight-bold blue-diversity--text">Voting duration</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
@@ -89,12 +92,13 @@
         <span class="font-weight-bold">Your project voting will start in: </span>
         <span>{{ $_get(vm.projectInfo, 'votingStart') | ddmmyyyy }}</span>
       </div>
-      <div class="mb-7 font-18">
+      <div class="font-18">
         <span class="font-weight-bold">Your project voting will end in: </span>
         <span>{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
       </div>
 
-      <div>
+      <!-- ------------------------------------ CAMPAIGN INFORMATION --------------------------------------- -->
+      <div class="mt-7">
         <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
@@ -119,7 +123,7 @@
       />
 
       <div class="flex-grow-1 mb-2">
-        <span class="font-weight-bold font-18 mr-1">Total missions</span>
+        <span class="font-weight-bold font-18 mr-1">Total missions<span class="app-red--text">*</span></span>
       </div>
       <app-text-field
         class="font-18"
@@ -128,6 +132,7 @@
         @input="vm.changeProjectInfo('totalMissions', $event)"
         placeholder="Enter number of missions"
       ></app-text-field>
+      <!-- ------------------------------------------------------------------------------------------------- -->
 
       <v-btn
         class="white--text font-weight-600 text-none elevation-0 text-subtitle-1"
