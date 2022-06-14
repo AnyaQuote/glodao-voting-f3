@@ -11,47 +11,14 @@
 
       <!-- ---------------- SKELETON LOADER ---------------- -->
       <v-col v-if="vm.pageLoading" cols="10">
-        <v-sheet class="neutral100--bg rounded-lg pb-7" outlined
-          ><div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-            <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
-          </div>
-          <v-divider />
-          <div class="px-4 mt-7">
-            <v-skeleton-loader class="mb-7" type="image" height="80" />
-            <v-skeleton-loader class="mb-7" type="image" height="120" />
-            <v-skeleton-loader class="mb-7" type="image" height="80" />
-            <v-skeleton-loader class="mb-7" type="image" height="80" />
-            <v-skeleton-loader type="image" height="80" />
-          </div>
-        </v-sheet>
+        <mission-skeleton-form />
       </v-col>
 
       <!-- ---------------- FORM CONTENT ---------------- -->
-      <v-col v-else cols="10">
-        <v-sheet class="neutral100--bg rounded-lg" outlined>
-          <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-            <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
-          </div>
-          <v-divider />
-          <v-form v-model="valid" class="pa-7">
-            <!-- MISSION, REWARD AND TIME INFORMATION -->
-            <mission-info />
-            <!-- MISSION SETTING -->
-            <mission-setting />
-            <v-btn
-              class="text-none mt-7"
-              :class="valid && 'linear-blue--bg white--text'"
-              :loading="vm.btnLoading"
-              :disabled="!valid"
-              @click="submit"
-              height="40"
-              depressed
-              block
-            >
-              Create
-            </v-btn>
-          </v-form>
-        </v-sheet>
+      <v-col v-else cols="8">
+        <mission-info v-if="vm.step === 1" />
+        <mission-lte-setting v-else-if="vm.step === 2 && vm.missionInfo.type === 'lte'" />
+        <mission-social-setting v-else />
       </v-col>
     </v-row>
   </v-container>
@@ -67,6 +34,9 @@ import { get } from 'lodash-es'
   components: {
     'mission-info': () => import('../components/new-mission/mission-info.vue'),
     'mission-setting': () => import('../components/new-mission/mission-setting.vue'),
+    'mission-skeleton-form': () => import('../components/new-mission/mission-skeleton-form.vue'),
+    'mission-lte-setting': () => import('../components/new-mission/mission-lte-setting.vue'),
+    'mission-social-setting': () => import('../components/new-mission/mission-social-setting.vue'),
   },
 })
 export default class MissionForm extends Vue {

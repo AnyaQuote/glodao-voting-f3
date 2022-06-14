@@ -13,6 +13,8 @@ import { walletStore } from '@/stores/wallet-store'
 import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
 export class NewMissionViewModel {
+  @observable step = 1
+
   @observable pool: VotingPool = {}
   @observable missionInfo = missionInfoDefault
   @observable joinTelegram = joinTelegramDef
@@ -228,6 +230,7 @@ const missionInfoDefault = {
   maxParticipants: '',
   startDate: '',
   endDate: '',
+  type: '',
 }
 
 const learnToEarnDefault: LearnToEarn = {
