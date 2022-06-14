@@ -169,13 +169,12 @@ import { Observer } from 'mobx-vue'
 })
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
-  valid = false
+  valid = true
   next() {
-    //
-    console.log(this.vm.missionInfo)
+    this.valid && this.vm.changeStep(2)
   }
   back() {
-    //
+    this.$router.go(-1)
   }
   get isActive() {
     return (type: string) => (this.vm.missionInfo.type === type ? 'active-type' : '')
