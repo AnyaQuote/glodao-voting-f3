@@ -11,43 +11,41 @@ import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { walletStore } from '@/stores/wallet-store'
 import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
+import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 
 export class NewMissionViewModel {
   @observable step = 1
 
   @observable pool: VotingPool = {}
   @observable missionInfo = missionInfoDefault
-  @observable joinTelegram = joinTelegramDef
-  @observable followTwitter = followTwitterDef
-  @observable quoteTweet = quoteTweetDef
-  @observable commentTweet = commentTweetDef
+  @observable joinTelegram = joinTelegramDefault
+  @observable followTwitter = followTwitterDefault
+  @observable quoteTweet = quoteTweetDefault
+  @observable commentTweet = commentTweetDefault
+  @observable telegramChat = telegramChatDefault
   @observable learnToEarn = learnToEarnDefault
   @observable pageLoading = false
   @observable btnLoading = false
 
-  _disposer: IReactionDisposer
   // PREVIEW QUIZ VARIABLES
   @observable previewQuiz: PreviewQuiz[] = []
   previewSampleSize = 10
 
   constructor(unicodeName: string) {
-    this._disposer = reaction(
-      () => walletStore.account,
-      (account) => {
-        account && this.fetchProjectByUnicode({ unicodeName, ownerAddress: account })
-      },
-      { fireImmediately: true }
-    )
+    this.fetchProjectByUnicode(unicodeName)
   }
 
   destroy() {
-    this._disposer()
+    //
   }
 
-  @asyncAction *fetchProjectByUnicode(query: { unicodeName: string; ownerAddress: string }) {
+  @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
-      const res = yield appProvider.api.voting.find(query, { _limit: 1 })
+
+      yield waitForGlobalLoadingFinished()
+
+      const res = yield appProvider.api.voting.find({ unicodeName, ownerAddress: walletStore.account }, { _limit: 1 })
       if (isEmpty(res)) {
         appProvider.router.replace(RoutePaths.not_found)
       }
@@ -63,29 +61,33 @@ export class NewMissionViewModel {
     this.missionInfo = set(this.missionInfo, property, value)
   }
   @action.bound changeJoinTelegramSetting(property, value) {
-    set(this.joinTelegram, property, value)
+    this.joinTelegram = set(this.joinTelegram, property, value)
   }
 
   @action.bound changeFollowTwitterSetting(property, value) {
-    set(this.followTwitter, property, value)
+    this.followTwitter = set(this.followTwitter, property, value)
   }
 
   @action.bound changeQuoteTweetSetting(property, value) {
-    set(this.quoteTweet, property, value)
-    if (isEqual(property, 'setting.link')) {
-      set(this.quoteTweet, 'setting.embedLink', value)
-    }
+    isEqual(property, 'setting.link') && (this.quoteTweet = set(this.quoteTweet, 'setting.embedLink', value))
+    this.quoteTweet = set(this.quoteTweet, property, value)
   }
 
   @action.bound changeCommentTweetSetting(property, value) {
-    set(this.commentTweet, property, value)
-    if (isEqual(property, 'setting.link')) {
-      set(this.commentTweet, 'setting.embedLink', value)
-    }
+    isEqual(property, 'setting.link') && (this.commentTweet = set(this.commentTweet, 'setting.embedLink', value))
+    this.commentTweet = set(this.commentTweet, property, value)
+  }
+
+  @action.bound changeTelegramChatSetting(property, value) {
+    this.telegramChat = set(this.telegramChat, property, value)
   }
 
   @action.bound changeLearnToEarnInfo(property, value) {
-    set(this.learnToEarn, property, value)
+    this.learnToEarn = set(this.learnToEarn, property, value)
+  }
+
+  @action changeStep(step: number) {
+    this.step = step
   }
 
   @asyncAction *getQuizId() {
@@ -220,6 +222,16 @@ export class NewMissionViewModel {
   @computed get priorityAmount() {
     return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
   }
+
+  @computed get isValid() {
+    return (formState) =>
+      formState &&
+      (this.joinTelegram.enabled ||
+        this.followTwitter.enabled ||
+        this.quoteTweet.enabled ||
+        this.commentTweet.enabled ||
+        this.telegramChat.enabled)
+  }
 }
 
 const missionInfoDefault = {
@@ -244,7 +256,7 @@ const learnToEarnDefault: LearnToEarn = {
   },
 }
 
-const joinTelegramDef = {
+const joinTelegramDefault = {
   enabled: false,
   setting: {
     type: 'follow',
@@ -254,12 +266,12 @@ const joinTelegramDef = {
   },
 }
 
-const followTwitterDef = {
+const followTwitterDefault = {
   enabled: false,
   setting: { type: 'follow', page: 'GloDAO', required: true, link: '' },
 }
 
-const quoteTweetDef = {
+const quoteTweetDefault = {
   enabled: false,
   setting: {
     type: 'quote',
@@ -272,7 +284,19 @@ const quoteTweetDef = {
   },
 }
 
-const commentTweetDef = {
+const commentTweetDefault = {
+  enabled: false,
+  setting: {
+    type: 'comment',
+    page: 'GloDAO',
+    content: 'GloDAO',
+    embedLink: '',
+    link: '',
+    required: true,
+  },
+}
+
+const telegramChatDefault = {
   enabled: false,
   setting: {
     type: 'comment',
