@@ -1,5 +1,5 @@
 <template>
-  <v-sheet outlined v-ripple class="d-flex align-center rounded px-5">
+  <v-sheet outlined class="d-flex align-center rounded px-5">
     <div v-if="isImageFile" class="flex-shrink-0 py-5 mr-5">
       <v-img v-if="preview.value" :src="preview.value" class="rounded" max-with="50" aspect-ratio="1"></v-img>
       <v-img

@@ -107,7 +107,7 @@
       <div class="font-18 font-weight-bold mt-6">Quiz cover</div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.required, $rules.maxSize(15000000)]"
+        :rules="[$rules.required, $rules.maxSize(1000000)]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
@@ -118,7 +118,7 @@
       </div>
       <app-file-upload
         isQuizFile
-        :rules="[$rules.required, $rules.maxSize(15000000)]"
+        :rules="[$rules.required, $rules.maxSize(1000000)]"
         @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
       />
       <v-btn
@@ -132,7 +132,7 @@
 
       <div class="d-flex font-18 mt-6 font-weight-bold mb-2">Document (fileName.md)</div>
       <app-file-upload
-        :rules="[$rules.required, $rules.maxSize(15000000)]"
+        :rules="[$rules.required, $rules.maxSize(1000000)]"
         @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
       />
     </switch-field>
