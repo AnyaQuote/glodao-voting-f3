@@ -216,11 +216,7 @@ export class NewMissionViewModel {
   }
 
   @computed get priorityAmount() {
-    try {
-      return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
-    } catch (error) {
-      return Zero
-    }
+    return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
   }
 }
 
