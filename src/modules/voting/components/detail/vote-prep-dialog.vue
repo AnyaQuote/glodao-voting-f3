@@ -25,7 +25,7 @@
       <!-- -------------------------------------- RADIO BUTTON GROUP (YES/NO) -------------------------------------- -->
       <div>
         <v-radio-group mandatory v-model="result">
-          <v-sheet class="rounded-lg rounded-b-0 mb-0" :class="result && 'blue-2'" outlined>
+          <v-sheet class="rounded-lg rounded-b-0 mb-0" :class="{ 'active-bg': result }" outlined>
             <v-radio class="ma-4" :value="true">
               <template v-slot:label>
                 <div>
@@ -36,7 +36,7 @@
             </v-radio>
           </v-sheet>
 
-          <v-sheet class="rounded-lg rounded-t-0 mt-0" :class="!result && 'blue-2'" outlined>
+          <v-sheet class="rounded-lg rounded-t-0 mt-0" :class="{ 'active-bg': !result }" outlined>
             <v-radio class="ma-4" :value="false">
               <template v-slot:label>
                 <v-chip class="mr-1" color="error">👎NO</v-chip>
@@ -96,6 +96,9 @@ export default class VotePrepDialog extends Vue {
   & > div:not(div:first-child) {
     margin-top: em(8);
     margin-bottom: em(8);
+  }
+  .active-bg {
+    background-color: var(--v-blue-2-base) !important;
   }
 }
 </style>
