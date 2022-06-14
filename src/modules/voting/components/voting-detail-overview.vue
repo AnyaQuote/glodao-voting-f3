@@ -66,7 +66,7 @@
     </v-sheet>
 
     <!-- ------------------------------------- VOTE BUTTON  ------------------------------------------------------------------ -->
-    <voting-detail-button @buttonClick="openDialog" />
+    <voting-detail-button />
 
     <!-- ------------------------------------- OVERVIEW ---------------------------------------------------------------------- -->
     <v-sheet class="pa-6 rounded-lg rounded-t-0">
@@ -129,8 +129,6 @@
       </div>
     </v-sheet>
     <!-- ------------------------------------------------------------------------------------------------------------------- -->
-    <vote-prep-dialog ref="vote-prep-dialog" />
-    <!-- <vote-confirm-dialog ref="vote-confirm-dialog" :voteResult="voteResult" /> -->
   </v-sheet>
 </template>
 
@@ -145,7 +143,6 @@ import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
     countdown: () => import('../components/common/countdown.vue'),
     'icon-git-book': () => import('@/assets/icons/icon-git-book.vue'),
     'voting-detail-button': () => import('../components/detail/voting-detail-button.vue'),
-    'vote-confirm-dialog': () => import('../components/detail/vote-confirm-dialog.vue'),
     'vote-prep-dialog': () => import('@/modules/voting/components/detail/vote-prep-dialog.vue'),
     'voting-info-cards': () => import('../components/detail/voting-info-cards.vue'),
     'voting-status': () => import('../components/detail/voting-status.vue'),
@@ -153,19 +150,11 @@ import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
 })
 export default class VotingDetailOverview extends Vue {
   @Ref('vote-prep-dialog') votePrepDialog
-  // @Ref('vote-confirm-dialog') voteConfirmDialog
   @Inject() vm!: VotingDetailViewModel
-
-  voteResult = ''
 
   openDialog() {
     this.votePrepDialog.open()
   }
-
-  // openConfirmDialog(voteResult) {
-  //   this.voteResult = voteResult
-  //   this.voteConfirmDialog.open()
-  // }
 
   getDisplayIcon(iconKey: string) {
     const iconName = iconKey.split('-')[0]

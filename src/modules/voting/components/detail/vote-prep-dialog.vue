@@ -5,30 +5,28 @@
         <span class="font-weight-bold text-h6">Cast your vote</span>
         <v-btn icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
       </div>
+
+      <!-- -------------------------------------- PROJECT NAME AND LOGO ------------------------------------------ -->
       <div class="d-flex align-center">
-        <v-img max-width="48" aspect-ratio="1" contain src="@/assets/icons/voting-trending--logo.png" />
-        <span class="ml-2 text-h5 font-weight-bold">Dragon Gaming</span>
+        <v-img max-width="48" aspect-ratio="1" contain src="$_get(vm.poolStore, 'projectLogo')" />
+        <span class="ml-2 text-h5 font-weight-bold"> {{ $_get(vm.poolStore, 'projectName') }}</span>
       </div>
       <div class="d-flex align-center">
         <div class="d-flex flex-column justify-center flex-grow-1">
           <div class="text-subtitle-1">Your connected wallet</div>
           <div class="d-flex align-center text-subtitle-1 font-weight-bold">
             <icon-chain />
-            <span class="ml-1">{{ walletStore.shortAccount }}</span>
+            <span class="ml-1">{{ walletStore.account | shortAddress(10, 10) }}</span>
           </div>
-        </div>
-        <div>
-          <v-sheet outlined class="rounded d-flex align-center pa-3">
-            <span class="mr-1">TRIBE</span>
-            <v-icon>mdi-fingerprint</v-icon>
-          </v-sheet>
         </div>
         <v-spacer />
       </div>
+
+      <!-- -------------------------------------- RADIO BUTTON GROUP (YES/NO) -------------------------------------- -->
       <div>
-        <v-radio-group v-model="result">
-          <v-sheet class="blue lighten-4 rounded-lg rounded-b-0 mb-0" outlined>
-            <v-radio class="ma-4" value="yes">
+        <v-radio-group mandatory v-model="result">
+          <v-sheet class="rounded-lg rounded-b-0 mb-0" :class="result && 'blue-2'" outlined>
+            <v-radio class="ma-4" :value="true">
               <template v-slot:label>
                 <div>
                   <v-chip class="mr-1" color="green">👍YES</v-chip>
@@ -38,8 +36,8 @@
             </v-radio>
           </v-sheet>
 
-          <v-sheet class="rounded-lg rounded-t-0 mt-0" outlined>
-            <v-radio class="ma-4" value="no">
+          <v-sheet class="rounded-lg rounded-t-0 mt-0" :class="!result && 'blue-2'" outlined>
+            <v-radio class="ma-4" :value="false">
               <template v-slot:label>
                 <v-chip class="mr-1" color="error">👎NO</v-chip>
                 <span class="text-subtitle-1 font-weight-medium">We don't want the project to launch</span>
@@ -48,9 +46,8 @@
           </v-sheet>
         </v-radio-group>
       </div>
-      <div class="d-flex flex-column">
-        <span>*By voting, you will burn 0.002 GLD in your staked</span>
-      </div>
+
+      <!-- -------------------------------------- SUBMIT BUTTON ------------------------------------------------------ -->
       <div>
         <v-btn
           block
@@ -62,12 +59,14 @@
         </v-btn>
       </div>
     </v-sheet>
+    <!-- ------------------------------------------------------------------------------------------------------------- -->
   </app-dialog>
 </template>
 
 <script lang="ts">
 import { walletStore } from '@/stores/wallet-store'
-import { Component, Vue, Ref } from 'vue-property-decorator'
+import { Component, Vue, Ref, Inject } from 'vue-property-decorator'
+import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 
 @Component({
   components: {
@@ -75,16 +74,19 @@ import { Component, Vue, Ref } from 'vue-property-decorator'
   },
 })
 export default class VotePrepDialog extends Vue {
+  @Inject() vm!: VotingDetailViewModel
   @Ref('dialog') dialog
+
   walletStore = walletStore
-  result = 'yes'
+  result = true
+  isLoading = false
 
   open() {
     this.dialog.open()
   }
 
   close() {
-    this.dialog.close()
+    !this.isLoading && this.dialog.close()
   }
 }
 </script>

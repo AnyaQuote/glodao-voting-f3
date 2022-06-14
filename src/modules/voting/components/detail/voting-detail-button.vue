@@ -33,31 +33,40 @@
           class="white--text rounded-lg"
           depressed
           :disabled="vm.poolStore.completed || !walletStore.account"
-          @click="$emit('buttonClick')"
+          @click="openVotePrepareDialog"
         >
           <span class="px-5">Cast your vote</span>
         </v-btn>
       </v-col>
     </v-row>
+
+    <vote-prep-dialog ref="vote-prep-dialog" />
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { walletStore } from '@/stores/wallet-store'
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { Component, Vue, Inject, Ref } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 
 @Component({
   components: {
     'icon-chain': () => import('@/assets/icons/icon-chain.vue'),
     ConnectWallet: () => import('@/components/connect-wallet.vue'),
+    'vote-prep-dialog': () => import('@/modules/voting/components/detail/vote-prep-dialog.vue'),
   },
 })
 export default class VotingDetailButton extends Vue {
   @Inject() vm!: VotingDetailViewModel
+  @Ref('vote-prep-dialog') dialog
+
   connected = false
   voted = true
   walletStore = walletStore
+
+  openVotePrepareDialog() {
+    this.dialog.open()
+  }
 }
 </script>
 
