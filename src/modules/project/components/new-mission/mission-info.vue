@@ -27,7 +27,7 @@
       </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.required, $rules.maxSize(15000000), $rules.isImage]"
+        :rules="[$rules.required, $rules.maxSize(1000000), $rules.isImage]"
         @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
         class="mt-2"
       />
