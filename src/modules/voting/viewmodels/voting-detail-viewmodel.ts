@@ -132,7 +132,7 @@ export class VotingDetailViewModel {
   }
 
   @computed get socialLinks() {
-    return Object.entries(get(this.poolStore, 'socialLinks')).filter((item) => item[0] !== 'website')
+    return Object.entries(get(this.poolStore, 'socialLinks', [])).filter((item) => item[0] !== 'website')
   }
 
   @computed get stakeBalanceInsufficient() {

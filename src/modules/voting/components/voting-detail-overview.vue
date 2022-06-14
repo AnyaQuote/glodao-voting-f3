@@ -101,8 +101,11 @@
           }}</v-chip>
         </div>
 
-        <!-- ==== SOCIAL LINKS ==== -->
-        <div class="col-md-4 col-12 d-flex justify-md-end justify-start align-center">
+        <div
+          v-if="!!$_get(vm.poolStore, 'socialLinks')"
+          class="col-md-4 col-12 d-flex justify-md-end justify-start align-center"
+        >
+          <!-- ==== SOCIAL LINKS ==== -->
           <v-tooltip top v-for="([icon, link], index) in vm.socialLinks" :key="index">
             <template v-slot:activator="{ on, attrs }">
               <v-btn :href="link" color="blue-diversity" v-bind="attrs" v-on="on" icon>
