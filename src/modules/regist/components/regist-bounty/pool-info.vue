@@ -51,7 +51,7 @@
         <span class="font-18 font-weight-bold blue-diversity--text">Project reward</span>
         <i class="neutral-10--text ml-2">(optional)</i>
       </div>
-      <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
+      <div class="font-18 font-weight-bold mb-2">Token reward address</div>
       <app-text-field
         :rules="[$rules.isAddress]"
         :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
@@ -60,7 +60,7 @@
       ></app-text-field>
       <div class="d-flex flex-column flex-sm-row">
         <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
+          <div class="font-18 font-weight-bold mb-2">Reward amount</div>
           <app-text-field
             :rules="[$rules.floatNumberOnly]"
             :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
@@ -69,7 +69,7 @@
           ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
+          <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
           <app-text-field
             :value="$_get(vm.projectInfo, 'optionalTokenName')"
             :loading="vm.tokenInfoLoading"
