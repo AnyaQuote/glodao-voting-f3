@@ -9,7 +9,7 @@
       <div class="font-weight-medium">Total reward</div>
       <div class="d-flex align-center">
         <span class="text-h6 font-weight-bold"
-          >{{ $_get(vm.poolStore, 'amount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
+          >{{ $_get(vm.poolStore, 'requiredAmount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
         </span>
         <v-img src="@/assets/icons/crypto.svg" class="ml-2" max-width="24" max-height="24" />
       </div>
@@ -36,20 +36,6 @@
       <div class="d-flex align-center">
         <span class="text-h6 font-weight-bold"
           >{{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}</span
-        >
-        <v-img src="@/assets/icons/crypto.svg" class="ml-2" max-width="24" max-height="24" />
-      </div>
-    </v-sheet>
-    <!-- Total reward value item -->
-    <v-sheet
-      class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
-      elevation="3"
-      outlined
-    >
-      <div class="font-weight-medium">Total reward value</div>
-      <div class="d-flex align-center">
-        <span class="text-h6 font-weight-bold"
-          >{{ $_get(vm.poolStore, 'amount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}</span
         >
         <v-img src="@/assets/icons/crypto.svg" class="ml-2" max-width="24" max-height="24" />
       </div>

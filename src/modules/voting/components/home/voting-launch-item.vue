@@ -18,7 +18,9 @@
                 <div class="col-6 text-center">
                   <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <span class="mr-1">{{ $_get(pool, 'amount') | formatNumber }} {{ $_get(pool, 'tokenName') }}</span>
+                    <span class="mr-1"
+                      >{{ $_get(pool, 'requiredAmount') | formatNumber }} {{ $_get(pool, 'tokenName') }}</span
+                    >
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
@@ -29,8 +31,8 @@
                     <v-img src="@/assets/icons/bulleyes.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
-                <div class="col-6 text-center">
-                  <span class="text-subtitle-2 white--text">Total reward </span>
+                <div class="col-12 text-center">
+                  <span class="text-subtitle-2 white--text">Mission reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     <span class="mr-1">
                       {{ $_get(pool, 'rewardPerMission') | formatNumber }} {{ $_get(pool, 'tokenName') }}
@@ -38,14 +40,15 @@
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
                 </div>
-                <div class="col-6 text-center">
+
+                <!-- <div class="col-6 text-center">
                   <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
-                    <!-- TODO: Hard code rewardValue -->
-                    <span class="mr-1">{{ $_get(pool, 'amount') | formatNumber }}</span>
+                    
+                    <span class="mr-1">{{ $_get(pool, 'requiredAmount') | formatNumber }}</span>
                     <v-img src="@/assets/icons/bsc-icon.svg" max-width="24" max-height="24" />
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
