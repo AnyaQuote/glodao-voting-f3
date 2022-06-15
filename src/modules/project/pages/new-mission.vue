@@ -33,7 +33,6 @@ import { get } from 'lodash-es'
 @Component({
   components: {
     'mission-info': () => import('../components/new-mission/mission-info.vue'),
-    'mission-setting': () => import('../components/new-mission/mission-setting.vue'),
     'mission-skeleton-form': () => import('../components/new-mission/mission-skeleton-form.vue'),
     'mission-lte-setting': () => import('../components/new-mission/mission-lte-setting.vue'),
     'mission-social-setting': () => import('../components/new-mission/mission-social-setting.vue'),
