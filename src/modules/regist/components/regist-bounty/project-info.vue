@@ -36,7 +36,7 @@
       <app-file-upload
         isImageFile
         :rules="[$rules.maxSize(1000000), $rules.isImage, $rules.required]"
-        :value="$_get(vm.projectInfo, 'projectLogo')"
+        :value="$_get(vm.projectInfo, 'projectLogo', null)"
         @change="vm.changeProjectInfo('projectLogo', $event)"
       />
 
@@ -50,7 +50,7 @@
       <app-file-upload
         isImageFile
         :rules="[$rules.maxSize(1000000), $rules.isImage, $rules.required]"
-        :value="$_get(vm.projectInfo, 'projectLogo')"
+        :value="$_get(vm.projectInfo, 'projectCover', null)"
         @change="vm.changeProjectInfo('projectCover', $event)"
       />
 
