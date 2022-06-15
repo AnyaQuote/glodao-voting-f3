@@ -1,22 +1,31 @@
 <template>
   <v-sheet class="rounded-lg" outlined>
-    <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-      <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
+    <div class="pa-6 text-center rounded-lg rounded-b-0 blue-2 d-flex align-center">
+      <div class="d-flex align-center cursor-pointer" @click="back">
+        <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
+        <span class="text-subtitle-2">Create mission</span>
+      </div>
+      <div
+        class="p-absolute text-h5 font-weight-bold blue-diversity--text"
+        style="left: 50%; transform: translateX(-50%)"
+      >
+        Learn to earn
+      </div>
     </div>
     <v-divider />
 
     <v-form v-model="valid" class="pa-7">
-      <div class="title font-weight-bold bluePrimary--text">Mission setting</div>
+      <div class="title font-weight-bold blue-diversity--text">Mission setting</div>
       <!-- ---------------------------------------------------------------------------------------------------- -->
       <switch-field
-        class="mt-4"
         readonly
+        class="mt-4"
         type="learn-to-earn"
         title="Learn to earn"
         subtitle="Learn document and answer question"
         :value="$_get(vm.learnToEarn, 'enabled')"
       >
-        <div class="font-18 font-weight-bold">Task name</div>
+        <div class="font-18 font-weight-bold">Task name<span class="app-red--text">*</span></div>
         <app-text-field
           :rules="[$rules.required]"
           :value="$_get(vm.learnToEarn, 'setting.name')"
@@ -25,7 +34,7 @@
           placeholder="Enter task name"
         />
 
-        <div class="font-18 font-weight-bold mt-6">Description</div>
+        <div class="font-18 font-weight-bold mt-6">Description<span class="app-red--text">*</span></div>
         <app-textarea
           :rules="[$rules.required]"
           :value="$_get(vm.learnToEarn, 'setting.description')"
@@ -34,16 +43,23 @@
           placeholder="Enter short description that describes the mission"
         />
 
-        <div class="font-18 font-weight-bold mt-7">Quiz cover</div>
+        <div class="mt-7 d-flex align-end">
+          <span class="font-18 font-weight-bold">Mission cover</span>
+          <v-spacer />
+          <i class="text-subtitle-2 neutral-10--text font-weight-regular">
+            *Recommend resolution 3:2 (2160×1440, 2560×1700)
+          </i>
+        </div>
         <app-file-upload
           isImageFile
-          :rules="[$rules.required, $rules.maxSize(1000000), $rules.isImage]"
+          :rules="[$rules.maxSize(1000000), $rules.isImage]"
+          :value="$_get(vm.learnToEarn, 'setting.imageCover')"
           @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
           class="mt-2"
         />
 
         <div class="font-18 mt-7 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
-          <span class="font-weight-bold">Quiz file (fileName.csv)</span>
+          <span class="font-weight-bold">Quiz file<span class="app-red--text">*</span>&nbsp;(fileName.csv)</span>
           <v-spacer />
           <span class="app-blue--text cursor-pointer text-subtitle-2" @click="download"
             >Download the quiz template</span
@@ -52,10 +68,11 @@
         <app-file-upload
           isQuizFile
           :rules="[$rules.required, $rules.maxSize(1000000)]"
+          :value="$_get(vm.learnToEarn, 'setting.quizFile')"
           @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
         />
         <v-btn
-          v-if="$_get(vm.learnToEarn, 'setting.quizFile')"
+          v-if="!!$_get(vm.learnToEarn, 'setting.quizFile')"
           class="mt-2 blue-diversity white--text"
           @click="openQuizPreviewDialog"
           depressed
@@ -63,9 +80,12 @@
           Preview your quiz
         </v-btn>
 
-        <div class="d-flex font-18 mt-7 font-weight-bold mb-2">Document (fileName.md)</div>
+        <div class="d-flex font-18 mt-7 font-weight-bold mb-2">
+          Document<span class="app-red--text">*</span>&nbsp;(fileName.md)
+        </div>
         <app-file-upload
           :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
+          :value="$_get(vm.learnToEarn, 'setting.learningFile')"
           @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
         />
       </switch-field>
@@ -114,7 +134,7 @@ export default class MissionLearnToEarnSetting extends Vue {
   @Ref('quiz-preview-dialog') dialog
   valid = false
 
-  mounted() {
+  created() {
     this.vm.changeLearnToEarnInfo('enabled', true)
   }
 
