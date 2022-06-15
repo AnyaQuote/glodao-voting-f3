@@ -17,10 +17,12 @@ export class PoolStore {
   @observable participants = 0
   @observable requiredAmount = Zero
   @observable optionalAmount = Zero
-  @observable votedWeight = Zero
-  @observable votedPercent = Zero
+  @observable votedYesPercent = Zero
+  @observable votedNoPercent = Zero
   @observable completed = false
   @observable cancelled = false
+  @observable approvedUsers?: Array<string>
+  @observable rejectedUsers?: Array<string>
 
   contract?: IVotingContract
 
@@ -80,14 +82,26 @@ export class PoolStore {
   @action.bound syncState() {
     const contract = this.contract
     if (contract) {
-      const { owner, requiredAmount, optionalAmount, poolType, votedWeight, votedPercent, completed, cancelled } =
-        contract.poolInfo!
-      this.votedWeight = votedWeight!
-      this.votedPercent = votedPercent!
+      const {
+        owner,
+        requiredAmount,
+        optionalAmount,
+        poolType,
+        votedYesPercent,
+        votedNoPercent,
+        completed,
+        cancelled,
+        approvedUsers,
+        rejectedUsers,
+      } = contract.poolInfo!
+      this.votedYesPercent = votedYesPercent!
+      this.votedNoPercent = votedNoPercent!
       this.completed = completed!
       this.cancelled = cancelled!
       this.requiredAmount = requiredAmount!
       this.optionalAmount = optionalAmount!
+      this.approvedUsers = approvedUsers!
+      this.rejectedUsers = rejectedUsers!
     }
   }
 

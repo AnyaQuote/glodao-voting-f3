@@ -49,12 +49,7 @@
 
       <!-- -------------------------------------- SUBMIT BUTTON ------------------------------------------------------ -->
       <div>
-        <v-btn
-          block
-          class="linear-blue--bg white--text font-weight-bold text-none"
-          depressed
-          @click="$emit('openConfirmDialog', result)"
-        >
+        <v-btn block class="linear-blue--bg white--text font-weight-bold text-none" depressed @click="vm.vote(result)">
           Cast vote
         </v-btn>
       </div>

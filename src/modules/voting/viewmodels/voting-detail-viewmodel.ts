@@ -116,15 +116,15 @@ export class VotingDetailViewModel {
     }
   }
 
-  async vote() {
-    const { completed } = await this.poolStore?.contract!.vote(this.poolStore!.poolId, walletStore.account)
+  @asyncAction *vote(result) {
+    const { completed } = yield this.poolStore?.contract!.vote(this.poolStore!.poolId, result, walletStore.account)
     this.voted = true
     this.poolStore?.fetchPoolInfo()
 
     if (completed) {
       try {
         // api update status to approved
-        await apiService.updateStatusToApproved({ id: this.poolStore!.id, poolId: this.poolStore!.poolId })
+        yield apiService.updateStatusToApproved({ id: this.poolStore!.id, poolId: this.poolStore!.poolId })
       } catch (error) {
         console.error(error)
       }

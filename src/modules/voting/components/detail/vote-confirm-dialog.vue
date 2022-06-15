@@ -26,8 +26,8 @@
         </div>
       </div>
 
-      <div v-if="vm.stakeBalanceInsufficient" class="error--text text-center">Stake Balance insufficient!</div>
-      <div class="d-flex flex-column">
+      <!-- <div v-if="vm.stakeBalanceInsufficient" class="error--text text-center">Stake Balance insufficient!</div> -->
+      <!-- <div class="d-flex flex-column">
         <v-btn
           class="white--text font-weight-bold text-none"
           :class="!vm.stakeBalanceInsufficient && 'linear-blue--bg'"
@@ -46,7 +46,7 @@
           depressed
           >Cancel</v-btn
         >
-      </div>
+      </div> -->
     </v-sheet>
   </app-dialog>
 </template>
@@ -76,7 +76,7 @@ export default class VoteConfirmDialog extends Vue {
   async vote() {
     this.dialog.increaseRequest()
     try {
-      await this.vm.vote()
+      // await this.vm.vote()
       this.dialog.decreaseRequest()
       this.close()
     } catch (error) {

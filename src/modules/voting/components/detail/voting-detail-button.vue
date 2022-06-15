@@ -35,7 +35,7 @@
           :disabled="vm.poolStore.completed || !walletStore.account"
           @click="openVotePrepareDialog"
         >
-          <span class="px-5">Cast your vote</span>
+          <span class="px-5">Cast your vote </span>
         </v-btn>
       </v-col>
     </v-row>

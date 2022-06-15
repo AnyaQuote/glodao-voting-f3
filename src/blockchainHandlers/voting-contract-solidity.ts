@@ -28,11 +28,16 @@ export class VotingHandler implements IVotingContract {
   _requiredAmount = Zero
   _optionalAmount = Zero
   _poolType = '0'
-  _votedWeight = Zero
   _votedPercent = Zero
   _createdAt = ''
   _completed = false
   _cancelled = false
+
+  _approvedUsers: any
+  _rejectedUsers: any
+
+  _votedYesPercent = Zero
+  _votedNoPercent = Zero
 
   constructor(public address: string, web3: Web3) {
     this.web3 = web3
@@ -86,21 +91,48 @@ export class VotingHandler implements IVotingContract {
   }
 
   async getPoolInfo(poolId) {
-    const [votingPoolInfo, stakePoolInfo] = await blockchainHandler.etherBatchRequest(this.web3, [
-      this.votingContract.methods.poolInfos(poolId),
-      this.stakingContract.methods.poolInfo(0),
-    ])
+    const [votingPoolInfo, approvedUsers, rejectedUsers, stakePoolInfo] = await blockchainHandler.etherBatchRequest(
+      this.web3,
+      [
+        this.votingContract.methods.poolInfos(poolId),
+        this.votingContract.methods.getApproveds(poolId),
+        this.votingContract.methods.getRejects(poolId),
+        this.stakingContract.methods.poolInfo(0),
+      ]
+    )
+
+    // const pui = await this.votingContract.methods.poolUserInfos(poolId, walletStore.account).call()
+    // console.log('pui: ', pui)
+
+    // get weight
+    let yesPercent = Zero
+    const approvedUserList = approvedUsers as Array<string>
+    if (approvedUserList && approvedUserList.length) {
+      const approvedUserInfos: Array<any> = await blockchainHandler.etherBatchRequest(
+        this.web3,
+        approvedUserList.map((address) => this.votingContract.methods.poolUserInfos(poolId, address))
+      )
+
+      for (let index = 0; index < approvedUserInfos.length; index++) {
+        const info = approvedUserInfos[index]
+        const percent = bnHelper.fromDecimals(info.votedWeight).divUnsafe(bnHelper.fromDecimals(info.totalStakedAmount))
+        yesPercent = yesPercent.addUnsafe(percent)
+      }
+    }
 
     const totalStaked = bnHelper.fromDecimals((stakePoolInfo as any).amount)
     this._owner = (votingPoolInfo as any).owner
     this._requiredAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).requiredAmount)
     this._optionalAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).optionalAmount)
     this._poolType = (votingPoolInfo as PoolInfo).poolType!
-    this._votedWeight = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedWeight)
-    this._votedPercent = this._votedWeight.divUnsafe(totalStaked).mulUnsafe(FixedNumber.from('100'))
+    this._votedYesPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedYesPercent)
+    this._votedNoPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedNoPercent)
     this._createdAt = (votingPoolInfo as PoolInfo).createdAt!
     this._completed = (votingPoolInfo as PoolInfo).completed!
     this._cancelled = (votingPoolInfo as PoolInfo).cancelled!
+
+    this._approvedUsers = approvedUsers
+    this._rejectedUsers = rejectedUsers
   }
 
   async createPool(poolInfo: ProjectInfo, account: string, requiredTokenDecimals = 18, optionalTokenDecimals = 18) {
@@ -133,8 +165,8 @@ export class VotingHandler implements IVotingContract {
     await sendRequest(f, account)
   }
 
-  async vote(poolId, account) {
-    const f = this.votingContract.methods.vote(poolId)
+  async vote(poolId, result, account) {
+    const f = this.votingContract.methods.vote(poolId, result)
     const res = await sendRequest(f, account)
 
     const userVotedEvent = (res as any).events['UserVoted']
@@ -170,11 +202,13 @@ export class VotingHandler implements IVotingContract {
       requiredAmount: this._requiredAmount,
       optionalAmount: this._optionalAmount,
       poolType: this._poolType,
-      votedWeight: this._votedWeight,
-      votedPercent: this._votedPercent,
+      votedYesPercent: this._votedYesPercent,
+      votedNoPercent: this._votedNoPercent,
       createdAt: this._createdAt,
       completed: this._completed,
       cancelled: this._cancelled,
+      approvedUsers: this._approvedUsers,
+      rejectedUsers: this._rejectedUsers,
     }
   }
 
