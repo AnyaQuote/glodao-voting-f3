@@ -1,7 +1,16 @@
 <template>
   <v-sheet class="rounded-lg" outlined>
-    <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-      <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
+    <div class="pa-6 text-center rounded-lg rounded-b-0 blue-2 d-flex align-center">
+      <div class="d-flex align-center cursor-pointer" @click="back">
+        <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
+        <span class="text-subtitle-2">Create mission</span>
+      </div>
+      <div
+        class="p-absolute text-h5 font-weight-bold blue-diversity--text"
+        style="left: 50%; transform: translateX(-50%)"
+      >
+        Social mission
+      </div>
     </div>
     <v-divider />
 
@@ -14,6 +23,7 @@
         type="telegram"
         title="Telegram task"
         subtitle="Join telegram group"
+        :value="vm.joinTelegram.enabled"
         @change="vm.changeJoinTelegramSetting('enabled', $event)"
       >
         <app-text-field
@@ -31,6 +41,7 @@
         type="twitter"
         title="Twitter task"
         subtitle="Follow project twitter"
+        :value="vm.followTwitter.enabled"
         @change="vm.changeFollowTwitterSetting('enabled', $event)"
       >
         <app-text-field
@@ -48,6 +59,7 @@
         type="twitter"
         title="Twitter task"
         subtitle="Quote a tweet"
+        :value="vm.quoteTweet.enabled"
         @change="vm.changeQuoteTweetSetting('enabled', $event)"
       >
         <div class="font-18 font-weight-bold">Twitter link</div>
@@ -76,6 +88,7 @@
         type="twitter"
         title="Twitter task"
         subtitle="Like and reply a post"
+        :value="vm.commentTweet.enabled"
         @change="vm.changeCommentTweetSetting('enabled', $event)"
       >
         <app-text-field
@@ -89,10 +102,12 @@
 
       <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
       <switch-field
+        readonly
         class="mt-4"
         type="telegram"
         title="Telegram task"
-        subtitle="Chat in group"
+        subtitle="Chat in group (Comming soon)"
+        :value="vm.telegramChat.enabled"
         @change="vm.changeTelegramChatSetting('enabled', $event)"
       >
         <app-text-field
@@ -143,6 +158,10 @@ import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 export default class MissionSocialSetting extends Vue {
   @Inject() vm!: NewMissionViewModel
   formState = false
+
+  beforeDestroy() {
+    this.vm.resetSocialSetting()
+  }
 
   submit() {
     this.vm.submit()
