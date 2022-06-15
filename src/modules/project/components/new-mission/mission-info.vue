@@ -141,6 +141,7 @@
             class="text-none"
             :class="valid && 'linear-blue--bg white--text'"
             :loading="vm.btnLoading"
+            :disabled="!valid"
             @click="next"
             height="40"
             depressed
