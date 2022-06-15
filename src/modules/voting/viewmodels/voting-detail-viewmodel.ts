@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { VotingPool } from '@/models/VotingModel'
+import { Voter, VotingPool } from '@/models/VotingModel'
 import { observable, computed, IReactionDisposer, action, reaction } from 'mobx'
 import { actionAsync, asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
@@ -29,7 +29,7 @@ export class VotingDetailViewModel {
 
   @observable poolStore?: PoolStore
 
-  @observable votedUserPagingList
+  @observable votedUserPagingList: Voter[] = []
   @observable votedUserPage = {
     limit: 6,
     current: 0,
@@ -39,15 +39,15 @@ export class VotingDetailViewModel {
   constructor(unicodeName: string) {
     this.loadData(unicodeName)
 
-    this._disposers.push(
+    this._disposers = [
       reaction(
         () => walletStore.account,
         () => {
           this.loadData(unicodeName)
           if (walletStore.account) this.getPoolUserInfos()
         }
-      )
-    )
+      ),
+    ]
   }
 
   /**
@@ -158,8 +158,17 @@ export class VotingDetailViewModel {
     return bnHelper.lt(this.userStakeBalance, this.stakeFee)
   }
 
-  @computed get votedUsers() {
-    const users = [...(this.poolStore?.approvedUsers || []), ...(this.poolStore?.rejectedUsers || [])]
+  @computed get votedUsers(): Voter[] {
+    const users = [
+      ...(this.poolStore?.approvedUsers || []).map((address) => ({
+        address: address,
+        voted: 'yes',
+      })),
+      ...(this.poolStore?.rejectedUsers || []).map((address) => ({
+        address: address,
+        voted: 'no',
+      })),
+    ]
     return users
   }
 }
