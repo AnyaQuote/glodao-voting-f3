@@ -7,12 +7,16 @@ export class PoolInfo {
   requiredErc20?: string
   optionalErc20?: string
   poolType?: string
-  votedWeight?: FixedNumber
-  votedPercent?: FixedNumber
+  votedYesPercent?: FixedNumber
+  votedYesWeight?: FixedNumber
+  votedNoPercent?: FixedNumber
+  votedNoWeight?: FixedNumber
   createdAt?: string
   completed?: boolean
   cancelled?: boolean
   paused?: boolean
+  approvedUsers?: Array<string>
+  rejectedUsers?: Array<string>
 }
 
 export interface IVotingContract {
@@ -21,8 +25,9 @@ export interface IVotingContract {
   init(): Promise<void>
   injectProvider(): void
   getPoolInfo(id): Promise<any>
-  vote(id, account): Promise<any>
+  vote(id, result, account): Promise<any>
   getPoolType(): Promise<any>
   cancelPool(id, account): Promise<any>
   getUserStakeBalance(account): Promise<any>
+  getPoolUserInfos(id, account)
 }

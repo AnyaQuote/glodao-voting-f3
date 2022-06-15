@@ -11,6 +11,7 @@ import { PoolStore } from '@/stores/pool-store'
 import { Zero } from '@/constants'
 import { takeUntil } from 'rxjs/operators'
 import { bnHelper } from '@/helpers/bignumber-helper'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 
 export class VotingDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -23,11 +24,12 @@ export class VotingDetailViewModel {
   @observable stakeFee = Zero
   @observable userStakeBalance = Zero
   @observable dataLoading = false
-  @observable votedUsers = []
+
+  @observable voteDialog = false
 
   @observable poolStore?: PoolStore
 
-  @observable votedUserPagingList = []
+  @observable votedUserPagingList
   @observable votedUserPage = {
     limit: 6,
     current: 0,
@@ -42,6 +44,7 @@ export class VotingDetailViewModel {
         () => walletStore.account,
         () => {
           this.loadData(unicodeName)
+          if (walletStore.account) this.getPoolUserInfos()
         }
       )
     )
@@ -104,6 +107,11 @@ export class VotingDetailViewModel {
     }
   }
 
+  @asyncAction *getPoolUserInfos() {
+    const { voted } = yield this.poolStore?.contract?.getPoolUserInfos(0, walletStore.account)
+    this.voted = voted
+  }
+
   @asyncAction *getStakeFee() {
     const poolType = yield this.poolStore?.contract?.getPoolType()
     this.stakeFee = poolType.stakeFee
@@ -116,19 +124,30 @@ export class VotingDetailViewModel {
     }
   }
 
-  async vote() {
-    const { completed } = await this.poolStore?.contract!.vote(this.poolStore!.poolId, walletStore.account)
-    this.voted = true
-    this.poolStore?.fetchPoolInfo()
+  @asyncAction *vote(result) {
+    this.voting = true
+    try {
+      const { completed } = yield this.poolStore?.contract!.vote(this.poolStore!.poolId, result, walletStore.account)
+      this.voted = true
+      this.poolStore?.fetchPoolInfo()
 
-    if (completed) {
-      try {
+      if (completed) {
         // api update status to approved
-        await apiService.updateStatusToApproved({ id: this.poolStore!.id, poolId: this.poolStore!.poolId })
-      } catch (error) {
-        console.error(error)
+        yield apiService.updateStatusToApproved({ id: this.poolStore!.id, poolId: this.poolStore!.poolId })
       }
+
+      snackController.success('Vote successfully')
+      this.voteDialog = false
+    } catch (error) {
+      console.error(error)
+      snackController.commonError(error)
+    } finally {
+      this.voting = false
     }
+  }
+
+  @action.bound changeVoteDialog(val) {
+    this.voteDialog = val
   }
 
   @computed get socialLinks() {
@@ -137,5 +156,10 @@ export class VotingDetailViewModel {
 
   @computed get stakeBalanceInsufficient() {
     return bnHelper.lt(this.userStakeBalance, this.stakeFee)
+  }
+
+  @computed get votedUsers() {
+    const users = [...(this.poolStore?.approvedUsers || []), ...(this.poolStore?.rejectedUsers || [])]
+    return users
   }
 }

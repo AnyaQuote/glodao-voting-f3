@@ -19,19 +19,31 @@
 
               <!-- ==== yes vote progress circle ==== -->
               <div class="col-12 col-md-6 mb-6 mb-md-0 d-flex justify-center">
-                <voting-progress-circle class="flex-shrink-0" color="green lighten-1" value="--" />
+                <voting-progress-circle
+                  class="flex-shrink-0"
+                  color="green lighten-1"
+                  :value="$_get(vm.poolStore, 'votedYesPercent', 0) | formatNumber(2)"
+                />
                 <div class="d-flex flex-column justify-space-around ml-4">
                   <div class="text-h5">👍 YES</div>
-                  <div class="text-h6 font-weight-bold">&nbsp;&nbsp;{{ 1000 | shortNumber }} votes</div>
+                  <div class="text-h6 font-weight-bold">
+                    &nbsp;&nbsp;{{ $_get(vm.poolStore, 'votedYesWeight', 0) | formatNumber(0) }} votes
+                  </div>
                 </div>
               </div>
 
               <!-- ==== no vote progress circle ==== -->
               <div class="col-12 col-md-6 d-flex justify-center">
-                <voting-progress-circle class="flex-shrink-0" color="red lighten-1" value="--" />
+                <voting-progress-circle
+                  class="flex-shrink-0"
+                  color="red lighten-1"
+                  :value="$_get(vm.poolStore, 'votedNoPercent', 0) | formatNumber(2)"
+                />
                 <div class="d-flex flex-column justify-space-around ml-4">
                   <div class="text-h5">👍 NO</div>
-                  <div class="font-weight-bold text-h6">&nbsp;&nbsp;{{ 1000 | shortNumber }} votes</div>
+                  <div class="font-weight-bold text-h6">
+                    &nbsp;&nbsp;{{ $_get(vm.poolStore, 'votedNoWeight', 0) | formatNumber(0) }} votes
+                  </div>
                 </div>
               </div>
               <!-- =================================== -->
@@ -50,15 +62,23 @@
 
         <!-- ==== yes vote progress content ==== -->
         <v-sheet class="rounded-lg pa-4 mb-2 green lighten-4 d-flex align-baseline black--text" outlined>
-          <span class="font-18 font-weight-bold mr-8">---%</span>
-          <span class="text-subtitle-2 spacer">--- upvotes</span>
+          <span class="font-18 font-weight-bold mr-8"
+            >{{ $_get(vm.poolStore, 'votedYesPercent', 0) | formatNumber(2) }}%</span
+          >
+          <span class="text-subtitle-2 spacer"
+            >{{ $_get(vm.poolStore, 'votedYesWeight', 0) | formatNumber(0) }} upvotes</span
+          >
           <v-chip label color="green lighten-2" class="white--text rounded-lg px-6">👍 YES votes</v-chip>
         </v-sheet>
 
         <!-- ==== no vote progress content ==== -->
         <v-sheet class="rounded-lg pa-4 mb-2 red lighten-4 d-flex align-baseline black--text" outlined>
-          <span class="font-18 font-weight-bold mr-8">---%</span>
-          <span class="text-subtitle-2 spacer">--- downvotes</span>
+          <span class="font-18 font-weight-bold mr-8"
+            >{{ $_get(vm.poolStore, 'votedNoPercent', 0) | formatNumber(2) }}%</span
+          >
+          <span class="text-subtitle-2 spacer"
+            >{{ $_get(vm.poolStore, 'votedNoWeight', 0) | formatNumber(0) }} downvotes</span
+          >
           <v-chip label color="red lighten-2" class="white--text rounded-lg px-6">👍 NO votes</v-chip>
         </v-sheet>
         <!-- ==================================== -->

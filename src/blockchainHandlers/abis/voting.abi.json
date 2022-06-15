@@ -165,12 +165,6 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "poolWeight",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "totalWeight",
         "type": "uint256"
       }
@@ -524,7 +518,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "votedWeight",
+        "name": "votedYesPercent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "votedNoPercent",
         "type": "uint256"
       },
       {
@@ -618,6 +617,11 @@
       {
         "internalType": "uint256",
         "name": "votedWeight",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalStakedAmount",
         "type": "uint256"
       }
     ],
