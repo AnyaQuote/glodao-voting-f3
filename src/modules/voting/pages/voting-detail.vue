@@ -39,7 +39,7 @@
         <!-- ------------------------------------ CONTENT ------------------------------------ -->
         <v-sheet v-else class="d-flex flex-column transparent" height="576">
           <v-slide-x-transition class="flex-grow-1" group hide-on-leave>
-            <voting-list-item v-for="address in vm.votedUserPagingList" :address="address" :key="address" />
+            <voting-list-item v-for="(voter, index) in vm.votedUserPagingList" :prop="voter" :key="index" />
           </v-slide-x-transition>
           <v-pagination
             prev-icon="mdi-arrow-left"
@@ -104,6 +104,11 @@ import { RoutePaths } from '@/router'
 export default class VotingDetail extends Vue {
   @Provide() vm = new VotingDetailViewModel(get(this.$route, 'params.code'))
   @Ref('guide-dialog') dialog
+
+  mounted() {
+    // Init paging
+    this.vm.handleVotedUserPaging(1)
+  }
 
   goToVotingList() {
     this.$router.push(RoutePaths.voting_list)
