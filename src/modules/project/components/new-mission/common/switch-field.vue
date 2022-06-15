@@ -21,7 +21,7 @@
         }}</span>
       </div>
       <div class="col-3 col-sm-2 d-flex justify-center">
-        <v-switch color="blue-diversity" :value="show" @change="onChange" />
+        <v-switch :readonly="readonly" color="blue-diversity" :input-value="show" @change="onChange" />
       </div>
     </div>
     <div v-if="show && hasSlot">
@@ -35,20 +35,22 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, PropSync } from 'vue-property-decorator'
 
 @Observer
 @Component
 export default class SwitchField extends Vue {
+  @Prop({ default: false }) value!: boolean
   @Prop({ required: true }) type!: string
   @Prop({ default: '' }) title!: string
   @Prop({ default: '' }) subtitle!: string
+  @Prop(Boolean) readonly!: boolean
 
-  show = false
+  show = this.value
 
   onChange(value: boolean) {
-    this.show = value
-    this.$emit('change', value)
+    this.show = !!value
+    this.$emit('change', !!value)
   }
 
   get hasSlot() {
