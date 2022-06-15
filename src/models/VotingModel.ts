@@ -28,3 +28,8 @@ export interface VotingPool {
   votingEnd?: string
   data?: Metadata
 }
+
+export interface Voter {
+  voted?: string
+  address?: string
+}
