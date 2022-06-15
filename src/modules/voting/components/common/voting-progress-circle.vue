@@ -11,7 +11,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 export default class VotingProgressCircle extends Vue {
   @Prop(String) value!: string
   @Prop({ default: '120' }) size!: string
-  @Prop({ default: '4' }) width!: string
+  @Prop({ default: '6' }) width!: string
   @Prop({ default: '270' }) rotate!: string
 }
 </script>
