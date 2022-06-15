@@ -31,7 +31,7 @@
       >
         <template v-slot:append>
           <v-hover v-slot="{ hover }">
-            <v-icon v-if="hover" color="error" @click="remove(index)">mdi-close</v-icon>
+            <v-icon v-if="!prop.required && hover" color="error" @click="remove(index)">mdi-close</v-icon>
             <v-icon v-else>mdi-link</v-icon>
           </v-hover>
         </template>
