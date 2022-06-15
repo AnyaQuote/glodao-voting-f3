@@ -37,7 +37,7 @@
         :disabled="disabled"
         :value="data.time"
         :error-messages="invalidDateRange"
-        placeholder="HH:mm (24 hrs)"
+        placeholder="hh:mm (am - pm)"
         @click="show('timePickerConfig', $event)"
       />
       <v-menu
@@ -50,7 +50,7 @@
         :close-on-content-click="false"
       >
         <v-time-picker
-          format="24hr"
+          format="ampm"
           :color="pickerBackground"
           :value="data.time"
           @input="onDateTimeChange('time', $event)"
@@ -132,7 +132,7 @@ export default class AppDateTimePicker extends Vue {
   }
 
   get pickerBackground() {
-    return this.$vuetify.theme.dark ? 'blue-2' : 'blue-diversity'
+    return this.$vuetify.theme.dark ? 'blue-2 white--text' : 'blue-diversity white--text'
   }
 }
 </script>

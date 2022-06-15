@@ -291,6 +291,9 @@ a {
 .v-picker {
   .v-picker__body {
     background: var(--v-neutral100-base) !important;
+    .v-picker__title__btn {
+      color: var(--v-neutral-0-base) !important;
+    }
   }
   .v-time-picker-clock {
     background: var(--v-neutral100-base) !important;
