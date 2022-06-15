@@ -62,7 +62,8 @@
         <app-file-upload
           isImageFile
           :rules="[$rules.required, $rules.maxSize(1000000), $rules.isImage]"
-          @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
+          :value="$_get(vm.missionInfo, 'missionCover')"
+          @change="vm.changeMissionInfo('missionCover', $event)"
           class="mt-2"
         />
       </div>
@@ -112,7 +113,7 @@
           timeLabel="Start time"
           :rules="[$rules.required]"
           :minDate="$_get(vm.pool, 'startDate')"
-          :maxDate="$_get(vm.missionInfo, 'endDate', $_get(vm.pool, 'endDate'))"
+          :maxDate="$_get(vm.missionInfo, 'endDate') || $_get(vm.pool, 'endDate')"
           :value="$_get(vm.missionInfo, 'startDate')"
           @change="vm.changeMissionInfo('startDate', $event)"
         />
