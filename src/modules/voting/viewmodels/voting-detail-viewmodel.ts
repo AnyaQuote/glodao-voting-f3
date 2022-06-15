@@ -1,7 +1,7 @@
 import { appProvider } from '@/app-providers'
 import { Voter, VotingPool } from '@/models/VotingModel'
 import { observable, computed, IReactionDisposer, action, reaction } from 'mobx'
-import { actionAsync, asyncAction } from 'mobx-utils'
+import { asyncAction } from 'mobx-utils'
 import { get, isEmpty } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject, timer } from 'rxjs'
@@ -48,12 +48,10 @@ export class VotingDetailViewModel {
         }
       ),
       reaction(
-        () => this.votedUserPagingList,
+        () => this.votedUsers,
         () => {
-          console.log('original:', this.votedUsers)
-          console.log('paging list:', [...this.votedUserPagingList])
-        },
-        { fireImmediately: true }
+          !isEmpty(this.votedUsers) && this.handleVotedUserPaging(1)
+        }
       ),
     ]
   }
