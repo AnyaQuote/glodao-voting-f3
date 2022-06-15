@@ -263,12 +263,12 @@ export class ApiService {
   }
 
   async updateStatusToApproved(data) {
-    const res = await this.axios.put('voting-pools/updateStatusToApproved', data)
+    const res = await this.axios.put('updateStatusToApproved', data)
     return res.data
   }
 
   async cancelVotingPool(data) {
-    const res = await this.axios.put('voting-pools/cancelVotingPool', data)
+    const res = await this.axios.put('cancelVotingPool', data)
     return res.data
   }
 
