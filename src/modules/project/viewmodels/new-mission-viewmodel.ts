@@ -4,14 +4,13 @@ import { Data } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
-import { action, IReactionDisposer, observable, reaction, computed } from 'mobx'
+import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { walletStore } from '@/stores/wallet-store'
 import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
-import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
+import { authStore } from '@/stores/auth-store'
 
 export class NewMissionViewModel {
   @observable step = 1
@@ -35,20 +34,15 @@ export class NewMissionViewModel {
     this.fetchProjectByUnicode(unicodeName)
   }
 
-  destroy() {
-    //
-  }
-
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
+      const res = yield appProvider.api.voting.find(
+        { unicodeName, ownerAddress: authStore.attachedAddress },
+        { _limit: 1 }
+      )
+      isEmpty(res) && appProvider.router.replace(RoutePaths.not_found)
 
-      yield waitForGlobalLoadingFinished()
-
-      const res = yield appProvider.api.voting.find({ unicodeName, ownerAddress: walletStore.account }, { _limit: 1 })
-      if (isEmpty(res)) {
-        appProvider.router.replace(RoutePaths.not_found)
-      }
       this.pool = res[0]
     } catch (error) {
       appProvider.snackbar.commonError(error)
@@ -89,6 +83,13 @@ export class NewMissionViewModel {
   @action changeStep(step: number) {
     this.step = step
   }
+  @action resetSocialSetting() {
+    this.changeJoinTelegramSetting('enabled', false)
+    this.changeCommentTweetSetting('enabled', false)
+    this.changeFollowTwitterSetting('enabled', false)
+    this.changeQuoteTweetSetting('enabled', false)
+    this.changeTelegramChatSetting('enabled', false)
+  }
 
   @asyncAction *getQuizId() {
     const { quizFile, learningFile, imageCover, name, description } = this.learnToEarn.setting!
@@ -126,24 +127,23 @@ export class NewMissionViewModel {
   }
 
   @asyncAction *getMissionSetting() {
-    const missionSetting = {}
-    if (this.joinTelegram.enabled) {
-      set(missionSetting, 'telegram', [{ ...this.joinTelegram.setting }])
-    }
-    if (this.followTwitter.enabled) {
-      set(missionSetting, 'twitter', [...get(missionSetting, 'twitter', []), { ...this.followTwitter.setting }])
-    }
-    if (this.quoteTweet.enabled) {
-      set(missionSetting, 'twitter', [...get(missionSetting, 'twitter', []), { ...this.quoteTweet.setting }])
-    }
-    if (this.commentTweet.enabled) {
-      set(missionSetting, 'twitter', [...get(missionSetting, 'twitter', []), { ...this.commentTweet.setting }])
-    }
+    const setting = {}
+
+    // Collect social settings
+    this.joinTelegram.enabled && set(setting, 'telegram', [{ ...this.joinTelegram.setting }])
+    this.followTwitter.enabled &&
+      set(setting, 'twitter', [...get(setting, 'twitter', []), { ...this.followTwitter.setting }])
+    this.quoteTweet.enabled && set(setting, 'twitter', [...get(setting, 'twitter', []), { ...this.quoteTweet.setting }])
+    this.commentTweet.enabled &&
+      set(setting, 'twitter', [...get(setting, 'twitter', []), { ...this.commentTweet.setting }])
+
+    // Collect learn to earn setting
     if (this.learnToEarn.enabled) {
       const quizId = yield this.getQuizId()
-      set(missionSetting, 'quiz', [{ type: 'quiz', quizId }])
+      set(setting, 'quiz', [{ type: 'quiz', quizId }])
     }
-    return missionSetting
+
+    return setting
   }
 
   @action mappingFields(setting: Data, missionInfo: any, pool: VotingPool): Mission {
@@ -185,10 +185,10 @@ export class NewMissionViewModel {
     try {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
-      const model = this.mappingFields(missionSetting, this.missionInfo, this.pool!)
+      const model = this.mappingFields(missionSetting, this.missionInfo, this.pool)
       yield appProvider.api.createTask(model)
       appProvider.snackbar.addSuccess()
-      appProvider.router.push(RoutePaths.project_detail + this.pool?.unicodeName)
+      appProvider.router.push(RoutePaths.project_detail + this.pool.unicodeName)
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
@@ -237,7 +237,7 @@ export class NewMissionViewModel {
 const missionInfoDefault = {
   name: '',
   shortDescription: '',
-  missionCover: '',
+  missionCover: null,
   priorityAmount: '',
   maxParticipants: '',
   startDate: '',
