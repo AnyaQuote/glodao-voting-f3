@@ -56,7 +56,7 @@
           </div>
           <progress-bar :value="pool.votedYesPercent" />
           <div class="d-flex justify-space-between text-subtitle-2 mt-2">
-            <div>{{ pool.votedYesWeight | formatNumber(0) }}</div>
+            <div>{{ pool.approvedUsers.length | formatNumber(0) }}</div>
             <div>{{ pool.votedYesPercent | formatNumber(2, 2) }} %</div>
           </div>
         </div>
@@ -73,7 +73,7 @@
           </div>
           <progress-bar :value="pool.votedNoPercent" />
           <div class="d-flex justify-space-between text-subtitle-2 mt-2">
-            <div>{{ pool.votedNoWeight | formatNumber(0) }}</div>
+            <div>{{ pool.rejectedUsers.length | formatNumber(0) }}</div>
             <div>{{ pool.votedNoPercent | formatNumber(2, 2) }} %</div>
           </div>
         </div>
