@@ -42,16 +42,11 @@ import { get } from 'lodash-es'
 export default class MissionForm extends Vue {
   @Provide() vm = new NewMissionViewModel(get(this.$route, 'params.code'))
 
-  valid = false
-
   goBack() {
     this.$router.go(-1)
   }
   submit() {
     this.vm.submit()
-  }
-  beforeDestroy() {
-    this.vm.destroy()
   }
 }
 </script>
