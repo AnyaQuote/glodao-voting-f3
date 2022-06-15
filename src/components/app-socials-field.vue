@@ -8,7 +8,7 @@
         :items="platforms"
         :value="prop.type"
         :rules="[$rules.required]"
-        :readonly="prop.required"
+        :disabled="prop.required"
         @change="onChange(index, 'type', $event)"
         placeholder="Choose platform"
       >
