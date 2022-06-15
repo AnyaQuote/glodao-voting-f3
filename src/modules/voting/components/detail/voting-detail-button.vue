@@ -33,14 +33,14 @@
           class="white--text rounded-lg"
           depressed
           :disabled="vm.poolStore.completed || !walletStore.account"
-          @click="openVotePrepareDialog"
+          @click="vm.changeVoteDialog(true)"
         >
           <span class="px-5">Cast your vote </span>
         </v-btn>
       </v-col>
     </v-row>
 
-    <vote-prep-dialog ref="vote-prep-dialog" />
+    <vote-prep-dialog />
   </v-sheet>
 </template>
 
@@ -58,15 +58,10 @@ import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 })
 export default class VotingDetailButton extends Vue {
   @Inject() vm!: VotingDetailViewModel
-  @Ref('vote-prep-dialog') dialog
 
   connected = false
   voted = true
   walletStore = walletStore
-
-  openVotePrepareDialog() {
-    this.dialog.open()
-  }
 }
 </script>
 

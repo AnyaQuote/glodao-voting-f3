@@ -54,10 +54,10 @@
             </div>
             <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We want the project to launch</div>
           </div>
-          <progress-bar :value="pool.votedPercent" />
+          <progress-bar :value="pool.votedYesPercent" />
           <div class="d-flex justify-space-between text-subtitle-2 mt-2">
-            <div>---</div>
-            <div>{{ pool.votedPercent | formatNumber(2, 2) }} %</div>
+            <div>{{ pool.votedYesWeight | formatNumber(0) }}</div>
+            <div>{{ pool.votedYesPercent | formatNumber(2, 2) }} %</div>
           </div>
         </div>
 
@@ -71,10 +71,10 @@
             </div>
             <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We don't want the project to launch</div>
           </div>
-          <progress-bar :value="pool.votedPercent" />
+          <progress-bar :value="pool.votedNoPercent" />
           <div class="d-flex justify-space-between text-subtitle-2 mt-2">
-            <div>---</div>
-            <div>{{ pool.votedPercent | formatNumber(2, 2) }} %</div>
+            <div>{{ pool.votedNoWeight | formatNumber(0) }}</div>
+            <div>{{ pool.votedNoPercent | formatNumber(2, 2) }} %</div>
           </div>
         </div>
       </v-col>

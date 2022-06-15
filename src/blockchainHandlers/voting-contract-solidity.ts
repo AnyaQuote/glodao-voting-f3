@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { ETHER_ZERO_ADDRESS, Zero } from '@/constants'
+import { ETHER_ZERO_ADDRESS, HUNDRED, Zero } from '@/constants'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { ProjectInfo } from '@/modules/regist/viewmodels/bounty-apply-viewmodel'
@@ -37,7 +37,9 @@ export class VotingHandler implements IVotingContract {
   _rejectedUsers: any
 
   _votedYesPercent = Zero
+  _votedYesWeight = Zero
   _votedNoPercent = Zero
+  _votedNoWeight = Zero
 
   constructor(public address: string, web3: Web3) {
     this.web3 = web3
@@ -101,11 +103,8 @@ export class VotingHandler implements IVotingContract {
       ]
     )
 
-    // const pui = await this.votingContract.methods.poolUserInfos(poolId, walletStore.account).call()
-    // console.log('pui: ', pui)
-
     // get weight
-    let yesPercent = Zero
+    let votedYesWeight = Zero
     const approvedUserList = approvedUsers as Array<string>
     if (approvedUserList && approvedUserList.length) {
       const approvedUserInfos: Array<any> = await blockchainHandler.etherBatchRequest(
@@ -115,18 +114,31 @@ export class VotingHandler implements IVotingContract {
 
       for (let index = 0; index < approvedUserInfos.length; index++) {
         const info = approvedUserInfos[index]
-        const percent = bnHelper.fromDecimals(info.votedWeight).divUnsafe(bnHelper.fromDecimals(info.totalStakedAmount))
-        yesPercent = yesPercent.addUnsafe(percent)
+        votedYesWeight = votedYesWeight.addUnsafe(bnHelper.fromDecimals(info.votedWeight))
+      }
+    }
+    let votedNoWeight = Zero
+    const rejectedUserList = rejectedUsers as Array<string>
+    if (rejectedUserList && rejectedUserList.length) {
+      const rejectedUserInfos: Array<any> = await blockchainHandler.etherBatchRequest(
+        this.web3,
+        rejectedUserList.map((address) => this.votingContract.methods.poolUserInfos(poolId, address))
+      )
+
+      for (let index = 0; index < rejectedUserInfos.length; index++) {
+        const info = rejectedUserInfos[index]
+        votedNoWeight = votedNoWeight.addUnsafe(bnHelper.fromDecimals(info.votedWeight))
       }
     }
 
-    const totalStaked = bnHelper.fromDecimals((stakePoolInfo as any).amount)
     this._owner = (votingPoolInfo as any).owner
     this._requiredAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).requiredAmount)
     this._optionalAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).optionalAmount)
     this._poolType = (votingPoolInfo as PoolInfo).poolType!
-    this._votedYesPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedYesPercent)
-    this._votedNoPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedNoPercent)
+    this._votedYesPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedYesPercent).mulUnsafe(HUNDRED)
+    this._votedYesWeight = votedYesWeight
+    this._votedNoPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedNoPercent).mulUnsafe(HUNDRED)
+    this._votedNoWeight = votedNoWeight
     this._createdAt = (votingPoolInfo as PoolInfo).createdAt!
     this._completed = (votingPoolInfo as PoolInfo).completed!
     this._cancelled = (votingPoolInfo as PoolInfo).cancelled!
@@ -203,7 +215,9 @@ export class VotingHandler implements IVotingContract {
       optionalAmount: this._optionalAmount,
       poolType: this._poolType,
       votedYesPercent: this._votedYesPercent,
+      votedYesWeight: this._votedYesWeight,
       votedNoPercent: this._votedNoPercent,
+      votedNoWeight: this._votedNoWeight,
       createdAt: this._createdAt,
       completed: this._completed,
       cancelled: this._cancelled,
@@ -225,6 +239,13 @@ export class VotingHandler implements IVotingContract {
       balance: bnHelper.fromDecimals(balance, decimals),
     }
     return info
+  }
+
+  async getPoolUserInfos(poolId, account) {
+    const { voted, votedYes, votedWeight, totalStakedAmount } = await this.votingContract.methods
+      .poolUserInfos(poolId, account)
+      .call()
+    return { voted, votedYes, votedWeight, totalStakedAmount }
   }
 
   async getUserStakeBalance(account) {

@@ -18,7 +18,9 @@ export class PoolStore {
   @observable requiredAmount = Zero
   @observable optionalAmount = Zero
   @observable votedYesPercent = Zero
+  @observable votedYesWeight = Zero
   @observable votedNoPercent = Zero
+  @observable votedNoWeight = Zero
   @observable completed = false
   @observable cancelled = false
   @observable approvedUsers?: Array<string>
@@ -88,14 +90,18 @@ export class PoolStore {
         optionalAmount,
         poolType,
         votedYesPercent,
+        votedYesWeight,
         votedNoPercent,
+        votedNoWeight,
         completed,
         cancelled,
         approvedUsers,
         rejectedUsers,
       } = contract.poolInfo!
       this.votedYesPercent = votedYesPercent!
+      this.votedYesWeight = votedYesWeight!
       this.votedNoPercent = votedNoPercent!
+      this.votedNoWeight = votedNoWeight!
       this.completed = completed!
       this.cancelled = cancelled!
       this.requiredAmount = requiredAmount!

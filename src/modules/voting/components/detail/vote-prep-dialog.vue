@@ -1,9 +1,9 @@
 <template>
-  <app-dialog ref="dialog">
+  <v-dialog :value="vm.voteDialog" persistent max-width="450">
     <v-sheet class="dialog-container d-flex flex-column pa-6 neutral-100">
       <div class="d-flex align-center justify-space-between">
         <span class="font-weight-bold text-h6">Cast your vote</span>
-        <v-btn icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn icon :disabled="vm.voting" @click="vm.changeVoteDialog(false)"><v-icon>mdi-close</v-icon></v-btn>
       </div>
 
       <!-- -------------------------------------- PROJECT NAME AND LOGO ------------------------------------------ -->
@@ -49,13 +49,19 @@
 
       <!-- -------------------------------------- SUBMIT BUTTON ------------------------------------------------------ -->
       <div>
-        <v-btn block class="linear-blue--bg white--text font-weight-bold text-none" depressed @click="vm.vote(result)">
+        <v-btn
+          block
+          class="linear-blue--bg white--text font-weight-bold text-none"
+          depressed
+          :loading="vm.voting"
+          @click="vm.vote(result)"
+        >
           Cast vote
         </v-btn>
       </div>
     </v-sheet>
     <!-- ------------------------------------------------------------------------------------------------------------- -->
-  </app-dialog>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -70,19 +76,9 @@ import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 })
 export default class VotePrepDialog extends Vue {
   @Inject() vm!: VotingDetailViewModel
-  @Ref('dialog') dialog
 
   walletStore = walletStore
   result = true
-  isLoading = false
-
-  open() {
-    this.dialog.open()
-  }
-
-  close() {
-    !this.isLoading && this.dialog.close()
-  }
 }
 </script>
 
