@@ -47,6 +47,14 @@ export class VotingDetailViewModel {
           if (walletStore.account) this.getPoolUserInfos()
         }
       ),
+      reaction(
+        () => this.votedUserPagingList,
+        () => {
+          console.log('original:', this.votedUsers)
+          console.log('paging list:', [...this.votedUserPagingList])
+        },
+        { fireImmediately: true }
+      ),
     ]
   }
 
