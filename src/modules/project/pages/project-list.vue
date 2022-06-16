@@ -52,7 +52,8 @@
             dense
             hide-details
             color="app-blue"
-            v-model="vm.filterRejected"
+            :value="vm.filterRejected"
+            @change="vm.shouldFilterRejected"
             class="ma-0 mr-md-6 px-3 py-6 px-md-0 py-md-0"
           >
             <template v-slot:label>

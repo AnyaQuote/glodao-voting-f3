@@ -1,5 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { waitForWalletAccount } from '@/helpers/promise-helper'
+import { authStore } from '@/stores/auth-store'
 import { PoolStore } from '@/stores/pool-store'
 import { observable, action, computed, IReactionDisposer } from 'mobx'
 export class ProjectListViewModel {
@@ -17,10 +18,9 @@ export class ProjectListViewModel {
   @action async fetchMyProject() {
     try {
       this.loading = true
-
-      await waitForWalletAccount()
-
-      const pools = await appProvider.api.voting.find({ ownerAddress: appProvider.wallet.account }, { _limit: -1 })
+      if (!authStore.attachedAddress) return
+      const pools = await appProvider.api.voting.find({ ownerAddress: authStore.attachedAddress }, { _limit: -1 })
+      console.log(pools)
       if (pools && pools.length) {
         this.votingPools = pools.map((pool: any) => {
           const poolStore = new PoolStore(pool)
@@ -38,13 +38,17 @@ export class ProjectListViewModel {
     this.filterType = value
   }
 
+  @action.bound shouldFilterRejected(value: boolean) {
+    this.filterRejected = !!value
+  }
+
   @computed get filteredTypeProjects() {
     return this.votingPools.filter((item) => item.type === this.filterType)
   }
 
   @computed get filteredStatusProjects() {
     return this.filterRejected
-      ? this.filteredTypeProjects.filter((item) => item.status !== 'rejected')
+      ? this.filteredTypeProjects.filter((item) => item.status === 'approved' || item.onVoting)
       : this.filteredTypeProjects
   }
 }
