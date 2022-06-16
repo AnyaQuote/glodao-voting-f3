@@ -42,22 +42,7 @@
         </div>
       </div>
       <div class="layout-custom pl-custom">
-        <v-hover v-slot="{ hover }">
-          <v-img aspect-ratio="1" max-height="200" :src="vm.poolStore.projectCover" class="rounded-lg">
-            <div v-if="hover" class="fill-height d-flex align-center justify-center">
-              <v-btn
-                height="24"
-                width="100"
-                color="text-none text-subtitle-2 neutral-100--text"
-                style="background: rgba(255, 255, 255, 0.3)"
-                class="pa-2"
-              >
-                <v-icon right size="13" color="white" class="ma-0 mr-2">mdi-pencil</v-icon>
-                Change
-              </v-btn>
-            </div>
-          </v-img>
-        </v-hover>
+        <v-img aspect-ratio="1" max-height="200" :src="vm.poolStore.projectCover" class="rounded-lg"> </v-img>
       </div>
     </div>
 
@@ -71,7 +56,7 @@
       <div style="display: grid; gap: 12px">
         <div v-for="(key, i) in $_keys(vm.poolStore.socialLinks)" :key="i" class="d-flex text-truncate">
           <v-icon color="app-blue" class="mr-2" size="24">
-            {{ key !== 'website' ? `fab fa-${key}` : 'mdi-web' }}
+            {{ getDisplayIcon(key) }}
           </v-icon>
           <div class="neutral-10--text text-capitalize mr-1">{{ key }}:</div>
           <a target="_blank" :href="vm.poolStore.socialLinks[key]" class="text-truncate blue--text text-truncate">
@@ -93,32 +78,16 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
-  get statusReport() {
-    if (this.vm.poolStore?.onVoting)
-      return {
-        color: 'app-blue',
-        text: 'Your project is opening for vote',
-      }
-    if (this.vm.poolStore?.status === 'approved')
-      return {
-        color: 'app-green',
-        text: 'Project is approved',
-      }
-    if (this.vm.poolStore?.status === 'cancelled')
-      return {
-        color: 'app-red',
-        text: 'Project is cancelled',
-      }
-    if (this.vm.poolStore?.voteEnded)
-      return {
-        color: 'app-red',
-        text: 'Project is ended',
-      }
-
-    return {
-      color: 'app-grey',
-      text: this.vm.poolStore?.status,
+  getDisplayIcon(iconKey: string) {
+    const iconName = iconKey.split('-')[0]
+    if (iconName === 'whitepaper') {
+      return 'fas fa-file-alt'
+    } else if (iconName === 'others') {
+      return 'fas fa-link'
+    } else if (iconName === 'website') {
+      return 'fas fa-globe'
     }
+    return `fab fa-${iconName}`
   }
 }
 </script>

@@ -13,13 +13,7 @@
 
       <div class="pa-4 pa-md-6">
         <div class="font-weight-bold mb-3">Final result</div>
-        <v-sheet
-          height="40"
-          class="mt-2 d-flex justify-center align-center rounded white--text font-weight-600 text-subtitle-1"
-          :color="statusReport.color"
-        >
-          {{ statusReport.text }}
-        </v-sheet>
+        <project-status :pool="vm.poolStore" />
       </div>
       <div class="pa-4 pa-md-6">
         <div class="d-flex align-baseline mb-2">
@@ -31,9 +25,10 @@
           </div>
           <div class="text-truncate">We want the project to launch</div>
         </div>
-        <progress-bar :value="vm.poolStore.votedPercent" />
+        <progress-bar :value="$_get(vm.poolStore, 'votedYesPercent')" />
         <div class="d-flex justify-space-between text-subtitle-2 font-weight-600 mt-2">
-          <span>---</span><span>{{ vm.poolStore.votedPercent }}%</span>
+          <span>{{ $_get(vm.poolStore, 'votedYesWeight') | formatNumber(0) }}</span
+          ><span>{{ $_get(vm.poolStore, 'votedYesPercent') | formatNumber(2) }}%</span>
         </div>
       </div>
       <div class="pa-4 pa-md-6">
@@ -46,9 +41,10 @@
           </div>
           <div class="text-truncate">We don't want the project to launch</div>
         </div>
-        <progress-bar :value="vm.poolStore.votedPercent" />
+        <progress-bar :value="$_get(vm.poolStore, 'votedNoPercent')" />
         <div class="d-flex justify-space-between text-subtitle-2 font-weight-600 mt-2">
-          <span>---</span><span>{{ vm.poolStore.votedPercent }}%</span>
+          <span>{{ $_get(vm.poolStore, 'votedNoWeight') | formatNumber(0) }}</span
+          ><span>{{ $_get(vm.poolStore, 'votedNoPercent') | formatNumber(2) }}%</span>
         </div>
       </div>
     </v-sheet>
@@ -61,37 +57,13 @@ import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 
 @Observer
-@Component
+@Component({
+  components: {
+    'project-status': () => import('./project-status.vue'),
+  },
+})
 export default class extends Vue {
   @Inject() vm!: ProjectDetailViewModel
-
-  get statusReport() {
-    if (this.vm.poolStore?.onVoting)
-      return {
-        color: 'app-blue',
-        text: 'Your project is opening for vote',
-      }
-    if (this.vm.poolStore?.status === 'approved')
-      return {
-        color: 'app-green lighten-1',
-        text: 'Project is approved',
-      }
-    if (this.vm.poolStore?.status === 'cancelled')
-      return {
-        color: 'app-red',
-        text: 'Project is cancelled',
-      }
-    if (this.vm.poolStore?.voteEnded)
-      return {
-        color: 'app-red',
-        text: 'Project is ended',
-      }
-
-    return {
-      color: 'app-grey',
-      text: this.vm.poolStore?.status,
-    }
-  }
 }
 </script>
 
