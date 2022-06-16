@@ -9,7 +9,7 @@
       <div class="font-weight-600 mb-2" :class="$vuetify.breakpoint.mobile ? 'font-18' : 'text-h5'">
         Project information detail
       </div>
-      <div class="d-flex align-center">
+      <!-- <div class="d-flex align-center">
         <v-icon size="17" class="mr-2">mdi-information-outline</v-icon>
         <span
           class="text-subtitle-1 font-italic font-weight-regular"
@@ -17,7 +17,7 @@
         >
           You can only edit pool information before voting time ended.
         </span>
-      </div>
+      </div> -->
     </div>
 
     <div class="mb-6 flex-custom mb-6">
