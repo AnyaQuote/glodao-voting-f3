@@ -1,6 +1,6 @@
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
-import { set, kebabCase, toNumber, get } from 'lodash'
+import { set, kebabCase, toNumber, isEmpty } from 'lodash'
 import { asyncAction } from 'mobx-utils'
 import { apiService } from '@/services/api-service'
 import { getApiFileUrl } from '@/helpers/file-helper'
@@ -14,6 +14,7 @@ import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
+import { promiseHelper } from '@/helpers/promise-helper'
 
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
@@ -150,6 +151,19 @@ export class BountyApplyViewModel {
     }
   }
 
+  /**
+   * Check if existed a unicode name
+   * If existed, return kebab case project name appends with unix from moment
+   * Else return kebab case project name
+   * @param projectName Name of the project
+   * @returns unicodeName
+   */
+  @asyncAction *checkUnicodeDuplicate(projectName: string) {
+    const unicodeName = kebabCase(projectName)
+    const [_, res] = yield promiseHelper.handle(apiService.voting.find({ unicodeName }, { _limit: 1 }))
+    return isEmpty(res) ? unicodeName : unicodeName + moment().unix().toString()
+  }
+
   @asyncAction *submit() {
     this.creating = true
     try {
@@ -169,15 +183,7 @@ export class BountyApplyViewModel {
         images = yield apiService.uploadFile(media)
       }
 
-      let unicodeName = kebabCase(this.projectInfo.projectName)
-      // check duplicate unicodeName
-      const pools = yield apiService.voting.find({
-        unicodeName,
-        _limit: 1,
-      })
-      if (pools && pools.length > 0) {
-        unicodeName = unicodeName + moment().unix().toString()
-      }
+      const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
 
       // update voting pool
       const data = {
@@ -188,7 +194,7 @@ export class BountyApplyViewModel {
         tokenAddress: this.projectInfo.tokenAddress,
         tokenName: this.projectInfo.tokenName,
         status: 'voting',
-        unicodeName: kebabCase(this.projectInfo.projectName),
+        unicodeName,
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
         votingStart: moment().toISOString(),
@@ -209,7 +215,7 @@ export class BountyApplyViewModel {
           optionalTokenName: this.projectInfo.optionalTokenName,
         },
       }
-      const pool = yield apiService.createOrUpdateVotingPool(data)
+      yield apiService.createOrUpdateVotingPool(data)
       appProvider.router.push(RoutePaths.project_list)
     } catch (error) {
       console.error(error)
