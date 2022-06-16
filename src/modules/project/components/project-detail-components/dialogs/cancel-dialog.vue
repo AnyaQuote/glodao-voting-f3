@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="vm.cancelDialog" v-if="vm.poolStore" persistent max-width="438">
+  <v-dialog :value="true" v-if="vm.poolStore" persistent max-width="438">
     <div class="rounded-lg pa-6 neutral-100">
       <!-- HEADER -->
       <div class="d-flex justify-space-between align-center mb-4">
@@ -19,12 +19,14 @@
       </div>
 
       <!-- WITHDRAW AMOUNT -->
-      <div class="rounded-lg text-center py-4 mb-6" style="border: 1px solid var(--v-neutral-20-base)">
+      <div class="rounded-lg text-center py-4" style="border: 1px solid var(--v-neutral-20-base)">
         <div class="font-18 neutral-10--text">Withdraw amount</div>
         <div class="text-h5 font-weight-600">
           {{ $_get(vm.poolStore, 'requiredAmount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
         </div>
       </div>
+
+      <div class="text-subtitle-2 font-italic font-weight-regular mb-6 mt-1">*Cancel fee is 5% reward amount</div>
 
       <!-- BUTTON -->
       <v-btn
