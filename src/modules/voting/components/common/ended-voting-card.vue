@@ -41,9 +41,22 @@
           <div>
             <v-divider />
             <div class="d-flex align-center mb-4 mx-6 mt-3">
+              <!-- YES VOTE  -->
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedPercent') | formatNumber(4) }}%</div>
+              <div class="font-weight-bold number-count mr-1">
+                {{ $_get(pool, 'votedYesPercent') | formatNumber(4) }}%
+              </div>
               <div><span class="green--text font-weight-bold">YES</span> votes</div>
+              <!------------->
+
+              <v-sheet height="4" width="4" class="blue-diversity rounded-circle mx-2"></v-sheet>
+
+              <!-- NO VOTE -->
+              <div class="font-weight-bold number-count mr-1">
+                {{ $_get(pool, 'votedNoPercent') | formatNumber(4) }}%
+              </div>
+              <div><span class="red--text font-weight-bold">NO</span> votes</div>
+              <!------------->
             </div>
             <div class="text-center py-2" :class="typeBackgroundColor">
               <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
@@ -75,11 +88,23 @@
           <v-divider></v-divider>
           <div class="text-subtitle-2 rounded-lg pa-4 d-flex align-center">
             <v-icon class="mr-2">mdi-star-outline</v-icon>
+            <!-- YES VOTE  -->
             <div class="font-weight-bold mt-1 text-subtitle-1">
-              {{ $_get(pool, 'votedPercent') | formatNumber(4) }}%
+              {{ $_get(pool, 'votedYesPercent') | formatNumber(4) }}%
               <span class="app-green--text">YES </span>
               <span class="font-weight-600"> votes</span>
             </div>
+            <!------------->
+
+            <v-sheet height="4" width="4" class="blue-diversity mt-1 rounded-circle mx-2"></v-sheet>
+
+            <!-- NO VOTE  -->
+            <div class="font-weight-bold mt-1 text-subtitle-1">
+              {{ $_get(pool, 'votedNoPercent') | formatNumber(4) }}%
+              <span class="app-red--text">NO </span>
+              <span class="font-weight-600"> votes</span>
+            </div>
+            <!------------->
           </div>
           <v-sheet height="24" class="text-caption text-center app-orange lighten-2 app-orange--text py-1">
             BOUNTY PROJECT
