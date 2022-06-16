@@ -12,6 +12,7 @@ import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
 import { authStore } from '@/stores/auth-store'
+import { promiseHelper } from '@/helpers/promise-helper'
 
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -92,8 +93,12 @@ export class ProjectDetailViewModel {
           ownerAddress: this.poolStore!.ownerAddress,
         })
 
-        appProvider.snackbar.success('Cancel successfully')
+        appProvider.snackbar.success('Cancel successfully. Browser will refresh soon...')
         this.changeCancelDialog(false)
+
+        // Reload after cancelling
+        promiseHelper.delay(500)
+        location.reload()
       } catch (error) {
         console.error(error)
       }
