@@ -9,6 +9,7 @@
         :value="prop.type"
         :rules="[$rules.required]"
         :disabled="prop.required"
+        :append-icon="prop.required ? '' : '$dropdown'"
         @change="onChange(index, 'type', $event)"
         placeholder="Choose platform"
       >
