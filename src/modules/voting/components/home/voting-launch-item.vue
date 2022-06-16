@@ -62,7 +62,7 @@
       <div class="d-flex justify-center align-center mt-2 text-h6 font-weight-bold flex-wrap">
         <div class="mr-4">Ended voting in:</div>
         <div>{{ $_get(pool, 'votingEnd') | ddmmyyyyhhmmss }}</div>
-        <v-sheet v-show="$vuetify.breakpoint.mdAndUp" height="8" width="8" class="rounded-circle blue mx-4"> </v-sheet>
+        <v-sheet height="8" width="8" class="d-none d-sm-none d-md-block rounded-circle blue mx-4"> </v-sheet>
         <div>Launching soon on {{ platform }}</div>
       </div>
       <v-btn class="rounded-lg" color="blue" outlined :to="`/voting/${pool.unicodeName}`">
