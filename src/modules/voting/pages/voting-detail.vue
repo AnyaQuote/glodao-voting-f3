@@ -32,7 +32,7 @@
           <v-skeleton-loader class="mb-2" v-for="index in 3" :key="index" height="80" type="image" />
         </div>
         <!-- ------------------------------------ EMPTY -------------------------------------- -->
-        <div v-else-if="!vm.dataLoading && !vm.votedUsers.length" class="text-h6 text-center rounded-lg">
+        <div v-else-if="!vm.dataLoading && !vm.votedUserPagingList.length" class="text-h6 text-center rounded-lg">
           No users has voted yet. Be the first to support this project
         </div>
 
@@ -44,9 +44,9 @@
           <v-pagination
             prev-icon="mdi-arrow-left"
             next-icon="mdi-arrow-right"
-            :length="vm.votedUserPage.total"
-            :value="vm.votedUserPage.current"
-            @input="vm.handleVotedUserPaging"
+            :value="vm.votedUserPage"
+            :length="vm.votedUserTotalPage"
+            @input="vm.changeVotedUserPage"
           />
         </v-sheet>
         <!-- -------------------------------------------------------------------------------- -->
@@ -104,11 +104,6 @@ import { RoutePaths } from '@/router'
 export default class VotingDetail extends Vue {
   @Provide() vm = new VotingDetailViewModel(get(this.$route, 'params.code'))
   @Ref('guide-dialog') dialog
-
-  mounted() {
-    // Init paging
-    this.vm.handleVotedUserPaging(1)
-  }
 
   goToVotingList() {
     this.$router.push(RoutePaths.voting_list)

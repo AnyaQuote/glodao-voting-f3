@@ -8,7 +8,7 @@ import { Subject, timer } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
 import { apiService } from '@/services/api-service'
 import { PoolStore } from '@/stores/pool-store'
-import { Zero } from '@/constants'
+import { PAGE_ITEM_LIMIT, Zero } from '@/constants'
 import { takeUntil } from 'rxjs/operators'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
@@ -29,12 +29,7 @@ export class VotingDetailViewModel {
 
   @observable poolStore?: PoolStore
 
-  @observable votedUserPagingList: Voter[] = []
-  @observable votedUserPage = {
-    limit: 6,
-    current: 0,
-    total: 0,
-  }
+  @observable votedUserPage = 1
 
   constructor(unicodeName: string) {
     this.loadData(unicodeName)
@@ -47,32 +42,7 @@ export class VotingDetailViewModel {
           if (walletStore.account) this.getPoolUserInfos()
         }
       ),
-      reaction(
-        () => this.votedUsers,
-        () => {
-          !isEmpty(this.votedUsers) && this.handleVotedUserPaging(1)
-        }
-      ),
     ]
-  }
-
-  /**
-   * Assign current page value and calculate total page if it is empty
-   * Initalize userVotedPagingList from current page and votedUsers list
-   * @param value Can be a number represents page index or command 'next | prev' to decrease or increase current page
-   */
-  @action.bound handleVotedUserPaging(value: number) {
-    this.votedUserPage.current = value
-    if (!this.votedUserPage.total) {
-      this.votedUserPage.total = Math.ceil(this.votedUsers.length / this.votedUserPage.limit)
-    }
-
-    if (this.votedUsers.length) {
-      this.votedUserPagingList = this.votedUsers.slice(
-        (this.votedUserPage.current - 1) * this.votedUserPage.limit,
-        this.votedUserPage.current * this.votedUserPage.limit
-      )
-    }
   }
 
   destroy() {
@@ -166,15 +136,21 @@ export class VotingDetailViewModel {
 
   @computed get votedUsers(): Voter[] {
     const users = [
-      ...(this.poolStore?.approvedUsers || []).map((address) => ({
-        address: address,
-        voted: 'yes',
-      })),
-      ...(this.poolStore?.rejectedUsers || []).map((address) => ({
-        address: address,
-        voted: 'no',
-      })),
+      ...(this.poolStore?.approvedUsers || []).map((address) => new Voter(address, 'yes', '--')),
+      ...(this.poolStore?.rejectedUsers || []).map((address) => new Voter(address, 'no', '--')),
     ]
     return users
+  }
+
+  @action.bound changeVotedUserPage(value: number) {
+    this.votedUserPage = value
+  }
+
+  @computed get votedUserTotalPage() {
+    return Math.ceil(this.votedUsers.length / PAGE_ITEM_LIMIT)
+  }
+
+  @computed get votedUserPagingList(): Voter[] {
+    return this.votedUsers.slice((this.votedUserPage - 1) * PAGE_ITEM_LIMIT, this.votedUserPage * PAGE_ITEM_LIMIT)
   }
 }
