@@ -20,7 +20,6 @@ export class ProjectListViewModel {
       this.loading = true
       if (!authStore.attachedAddress) return
       const pools = await appProvider.api.voting.find({ ownerAddress: authStore.attachedAddress }, { _limit: -1 })
-      console.log(pools)
       if (pools && pools.length) {
         this.votingPools = pools.map((pool: any) => {
           const poolStore = new PoolStore(pool)
