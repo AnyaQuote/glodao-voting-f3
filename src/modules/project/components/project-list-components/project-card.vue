@@ -4,47 +4,46 @@
       <v-col :cols="$vuetify.breakpoint.mobile ? 12 : 6" :class="!$vuetify.breakpoint.mobile && 'border-right'">
         <div class="project-info pa-4 pa-sm-6 d-flex align-stretch blue-2">
           <div class="project-logo neutral-100 rounded d-flex justify-center align-center mr-4" style="padding: 6px">
-            <v-img :src="pool.projectLogo" contain max-height="100%" />
+            <v-img :src="$_get(pool, 'projectLogo')" contain max-height="100%" />
           </div>
           <div class="spacer text-truncate">
-            <div class="text-h6 text-sm-h5 font-weight-bold text-truncate">{{ pool.projectName }}</div>
-            <div class="text-subtitle-1 text-sm-h6 neutral10--text font-weight-medium">$SB</div>
+            <div class="text-h6 text-sm-h5 font-weight-bold text-truncate">{{ $_get(pool, 'projectName') }}</div>
+            <div class="text-subtitle-1 text-sm-h6 neutral10--text font-weight-medium">
+              ${{ $_get(pool, 'tokenName') }}
+            </div>
           </div>
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-2 text-md-subtitle-1 neutral-10--text font-weight-regular">
-          {{ pool.shortDescription }}
+          {{ $_get(pool, 'shortDescription') }}
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-1" :class="$vuetify.breakpoint.mobile && 'border-bottom'">
-          <div>
-            <span class="neutral-10--text font-weight-medium">Voting start: </span>
-            <span class="font-weight-600">{{ pool.startDate | ddmmyyyyhhmma }}</span>
-          </div>
-          <div>
-            <span class="neutral-10--text font-weight-medium">Voting start: </span>
-            <span class="font-weight-600">{{ pool.endDate | ddmmyyyyhhmma }}</span>
-          </div>
+          <!-- PROJECT TIME -->
+          <project-time :pool="pool" />
+          <!--==========--->
+
+          <!-- PROJECT TOTAL REWARD -->
           <div>
             <span class="neutral-10--text font-weight-medium">Total reward amount: </span>
-            <span class="font-weight-600">{{ pool.requiredAmount | formatNumber }} {{ pool.tokenName }}</span>
+            <span class="font-weight-600"
+              >{{ $_get(pool, 'requiredAmount') | formatNumber(2) }} {{ pool.tokenName }}</span
+            >
           </div>
+          <!--======================-->
         </div>
       </v-col>
       <v-col :cols="$vuetify.breakpoint.mobile ? 12 : 6">
         <div class="pa-4 project-info">
           <div class="text-subtitle-1 font-weight-medium mb-3">Final result</div>
-          <div
-            style="height: 40px"
-            class="rounded app-blue--text text--lighten-1 font-weight-medium d-flex align-center justify-center text-subtitle-1"
-            :class="statusReport.color"
-          >
-            {{ statusReport.text }}
-          </div>
+          <!-- PROJECT STATUS -->
+          <project-status :pool="pool" />
+          <!--================-->
         </div>
         <div class="border-bottom"></div>
 
         <div class="pa-4">
+          <!-- VOTED YES  -->
           <div class="d-flex align-baseline">
             <div
               class="app-blue--text text--lighten-1 text-subtitle-2 rounded-lg d-flex justify-center align-center mr-4 mb-2 app-green lighten-1"
@@ -54,14 +53,16 @@
             </div>
             <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We want the project to launch</div>
           </div>
-          <progress-bar :value="pool.votedYesPercent" />
+          <progress-bar :value="$_get(pool, 'votedYesPercent')" />
           <div class="d-flex justify-space-between text-subtitle-2 mt-2">
-            <div>{{ pool.approvedUsers.length | formatNumber(0) }}</div>
-            <div>{{ pool.votedYesPercent | formatNumber(2, 2) }} %</div>
+            <div>{{ $_get(pool, 'approvedUsers.length') | formatNumber(0) }}</div>
+            <div>{{ $_get(pool, 'votedYesPercent') | formatNumber(2, 2) }} %</div>
           </div>
+          <!--==========--->
         </div>
 
         <div class="pa-4">
+          <!-- VOTED NO -->
           <div class="d-flex align-baseline">
             <div
               class="app-blue--text text--lighten-1 text-subtitle-2 rounded-lg d-flex justify-center align-center mr-4 mb-2 app-red"
@@ -71,11 +72,12 @@
             </div>
             <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We don't want the project to launch</div>
           </div>
-          <progress-bar :value="pool.votedNoPercent" />
+          <progress-bar :value="$_get(pool, 'votedNoPercent')" />
           <div class="d-flex justify-space-between text-subtitle-2 mt-2">
-            <div>{{ pool.rejectedUsers.length | formatNumber(0) }}</div>
-            <div>{{ pool.votedNoPercent | formatNumber(2, 2) }} %</div>
+            <div>{{ $_get(pool, 'rejectedUsers.length') | formatNumber(0) }}</div>
+            <div>{{ $_get(pool, 'votedNoPercent') | formatNumber(2, 2) }} %</div>
           </div>
+          <!--==========--->
         </div>
       </v-col>
     </v-row>
@@ -94,37 +96,14 @@ import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Observer
-@Component
+@Component({
+  components: {
+    'project-status': () => import('./project-status.vue'),
+    'project-time': () => import('./project-time.vue'),
+  },
+})
 export default class extends Vue {
   @Prop({ required: true }) pool!: PoolStore
-
-  get statusReport() {
-    if (this.pool.onVoting)
-      return {
-        color: 'app-blue',
-        text: 'Your project is opening for vote',
-      }
-    if (this.pool.status === 'approved')
-      return {
-        color: 'app-green lighten-1',
-        text: 'Project is approved',
-      }
-    if (this.pool.status === 'cancelled')
-      return {
-        color: 'app-red',
-        text: 'Project is cancelled',
-      }
-    if (this.pool.voteEnded)
-      return {
-        color: 'app-red',
-        text: 'Project is ended',
-      }
-
-    return {
-      color: 'app-grey',
-      text: this.pool.status,
-    }
-  }
 }
 </script>
 
