@@ -2,7 +2,7 @@
   <!-- ----------------------------------------------- DESKTOP CARD ------------------------------------------ -->
   <v-hover v-slot="{ hover }">
     <v-sheet width="348" class="fill-height rounded-lg pa-thin overflow-hidden" :class="typeBorderColor">
-      <v-sheet class="d-flex flex-column">
+      <v-sheet class="d-flex flex-column fill-height">
         <div class="rounded-t-lg flex-shrink-0">
           <v-img max-height="234" aspect-ratio="1" :src="$_get(pool, 'data.projectCover')">
             <div class="p-absolute absolute-space d-flex flex-column" :class="{ blur: hover }">
@@ -20,14 +20,14 @@
             </div>
           </v-img>
         </div>
-        <div class="flex-grow-1 d-flex flex-column">
+        <div class="d-flex flex-column flex-grow-1">
           <!-- CARD TOP START -->
-          <div class="d-flex flex-column flex-grow-1 pa-6">
+          <div class="d-flex flex-column pa-6">
             <div class="d-flex align-center mb-4">
               <v-avatar size="48" class="mr-4">
                 <v-img :src="$_get(pool, 'data.projectLogo')" />
               </v-avatar>
-              <div class="text-h5 flex-grow-1 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
+              <div class="text-h5 font-weight-bold">{{ $_get(pool, 'projectName') }}</div>
             </div>
             <div class="text-subtitle-2 text-truncate neutral10--text font-weight-bold mb-4">
               {{ $_get(pool, 'data.shortDescription') }}
