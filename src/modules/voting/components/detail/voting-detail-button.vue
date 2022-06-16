@@ -58,9 +58,6 @@ import { VotingDetailViewModel } from '../../viewmodels/voting-detail-viewmodel'
 })
 export default class VotingDetailButton extends Vue {
   @Inject() vm!: VotingDetailViewModel
-
-  connected = false
-  voted = true
   walletStore = walletStore
 }
 </script>
