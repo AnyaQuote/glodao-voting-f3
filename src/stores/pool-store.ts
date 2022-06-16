@@ -195,7 +195,7 @@ export class PoolStore {
   @computed get votingEnd() {
     return this.poolData.votingEnd
   }
-  @computed get votedUser(): Voter[] {
+  @computed get votedUsers(): Voter[] {
     return [
       ...(this.approvedUsers || []).map((address) => new Voter(address, 'yes')),
       ...(this.rejectedUsers || []).map((address) => new Voter(address, 'no')),

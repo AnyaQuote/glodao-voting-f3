@@ -140,11 +140,11 @@ export class VotingDetailViewModel {
   }
 
   @computed get votedUserTotalPage() {
-    return Math.ceil((this.poolStore?.votedUser || []).length / PAGE_ITEM_LIMIT)
+    return Math.ceil((this.poolStore?.votedUsers || []).length / PAGE_ITEM_LIMIT)
   }
 
   @computed get votedUserPagingList(): Voter[] {
-    return (this.poolStore?.votedUser || []).slice(
+    return (this.poolStore?.votedUsers || []).slice(
       (this.votedUserPage - 1) * PAGE_ITEM_LIMIT,
       this.votedUserPage * PAGE_ITEM_LIMIT
     )
