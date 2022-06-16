@@ -48,7 +48,7 @@
               <v-icon class="mr-2">mdi-star-outline</v-icon>
 
               <!-- NUMBER OF VOTED USER -->
-              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedUser.length') }}</div>
+              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedUser.length', 0) }}</div>
               <div><span class="font-weight-bold">users</span> voted</div>
             </div>
             <!-- ---------------------- -->
@@ -118,7 +118,7 @@
           <v-icon class="mr-2">mdi-star-outline</v-icon>
           <div class="text-subtitle-2">
             <!-- NUMBER OF VOTED USER -->
-            <span class="mr-1 font-weight-600">{{ $_get(pool, 'votedUser.length') }} users</span>
+            <span class="mr-1 font-weight-600">{{ $_get(pool, 'votedUser.length', 0) }} users</span>
             <span class="font-weight-regular">voted</span>
             <!-------------------------->
           </div>
