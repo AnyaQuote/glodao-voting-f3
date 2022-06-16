@@ -46,7 +46,7 @@
               <div class="font-weight-bold number-count mr-1">
                 {{ $_get(pool, 'votedYesPercent') | formatNumber(2) }}%
               </div>
-              <div><span class="green--text font-weight-bold">YES</span> votes</div>
+              <div class="text-truncate"><span class="green--text font-weight-bold">YES</span> votes</div>
               <!------------->
 
               <v-sheet height="4" width="4" class="blue-diversity rounded-circle mx-2"></v-sheet>
@@ -55,7 +55,7 @@
               <div class="font-weight-bold number-count mr-1">
                 {{ $_get(pool, 'votedNoPercent') | formatNumber(2) }}%
               </div>
-              <div><span class="red--text font-weight-bold">NO</span> votes</div>
+              <div class="text-truncate"><span class="red--text font-weight-bold">NO</span> votes</div>
               <!------------->
             </div>
             <div class="text-center py-2" :class="typeBackgroundColor">
