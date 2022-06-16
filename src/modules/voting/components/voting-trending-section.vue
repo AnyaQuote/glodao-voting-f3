@@ -121,7 +121,7 @@
           >
             <v-hover v-slot="{ hover }">
               <div class="transparent-border" :class="{ 'active-border': hover }">
-                <v-img class="rounded-lg" max-width="160" :src="$_get(item, 'projectCover')" />
+                <v-img class="rounded-lg" width="160" min-height="100" :src="$_get(item, 'projectCover')" />
               </div>
             </v-hover>
           </div>
