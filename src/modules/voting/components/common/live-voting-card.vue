@@ -44,11 +44,15 @@
             <v-divider />
             <countdown class="text-h5 my-3" :to="$_get(pool, 'votingEnd')"> </countdown>
             <v-divider />
-            <div class="d-flex mb-4 mx-6 mt-3">
+            <div class="d-flex mb-4 mx-6 mt-3 align-end">
               <v-icon class="mr-2">mdi-star-outline</v-icon>
-              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedPercent') | formatNumber(4) }}%</div>
-              <div><span class="green--text font-weight-bold">YES</span> votes</div>
+
+              <!-- NUMBER OF VOTED USER -->
+              <div class="font-weight-bold number-count mr-1">{{ $_get(pool, 'votedUser.length') }}</div>
+              <div><span class="font-weight-bold">users</span> voted</div>
             </div>
+            <!-- ---------------------- -->
+
             <div class="flag text-center py-2" :class="typeBackgroundColor">
               <span class="text-uppercase" :class="typeTextColor">{{ typeName }}</span>
             </div>
@@ -112,9 +116,11 @@
         <v-divider></v-divider>
         <div class="pa-4 d-flex align-center">
           <v-icon class="mr-2">mdi-star-outline</v-icon>
-          <div class="mt-1">
-            <span class="text-subtitle-2 mr-1 font-weight-600"></span>
-            <span>votes for launching</span>
+          <div class="text-subtitle-2">
+            <!-- NUMBER OF VOTED USER -->
+            <span class="mr-1 font-weight-600">{{ $_get(pool, 'votedUser.length') }} users</span>
+            <span class="font-weight-regular">voted</span>
+            <!-------------------------->
           </div>
         </div>
         <div class="text-center py-2" :class="typeBackgroundColor">
