@@ -68,7 +68,7 @@
               class="app-blue--text text--lighten-1 text-subtitle-2 rounded-lg d-flex justify-center align-center mr-4 mb-2 app-red"
               style="height: 27px; width: 59px"
             >
-              👍 NO
+              👎 NO
             </div>
             <div class="text-subtitle-2 text-md-subtitle-1 text-truncate">We don't want the project to launch</div>
           </div>
