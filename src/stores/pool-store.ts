@@ -2,7 +2,7 @@ import { blockchainHandler } from '@/blockchainHandlers'
 import { IVotingContract } from '@/blockchainHandlers/ido-contract-interface'
 import { Zero } from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { VotingPool } from '@/models/VotingModel'
+import { Voter, VotingPool } from '@/models/VotingModel'
 import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { random } from 'lodash-es'
@@ -194,5 +194,11 @@ export class PoolStore {
 
   @computed get votingEnd() {
     return this.poolData.votingEnd
+  }
+  @computed get votedUser(): Voter[] {
+    return [
+      ...(this.approvedUsers || []).map((address) => new Voter(address, 'yes')),
+      ...(this.rejectedUsers || []).map((address) => new Voter(address, 'no')),
+    ]
   }
 }

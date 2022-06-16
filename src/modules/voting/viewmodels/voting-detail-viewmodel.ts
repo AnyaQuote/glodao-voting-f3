@@ -134,23 +134,20 @@ export class VotingDetailViewModel {
     return bnHelper.lt(this.userStakeBalance, this.stakeFee)
   }
 
-  @computed get votedUsers(): Voter[] {
-    const users = [
-      ...(this.poolStore?.approvedUsers || []).map((address) => new Voter(address, 'yes', '--')),
-      ...(this.poolStore?.rejectedUsers || []).map((address) => new Voter(address, 'no', '--')),
-    ]
-    return users
-  }
-
+  // ===== USER VOTED PAGINATION START =====
   @action.bound changeVotedUserPage(value: number) {
     this.votedUserPage = value
   }
 
   @computed get votedUserTotalPage() {
-    return Math.ceil(this.votedUsers.length / PAGE_ITEM_LIMIT)
+    return Math.ceil((this.poolStore?.votedUser || []).length / PAGE_ITEM_LIMIT)
   }
 
   @computed get votedUserPagingList(): Voter[] {
-    return this.votedUsers.slice((this.votedUserPage - 1) * PAGE_ITEM_LIMIT, this.votedUserPage * PAGE_ITEM_LIMIT)
+    return (this.poolStore?.votedUser || []).slice(
+      (this.votedUserPage - 1) * PAGE_ITEM_LIMIT,
+      this.votedUserPage * PAGE_ITEM_LIMIT
+    )
   }
+  // ====== USER VOTED PAGINATION END ======
 }
