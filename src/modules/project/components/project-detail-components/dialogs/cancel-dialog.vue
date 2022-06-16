@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="true" v-if="vm.poolStore" persistent max-width="438">
+  <v-dialog :value="vm.cancelDialog" v-if="vm.poolStore" persistent max-width="438">
     <div class="rounded-lg pa-6 neutral-100">
       <!-- HEADER -->
       <div class="d-flex justify-space-between align-center mb-4">
