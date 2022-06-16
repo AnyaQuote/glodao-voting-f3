@@ -29,7 +29,14 @@ export interface VotingPool {
   data?: Metadata
 }
 
-export interface Voter {
+export class Voter {
   voted?: string
   address?: string
+  time?: string
+
+  constructor(address: string, voted: string, time: string) {
+    this.address = address
+    this.voted = voted
+    this.time = time
+  }
 }
