@@ -3,6 +3,7 @@ export const Zero = FixedNumber.from('0')
 export const HUNDRED = FixedNumber.from('100')
 export const PRIORITY_AMOUNT_RATIO = FixedNumber.from('0.3')
 export const ETHER_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const PAGE_ITEM_LIMIT = 6
 
 export const URL_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
