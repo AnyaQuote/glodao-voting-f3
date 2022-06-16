@@ -34,7 +34,7 @@ export class Voter {
   address?: string
   time?: string
 
-  constructor(address: string, voted: string, time: string) {
+  constructor(address: string, voted: string, time = '--') {
     this.address = address
     this.voted = voted
     this.time = time
