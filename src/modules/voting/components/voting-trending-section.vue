@@ -28,7 +28,9 @@
           hide-delimiter-background
           hide-delimiters
           v-model="tab"
-          class="fill-height"
+          cycle
+          continuous
+          class="fill-height rounded-lg"
           show-arrows-on-hover
         >
           <template v-slot:prev="{ on, attrs }">
@@ -76,7 +78,11 @@
       <!-- PREVIEW SCROLL ITEM START -->
       <v-col cols="12" md="4">
         <div class="text-uppercase blue-diversity--text text-h6 mb-4">Trending now</div>
-        <v-sheet v-if="$vuetify.breakpoint.mdAndUp" height="480" class="rounded-lg-y pa-n4 overflow-y-scroll">
+        <v-sheet
+          v-if="$vuetify.breakpoint.mdAndUp"
+          height="480"
+          class="rounded-lg-y pa-n4 overflow-y-scroll rounded-lg"
+        >
           <!-- ------------------------------------ MOBILE SLIDER VERTICAL -------------------------------------- -->
           <div
             v-for="(item, index) in vm.votingList"

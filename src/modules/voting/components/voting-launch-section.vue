@@ -15,8 +15,10 @@
     v-else
     height="auto"
     hide-delimiters
+    cycle
     delimiter-icon="mdi-minus"
     show-arrows-on-hover
+    continuous
     class="rounded-lg transparent--bg elevation-3"
   >
     <template v-slot:prev="{ on, attrs }">
