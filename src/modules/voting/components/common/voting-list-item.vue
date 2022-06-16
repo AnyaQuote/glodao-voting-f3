@@ -15,10 +15,10 @@
       <v-chip color="red mr-2" class="white--text">👎 NO</v-chip>
       <span class="font-weight-medium"> We do not want to join in this project </span>
     </div>
-    <!-- <div class="col-12 col-md-4 d-flex flex-row flex-md-column align-md-end justify-space-between text-subtitle-2">
+    <div class="col-12 col-md-4 d-flex flex-row flex-md-column align-md-end justify-space-between text-subtitle-2">
       <span class="neutral10--text">Time voted</span>
-      <span class="font-weight-bold">---</span>
-    </div> -->
+      <span class="font-weight-bold">{{ prop.time }}</span>
+    </div>
   </v-sheet>
 </template>
 
