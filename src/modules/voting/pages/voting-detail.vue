@@ -39,8 +39,8 @@
         </div>
 
         <!-- ------------------------------------ CONTENT ------------------------------------ -->
-        <v-sheet v-else class="d-flex flex-column transparent" height="576">
-          <v-slide-x-transition class="flex-grow-1" group hide-on-leave>
+        <div v-else>
+          <v-slide-x-transition group hide-on-leave>
             <voting-list-item v-for="(voter, index) in vm.votedUserPagingList" :prop="voter" :key="index" />
           </v-slide-x-transition>
           <v-pagination
@@ -50,7 +50,7 @@
             :length="vm.votedUserTotalPage"
             @input="vm.changeVotedUserPage"
           />
-        </v-sheet>
+        </div>
         <!-- -------------------------------------------------------------------------------- -->
       </v-col>
 
