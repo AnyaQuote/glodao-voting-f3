@@ -116,7 +116,7 @@ export class NewMissionViewModel {
       learningInformation,
       data: quizJSON,
       answer: answerJSON,
-      ownerAddress: appProvider.wallet.account,
+      ownerAddress: appProvider.authStore.attachedAddress,
       metadata: {
         coverImage: coverUrl,
         tags: this.pool?.data?.fields,
@@ -157,7 +157,7 @@ export class NewMissionViewModel {
       rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
       maxParticipant: toNumber(missionInfo.maxParticipants),
       priorityRewardAmount: this.priorityAmount.toString(),
-      ownerAddress: appProvider.wallet.account,
+      ownerAddress: appProvider.authStore.attachedAddress,
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
