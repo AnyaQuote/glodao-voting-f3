@@ -2,7 +2,7 @@
   <!-- ------------------------------------------ DESKTOP CARD --------------------------------------------  -->
   <v-hover v-slot="{ hover }">
     <div v-if="$vuetify.breakpoint.smAndUp" class="pa-thin rounded-lg fill-height" :class="typeBorderColor">
-      <v-sheet class="overflow-hidden d-flex flex-column rounded-lg">
+      <v-sheet class="overflow-hidden fill-height d-flex flex-column rounded-lg">
         <div class="card-image rounded-lg rounded-b-0 flex-shrink-0">
           <v-img max-height="234" aspect-ratio="1" :src="pool.projectCover">
             <div class="d-flex flex-column fill-height" :class="{ blur: hover }">
