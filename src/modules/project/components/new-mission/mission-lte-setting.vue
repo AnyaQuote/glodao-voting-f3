@@ -60,7 +60,7 @@
 
         <div class="font-18 mt-7 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
           <span class="font-weight-bold">Quiz file<span class="app-red--text">*</span></span>
-          <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .csv, .txt file)</span>
+          <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .csv, .txt file)</span> -->
           <v-spacer />
           <span class="app-blue--text cursor-pointer text-subtitle-2" @click="download"
             >Download the quiz template</span
@@ -83,7 +83,7 @@
 
         <div class="d-flex mt-7 mb-2">
           <span class="font-18 font-weight-bold">Document<span class="app-red--text">*</span></span>
-          <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .md, .me, .readme file)</span>
+          <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .md, .me, .readme file)</span> -->
         </div>
         <app-file-upload
           :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
