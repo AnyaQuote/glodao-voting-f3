@@ -7,7 +7,7 @@
         :rules="rules"
         :disabled="disabled"
         :value="formattedDate"
-        :error-messages="invalidDateRange"
+        :error-messages="errorMessage"
         placeholder="DD/MM/YYYY"
         @click="show('datePickerConfig', $event)"
       />
@@ -25,7 +25,7 @@
           :min="minDate"
           :max="maxDate"
           :value="data.date"
-          @change="onDateTimeChange('date', $event)"
+          @input="onDateTimeChange('date', $event)"
         />
       </v-menu>
     </div>
@@ -36,7 +36,7 @@
         :rules="rules"
         :disabled="disabled"
         :value="data.time"
-        :error-messages="invalidDateRange"
+        :error-messages="errorMessage"
         placeholder="hh:mm (am - pm)"
         @click="show('timePickerConfig', $event)"
       />
@@ -65,6 +65,7 @@ import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { getValueByFormat, toISO, isDateInRange } from '@/helpers/date-helper'
+import moment from 'moment'
 
 @Observer
 @Component
@@ -105,17 +106,17 @@ export default class AppDateTimePicker extends Vue {
     })
   }
 
-  /**
-   * Check if all values in object is not empty string
-   * @param value object
-   */
-  checkPropNotEmpty(value: { [key: string]: string }) {
-    return Object.values(value).every((x) => x !== '')
-  }
+  // /**
+  //  * Check if all values in object is not empty string
+  //  * @param value object
+  //  */
+  // checkPropNotEmpty(value: { [key: string]: string }) {
+  //   return Object.values(value).every((x) => x !== '')
+  // }
 
   onDateTimeChange(property: string, value: string) {
     this.data = set(this.data, property, value)
-    if (this.checkPropNotEmpty(this.data)) {
+    if (this.data.date && this.data.time && !this.errorMessage) {
       this.$emit('change', toISO(this.data))
     }
   }
@@ -124,9 +125,13 @@ export default class AppDateTimePicker extends Vue {
     return this.data.date ? getValueByFormat(this.data.date, 'DD/MM/YYYY') : ''
   }
 
-  get invalidDateRange() {
-    if (this.maxDate && this.minDate && this.checkPropNotEmpty(this.data)) {
-      if (!isDateInRange(toISO(this.data), this.minDate, this.maxDate)) return 'Invalid date range'
+  get errorMessage() {
+    if (this.data.date && this.data.time) {
+      if (this.minDate && !moment(toISO(this.data)).isAfter(moment(this.minDate))) {
+        return `Selected date must be after ${moment(this.minDate).format('DD/MM/YYYY HH:mm')}`
+      } else if (this.maxDate && !moment(toISO(this.data)).isBefore(moment(this.maxDate))) {
+        return `Selected date must be before ${moment(this.maxDate).format('DD/MM/YYYY HH:mm')}`
+      }
     }
     return ''
   }
