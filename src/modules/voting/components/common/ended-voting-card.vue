@@ -44,7 +44,7 @@
               <!-- YES VOTE  -->
               <v-icon class="mr-2">mdi-star-outline</v-icon>
               <div class="font-weight-bold number-count mr-1">
-                {{ $_get(pool, 'votedYesPercent') | formatNumber(4) }}%
+                {{ $_get(pool, 'votedYesPercent') | formatNumber(2) }}%
               </div>
               <div><span class="green--text font-weight-bold">YES</span> votes</div>
               <!------------->
@@ -53,7 +53,7 @@
 
               <!-- NO VOTE -->
               <div class="font-weight-bold number-count mr-1">
-                {{ $_get(pool, 'votedNoPercent') | formatNumber(4) }}%
+                {{ $_get(pool, 'votedNoPercent') | formatNumber(2) }}%
               </div>
               <div><span class="red--text font-weight-bold">NO</span> votes</div>
               <!------------->
@@ -90,7 +90,7 @@
             <v-icon class="mr-2">mdi-star-outline</v-icon>
             <!-- YES VOTE  -->
             <div class="font-weight-bold mt-1 text-subtitle-1">
-              {{ $_get(pool, 'votedYesPercent') | formatNumber(4) }}%
+              {{ $_get(pool, 'votedYesPercent') | formatNumber(2) }}%
               <span class="app-green--text">YES </span>
               <span class="font-weight-600"> votes</span>
             </div>
@@ -100,7 +100,7 @@
 
             <!-- NO VOTE  -->
             <div class="font-weight-bold mt-1 text-subtitle-1">
-              {{ $_get(pool, 'votedNoPercent') | formatNumber(4) }}%
+              {{ $_get(pool, 'votedNoPercent') | formatNumber(2) }}%
               <span class="app-red--text">NO </span>
               <span class="font-weight-600"> votes</span>
             </div>
