@@ -11,6 +11,7 @@ import { PoolStore } from '@/stores/pool-store'
 import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
+import { authStore } from '@/stores/auth-store'
 
 export class ProjectDetailViewModel {
   _disposers: IReactionDisposer[] = []
@@ -30,15 +31,7 @@ export class ProjectDetailViewModel {
   @observable poolInfo: any = {}
 
   constructor(unicodeName: string) {
-    this._disposers = [
-      reaction(
-        () => walletStore.account,
-        (account) => {
-          account && this.fetchProjectDetail({ unicodeName, ownerAddress: account })
-        },
-        { fireImmediately: true }
-      ),
-    ]
+    this.fetchProjectDetail(unicodeName)
   }
 
   destroy() {
@@ -47,11 +40,17 @@ export class ProjectDetailViewModel {
     this._disposers.forEach((d) => d())
   }
 
-  @asyncAction *fetchProjectDetail(query: { unicodeName: string; ownerAddress: string }) {
+  @asyncAction *fetchProjectDetail(unicodeName: string) {
     try {
       let res
       this.loading = true
-      res = yield appProvider.api.voting.find(query, { _limit: 1 })
+      res = yield appProvider.api.voting.find(
+        {
+          unicodeName,
+          ownerAddress: authStore.attachedAddress,
+        },
+        { _limit: 1 }
+      )
       if (isEmpty(res)) {
         appProvider.router.replace(RoutePaths.not_found)
       }
