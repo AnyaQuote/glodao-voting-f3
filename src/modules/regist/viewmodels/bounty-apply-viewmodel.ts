@@ -153,10 +153,10 @@ export class BountyApplyViewModel {
 
   /**
    * Check if existed a unicode name
-   * If existed, return kebab case project name appends with unix from moment
+   * If existed, return kebab case project name postfix with unix from moment
    * Else return kebab case project name
    * @param projectName Name of the project
-   * @returns unicodeName
+   * @returns projectName converted to kebase case
    */
   @asyncAction *checkUnicodeDuplicate(projectName: string) {
     const unicodeName = kebabCase(projectName)
