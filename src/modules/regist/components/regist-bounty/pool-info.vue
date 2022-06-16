@@ -107,6 +107,7 @@
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
+        :minDate="$_get(vm.projectInfo, 'votingStart')"
         :maxDate="$_get(vm.projectInfo, 'endDate')"
         :value="$_get(vm.projectInfo, 'startDate')"
         @change="vm.changeProjectInfo('startDate', $event)"
