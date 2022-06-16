@@ -2,7 +2,7 @@ import { appProvider } from '@/app-providers'
 import { Voter, VotingPool } from '@/models/VotingModel'
 import { observable, computed, IReactionDisposer, action, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, sample, sampleSize } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject, timer } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
@@ -59,7 +59,11 @@ export class VotingDetailViewModel {
     if (isEmpty(poolStore)) {
       appProvider.router.push(RoutePaths.not_found)
     }
-    this.votingList = votingList
+    // Sample voting list without current pool detail
+    this.votingList = sampleSize(
+      votingList.filter((item) => item.id !== poolStore.id),
+      4
+    )
     this.poolStore = new PoolStore(get(poolStore, '[0]'))
   }
 
