@@ -10,7 +10,7 @@
           <v-icon color="blue-diversity" size="30">fab fa-twitter</v-icon>
         </div>
         <div class="mt-2 font-weight-bold">Connect twitter</div>
-        <div class="mt-1">To vote projects</div>
+        <div class="mt-1">To manage your projects</div>
         <div class="mt-4">
           <v-btn
             depressed

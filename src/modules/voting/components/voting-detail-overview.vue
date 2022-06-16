@@ -40,7 +40,7 @@
                   :value="$_get(vm.poolStore, 'votedNoPercent', 0) | formatNumber(2)"
                 />
                 <div class="d-flex flex-column justify-space-around ml-4">
-                  <div class="text-h5">👍 NO</div>
+                  <div class="text-h5">👎 NO</div>
                   <div class="font-weight-bold text-h6">
                     &nbsp;&nbsp;{{ $_get(vm.poolStore, 'rejectedUsers.length', 0) | formatNumber(0) }} vote(s)
                   </div>
@@ -79,7 +79,7 @@
           <span class="text-subtitle-2 spacer"
             >{{ $_get(vm.poolStore, 'rejectedUsers.length', 0) | formatNumber(0) }} downvote(s)</span
           >
-          <v-chip label color="red lighten-2" class="white--text rounded-lg px-6">👍 NO votes</v-chip>
+          <v-chip label color="red lighten-2" class="white--text rounded-lg px-6">👎 NO votes</v-chip>
         </v-sheet>
         <!-- ==================================== -->
       </div>
