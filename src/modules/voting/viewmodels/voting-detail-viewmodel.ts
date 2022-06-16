@@ -59,12 +59,12 @@ export class VotingDetailViewModel {
     if (isEmpty(poolStore)) {
       appProvider.router.push(RoutePaths.not_found)
     }
+    this.poolStore = new PoolStore(poolStore[0])
     // Sample voting list without current pool detail
     this.votingList = sampleSize(
-      votingList.filter((item) => item.id !== poolStore.id),
+      votingList.filter((item) => item.id !== poolStore[0].id),
       4
     )
-    this.poolStore = new PoolStore(get(poolStore, '[0]'))
   }
 
   @asyncAction *loadData(unicodeName) {
