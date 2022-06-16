@@ -4,11 +4,11 @@
       <div
         style="height: 40px"
         class="d-flex align-center justify-center white--text cursor-pointer"
-        :class="vm.poolStore.onVoting ? 'app-red' : 'linear-blue--bg'"
+        :class="$_get(vm.poolStore, 'onVoting') ? 'app-red' : 'linear-blue--bg'"
         @click="vm.changeCancelDialog(true)"
         v-if="!vm.poolCancelled"
       >
-        {{ vm.poolStore.onVoting ? 'Cancel project' : 'Withdraw' }}
+        {{ $_get(vm.poolStore, 'onVoting') ? 'Cancel project' : 'Withdraw' }}
       </div>
 
       <div class="pa-4 pa-md-6">

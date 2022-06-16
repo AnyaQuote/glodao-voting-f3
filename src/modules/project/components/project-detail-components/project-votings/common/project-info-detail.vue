@@ -24,16 +24,16 @@
       <div class="layout-custom pr--custom mb-4">
         <div class="d-flex mb-4">
           <div class="project-logo flex-shrink-0 pa-1 rounded-lg mr-4 pa-1">
-            <v-img height="100%" :src="vm.poolStore.projectLogo" />
+            <v-img height="100%" :src="$_get(vm.poolStore, 'projectLogo')" />
           </div>
           <div class="text-truncate">
-            <div class="text-h5 font-weight-bold text-truncate">{{ vm.poolStore.projectName }}</div>
-            <div class="text-h6 font-weight-bold neutral-10--text">${{ vm.poolStore.tokenName }}</div>
+            <div class="text-h5 font-weight-bold text-truncate">{{ $_get(vm.poolStore, 'projectName') }}</div>
+            <div class="text-h6 font-weight-bold neutral-10--text">${{ $_get(vm.poolStore, 'tokenName') }}</div>
           </div>
         </div>
         <div class="d-flex flex-wrap">
           <div
-            v-for="(field, i) in vm.poolStore.fields"
+            v-for="(field, i) in $_get(vm.poolStore, 'fields')"
             :key="i"
             class="pa-2 text-caption neutral-20 neutral-10--text rounded-pill mr-2 mb-2 text-uppercase"
           >
@@ -42,25 +42,29 @@
         </div>
       </div>
       <div class="layout-custom pl-custom">
-        <v-img aspect-ratio="1" max-height="200" :src="vm.poolStore.projectCover" class="rounded-lg"> </v-img>
+        <v-img aspect-ratio="1" max-height="200" :src="$_get(vm.poolStore, 'projectCover')" class="rounded-lg"> </v-img>
       </div>
     </div>
 
     <!-- description -->
     <div class="neutral-10--text mb-6 font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
-      {{ vm.poolStore.shortDescription }}
+      {{ $_get(vm.poolStore, 'shortDescription') }}
     </div>
     <!-- web social link -->
     <div>
       <div class="mb-4 font-weight-bold">Website and social link</div>
       <div style="display: grid; gap: 12px">
-        <div v-for="(key, i) in $_keys(vm.poolStore.socialLinks)" :key="i" class="d-flex text-truncate">
+        <div v-for="(key, i) in $_keys($_get(vm.poolStore, 'socialLinks'))" :key="i" class="d-flex text-truncate">
           <v-icon color="app-blue" class="mr-2" size="24">
             {{ getDisplayIcon(key) }}
           </v-icon>
           <div class="neutral-10--text text-capitalize mr-1">{{ key }}:</div>
-          <a target="_blank" :href="vm.poolStore.socialLinks[key]" class="text-truncate blue--text text-truncate">
-            {{ vm.poolStore.socialLinks[key] }}
+          <a
+            target="_blank"
+            :href="$_get(vm.poolStore, `socialLinks[${key}]`)"
+            class="text-truncate blue--text text-truncate"
+          >
+            {{ $_get(vm.poolStore, `socialLinks[${key}]`) }}
           </a>
         </div>
       </div>
