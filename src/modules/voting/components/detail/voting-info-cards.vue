@@ -2,7 +2,7 @@
   <div class="row no-gutters">
     <!-- Total reward card -->
     <v-sheet
-      class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
+      class="col-12 col-md-3 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
       elevation="3"
       outlined
     >
@@ -16,7 +16,7 @@
     </v-sheet>
     <!-- Total mission card -->
     <v-sheet
-      class="col-12 col-md-2 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text mr-4 d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
+      class="col-12 col-md-3 mb-2 mb-md-0 mr-md-4 mr-0 rounded-lg pa-6 neutral10--text mr-4 d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
       elevation="3"
       outlined
     >
@@ -28,7 +28,7 @@
     </v-sheet>
     <!-- Mission reward card -->
     <v-sheet
-      class="col-12 col-md-2 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
+      class="col-12 col-md-3 mb-2 mb-md-0 mr-0 mr-md-4 rounded-lg pa-6 neutral10--text d-flex flex-row flex-md-column align-md-start align-center justify-start justify-space-between flex-wrap text-truncate"
       elevation="3"
       outlined
     >
