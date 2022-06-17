@@ -76,26 +76,14 @@
             >All potential projects are voted by Glodao user
           </span>
         </div>
-        <v-row v-if="vm.loading">
-          <v-col cols="4" v-for="index in 3" :key="index">
-            <v-skeleton-loader type="image, list-item-avatar, list-item-two-line" class="neutral-100" />
-          </v-col>
-        </v-row>
-        <!-- -------------------------------------- EMPTY PROJECTS --------------------------------------- -->
-        <div v-else-if="!vm.loading && !vm.endedList.length" class="text-center text-h6 pa-8">
-          No ended project of this type yet
-        </div>
-        <!-- -------------------------------------- HAS PROJECTS ----------------------------------------- -->
-        <v-row v-else>
-          <v-col cols="12" sm="6" md="4" v-for="(pool, index) in vm.endedList" :key="index">
-            <ended-voting-card :pool="pool" />
-          </v-col>
-          <v-col cols="12">
-            <div class="text-center mb-9">
-              <v-btn class="text-none font-weight-bold" depressed color="blue-diversity" outlined>View all pools</v-btn>
-            </div>
-          </v-col>
-        </v-row>
+        <!-- -------------------------------------- PREVIEW POOLS ---------------------------------------- -->
+        <v-fade-transition v-if="!vm.showEndedList" hide-on-leave leave-absolute>
+          <voting-ended-cards />
+        </v-fade-transition>
+        <!-- -------------------------------------- VIEW ALL POOlS --------------------------------------- -->
+        <v-fade-transition v-else hide-on-leave>
+          <voting-ended-list />
+        </v-fade-transition>
         <!-- --------------------------------------------------------------------------------------------- -->
       </v-col>
     </v-row>
@@ -111,11 +99,16 @@ import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
     'voting-launch-section': () => import('@/modules/voting/components/voting-launch-section.vue'),
     'voting-trending-section': () => import('@/modules/voting/components/voting-trending-section.vue'),
     'live-voting-card': () => import('@/modules/voting/components/common/live-voting-card.vue'),
-    'ended-voting-card': () => import('@/modules/voting/components/common/ended-voting-card.vue'),
+    'voting-ended-list': () => import('@/modules/voting/components/home/voting-ended-list.vue'),
+    'voting-ended-cards': () => import('@/modules/voting/components/home/voting-ended-cards.vue'),
   },
 })
 export default class VotingHome extends Vue {
   @Provide() vm = new VotingListViewModel()
+
+  beforeDestroy() {
+    this.vm.destroy()
+  }
 }
 </script>
 
