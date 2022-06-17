@@ -222,7 +222,7 @@ a {
   position: relative !important;
 }
 .cursor-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .overflow-hidden {
