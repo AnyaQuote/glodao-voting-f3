@@ -30,7 +30,7 @@
           v-model="tab"
           cycle
           continuous
-          class="fill-height rounded-lg"
+          class="fill-height"
           show-arrows-on-hover
         >
           <template v-slot:prev="{ on, attrs }">
@@ -52,14 +52,15 @@
             </v-sheet>
           </template>
           <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
-            <v-sheet class="rounded-lgn" :class="[carouselItemColor, customPadding]">
+            <v-sheet class="rounded-lg blue-2 linear-gradient--bg" :class="customPadding" style="">
               <v-img
                 class="p-relative rounded-lg rounded-b-0 text-end"
                 :max-height="$vuetify.breakpoint.smAndUp ? 435 : 234"
                 aspect-ratio="1"
                 :src="$_get(item, 'projectCover')"
+                style="z-index: 1"
               >
-                <voting-out-btn class="mt-7 mr-7" />
+                <voting-share-btn class="ma-7" />
               </v-img>
               <div class="d-flex align-end p-absolute absolute-space">
                 <v-sheet class="blue-2 rounded-lg pa-3 ml-6" outlined :class="logoSize">
@@ -93,7 +94,7 @@
           >
             <v-hover v-slot="{ hover }">
               <div class="d-flex transparent-border" :class="{ 'active-border': hover }">
-                <v-img class="rounded-lg" max-width="163" max-height="99" :src="$_get(item, 'projectCover')" />
+                <v-img class="rounded-lg" height="100" aspect-ratio="3 / 2" :src="$_get(item, 'projectCover')" />
                 <div class="ml-4 d-flex flex-column justify-space-around align-start">
                   <v-sheet
                     class="transparent--bg rounded-pill px-3"
@@ -121,7 +122,7 @@
           >
             <v-hover v-slot="{ hover }">
               <div class="transparent-border" :class="{ 'active-border': hover }">
-                <v-img class="rounded-lg" width="160" min-height="100" :src="$_get(item, 'projectCover')" />
+                <v-img class="rounded-lg" height="100" width="150" :src="$_get(item, 'projectCover')" />
               </div>
             </v-hover>
           </div>
@@ -139,7 +140,7 @@ import { VotingListViewModel } from '../viewmodels/voting-list-viewmodel'
 
 @Component({
   components: {
-    'voting-out-btn': () => import('../components/common/voting-out-btn.vue'),
+    'voting-share-btn': () => import('../components/common/voting-share-btn.vue'),
   },
 })
 export default class VotingTrendingSection extends Vue {
@@ -149,9 +150,9 @@ export default class VotingTrendingSection extends Vue {
     this.tab = index
   }
 
-  get carouselItemColor() {
-    return this.$vuetify.theme.dark ? 'neutral100--bg' : 'blue lighten-4'
-  }
+  // get carouselItemColor() {
+  //   return this.$vuetify.theme.dark ? 'neutral100--bg' : 'blue lighten-4'
+  // }
 
   get logoSize() {
     return this.$vuetify.breakpoint.smAndUp ? 'w-h-160' : 'w-h-80'
@@ -172,13 +173,19 @@ export default class VotingTrendingSection extends Vue {
   padding-bottom: 92px;
 }
 
+.linear-gradient--bg {
+  background: linear-gradient(12.87deg, var(--v-blue-2-base) 6.84%, rgba(20, 57, 115, 0) 94.95%) !important;
+}
+
 .transparent-border {
-  border: thin solid transparent;
+  border: 2px solid transparent;
 }
 
 .active-border {
-  border: thin solid var(--v-blue-diversity-base) !important;
+  border: 2px solid var(--v-blue-diversity-base) !important;
   border-radius: 8px;
+  transform: scale(105%);
+  transition: transform 300ms;
 }
 
 .overflow-y-scroll {
