@@ -22,3 +22,15 @@ export const ERROR_MSG_DIFFERENT_WALLET_DETECTED =
   'Different wallet account detected. Please change back to your previous attached wallet account to continue.'
 export const ERROR_MSG_NO_WALLET_CONNECTED = 'You have not connected any wallet. Please connect your wallet to continue'
 export const MSG_RELOAD_AFTER_UPDATE_SUCCESS = 'Update successfully. Browser will reload soon...'
+
+export const SOCIAL_ICONS = {
+  whitepaper: 'fas fa-file-alt',
+  others: 'fas fa-link',
+  website: 'fas fa-globe',
+  reddit: 'fab fa-reddit',
+  telegram: 'fab fa-telegram',
+  discord: 'fab fa-discord',
+  youtube: 'fab fa-youtube',
+  github: 'fab fa-github',
+  twitter: 'fab fa-twitter',
+}

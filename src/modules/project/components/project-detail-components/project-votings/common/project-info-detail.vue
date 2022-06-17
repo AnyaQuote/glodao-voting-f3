@@ -53,18 +53,18 @@
     <!-- web social link -->
     <div>
       <div class="mb-4 font-weight-bold">Website and social link</div>
-      <div style="display: grid; gap: 12px">
-        <div v-for="(key, i) in $_keys($_get(vm.poolStore, 'socialLinks'))" :key="i" class="d-flex text-truncate">
-          <v-icon color="app-blue" class="mr-2" size="24">
-            {{ getDisplayIcon(key) }}
-          </v-icon>
-          <div class="neutral-10--text text-capitalize mr-1">{{ key }}:</div>
-          <a
-            target="_blank"
-            :href="$_get(vm.poolStore, `socialLinks[${key}]`)"
-            class="text-truncate blue--text text-truncate"
-          >
-            {{ $_get(vm.poolStore, `socialLinks[${key}]`) }}
+      <div
+        v-for="([icon, link], index) in Object.entries($_get(vm.poolStore, 'socialLinks', []))"
+        class="d-grid-2-cols mt-2"
+        :key="index"
+      >
+        <v-icon color="app-blue" class="mr-2" size="24">
+          {{ getDisplayIcon(icon) }}
+        </v-icon>
+        <div>
+          <span class="neutral-10--text text-capitalize mr-1">{{ icon.split('-')[0] }}:</span>
+          <a target="_blank" :href="link" class="text-truncate blue--text text-truncate">
+            {{ link }}
           </a>
         </div>
       </div>
@@ -73,6 +73,7 @@
 </template>
 
 <script lang="ts">
+import { SOCIAL_ICONS } from '@/constants'
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
@@ -84,14 +85,7 @@ export default class extends Vue {
 
   getDisplayIcon(iconKey: string) {
     const iconName = iconKey.split('-')[0]
-    if (iconName === 'whitepaper') {
-      return 'fas fa-file-alt'
-    } else if (iconName === 'others') {
-      return 'fas fa-link'
-    } else if (iconName === 'website') {
-      return 'fas fa-globe'
-    }
-    return `fab fa-${iconName}`
+    return SOCIAL_ICONS[iconName]
   }
 }
 </script>
@@ -149,5 +143,10 @@ export default class extends Vue {
   @include breakpoint(desktop) {
     max-width: 190px;
   }
+}
+
+.d-grid-2-cols {
+  display: grid;
+  grid-template-columns: em(40) 1fr;
 }
 </style>

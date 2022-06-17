@@ -50,13 +50,13 @@
             </v-sheet>
           </div>
         </div>
-        <voting-out-btn class="align-self-start mb-8 ml-8" />
+        <voting-share-btn class="align-self-start mb-4 ml-4" />
       </div>
     </v-img>
 
     <!-- mobile banner -->
     <v-sheet v-else>
-      <v-img max-height="244" class="rounded-t-lg" :src="vm.poolStore.projectCover" />
+      <v-img max-height="244" class="rounded-t-lg" :src="$_get(vm.poolStore, 'projectCover')" />
       <div class="pa-4 d-flex flex-column">
         <div class="font-18 font-weight-bold mb-2">Current result</div>
 
@@ -93,7 +93,12 @@
       <div class="row">
         <!-- ==== PROJECT NAME ==== -->
         <div class="col-md-8 col-12 d-flex align-center text-h4 font-weight-bold">
-          <v-img class="mr-6" max-width="64" aspect-ratio="1" :src="$_get(vm.poolStore, 'projectLogo')" />
+          <v-img
+            class="mr-6 rounded-circle"
+            max-width="64"
+            aspect-ratio="1"
+            :src="$_get(vm.poolStore, 'projectLogo')"
+          />
           {{ $_get(vm.poolStore, 'projectName') }}
         </div>
         <!-- ==== COUNT DOWN AND STATUS ==== -->
@@ -134,17 +139,6 @@
             </template>
             {{ link }}
           </v-tooltip>
-
-          <!-- ==== WEBSITE LINKS ==== -->
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" icon color="blue-diversity" :href="$_get(vm.poolStore, 'website')">
-                <icon-git-book />
-              </v-btn>
-            </template>
-            {{ $_get(vm.poolStore, 'website') }}
-          </v-tooltip>
-          <!-- ======================= -->
         </div>
       </div>
     </v-sheet>
@@ -153,12 +147,13 @@
 </template>
 
 <script lang="ts">
+import { SOCIAL_ICONS } from '@/constants'
 import { Component, Vue, Ref, Inject } from 'vue-property-decorator'
 import { VotingDetailViewModel } from '../viewmodels/voting-detail-viewmodel'
 
 @Component({
   components: {
-    'voting-out-btn': () => import('../components/common/voting-out-btn.vue'),
+    'voting-share-btn': () => import('../components/common/voting-share-btn.vue'),
     'voting-progress-circle': () => import('../components/common/voting-progress-circle.vue'),
     countdown: () => import('../components/common/countdown.vue'),
     'icon-git-book': () => import('@/assets/icons/icon-git-book.vue'),
@@ -178,12 +173,7 @@ export default class VotingDetailOverview extends Vue {
 
   getDisplayIcon(iconKey: string) {
     const iconName = iconKey.split('-')[0]
-    if (iconName === 'whitepaper') {
-      return 'fas fa-file-alt'
-    } else if (iconName === 'others') {
-      return 'fas fa-link'
-    }
-    return `fab fa-${iconName}`
+    return SOCIAL_ICONS[iconName]
   }
 
   get typeColor() {
