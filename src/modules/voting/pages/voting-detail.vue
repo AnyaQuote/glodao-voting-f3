@@ -66,21 +66,39 @@
         </div>
         <!-- ------------------------------------------ HAS PROJECTS ------------------------------------------ -->
         <div v-else class="app-slide-group">
-          <v-slide-group show-arrows>
-            <template v-slot:next>
-              <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-sheet>
-            </template>
-            <template v-slot:prev>
-              <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-sheet>
-            </template>
-            <v-slide-item v-for="(pool, index) in vm.votingList" :key="index">
-              <live-compact-card class="mr-4" :pool="pool" />
-            </v-slide-item>
-          </v-slide-group>
+          <v-hover v-slot="{ hover }">
+            <v-slide-group show-arrows>
+              <template v-slot:next>
+                <v-fade-transition>
+                  <v-sheet
+                    v-if="hover"
+                    width="36"
+                    class="py-10 rounded-lg d-flex justify-center"
+                    elevation="3"
+                    outlined
+                  >
+                    <v-icon>mdi-chevron-right</v-icon>
+                  </v-sheet>
+                </v-fade-transition>
+              </template>
+              <template v-slot:prev>
+                <v-fade-transition>
+                  <v-sheet
+                    v-if="hover"
+                    width="36"
+                    class="py-10 rounded-lg d-flex justify-center"
+                    elevation="3"
+                    outlined
+                  >
+                    <v-icon>mdi-chevron-left</v-icon>
+                  </v-sheet>
+                </v-fade-transition>
+              </template>
+              <v-slide-item v-for="(pool, index) in vm.votingList" :key="index">
+                <live-compact-card class="mr-4" :pool="pool" />
+              </v-slide-item>
+            </v-slide-group>
+          </v-hover>
         </div>
         <!-- ------------------------------------------------------------------------------------------------- -->
       </v-col>
