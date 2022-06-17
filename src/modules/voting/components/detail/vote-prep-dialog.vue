@@ -24,7 +24,7 @@
 
       <!-- -------------------------------------- RADIO BUTTON GROUP (YES/NO) -------------------------------------- -->
       <div>
-        <v-radio-group mandatory v-model="result">
+        <v-radio-group mandatory v-model="result" :readonly="vm.voting">
           <v-sheet class="rounded-lg rounded-b-0 mb-0" :class="{ 'active-bg': result }" outlined>
             <v-radio class="ma-4" :value="true">
               <template v-slot:label>
