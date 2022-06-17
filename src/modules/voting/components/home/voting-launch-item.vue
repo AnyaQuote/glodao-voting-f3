@@ -6,7 +6,7 @@
         <div class="d-flex flex-column white--text pt-7 px-9">
           <div class="d-flex align-center justify-space-between">
             <span class="text-h6 font-weight-bold">Project launching soon</span>
-            <voting-out-btn />
+            <voting-share-btn />
           </div>
           <div class="row justify-center mt-10">
             <div class="col-12 text-center">
@@ -19,7 +19,7 @@
                   <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     <span class="mr-1"
-                      >{{ $_get(pool, 'requiredAmount') | formatNumber }} {{ $_get(pool, 'tokenName') }}</span
+                      >{{ $_get(pool, 'requiredAmount', 0) | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}</span
                     >
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
@@ -35,7 +35,7 @@
                   <span class="text-subtitle-2 white--text">Mission reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     <span class="mr-1">
-                      {{ $_get(pool, 'rewardPerMission') | formatNumber }} {{ $_get(pool, 'tokenName') }}
+                      {{ $_get(pool, 'rewardPerMission', 0) | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}
                     </span>
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
@@ -74,7 +74,7 @@
   <div v-else class="rounded-lg" :class="backgroundColor">
     <v-img max-height="244" aspect-ratio="1" :src="$_get(pool, 'projectCover')">
       <div class="text-end ma-4">
-        <voting-out-btn />
+        <voting-share-btn />
       </div>
     </v-img>
     <div class="white d-flex flex-column align-center py-4" :class="cardColor">
@@ -104,7 +104,7 @@ import { PoolStore } from '@/stores/pool-store'
 
 @Component({
   components: {
-    'voting-out-btn': () => import('../common/voting-out-btn.vue'),
+    'voting-share-btn': () => import('../common/voting-share-btn.vue'),
     'voting-progress-circle': () => import('../common/voting-progress-circle.vue'),
   },
 })
