@@ -8,7 +8,7 @@
 
       <!-- -------------------------------------- PROJECT NAME AND LOGO ------------------------------------------ -->
       <div class="d-flex align-center">
-        <v-img max-width="48" aspect-ratio="1" contain :src="$_get(vm.poolStore, 'projectLogo')" />
+        <v-img class="rounded-cỉrcle" max-width="48" aspect-ratio="1" :src="$_get(vm.poolStore, 'projectLogo')" />
         <span class="ml-2 text-h5 font-weight-bold"> {{ $_get(vm.poolStore, 'projectName') }}</span>
       </div>
       <div class="d-flex align-center">
