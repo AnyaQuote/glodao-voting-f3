@@ -66,7 +66,7 @@
         </div>
         <!-- ------------------------------------------ HAS PROJECTS ------------------------------------------ -->
         <div v-else class="app-slide-group">
-          <v-slide-group>
+          <v-slide-group show-arrows>
             <template v-slot:next>
               <v-sheet width="36" class="py-10 rounded-lg d-flex justify-center" elevation="3" outlined>
                 <v-icon>mdi-chevron-right</v-icon>
