@@ -82,7 +82,7 @@ export class VotingListViewModel {
       ])
       // Map VotingPool through PoolStore to retrieve contract information
       this.endedPoolPagingList = pagingResult.map((item) => new PoolStore(item))
-      this.totalEndedPoolPage = Math.floor(Math.round(totalItems / PAGE_ITEM_LIMIT))
+      this.totalEndedPoolPage = Math.ceil(totalItems / PAGE_ITEM_LIMIT)
     } catch (error) {
       snackController.commonError(error)
     } finally {

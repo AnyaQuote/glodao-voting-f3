@@ -1,45 +1,47 @@
 <template>
-  <v-sheet>
-    <div class="d-flex rounded-lg blue-2 rounded-b-0 overflow-hidden neutral-10--text font-weight-600">
-      <div
-        v-ripple
-        class="pa-4 cursor-pointer"
-        :class="activeTab('bounty')"
-        @click="vm.changeEndedFilterOption('bounty')"
-      >
-        Bounty project
+  <div>
+    <v-sheet class="pb-6">
+      <div class="d-flex rounded-lg blue-2 rounded-b-0 overflow-hidden neutral-10--text font-weight-600">
+        <div
+          v-ripple
+          class="pa-4 cursor-pointer"
+          :class="activeTab('bounty')"
+          @click="vm.changeEndedFilterOption('bounty')"
+        >
+          Bounty project
+        </div>
+        <div
+          v-ripple
+          class="pa-4 cursor-pointer"
+          :class="activeTab('launchpad')"
+          @click="vm.changeEndedFilterOption('launchpad')"
+        >
+          Launchpad project
+        </div>
       </div>
-      <div
-        v-ripple
-        class="pa-4 cursor-pointer"
-        :class="activeTab('launchpad')"
-        @click="vm.changeEndedFilterOption('launchpad')"
-      >
-        Launchpad project
-      </div>
-    </div>
-    <!-- --------------------------------------- IS LOADING --------------------------------------- -->
-    <template v-if="vm.isPaging">
-      <v-progress-linear indeterminate color="blue-diversity" />
-      <v-sheet height="300" class="d-flex align-center justify-center">.</v-sheet>
-    </template>
-    <!-- --------------------------------------- EMPTY PAGING LIST -------------------------------- -->
-    <template v-else-if="!vm.isPaging && !vm.totalEndedPoolPage">
-      <v-slide-x-transition hide-on-leave>
-        <v-sheet height="300" class="d-flex flex-column align-center justify-center">
-          <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
-          <div class="font-weight-600 neutral-10--text text-h6">No ended {{ vm.endedFilterOption }} projects</div>
-        </v-sheet>
-      </v-slide-x-transition>
-    </template>
-    <!-- --------------------------------------- HAS PAGING LIST ----------------------------------- -->
-    <template v-else>
-      <v-slide-x-transition group hide-on-leave>
-        <voting-ended-list-item v-for="(item, index) in vm.endedPoolPagingList" :pool="item" :key="index" />
-        <v-divider />
-      </v-slide-x-transition>
-    </template>
-    <!-- ------------------------------------------------------------------------------------------- -->
+      <!-- --------------------------------------- IS LOADING --------------------------------------- -->
+      <template v-if="vm.isPaging">
+        <v-progress-linear indeterminate color="blue-diversity" />
+        <v-sheet height="300" class="d-flex align-center justify-center">.</v-sheet>
+      </template>
+      <!-- --------------------------------------- EMPTY PAGING LIST -------------------------------- -->
+      <template v-else-if="!vm.isPaging && !vm.totalEndedPoolPage">
+        <v-slide-x-transition hide-on-leave>
+          <v-sheet height="300" class="d-flex flex-column align-center justify-center">
+            <img width="80" height="80" src="@/assets/icons/project/empty-icon.svg" class="mb-4" />
+            <div class="font-weight-600 neutral-10--text text-h6">No ended {{ vm.endedFilterOption }} projects</div>
+          </v-sheet>
+        </v-slide-x-transition>
+      </template>
+      <!-- --------------------------------------- HAS PAGING LIST ----------------------------------- -->
+      <template v-else>
+        <v-slide-x-transition group hide-on-leave>
+          <voting-ended-list-item v-for="(item, index) in vm.endedPoolPagingList" :pool="item" :key="index" />
+          <v-divider />
+        </v-slide-x-transition>
+      </template>
+      <!-- ------------------------------------------------------------------------------------------- -->
+    </v-sheet>
     <v-pagination
       class="mt-6"
       v-show="vm.totalEndedPoolPage"
@@ -48,7 +50,7 @@
       :value="vm.currentEndedPoolPage"
       @input="vm.changeEndedCurrentPage"
     />
-  </v-sheet>
+  </div>
 </template>
 
 <script lang="ts">
