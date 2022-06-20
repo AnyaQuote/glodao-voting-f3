@@ -61,25 +61,32 @@
         <div class="font-18 font-weight-bold mb-2">Current result</div>
 
         <!-- ==== yes vote progress content ==== -->
-        <v-sheet class="rounded-lg pa-4 mb-2 green lighten-4 d-flex align-baseline black--text" outlined>
-          <span class="font-18 font-weight-bold mr-8"
+        <v-sheet
+          class="rounded-lg pa-4 mb-2 green lighten-4 d-flex align-baseline justify-space-between black--text"
+          outlined
+        >
+          <span class="font-18 font-weight-bold"
             >{{ $_get(vm.poolStore, 'votedYesPercent', 0) | formatNumber(2) }}%</span
           >
-          <span class="text-subtitle-2 spacer"
-            >{{ $_get(vm.poolStore, 'approvedUsers.length', 0) | formatNumber(0) }} upvote(s)</span
-          >
-          <v-chip label color="green lighten-2" class="white--text rounded-lg px-6">👍 YES votes</v-chip>
+          <span class="text-subtitle-2 text-truncate">
+            {{ $_get(vm.poolStore, 'approvedUsers.length', 0) | shortNumber(2) }} upvote(s)
+          </span>
+
+          <v-chip label color="green lighten-2" class="white--text rounded-lg px-3 flex-shrink-0">👍 YES votes</v-chip>
         </v-sheet>
 
         <!-- ==== no vote progress content ==== -->
-        <v-sheet class="rounded-lg pa-4 mb-2 red lighten-4 d-flex align-baseline black--text" outlined>
-          <span class="font-18 font-weight-bold mr-8"
-            >{{ $_get(vm.poolStore, 'votedNoPercent', 0) | formatNumber(2) }}%</span
-          >
-          <span class="text-subtitle-2 spacer"
-            >{{ $_get(vm.poolStore, 'rejectedUsers.length', 0) | formatNumber(0) }} downvote(s)</span
-          >
-          <v-chip label color="red lighten-2" class="white--text rounded-lg px-6">👎 NO votes</v-chip>
+        <v-sheet
+          class="rounded-lg pa-4 mb-2 red lighten-4 d-flex align-baseline justify-space-between black--text"
+          outlined
+        >
+          <span class="font-18 font-weight-bold">
+            {{ $_get(vm.poolStore, 'votedNoPercent', 0) | formatNumber(2) }}%
+          </span>
+          <span class="text-subtitle-2 text-truncate">
+            {{ $_get(vm.poolStore, 'rejectedUsers.length', 0) | shortNumber(2) }} downvote(s)
+          </span>
+          <v-chip label color="red lighten-2 " class="white--text rounded-lg px-3 flex-shrink-0">👎 NO votes</v-chip>
         </v-sheet>
         <!-- ==================================== -->
       </div>
