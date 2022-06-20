@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-sheet class="pb-2">
-      <div class="d-flex rounded-lg blue-2 rounded-b-0 mb-6 overflow-hidden neutral-10--text font-weight-600">
+    <v-sheet class="pb-6">
+      <div class="d-flex rounded-lg blue-2 rounded-b-0 overflow-hidden neutral-10--text font-weight-600">
         <div
           v-ripple
           class="pa-4 cursor-pointer"
