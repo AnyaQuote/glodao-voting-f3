@@ -33,4 +33,5 @@ export const SOCIAL_ICONS = {
   youtube: 'fab fa-youtube',
   github: 'fab fa-github',
   twitter: 'fab fa-twitter',
+  facebook: 'fab fa-facebook',
 }
