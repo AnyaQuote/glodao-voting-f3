@@ -105,7 +105,7 @@ export class AuthStore {
     if (isExpired) {
       const res = yield twitterLoginDialogController.open({
         message: 'Your Token has expired. Please sign in to continue.',
-        canClose: false,
+        canClose: true,
       })
       if (res) {
         twitterLoginDialogController.close()
