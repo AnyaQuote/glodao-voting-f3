@@ -35,13 +35,18 @@
             width="136"
             outlined
             class="d-flex text-center rounded-lg mr-2"
-            style="border-color: var(--v-green-base)"
+            style="border-color: var(--v-green-base) !important"
           >
             <span class="flex-grow-1">{{ $_get(pool, 'votedYesPercent') | formatNumber(2) }}%</span>
             <div class="green white--text flex-grow-1 rounded-lg">👍 YES</div>
           </v-sheet>
           <!-- YES STAT PERCENTAGE -->
-          <v-sheet width="136" class="d-flex text-center rounded-lg" outlined style="border-color: var(--v-red-base)">
+          <v-sheet
+            width="136"
+            class="d-flex text-center rounded-lg"
+            outlined
+            style="border-color: var(--v-red-base) !important"
+          >
             <span class="flex-grow-1">{{ $_get(pool, 'votedNoPercent') | formatNumber(2) }}%</span>
             <div class="red white--text flex-grow-1 rounded-lg">👎 NO</div>
           </v-sheet>
@@ -68,8 +73,8 @@
               <!-- NO STAT PERCENTAGE -->
               <v-sheet
                 outlined
-                style="border-color: var(--v-green-base)"
-                class="d-flex transparent--bg text-center rounded-lg mr-2 text-subtitle-2 white--text"
+                style="border-color: var(--v-green-base) !important"
+                class="d-flex text-center rounded-lg mr-2 text-subtitle-2 white--text black-opaque--bg"
               >
                 <span class="flex-grow-1 px-2">{{ $_get(pool, 'votedYesPercent') | formatNumber(2) }}%</span>
                 <div class="green flex-grow-1 rounded-lg px-2">👍 YES</div>
@@ -77,8 +82,8 @@
               <!-- YES STAT PERCENTAGE -->
               <v-sheet
                 outlined
-                style="border-color: var(--v-red-base)"
-                class="d-flex text-center transparent--bg rounded-lg text-subtitle-2 white--text"
+                style="border-color: var(--v-red-base) !important"
+                class="d-flex text-center rounded-lg text-subtitle-2 white--text black-opaque--bg"
               >
                 <span class="flex-grow-1 px-2">{{ $_get(pool, 'votedNoPercent') | formatNumber(2) }}%</span>
                 <div class="red flex-grow-1 rounded-lg px-2">👎 NO</div>
