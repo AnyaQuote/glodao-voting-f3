@@ -41,6 +41,7 @@
     </template>
     <!-- ------------------------------------------------------------------------------------------- -->
     <v-pagination
+      class="mt-6"
       v-show="vm.totalEndedPoolPage"
       :disabled="vm.isPaging"
       :length="vm.totalEndedPoolPage"
