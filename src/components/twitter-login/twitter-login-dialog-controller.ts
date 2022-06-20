@@ -38,9 +38,8 @@ export class TwitterLoginDialogController {
   @action.bound async handleTwitterLogin() {
     try {
       this.isProcessing = true
-
       window.open(`${URL_ENDPOINT}connect/twitter`, '_blank')
-
+      appProvider.authStore.clearLocalStorage()
       const res = await waitForLocalStorage()
       appProvider.authStore.changeJwt(res[0])
       appProvider.authStore.changeUser(res[1])

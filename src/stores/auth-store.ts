@@ -1,4 +1,3 @@
-import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
 import { SUCCESS_STATUS } from '@/constants'
 import { localdata } from '@/helpers/local-data'
@@ -36,6 +35,10 @@ export class AuthStore {
 
   @action.bound resetUser() {
     this.user = {}
+  }
+
+  @action clearLocalStorage() {
+    localdata.resetAuth()
   }
 
   @action logout() {
@@ -96,21 +99,17 @@ export class AuthStore {
     return SUCCESS_STATUS
   }
 
-  @asyncAction checkJwtExpiration() {
+  @asyncAction *checkJwtExpiration() {
     const { exp } = jwtDecode(this.jwt) as any
     const isExpired = Date.now() >= exp * 1000
     if (isExpired) {
-      this.logout()
-      // Cons: if user is in any form pages.
-      // This login will redirect the user to new page,
-      // resulting in the user has to do the form again
-      twitterLoginDialogController.open()
-    }
-  }
-
-  @asyncAction checkEmptyJwt() {
-    if (isEmpty(this.jwt)) {
-      twitterLoginDialogController.open()
+      const res = yield twitterLoginDialogController.open({
+        message: 'Your Token has expired. Please sign in to continue.',
+        canClose: true,
+      })
+      if (res) {
+        twitterLoginDialogController.close()
+      }
     }
   }
 
