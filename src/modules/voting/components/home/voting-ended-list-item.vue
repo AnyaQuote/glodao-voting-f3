@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-sheet class="d-none d-sm-flex px-6 mt-6">
+    <v-sheet class="d-none d-sm-flex px-6 mb-6">
       <!-- ------------------------------------- IMAGE COVER  ------------------------------------- -->
       <v-img
         class="d-none d-md-block rounded-lg flex-shrink-0"
