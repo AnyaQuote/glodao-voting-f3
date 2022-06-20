@@ -30,7 +30,7 @@
           v-model="tab"
           cycle
           continuous
-          class="fill-height"
+          class="fill-height elevation-3 rounded-lg"
           show-arrows-on-hover
         >
           <template v-slot:prev="{ on, attrs }">
@@ -52,18 +52,17 @@
             </v-sheet>
           </template>
           <v-carousel-item v-for="(item, i) in vm.votingList" :key="i" eager>
-            <v-sheet class="rounded-lg blue-2 linear-gradient--bg" :class="customPadding" style="">
+            <v-sheet class="rounded-lg blue-2 linear-gradient--bg" :class="customPadding">
               <v-img
-                class="p-relative rounded-lg rounded-b-0 text-end"
+                class="p-relative rounded-lg rounded-b-0 text-end z-index-1"
                 :max-height="$vuetify.breakpoint.smAndUp ? 435 : 234"
                 aspect-ratio="1"
                 :src="$_get(item, 'projectCover')"
-                style="z-index: 1"
               >
                 <voting-share-btn class="ma-7" />
               </v-img>
               <div class="d-flex align-end p-absolute absolute-space">
-                <v-sheet class="blue-2 rounded-lg pa-3 ml-6" outlined :class="logoSize">
+                <v-sheet class="blue-2 rounded-lg pa-3 ml-6 z-index-2" outlined :class="logoSize">
                   <v-img contain aspect-ratio="1" :src="$_get(item, 'projectLogo')" />
                 </v-sheet>
                 <div class="font-weight-bold ml-4 mb-sm-6 mb-3 text-sm-h4 text-subtitle-1 text-truncate">
@@ -83,6 +82,7 @@
           v-if="$vuetify.breakpoint.mdAndUp"
           height="480"
           class="rounded-lg-y pa-n4 overflow-y-scroll rounded-lg"
+          elevation="3"
         >
           <!-- ------------------------------------ MOBILE SLIDER VERTICAL -------------------------------------- -->
           <div
@@ -94,7 +94,13 @@
           >
             <v-hover v-slot="{ hover }">
               <div class="d-flex transparent-border" :class="{ 'active-border': hover }">
-                <v-img class="rounded-lg" height="100" aspect-ratio="3 / 2" :src="$_get(item, 'projectCover')" />
+                <v-img
+                  class="rounded-lg"
+                  :src="$_get(item, 'projectCover')"
+                  max-height="100"
+                  min-height="100"
+                  max-width="160"
+                />
                 <div class="ml-4 d-flex flex-column justify-space-around align-start">
                   <v-sheet
                     class="transparent--bg rounded-pill px-3"
@@ -112,7 +118,7 @@
           </div>
         </v-sheet>
         <!-- ------------------------------------ MOBILE SLIDER HORIZONTAL ------------------------------------ -->
-        <v-sheet v-else class="d-flex pa-n1 rounded-lg overflow-x-scroll">
+        <v-sheet v-else class="d-flex pa-n1 rounded-lg overflow-x-scroll" elevation="3">
           <div
             v-for="(item, index) in vm.votingList"
             class="pa-1 cursor-pointer"
@@ -204,5 +210,13 @@ export default class VotingTrendingSection extends Vue {
 .w-h-80 {
   width: 80px;
   height: 80px;
+}
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.z-index-2 {
+  z-index: 2;
 }
 </style>
