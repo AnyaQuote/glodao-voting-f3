@@ -223,7 +223,6 @@ export class NewMissionViewModel {
       const missionSetting = yield this.getMissionSetting()
       const model = this.mappingFields(missionSetting, this.missionInfo, this.pool)
       const task = yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
-      console.log('task: ', task)
       this._snackbar.addSuccess()
       this._router.push(RoutePaths.project_detail + this.pool.unicodeName)
     } catch (error) {
