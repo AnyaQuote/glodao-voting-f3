@@ -53,7 +53,7 @@
         <app-file-upload
           isImageFile
           :rules="[$rules.maxSize(1000000), $rules.isImage]"
-          :value="$_get(vm.learnToEarn, 'setting.imageCover')"
+          :value="$_get(vm.learnToEarn, 'setting.imageCover', null)"
           @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
           class="mt-2"
         />
@@ -69,7 +69,7 @@
         <app-file-upload
           isQuizFile
           :rules="[$rules.required, $rules.maxSize(1000000)]"
-          :value="$_get(vm.learnToEarn, 'setting.quizFile')"
+          :value="$_get(vm.learnToEarn, 'setting.quizFile', null)"
           @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
         />
         <v-btn
@@ -87,7 +87,7 @@
         </div>
         <app-file-upload
           :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
-          :value="$_get(vm.learnToEarn, 'setting.learningFile')"
+          :value="$_get(vm.learnToEarn, 'setting.learningFile', null)"
           @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
         />
       </switch-field>
@@ -157,10 +157,8 @@ export default class MissionLearnToEarnSetting extends Vue {
   }
 
   async openQuizPreviewDialog() {
-    const res = await this.vm.prepareQuizPreview()
-    if (res) {
-      this.dialog.open()
-    }
+    await this.vm.prepareQuizPreview()
+    this.dialog.open()
   }
 }
 </script>
