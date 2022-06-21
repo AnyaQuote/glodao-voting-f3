@@ -1,7 +1,17 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile } from '@/helpers/file-helper'
 import { Data } from '@/models/MissionModel'
-import { Quiz, LearnToEarn, PreviewQuiz } from '@/models/QuizModel'
+import {
+  Quiz,
+  LearnToEarn,
+  PreviewQuiz,
+  MissionInfo,
+  joinTelegramDefault,
+  followTwitterDefault,
+  quoteTweetDefault,
+  commentTweetDefault,
+  telegramChatDefault,
+} from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
@@ -9,26 +19,30 @@ import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
-import { authStore } from '@/stores/auth-store'
+import { COMMUNITY_AMOUNT_RATIO, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
 export class NewMissionViewModel {
   @observable step = 1
 
   @observable pool: VotingPool = {}
-  @observable missionInfo = missionInfoDefault
+  @observable missionInfo: MissionInfo = {}
+  @observable learnToEarn: LearnToEarn = {}
   @observable joinTelegram = joinTelegramDefault
   @observable followTwitter = followTwitterDefault
   @observable quoteTweet = quoteTweetDefault
   @observable commentTweet = commentTweetDefault
   @observable telegramChat = telegramChatDefault
-  @observable learnToEarn = learnToEarnDefault
   @observable pageLoading = false
   @observable btnLoading = false
 
   // PREVIEW QUIZ VARIABLES
   @observable previewQuiz: PreviewQuiz[] = []
   previewSampleSize = 10
+
+  private _snackbar = appProvider.snackbar
+  private _router = appProvider.router
+  private _auth = appProvider.authStore
+  private _api = appProvider.api
 
   constructor(unicodeName: string) {
     this.fetchProjectByUnicode(unicodeName)
@@ -37,15 +51,12 @@ export class NewMissionViewModel {
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
-      const res = yield appProvider.api.voting.find(
-        { unicodeName, ownerAddress: authStore.attachedAddress },
-        { _limit: 1 }
-      )
-      isEmpty(res) && appProvider.router.replace(RoutePaths.not_found)
+      const res = yield this._api.voting.find({ unicodeName, ownerAddress: this._auth.attachedAddress }, { _limit: 1 })
+      isEmpty(res) && this._router.replace(RoutePaths.not_found)
 
       this.pool = res[0]
     } catch (error) {
-      appProvider.snackbar.commonError(error)
+      this._snackbar.commonError(error)
     } finally {
       this.pageLoading = false
     }
@@ -54,35 +65,36 @@ export class NewMissionViewModel {
   @action.bound changeMissionInfo(property: string, value: string) {
     this.missionInfo = set(this.missionInfo, property, value)
   }
-  @action.bound changeJoinTelegramSetting(property, value) {
+  @action.bound changeJoinTelegramSetting(property: string, value: string | boolean) {
     this.joinTelegram = set(this.joinTelegram, property, value)
   }
 
-  @action.bound changeFollowTwitterSetting(property, value) {
+  @action.bound changeFollowTwitterSetting(property: string, value: string | boolean) {
     this.followTwitter = set(this.followTwitter, property, value)
   }
 
-  @action.bound changeQuoteTweetSetting(property, value) {
+  @action.bound changeQuoteTweetSetting(property: string, value: string | boolean) {
     isEqual(property, 'setting.link') && (this.quoteTweet = set(this.quoteTweet, 'setting.embedLink', value))
     this.quoteTweet = set(this.quoteTweet, property, value)
   }
 
-  @action.bound changeCommentTweetSetting(property, value) {
+  @action.bound changeCommentTweetSetting(property: string, value: string | boolean) {
     isEqual(property, 'setting.link') && (this.commentTweet = set(this.commentTweet, 'setting.embedLink', value))
     this.commentTweet = set(this.commentTweet, property, value)
   }
 
-  @action.bound changeTelegramChatSetting(property, value) {
+  @action.bound changeTelegramChatSetting(property: string, value: string | boolean) {
     this.telegramChat = set(this.telegramChat, property, value)
   }
 
-  @action.bound changeLearnToEarnInfo(property, value) {
+  @action.bound changeLearnToEarnInfo(property: string, value: string | boolean) {
     this.learnToEarn = set(this.learnToEarn, property, value)
   }
 
   @action changeStep(step: number) {
     this.step = step
   }
+
   @action resetSocialSetting() {
     this.changeJoinTelegramSetting('enabled', false)
     this.changeCommentTweetSetting('enabled', false)
@@ -91,79 +103,102 @@ export class NewMissionViewModel {
     this.changeTelegramChatSetting('enabled', false)
   }
 
-  @asyncAction *getQuizId() {
-    const { quizFile, learningFile, imageCover, name, description } = this.learnToEarn.setting!
+  async getQuizId() {
+    if (!this.learnToEarn.setting) return null
+    const { quizFile, learningFile, imageCover, name, description } = this.learnToEarn.setting
     let quizJSON, answerJSON, learningInformation, coverUrl
     if (imageCover) {
       const media = new FormData()
       media.append('files', imageCover)
-      coverUrl = getApiFileUrl(yield appProvider.api.uploadFile(media)[0])
+      coverUrl = getApiFileUrl(await this._api.uploadFile(media)[0])
     } else {
-      coverUrl = this.pool?.data?.projectCover
+      coverUrl = get(this.pool, 'data.projectCover', '')
     }
-
-    if (quizFile) {
-      ;[quizJSON, answerJSON] = yield getDataFromQuizFile(quizFile)
-    }
-
-    if (learningFile) {
-      learningInformation = (yield learningFile.text()).trim()
-    }
-
+    !isEmpty(quizFile) && ([quizJSON, answerJSON] = await getDataFromQuizFile(quizFile!))
+    !isEmpty(learningFile) && (learningInformation = (await learningFile!.text()).trim())
     const quiz: Quiz = {
       name,
       description,
       learningInformation,
       data: quizJSON,
       answer: answerJSON,
-      ownerAddress: appProvider.authStore.attachedAddress,
       metadata: {
         coverImage: coverUrl,
-        tags: this.pool?.data?.fields,
+        tags: get(this.pool, 'data.fields', []),
       },
     }
-    const res = yield appProvider.api.createQuiz(quiz)
+    const res = await this._api.createQuiz({ ...quiz, ownerAddress: appProvider.authStore.attachedAddress })
     return res.id
   }
 
-  @asyncAction *getMissionSetting() {
-    const setting = {}
-
-    // Collect social settings
-    this.joinTelegram.enabled && set(setting, 'telegram', [{ ...this.joinTelegram.setting }])
-    this.followTwitter.enabled &&
-      set(setting, 'twitter', [...get(setting, 'twitter', []), { ...this.followTwitter.setting }])
-    this.quoteTweet.enabled && set(setting, 'twitter', [...get(setting, 'twitter', []), { ...this.quoteTweet.setting }])
-    this.commentTweet.enabled &&
-      set(setting, 'twitter', [...get(setting, 'twitter', []), { ...this.commentTweet.setting }])
-
-    // Collect learn to earn setting
+  async getMissionSetting() {
     if (this.learnToEarn.enabled) {
-      const quizId = yield this.getQuizId()
-      set(setting, 'quiz', [{ type: 'quiz', quizId }])
+      const quizId = await this.getQuizId()
+      return [
+        {
+          type: 'quiz',
+          quizId,
+        },
+      ]
+    } else {
+      let socialSetting = {}
+      if (this.joinTelegram.enabled) {
+        socialSetting = set(socialSetting, 'telegram', [
+          ...get(socialSetting, 'telegram', []),
+          { ...this.joinTelegram.setting },
+        ])
+      }
+      if (this.followTwitter.enabled) {
+        socialSetting = set(socialSetting, 'twitter', [
+          ...get(socialSetting, 'twitter', []),
+          { ...this.followTwitter.setting },
+        ])
+      }
+      if (this.quoteTweet.enabled) {
+        socialSetting = set(socialSetting, 'twitter', [
+          ...get(socialSetting, 'twitter', []),
+          { ...this.quoteTweet.setting },
+        ])
+      }
+      if (this.commentTweet.enabled) {
+        socialSetting = set(socialSetting, 'twitter', [
+          ...get(socialSetting, 'twitter', []),
+          { ...this.commentTweet.setting },
+        ])
+      }
+      if (this.telegramChat.enabled) {
+        socialSetting = set(socialSetting, 'telegram', [
+          ...get(socialSetting, 'twitter', []),
+          { ...this.telegramChat.setting },
+        ])
+      }
+      return socialSetting
     }
-
-    return setting
   }
 
-  @action mappingFields(setting: Data, missionInfo: any, pool: VotingPool): Mission {
-    const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-    // HARD CODE
+  @action mappingFields(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
+    // ==== HARD CODE ====
     const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'draft'
     const tokenBasePrice = '1'
-    // =========
-    return {
-      rewardAmount: FixedNumber.from(pool.rewardAmount).divUnsafe(FixedNumber.from(pool.totalMission)).toString(),
-      maxParticipant: toNumber(missionInfo.maxParticipants),
-      priorityRewardAmount: this.priorityAmount.toString(),
-      ownerAddress: appProvider.authStore.attachedAddress,
+    // ===================
+    const { website, ...socialLinks } = get(pool, 'data.socialLinks')
+    const isSocialMission = missionInfo.type === 'social'
+    const rewardInfo = {
+      rewardAmount: this.rewardAmount._value,
+      maxPriorityParticipants: isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0,
+      priorityRewardAmount: isSocialMission ? this.priorityAmount._value : '0',
+      maxParticipants: isSocialMission ? 0 : toNumber(missionInfo.maxParticipants),
+      tokenBasePrice,
+    }
+
+    const mission: Mission = {
+      ...rewardInfo,
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
       chainId: pool.chain,
       type: pool.type,
-      tokenBasePrice,
       poolId: pool.id,
       data: setting,
       status,
@@ -179,6 +214,7 @@ export class NewMissionViewModel {
         tokenLogo,
       },
     }
+    return mission
   }
 
   @asyncAction *submit() {
@@ -186,11 +222,12 @@ export class NewMissionViewModel {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
       const model = this.mappingFields(missionSetting, this.missionInfo, this.pool)
-      yield appProvider.api.createTask(model)
-      appProvider.snackbar.addSuccess()
-      appProvider.router.push(RoutePaths.project_detail + this.pool.unicodeName)
+      const task = yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
+      console.log('task: ', task)
+      this._snackbar.addSuccess()
+      this._router.push(RoutePaths.project_detail + this.pool.unicodeName)
     } catch (error) {
-      appProvider.snackbar.commonError(error)
+      this._snackbar.commonError(error)
     } finally {
       this.btnLoading = false
     }
@@ -200,27 +237,41 @@ export class NewMissionViewModel {
    * Process file and return JSON data of preview quiz
    */
   @asyncAction *prepareQuizPreview() {
+    if (!this.learnToEarn.setting?.quizFile) return false
+    const res = yield getPreviewFromQuizFile(this.learnToEarn.setting.quizFile)
+    this.previewQuiz = sampleSize(res, 10)
+  }
+
+  @computed get rewardAmount() {
     try {
-      if (!this.learnToEarn.setting?.quizFile) return false
-      const res = yield getPreviewFromQuizFile(this.learnToEarn.setting?.quizFile)
-      this.previewQuiz = sampleSize(res, 10)
-      return true
-    } catch (error) {
-      appProvider.snackbar.commonError(error)
+      return FixedNumber.from(this.pool.rewardAmount).divUnsafe(FixedNumber.from(this.pool.totalMission))
+    } catch (_) {
+      return Zero
     }
-    return false
   }
 
   @computed get rewardPerMission() {
     try {
       return FixedNumber.from(this.pool?.rewardAmount).divUnsafe(FixedNumber.from(this.pool?.totalMission))
-    } catch (error) {
+    } catch (_) {
       return Zero
     }
   }
 
   @computed get priorityAmount() {
     return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
+  }
+
+  @computed get communityAmount() {
+    return this.rewardPerMission.mulUnsafe(COMMUNITY_AMOUNT_RATIO)
+  }
+
+  @computed get personalReward() {
+    try {
+      return this.priorityAmount.divUnsafe(FixedNumber.from(this.missionInfo.maxPriorityParticipants))
+    } catch (_) {
+      return Zero
+    }
   }
 
   @computed get isValid() {
@@ -232,78 +283,4 @@ export class NewMissionViewModel {
         this.commentTweet.enabled ||
         this.telegramChat.enabled)
   }
-}
-
-const missionInfoDefault = {
-  name: '',
-  shortDescription: '',
-  missionCover: null,
-  priorityAmount: '',
-  maxParticipants: '',
-  startDate: '',
-  endDate: '',
-  type: '',
-}
-
-const learnToEarnDefault: LearnToEarn = {
-  enabled: false,
-  setting: {
-    name: '',
-    description: '',
-    imageCover: null,
-    quizFile: null,
-    learningFile: null,
-  },
-}
-
-const joinTelegramDefault = {
-  enabled: false,
-  setting: {
-    type: 'follow',
-    link: '',
-    page: 'GloDAO Chanel',
-    required: true,
-  },
-}
-
-const followTwitterDefault = {
-  enabled: false,
-  setting: { type: 'follow', page: 'GloDAO', required: true, link: '' },
-}
-
-const quoteTweetDefault = {
-  enabled: false,
-  setting: {
-    type: 'quote',
-    content: 'GloDAO',
-    page: 'GloDAO',
-    hashtag: '',
-    link: '',
-    embedLink: '',
-    required: true,
-  },
-}
-
-const commentTweetDefault = {
-  enabled: false,
-  setting: {
-    type: 'comment',
-    page: 'GloDAO',
-    content: 'GloDAO',
-    embedLink: '',
-    link: '',
-    required: true,
-  },
-}
-
-const telegramChatDefault = {
-  enabled: false,
-  setting: {
-    type: 'comment',
-    page: 'GloDAO',
-    content: 'GloDAO',
-    embedLink: '',
-    link: '',
-    required: true,
-  },
 }
