@@ -34,7 +34,7 @@ export interface Mission {
   chainId?: string
   startTime?: string
   endTime?: string
-  maxParticipant?: number
+  maxParticipants?: number
   totalParticipants?: number
   maxPriorityParticipants?: number
   completedParticipants?: number
