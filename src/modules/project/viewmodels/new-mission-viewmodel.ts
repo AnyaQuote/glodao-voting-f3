@@ -168,7 +168,7 @@ export class NewMissionViewModel {
       }
       if (this.telegramChat.enabled) {
         socialSetting = set(socialSetting, 'telegram', [
-          ...get(socialSetting, 'twitter', []),
+          ...get(socialSetting, 'telegram', []),
           { ...this.telegramChat.setting },
         ])
       }
