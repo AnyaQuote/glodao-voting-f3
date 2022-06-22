@@ -19,7 +19,7 @@ import { asyncAction } from 'mobx-utils'
 import { RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { COMMUNITY_AMOUNT_RATIO, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
+import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
 export class NewMissionViewModel {
   @observable step = 1
@@ -177,23 +177,28 @@ export class NewMissionViewModel {
   }
 
   @action mappingFields(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
-    // ==== HARD CODE ====
     const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'draft'
     const tokenBasePrice = '1'
-    // ===================
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
     const isSocialMission = missionInfo.type === 'social'
-    const rewardInfo = {
-      rewardAmount: this.rewardAmount._value,
-      maxPriorityParticipants: isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0,
-      priorityRewardAmount: isSocialMission ? this.priorityAmount._value : '0',
-      maxParticipants: isSocialMission ? 0 : toNumber(missionInfo.maxParticipants),
-      tokenBasePrice,
-    }
+
+    // Reward amount of a mission/task
+    const rewardAmount = this.rewardPerMission._value
+
+    // Learn to earn mission needs maxParticipants
+    const maxParticipants = isSocialMission ? 0 : toNumber(missionInfo.maxParticipants)
+
+    // Social misison needs maxPriorityParticipants and priorityRewardAmount field
+    const maxPriorityParticipants = isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0
+    const priorityRewardAmount = isSocialMission ? this.priorityAmount._value : '0'
 
     const mission: Mission = {
-      ...rewardInfo,
+      rewardAmount,
+      maxParticipants,
+      maxPriorityParticipants,
+      priorityRewardAmount,
+      tokenBasePrice,
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
@@ -222,7 +227,7 @@ export class NewMissionViewModel {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
       const model = this.mappingFields(missionSetting, this.missionInfo, this.pool)
-      const task = yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
+      yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
       this._snackbar.addSuccess()
       this._router.push(RoutePaths.project_detail + this.pool.unicodeName)
     } catch (error) {
@@ -241,14 +246,6 @@ export class NewMissionViewModel {
     this.previewQuiz = sampleSize(res, 10)
   }
 
-  @computed get rewardAmount() {
-    try {
-      return FixedNumber.from(this.pool.rewardAmount).divUnsafe(FixedNumber.from(this.pool.totalMission))
-    } catch (_) {
-      return Zero
-    }
-  }
-
   @computed get rewardPerMission() {
     try {
       return FixedNumber.from(this.pool?.rewardAmount).divUnsafe(FixedNumber.from(this.pool?.totalMission))
@@ -262,7 +259,9 @@ export class NewMissionViewModel {
   }
 
   @computed get communityAmount() {
-    return this.rewardPerMission.mulUnsafe(COMMUNITY_AMOUNT_RATIO)
+    const roundedValue = parseFloat(this.priorityAmount._value).toFixed(2)
+    const fxRoundedValue = FixedNumber.from(roundedValue)
+    return this.rewardPerMission.subUnsafe(fxRoundedValue)
   }
 
   @computed get personalReward() {
