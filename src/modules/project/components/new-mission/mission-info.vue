@@ -7,7 +7,7 @@
     <v-form v-model="valid" class="pa-7">
       <!-- ------------------------------------ MISSION TYPE -------------------------------------------------- -->
 
-      <v-radio-group mandatory v-model="vm.missionInfo.type">
+      <v-radio-group mandatory :value="vm.missionInfo.type" @change="vm.changeMissionInfo('type', $event)">
         <div class="row no-gutters">
           <div class="col-6 pr-4">
             <v-sheet class="rounded pa-5" outlined :class="isActive('social')">
@@ -62,44 +62,17 @@
         <app-file-upload
           isImageFile
           :rules="[$rules.required, $rules.maxSize(1000000), $rules.isImage]"
-          :value="$_get(vm.missionInfo, 'missionCover')"
+          :value="$_get(vm.missionInfo, 'missionCover', null)"
           @change="vm.changeMissionInfo('missionCover', $event)"
           class="mt-2"
         />
       </div>
 
-      <!-- ------------------------------------- REWARD INFORMATION -------------------------------------------- -->
-      <div class="d-flex flex-column mt-7">
-        <div class="title font-weight-bold blue-diversity--text">Reward information</div>
-        <div class="font-18 font-weight-bold mt-4">
-          <span>Reward mission: {{ vm.rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
-        </div>
-        <div class="mt-4 row ma-0">
-          <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
-            <span class="font-18 font-weight-bold">Priority amount</span>
-            <app-text-field
-              readonly
-              class="mt-2"
-              :value="`${vm.priorityAmount} ${$_get(vm.pool, 'tokenName')}`"
-              placeholder="Enter amount"
-            />
-          </div>
-          <div class="col-12 col-md-6 pa-0">
-            <span class="font-18 font-weight-bold"
-              >Max participant in priority pool<span class="app-red--text">*</span></span
-            >
-            <app-text-field
-              class="mt-2"
-              :rules="[$rules.required, $rules.integer]"
-              :value="$_get(vm.missionInfo, 'maxParticipants')"
-              @change="vm.changeMissionInfo('maxParticipants', $event)"
-              placeholder="Enter participants"
-            />
-          </div>
-        </div>
-      </div>
+      <v-divider class="mt-10 my-5 dashed-border" />
 
-      <v-divider class="mt-10 my-5" />
+      <!-- ------------------------------------- REWARD INFORMATION -------------------------------------------- -->
+      <mission-reward-info />
+      <v-divider class="mt-10 my-5 dashed-border" />
 
       <!-- -------------------------------------- MISSION TIME ------------------------------------------------- -->
       <div class="mt-7">
@@ -129,7 +102,7 @@
         />
       </div>
 
-      <v-divider />
+      <v-divider class="dashed-border" />
 
       <!-- -------------------------------------- BUTTONS --------------------------------------------------------- -->
       <div class="row no-gutters mt-7">
@@ -165,6 +138,7 @@ import { Observer } from 'mobx-vue'
 @Observer
 @Component({
   components: {
+    'mission-reward-info': () => import('./mission-reward-info.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
@@ -189,5 +163,8 @@ export default class MissionInfoForm extends Vue {
   color: var(--v-blue-diversity-base) !important;
   border-color: var(--v-blue-diversity-base) !important;
   background-color: var(--v-blue-2-base) !important;
+}
+.dashed-border {
+  border-style: dashed;
 }
 </style>

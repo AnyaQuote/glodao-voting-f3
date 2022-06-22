@@ -36,9 +36,73 @@ export interface LearnToEarn {
   }
 }
 
+export interface MissionInfo {
+  name?: string
+  shortDescription?: string
+  missionCover?: File | null
+  priorityAmount?: string
+  maxParticipants?: string
+  maxPriorityParticipants?: string
+  startDate?: string
+  endDate?: string
+  type?: string
+}
+
 export interface PreviewQuiz {
   id?: string
   question?: string
   answer?: number
   choices?: { text?: string; value?: number }[]
+}
+
+export const joinTelegramDefault = {
+  enabled: false,
+  setting: {
+    type: 'follow',
+    link: '',
+    page: 'GloDAO Chanel',
+    required: true,
+  },
+}
+
+export const followTwitterDefault = {
+  enabled: false,
+  setting: { type: 'follow', page: 'GloDAO', required: true, link: '' },
+}
+
+export const quoteTweetDefault = {
+  enabled: false,
+  setting: {
+    type: 'quote',
+    content: 'GloDAO',
+    page: 'GloDAO',
+    hashtag: '',
+    link: '',
+    embedLink: '',
+    required: true,
+  },
+}
+
+export const commentTweetDefault = {
+  enabled: false,
+  setting: {
+    type: 'comment',
+    page: 'GloDAO',
+    content: 'GloDAO',
+    embedLink: '',
+    link: '',
+    required: true,
+  },
+}
+
+export const telegramChatDefault = {
+  enabled: false,
+  setting: {
+    type: 'comment',
+    page: 'GloDAO',
+    content: 'GloDAO',
+    embedLink: '',
+    link: '',
+    required: true,
+  },
 }
