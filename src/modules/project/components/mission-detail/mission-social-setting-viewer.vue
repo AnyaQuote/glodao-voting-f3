@@ -1,40 +1,53 @@
 <template>
-  <div class="d-flex flex-column mt-2">
-    <v-sheet class="d-flex align-center pa-5" rounded="lg" outlined>
-      <v-img class="d-none d-md-block" src="@/assets/icons/twitter.svg" max-width="24" max-height="24" />
-      <span class="mx-3 font-weight-600">Twitter task</span>
-      <span class="bullet neutral-10--text">Follow Project twitter</span>
-    </v-sheet>
-
-    <v-sheet class="d-flex align-center pa-5 mt-2" rounded="lg" outlined>
-      <v-img class="d-none d-md-block" src="@/assets/icons/twitter.svg" max-width="24" max-height="24" />
-      <span class="mx-3 font-weight-600">Twitter task</span>
-      <span class="bullet neutral-10--text">Follow Project twitter</span>
-    </v-sheet>
-
-    <v-sheet class="pa-5 mt-2" rounded="lg" outlined>
+  <div class="d-flex flex-column">
+    <!-- ----------------------------- DISPLAY TWITTER SETTING ----------------------------------------------- -->
+    <v-sheet v-for="(task, index) in twitterSetting" :key="index" class="pa-5 mt-2" rounded="lg" outlined>
       <div class="d-flex align-center">
-        <v-img class="d-none d-md-block" src="@/assets/icons/twitter.svg" max-width="24" max-height="24" />
-        <span class="mx-3 font-weight-600">Twitter task</span>
-        <span class="bullet neutral-10--text">Follow Project twitter</span>
+        <v-img src="@/assets/icons/twitter.svg" max-width="24" max-height="24" />
+        <span class="ml-2 font-weight-600"> Twitter task</span>
+        <v-sheet width="4" height="4" rounded="circle" class="neutral-10 mx-sm-4 mx-2" />
+        <span class="neutral-10--text text-subtitle-2 text-capitalize">{{ task.type }} project twitter</span>
       </div>
-      <v-sheet :width="linkWidth" class="mt-2 text-truncate">
-        <span class="mr-2">Twitter link:</span>
-        <a class="blue-diversity--text text-truncate" href="https://twitter.com/elonmusk/status/1538406040374595585">
-          https://twitter.com/elonmusk/status/1538406040374595585
-        </a>
-      </v-sheet>
+      <div class="mt-2 text-truncate text-subtitle-2 font-weight-600" :style="`max-width: ${linkWidth}`">
+        <span>Twitter link:&nbsp;</span>
+        <a class="blue-diversity--text" :href="task.link">{{ task.link }}</a>
+      </div>
+      <!-- </div> -->
+      <div v-if="'quote' === task.type" class="mt-2 text-subtitle-2 font-weight-600">
+        <span>Hastag:&nbsp;</span>
+        <span class="blue-diversity--text">#{{ task.hashtag }}</span>
+      </div>
     </v-sheet>
-    <v-sheet class="d-flex align-center pa-5 mt-2" rounded="lg" outlined>
-      <v-img class="d-none d-md-block" src="@/assets/icons/twitter.svg" max-width="24" max-height="24" />
-      <span class="mx-3 font-weight-600">Twitter task</span>
-      <span class="bullet neutral-10--text">Follow Project twitter</span>
+    <!-- ------------------------------------------------------------------------------------------------------ -->
+
+    <!-- ----------------------------- DISPLAY TELEGRAM SETTING ----------------------------------------------- -->
+    <v-sheet
+      v-for="(task, index) in telegramSetting"
+      :key="index + twitterSetting.length"
+      class="pa-5 mt-2"
+      rounded="lg"
+      outlined
+    >
+      <div class="d-flex align-center">
+        <v-img src="@/assets/icons/telegram.svg" max-width="24" max-height="24" />
+        <span class="ml-2 font-weight-600"> Telegram task</span>
+        <v-sheet width="4" height="4" rounded="circle" class="neutral-10 mx-sm-3 mx-1" />
+        <span class="neutral-10--text text-subtitle-2 text-capitalize">
+          {{ task.type === 'follow' ? 'Join' : task.type }} telegram group
+        </span>
+      </div>
+      <div class="mt-2 text-truncate text-subtitle-2 font-weight-600" :style="`max-width: ${linkWidth}`">
+        <span>Channel group:&nbsp;</span>
+        <a class="blue-diversity--text" :href="task.link">{{ task.link }}</a>
+      </div>
     </v-sheet>
+    <!-- ------------------------------------------------------------------------------------------------------ -->
   </div>
 </template>
 
 <script lang="ts">
-import { Data } from '@/models/MissionModel'
+import { Data, Task } from '@/models/MissionModel'
+import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -43,12 +56,18 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class MissionSocialSettingViewer extends Vue {
   @Prop({ required: true }) data!: Data
 
-  mounted() {
-    console.log({ ...this.data })
+  twitterSetting: Task[] = []
+  telegramSetting: Task[] = []
+  // discordSetting: Task[] = []
+
+  created() {
+    this.twitterSetting = get(this.data, 'twitter', [])
+    this.telegramSetting = get(this.data, 'telegram', [])
+    // this.discordSetting = get(this.data, 'discord', [])
   }
 
   get linkWidth() {
-    return this.$vuetify.breakpoint.mdAndUp ? '600' : '300'
+    return this.$vuetify.breakpoint.mdAndUp ? '600px' : '300px'
   }
 }
 </script>
