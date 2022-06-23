@@ -24,9 +24,7 @@
       <!-- ------------------------------ LOADING SKELETON START ----------------------------------- -->
       <template v-if="vm.loading">
         <v-col cols="12" md="8" order="2" order-md="1">
-          <v-skeleton-loader type="image" />
-          <v-skeleton-loader type="image" />
-          <v-skeleton-loader type="image" />
+          <v-skeleton-loader type="image,image,image" />
         </v-col>
         <v-col cols="12" md="4" class="mb-4 mb-md-0" order="1" order-md="2">
           <v-skeleton-loader type="image" />
@@ -36,8 +34,8 @@
 
       <!-- ------------------------------ MISSION DETAIL START ------------------------------------- -->
       <template v-else>
-        <!-- <mission-social-detail /> -->
-        <mission-lte-detail />
+        <mission-lte-detail v-if="vm.isLearnToEarnMission" />
+        <mission-social-detail v-else />
       </template>
       <!-- ------------------------------ MISSION DETAIL END --------------------------------------- -->
     </v-row>
