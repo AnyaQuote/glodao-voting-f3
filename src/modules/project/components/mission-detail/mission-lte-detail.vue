@@ -3,15 +3,17 @@
     <v-col cols="12" md="8" order="2" order-md="1">
       <v-sheet outlined rounded="lg" class="pa-6 mb-6">
         <!-- PROJECT LOGO AND NAME START  -->
-        <div class="d-flex align-center">
+        <div class="d-flex align-center flex-wrap">
           <v-avatar size="76">
-            <v-img src="@/assets/icons/voting-trending--logo.png" />
+            <v-img :src="$_get(vm.mission, 'metadata.projectLogo')" />
           </v-avatar>
-          <div class="d-flex flex-column justify-space-between ml-4 flex-grow-1">
-            <span class="text-h5 font-weight-bold">Mission Dragon #1</span>
-            <span class="text-h6 font-weight-bold neutral-10--text">Jan 21st 2022 - Jan 21st 2023</span>
+          <div class="d-flex flex-column justify-space-between mt-2 ml-0 ml-sm-4 flex-grow-1">
+            <span class="text-h5 font-weight-bold">{{ $_get(vm.mission, 'name') }}</span>
+            <span class="text-h6 font-weight-bold neutral-10--text"
+              >{{ $_get(vm.mission, 'startTime') | MMDoYYYY }} - {{ $_get(vm.mission, 'endTime') | MMDoYYYY }}</span
+            >
           </div>
-          <v-sheet color="blue-2" class="blue-diversity--text font-weight-600 pa-2" rounded>
+          <v-sheet color="blue-2" class="mt-2 mt-sm-0 blue-diversity--text font-weight-600 pa-2" rounded>
             Learn to earn Mission
           </v-sheet>
         </div>
@@ -19,18 +21,16 @@
 
         <!-- DESCRIPTION START -->
         <div class="mt-7 neutral-10--text">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged.
+          {{ $_get(vm.mission, 'metadata.shortDescription') }}
         </div>
         <!-- DESCRIPTION END -->
 
         <div class="mt-6 row no-gutters">
-          <v-img
-            class="col-12 col-sm-6 mb-2 mb-sm-0 rounded-lg"
-            src="@/assets/images/voting-trending--background.png"
-          />
+          <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+            <div class="black rounded-lg overflow-hidden">
+              <v-img max-height="250" aspect-ratio="1" contain :src="$_get(vm.mission, 'metadata.coverImage')" />
+            </div>
+          </div>
           <div class="col-12 col-sm-6">
             <v-sheet
               class="px-4 py-8 d-flex justify-center align-center ml-0 ml-sm-4 fill-height"
@@ -38,35 +38,55 @@
               outlined
             >
               <div>
-                <div class="text-center text-h5 font-weight-600">100,000.00 $SB</div>
+                <div class="text-center text-h5 font-weight-600">
+                  {{ $_get(vm.mission, 'rewardAmount') }} {{ $_get(vm.mission, 'metadata.rewardToken') }}
+                </div>
                 <div class="text-center">Total reward</div>
               </div>
             </v-sheet>
           </div>
         </div>
 
+        <!-- MISSION DETAIL -->
         <div class="mt-6">
-          <div class="text-h6 font-weight-bold">Mission setting</div>
-          <mission-document-viewer class="mt-4" :document="mock" />
+          <v-sheet class="blue-2 d-flex rounded-t-lg font-weight-bold overflow-hidden">
+            <div
+              v-for="tab in tabs"
+              :key="tab.value"
+              class="pa-4 cursor-pointer"
+              :class="isActive(tab.value)"
+              @click="changeTab(tab.value)"
+            >
+              {{ tab.name }}
+            </div>
+          </v-sheet>
+
+          <div class="mt-6">
+            <v-slide-x-transition group hide-on-leave>
+              <mission-lte-overview v-if="tab === 1" key="1" />
+              <mission-document-viewer v-if="tab === 2" key="2" :document="$_get(vm.quiz, 'learningInformation')" />
+              <mission-quiz-viewer v-if="tab === 3" key="3" :data="vm.combineQuizData" />
+            </v-slide-x-transition>
+          </div>
         </div>
       </v-sheet>
     </v-col>
     <v-col cols="12" md="4" class="mb-4 mb-md-0" order="1" order-md="2">
-      <v-sheet outlined rounded="lg" style="border: 2px solid var(--v-blue-diversity-base)">
+      <v-sheet class="overflow-hidden" outlined rounded="lg" style="border: 2px solid var(--v-blue-diversity-base)">
         <div class="blue-diversity white--text py-2 text-center font-weight-600">Mission stats</div>
         <div class="pa-6">
           <div class="d-flex justify-space-between font-18 font-weight-600">
+            <span>Total participants</span>
+            <span>{{ $_get(vm.mission, 'totalParticipants', 0) }} users</span>
+          </div>
+          <!-- <div class="d-flex justify-space-between mt-5 font-18 font-weight-600">
             <span>Total participant</span>
             <span>1,500</span>
           </div>
           <div class="d-flex justify-space-between mt-5 font-18 font-weight-600">
             <span>Total participant</span>
             <span>1,500</span>
-          </div>
-          <div class="d-flex justify-space-between mt-5 font-18 font-weight-600">
-            <span>Total participant</span>
-            <span>1,500</span>
-          </div>
+          </div> -->
         </div>
       </v-sheet>
     </v-col>
@@ -75,17 +95,33 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue } from 'vue-property-decorator'
-import { mock } from './mock'
+import { Component, Inject, Vue } from 'vue-property-decorator'
+import { MissionDetailViewModel } from '../../viewmodels/mission-detail-viewmodel'
 
 @Observer
 @Component({
   components: {
     'mission-document-viewer': () => import('../mission-detail/mission-document-viewer.vue'),
+    'mission-lte-overview': () => import('../mission-detail/mission-lte-overview.vue'),
+    'mission-quiz-viewer': () => import('../mission-detail/mission-quiz-viewer.vue'),
   },
 })
 export default class MissionLearnToEarnDetail extends Vue {
-  mock = mock
+  @Inject() vm!: MissionDetailViewModel
+  readonly tabs = [
+    { name: 'Overview', value: 1 },
+    { name: 'Document', value: 2 },
+    { name: 'Quiz', value: 3 },
+  ]
+  tab = 1
+
+  changeTab(value: number) {
+    this.tab = value
+  }
+
+  get isActive() {
+    return (tabIndex) => (this.tab == tabIndex ? 'blue-diversity white--text' : '')
+  }
 }
 </script>
 
