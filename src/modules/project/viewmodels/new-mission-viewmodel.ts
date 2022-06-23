@@ -134,12 +134,14 @@ export class NewMissionViewModel {
   async getMissionSetting() {
     if (this.learnToEarn.enabled) {
       const quizId = await this.getQuizId()
-      return [
-        {
-          type: 'quiz',
-          quizId,
-        },
-      ]
+      return {
+        quiz: [
+          {
+            type: 'quiz',
+            quizId,
+          },
+        ],
+      }
     } else {
       let socialSetting = {}
       if (this.joinTelegram.enabled) {
