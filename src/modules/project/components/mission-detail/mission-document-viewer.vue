@@ -1,41 +1,36 @@
 <template>
-  <v-sheet v-if="loading" class="row no-gutters">
-    <div class="col-3 pr-4">
-      <v-skeleton-loader type="image" />
+  <v-sheet v-if="noContent" class="row no-gutters">
+    <div class="d-none d-sm-none d-md-block col-3 pr-4">
+      <v-skeleton-loader boilerplate type="image" />
     </div>
     <div class="col-9">
-      <v-skeleton-loader type="image, image, image" />
+      <v-skeleton-loader boilerplate type="image, image, image" />
     </div>
   </v-sheet>
   <v-sheet v-else class="markdown-container">
     <main :class="wrapperClass">
-      <div v-show="$vuetify.breakpoint.mdAndUp" id="markdown-aside" class="pt-5 markdown-sticky mt-3"></div>
+      <div id="markdown-aside" class="d-none d-sm-none d-md-block markdown-sticky mt-3"></div>
       <div id="markdown-content"></div>
     </main>
   </v-sheet>
 </template>
 
 <script lang="ts">
-import marked from 'marked'
+import { marked } from 'marked'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
 export default class MissionLearningDocument extends Vue {
   @Prop({ required: true }) document!: string
 
-  loading = true
+  noContent = false
 
-  async mounted() {
-    if (!this.document) return
-    else {
-      console.log('inside')
-      await this.init()
-      this.loading = false
+  mounted() {
+    if (!this.document) {
+      this.noContent = true
+    } else {
+      this.init()
     }
-  }
-
-  getParsedMarkdown() {
-    return marked(this.document)
   }
 
   /**
@@ -63,7 +58,7 @@ export default class MissionLearningDocument extends Vue {
   /**
    * Hightlight link in markdown aside matched heading in markdown content
    * @param visibleId
-   * @param links
+   * @param links arrays of links
    */
   updateLinks(visibleId: string, links: any[]) {
     links.map((link) => {
@@ -76,8 +71,8 @@ export default class MissionLearningDocument extends Vue {
   /**
    * Hightlight any link in markdown aside that matches heading in markdown content when scrolling
    * Jump to heading in markdown content matches selected link in markdown aside
-   * @param headings
-   * @param links
+   * @param headings array of headings
+   * @param links array of links
    */
   handleScroll(headings: any[], links: any[]) {
     if (!headings || !headings.length || !links) return
@@ -95,15 +90,11 @@ export default class MissionLearningDocument extends Vue {
   /**
    * Append content and add events to tags
    */
-  async init() {
-    console.log('test 1')
+  init() {
     const $main = document.querySelector('#markdown-content')
     const $aside = document.querySelector('#markdown-aside')
-    console.log('test 2')
-    const htmlContent = await this.getParsedMarkdown()
-    console.log('test 3')
 
-    console.log('htmlContent: ', htmlContent)
+    const htmlContent = marked(this.document)
 
     $main!.innerHTML = htmlContent
 
@@ -189,10 +180,10 @@ export default class MissionLearningDocument extends Vue {
 }
 #markdown-content h1 {
   padding-bottom: 15px;
-  color: var(--v-bluePrimary-base); //TODO: check real md
+  color: var(--v-blue-diversity-base); //TODO: check real md
 }
 #markdown-content h2 {
-  color: var(--v-bluePrimary-base);
+  color: var(--v-blue-diversity-base);
 }
 #markdown-content h1:not(:first-child) {
   padding-top: 15px;
@@ -203,7 +194,7 @@ export default class MissionLearningDocument extends Vue {
   text-overflow: ellipsis;
 }
 .custom-link-item .markdown-is-active {
-  color: var(--v-bluePrimary-base) !important;
+  color: var(--v-blue-diversity-base) !important;
   font-weight: 700 !important;
 }
 .custom-link-item a:not(.markdown-is-active) {
@@ -219,7 +210,6 @@ export default class MissionLearningDocument extends Vue {
   display: flex;
   margin: auto;
   background-color: transparent;
-  /* font-family: 'Cabin', sans-serif; */
   font-weight: 400;
   line-height: 1.65;
   color: white;
