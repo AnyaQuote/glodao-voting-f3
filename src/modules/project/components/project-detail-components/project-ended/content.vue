@@ -52,6 +52,7 @@
 
 <script lang="ts">
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
+import { RouteName } from '@/router'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 
@@ -62,7 +63,7 @@ export default class ProjectEndedContent extends Vue {
 
   goToMissionDetail(missionId: string) {
     this.$router.push({
-      name: 'mission-detail',
+      name: RouteName.MISSION_DETAIL,
       params: {
         unicodeName: this.vm.poolStore?.unicodeName || '',
         id: missionId,
