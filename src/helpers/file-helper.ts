@@ -29,7 +29,7 @@ export const convertBytes = (bytes, decimals = 2) => {
 }
 
 /**
- * Get content from file, if file is rich text file, format content
+ * Get content from file
  * @param file
  * @returns
  */
