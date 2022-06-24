@@ -44,7 +44,7 @@ export default class AppUploadField extends Vue {
   config: FileConfig = {
     label: `Upload your ${this.isImageFile ? 'image' : 'file'}`,
     hint: this.isImageFile ? 'Allow file types: png, jpg, svg' : 'Allowed file types: csv, txt',
-    accept: this.isImageFile ? '.png,.jpg,.svg' : '.csv.txt',
+    accept: this.isImageFile ? '.png,.jpg,.svg' : '.csv,.txt',
     isEdit: !!this.data,
     error: '',
   }
