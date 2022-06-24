@@ -44,7 +44,7 @@ export class MissionDetailViewModel {
 
       // If mission is learn to earn, get quiz
       if (this.isLearnMission) {
-        const taskTypeQuiz = find(get(this.mission, 'data.quiz', []), (task) => task.type == 'quiz')
+        const taskTypeQuiz = find(get(this.mission, 'data.quiz', []), (task) => task.type === 'quiz')
         const id = get(taskTypeQuiz, 'quizId', '')
         const quiz = yield this._api.getOwnerQuiz(id)
         if (isEmpty(quiz)) {
