@@ -9,8 +9,8 @@
           </v-avatar>
           <div class="d-flex flex-column justify-space-between mt-2 ml-0 ml-sm-4 flex-grow-1">
             <span class="text-h5 font-weight-bold">{{ $_get(vm.mission, 'name') }}</span>
-            <span class="text-h6 font-weight-bold neutral-10--text"
-              >{{ $_get(vm.mission, 'startTime') | MMDoYYYY }} - {{ $_get(vm.mission, 'endTime') | MMDoYYYY }}</span
+            <span class="font-weight-bold neutral-10--text"
+              >{{ $_get(vm.mission, 'startTime') | datetime }} - {{ $_get(vm.mission, 'endTime') | datetime }}</span
             >
           </div>
           <v-sheet color="blue-2" class="mt-2 blue-diversity--text font-weight-600 pa-2" rounded
