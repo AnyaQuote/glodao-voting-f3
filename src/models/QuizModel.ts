@@ -23,6 +23,7 @@ export interface Quiz {
   answer?: Answer[]
   metadata?: MetaData
   ownerAddress?: string
+  userId?: string
 }
 
 export interface LearnToEarn {

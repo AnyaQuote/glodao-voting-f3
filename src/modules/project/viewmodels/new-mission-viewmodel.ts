@@ -116,6 +116,7 @@ export class NewMissionViewModel {
     }
     !isEmpty(quizFile) && ([quizJSON, answerJSON] = await getDataFromQuizFile(quizFile!))
     !isEmpty(learningFile) && (learningInformation = (await learningFile!.text()).trim())
+
     const quiz: Quiz = {
       name,
       description,
