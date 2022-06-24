@@ -29,6 +29,16 @@ export const convertBytes = (bytes, decimals = 2) => {
 }
 
 /**
+ * Get content from file, if file is rich text file, format content
+ * @param file
+ * @returns
+ */
+export const getTextData = async (file: File) => {
+  const content = await file!.text()
+  return content.trim()
+}
+
+/**
  * Read file and return converted line in file to quiz JSON and answer JSON
  * Shape of quiz JSON: {id: string, type: string, question: string, data: {text: string, value: number}[]}
  * Shape of answer JSON: {id: string, answer: number}

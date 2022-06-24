@@ -41,7 +41,7 @@ export const rules = {
     !value || value.size < size || `File size should be less than ${formatFileSize(size)}`,
   isImage: (v: File) => !v || (v instanceof File && /^(image)\/.*$/.test(v.type)) || 'File is not an image.',
   isTextFile: (v: File) =>
-    !v || (v instanceof File && /\.(csv|me|md|readme|te?xt|rtfd?|docx?)$/i.test(v.name)) || 'File is not text file.',
+    !v || (v instanceof File && /\.(csv|te?xt|docx?)$/i.test(v.name)) || 'File is not plain text file.',
 }
 
 export const appRules = {}
