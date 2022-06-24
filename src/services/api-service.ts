@@ -288,6 +288,15 @@ export class ApiService {
     return res.data
   }
 
+  async getOwnerQuiz(id: string) {
+    const res = await this.axios.get(`quizzes/getOwnerQuiz/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
   async createTask(model) {
     const res = await this.axios.post('tasks/createTask', model, {
       headers: {
