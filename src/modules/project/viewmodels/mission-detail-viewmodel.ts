@@ -43,8 +43,9 @@ export class MissionDetailViewModel {
       this.mission = missions[0]
 
       // If mission is learn to earn, get quiz
-      if (this.isLteMission) {
-        const id = get(this.mission, 'data.quiz[0].quizId', '')
+      if (this.isLearnMission) {
+        const taskTypeQuiz = find(get(this.mission, 'data.quiz', []), (task) => task.type == 'quiz')
+        const id = get(taskTypeQuiz, 'quizId', '')
         const quiz = yield this._api.getOwnerQuiz(id)
         if (isEmpty(quiz)) {
           this._router.replace({ name: RouteName.NOT_FOUND })
@@ -58,7 +59,7 @@ export class MissionDetailViewModel {
     }
   }
 
-  @computed get isLteMission() {
+  @computed get isLearnMission() {
     return this.mission.type === 'learn'
   }
 
@@ -89,7 +90,7 @@ export class MissionDetailViewModel {
 
   // For learn to earn mission
   @computed get combineQuizData(): PreviewQuiz[] {
-    if (!this.isLteMission || isEmpty(this.quiz.answer)) return []
+    if (!this.isLearnMission || isEmpty(this.quiz.answer)) return []
     const combinedData = this.quiz.data!.map((item) => {
       const found = find(this.quiz.answer, (answer) => answer.id === item.id)!
       return {
