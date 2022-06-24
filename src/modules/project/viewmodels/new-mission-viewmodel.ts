@@ -106,7 +106,8 @@ export class NewMissionViewModel {
   async getQuizId() {
     if (!this.learnToEarn.setting) return null
     const { quizFile, learningFile, imageCover, name, description } = this.learnToEarn.setting
-    let quizJSON, answerJSON, learningInformation, coverUrl
+    let coverUrl
+
     if (imageCover) {
       const media = new FormData()
       media.append('files', imageCover)
@@ -114,21 +115,25 @@ export class NewMissionViewModel {
     } else {
       coverUrl = get(this.pool, 'data.projectCover', '')
     }
-    !isEmpty(quizFile) && ([quizJSON, answerJSON] = await getDataFromQuizFile(quizFile!))
-    !isEmpty(learningFile) && (learningInformation = (await learningFile!.text()).trim())
+
+    const [data, answer] = await getDataFromQuizFile(quizFile!)
+    const learningInformation = (await learningFile!.text()).trim()
 
     const quiz: Quiz = {
       name,
       description,
       learningInformation,
-      data: quizJSON,
-      answer: answerJSON,
+      data,
+      answer,
       metadata: {
         coverImage: coverUrl,
         tags: get(this.pool, 'data.fields', []),
       },
     }
-    const res = await this._api.createQuiz({ ...quiz, ownerAddress: appProvider.authStore.attachedAddress })
+    const res = await this._api.createQuiz({
+      ownerAddress: this._auth.attachedAddress,
+      ...quiz,
+    })
     return res.id
   }
 
