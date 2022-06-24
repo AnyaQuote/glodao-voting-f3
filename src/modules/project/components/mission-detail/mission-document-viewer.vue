@@ -16,8 +16,9 @@
 </template>
 
 <script lang="ts">
-import { marked } from 'marked'
 import { Component, Vue, Prop } from 'vue-property-decorator'
+
+const { marked } = require('marked')
 
 @Component
 export default class MissionLearningDocument extends Vue {
