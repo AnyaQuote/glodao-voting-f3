@@ -44,13 +44,12 @@ export class MissionDetailViewModel {
 
       // If mission is learn to earn, get quiz
       if (this.isLearnToEarnMission) {
-        const id = get(this.mission, 'data.quiz.quizId', '')
+        const id = get(this.mission, 'data.quiz[0].quizId', '')
         const quiz = yield this._api.getOwnerQuiz(id)
         if (isEmpty(quiz)) {
           this._router.replace({ name: RouteName.NOT_FOUND })
         }
         this.quiz = quiz
-        console.log('this.quiz', this.quiz)
       }
     } catch (error) {
       this._snackbar.commonError(error)
