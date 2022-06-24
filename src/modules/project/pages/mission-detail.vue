@@ -34,7 +34,7 @@
 
       <!-- ------------------------------ MISSION DETAIL START ------------------------------------- -->
       <template v-else>
-        <mission-lte-detail v-if="vm.isLearnToEarnMission" />
+        <mission-lte-detail v-if="vm.isLteMission" />
         <mission-social-detail v-else />
       </template>
       <!-- ------------------------------ MISSION DETAIL END --------------------------------------- -->

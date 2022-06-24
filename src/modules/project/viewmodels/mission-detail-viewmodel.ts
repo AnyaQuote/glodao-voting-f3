@@ -43,7 +43,7 @@ export class MissionDetailViewModel {
       this.mission = missions[0]
 
       // If mission is learn to earn, get quiz
-      if (this.isLearnToEarnMission) {
+      if (this.isLteMission) {
         const id = get(this.mission, 'data.quiz[0].quizId', '')
         const quiz = yield this._api.getOwnerQuiz(id)
         if (isEmpty(quiz)) {
@@ -58,8 +58,8 @@ export class MissionDetailViewModel {
     }
   }
 
-  @computed get isLearnToEarnMission() {
-    return has(this.mission, 'data.quiz')
+  @computed get isLteMission() {
+    return this.mission.type === 'learn'
   }
 
   // For social mission
@@ -89,7 +89,7 @@ export class MissionDetailViewModel {
 
   // For learn to earn mission
   @computed get combineQuizData(): PreviewQuiz[] {
-    if (!this.isLearnToEarnMission || isEmpty(this.quiz.answer)) return []
+    if (!this.isLteMission || isEmpty(this.quiz.answer)) return []
     const combinedData = this.quiz.data!.map((item) => {
       const found = find(this.quiz.answer, (answer) => answer.id === item.id)!
       return {
