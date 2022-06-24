@@ -114,6 +114,16 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/projects/:unicodeName/:id',
+    name: 'mission-detail',
+    component: () => import('@/modules/project/pages/mission-detail.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Mission detail',
+    },
+  },
+  {
     path: '/comming-soon',
     name: 'comming-soon',
     component: () => import('@/modules/error/pages/coming-soon.vue'),
@@ -179,5 +189,20 @@ router.afterEach(async (to, _) => {
     }
   }
 })
+
+export enum RouteName {
+  VOTING_LIST = 'voting-list',
+  VOTING_DETAIL = 'voting-detail',
+  NEW_PROJECT = 'new-project',
+  NEW_LAUNCHPAD_PROJECT = 'launchpad-apply',
+  NEW_BOUNTY_PROJECT = 'bounty-apply',
+  PROJECT_LIST = 'project-list',
+  PROJECT_DETAIL = 'project-detail',
+  NEW_MISSION = 'mission-apply',
+  MISSION_DETAIL = 'mission-detail',
+  NOT_FOUND = 'not-found',
+  UNAUTHENTICATED = 'unauthenticated',
+  COMMING_SOON = 'comming-soon',
+}
 
 export default router

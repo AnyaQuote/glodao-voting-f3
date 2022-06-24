@@ -192,7 +192,7 @@ export class ApiService {
   users = new ApiHandlerJWT<any>(this.axios, 'users', { find: false })
   tasks = new ApiHandlerJWT<any>(this.axios, 'tasks', { find: false, count: false })
   voting = new ApiHandlerJWT<any>(this.axios, 'voting-pools', { find: false, count: false, findOne: false })
-  quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes', { find: false, count: false })
+  quizzes = new ApiHandlerJWT<any>(this.axios, 'quizzes', { find: false, findOne: false, count: false })
 
   constructor() {
     this.setupAuthInjection()
@@ -281,6 +281,15 @@ export class ApiService {
 
   async createQuiz(model) {
     const res = await this.axios.post('quizzes/createQuiz', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
+  async getOwnerQuiz(id: string) {
+    const res = await this.axios.get(`quizzes/getOwnerQuiz/${id}`, {
       headers: {
         Authorization: `Bearer ${authStore.jwt}`,
       },

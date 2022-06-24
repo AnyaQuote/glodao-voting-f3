@@ -52,8 +52,8 @@ export interface MissionInfo {
 export interface PreviewQuiz {
   id?: string
   question?: string
-  answer?: number
-  choices?: { text?: string; value?: number }[]
+  answer?: number | string
+  choices?: { text?: string; value?: number | string }[]
 }
 
 export const joinTelegramDefault = {
