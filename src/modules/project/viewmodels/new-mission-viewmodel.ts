@@ -191,13 +191,16 @@ export class NewMissionViewModel {
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
     const isSocialMission = missionInfo.type === 'social'
 
+    // Type of the mission
+    const type = isSocialMission ? 'bounty' : 'learn'
+
     // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value
 
     // Learn to earn mission needs maxParticipants
     const maxParticipants = isSocialMission ? 0 : toNumber(missionInfo.maxParticipants)
 
-    // Social misison needs maxPriorityParticipants and priorityRewardAmount field
+    // Social mission needs maxPriorityParticipants and priorityRewardAmount field
     const maxPriorityParticipants = isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0
     const priorityRewardAmount = isSocialMission ? this.priorityAmount._value : '0'
 
@@ -211,7 +214,7 @@ export class NewMissionViewModel {
       endTime: missionInfo.endDate,
       name: missionInfo.name,
       chainId: pool.chain,
-      type: pool.type,
+      type,
       poolId: pool.id,
       data: setting,
       status,
