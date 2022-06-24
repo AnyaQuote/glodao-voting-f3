@@ -27,6 +27,7 @@ export interface MetaData {
 }
 
 export interface Mission {
+  id?: string
   ownerAddress?: string
   poolId?: string
   name?: string
