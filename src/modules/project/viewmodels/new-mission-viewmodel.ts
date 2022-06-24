@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile } from '@/helpers/file-helper'
+import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
 import { Data } from '@/models/MissionModel'
 import {
   Quiz,
@@ -117,7 +117,7 @@ export class NewMissionViewModel {
     }
 
     const [data, answer] = await getDataFromQuizFile(quizFile!)
-    const learningInformation = (await learningFile!.text()).trim()
+    const learningInformation = await getTextData(learningFile!)
 
     const quiz: Quiz = {
       name,
