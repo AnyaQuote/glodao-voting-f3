@@ -127,7 +127,6 @@ export class NewMissionViewModel {
         coverImage: coverUrl,
         tags: get(this.pool, 'data.fields', []),
       },
-      userId: get(this._auth, 'user,id', ''),
     }
     const res = await this._api.createQuiz({ ...quiz, ownerAddress: appProvider.authStore.attachedAddress })
     return res.id
