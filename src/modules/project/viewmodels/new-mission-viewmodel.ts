@@ -308,7 +308,7 @@ export class NewMissionViewModel {
 
   @computed get maxPriorityParticipantsLimit() {
     try {
-      const fxPotentialPriorityReward = this.fxAvgCommunityReward.divUnsafe(FixedNumber.from('2'))
+      const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
       const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
       const limit = ceil(toNumber(fxparticipantLimit._value))
       if (limit === 0) {
