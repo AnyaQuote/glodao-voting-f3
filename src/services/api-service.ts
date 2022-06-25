@@ -306,6 +306,19 @@ export class ApiService {
     return res.data
   }
 
+  /**
+   * Get average applied community reward
+   * @param limit number of tasks to calculate average from
+   */
+  async getAverageCommunityReward(limit) {
+    const res = await this.axios.get(`tasks/getAverageCommunityReward/${limit}`, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
   async getFile(id: any) {
     const res = await this.axios.get(`upload/files/${id}`)
     return res.data

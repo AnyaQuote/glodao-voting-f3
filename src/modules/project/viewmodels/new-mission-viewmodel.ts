@@ -13,13 +13,13 @@ import {
   telegramChatDefault,
 } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
+import { isEqual, set, get, isEmpty, toNumber, sampleSize, ceil } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { RoutePaths } from '@/router'
+import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
+import { ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
 export class NewMissionViewModel {
   @observable step = 1
@@ -32,6 +32,7 @@ export class NewMissionViewModel {
   @observable quoteTweet = quoteTweetDefault
   @observable commentTweet = commentTweetDefault
   @observable telegramChat = telegramChatDefault
+  @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
 
@@ -51,10 +52,20 @@ export class NewMissionViewModel {
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
-      const res = yield this._api.voting.find({ unicodeName, ownerAddress: this._auth.attachedAddress }, { _limit: 1 })
-      isEmpty(res) && this._router.replace(RoutePaths.not_found)
+      const [pools, avgCommunityReward] = yield Promise.all([
+        this._api.voting.find({ unicodeName, ownerAddress: this._auth.attachedAddress }, { _limit: 1 }),
+        this._api.getAverageCommunityReward(10),
+      ])
 
-      this.pool = res[0]
+      if (isEmpty(pools)) {
+        this._router.replace(RoutePaths.not_found)
+      }
+      this.pool = pools[0]
+
+      if (get(avgCommunityReward, 'code') === '500') {
+        throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
+      }
+      this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
@@ -103,15 +114,20 @@ export class NewMissionViewModel {
     this.changeTelegramChatSetting('enabled', false)
   }
 
+  async getImageSource(imageFile: File) {
+    const media = new FormData()
+    media.append('files', imageFile)
+    const imageResult = await this._api.uploadFile(media)
+    return getApiFileUrl(imageResult[0])
+  }
+
   async getQuizId() {
     if (!this.learnToEarn.setting) return null
     const { quizFile, learningFile, imageCover, name, description } = this.learnToEarn.setting
     let coverUrl
 
     if (imageCover) {
-      const media = new FormData()
-      media.append('files', imageCover)
-      coverUrl = getApiFileUrl(await this._api.uploadFile(media)[0])
+      coverUrl = this.getImageSource(imageCover)
     } else {
       coverUrl = get(this.pool, 'data.projectCover', '')
     }
@@ -184,7 +200,7 @@ export class NewMissionViewModel {
     }
   }
 
-  @action mappingFields(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
+  async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'draft'
     const tokenBasePrice = '1'
@@ -204,6 +220,8 @@ export class NewMissionViewModel {
     const maxPriorityParticipants = isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0
     const priorityRewardAmount = isSocialMission ? this.priorityAmount._value : '0'
 
+    const coverImage = await this.getImageSource(missionInfo.missionCover!)
+
     const mission: Mission = {
       rewardAmount,
       maxParticipants,
@@ -221,7 +239,7 @@ export class NewMissionViewModel {
       metadata: {
         shortDescription: missionInfo.shortDescription,
         projectLogo: pool.data?.projectLogo,
-        coverImage: pool.data?.projectCover,
+        coverImage,
         caption: missionInfo.shortDescription,
         decimals: pool.data?.decimals,
         rewardToken: pool.tokenName,
@@ -237,10 +255,15 @@ export class NewMissionViewModel {
     try {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
-      const model = this.mappingFields(missionSetting, this.missionInfo, this.pool)
+      const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
       yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
       this._snackbar.addSuccess()
-      this._router.push(RoutePaths.project_detail + this.pool.unicodeName)
+      this._router.push({
+        name: RouteName.PROJECT_DETAIL,
+        params: {
+          unicodeName: get(this.pool, 'unicodeName', ''),
+        },
+      })
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
@@ -280,6 +303,19 @@ export class NewMissionViewModel {
       return this.priorityAmount.divUnsafe(FixedNumber.from(this.missionInfo.maxPriorityParticipants))
     } catch (_) {
       return Zero
+    }
+  }
+
+  @computed get maxPriorityParticipantsLimit() {
+    try {
+      const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
+      const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
+      const limit = ceil(toNumber(fxparticipantLimit._value))
+      if (limit === 0) {
+        throw null
+      } else return limit
+    } catch (_) {
+      return 200
     }
   }
 
