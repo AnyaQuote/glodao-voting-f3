@@ -94,7 +94,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:code',
+    path: '/projects/:unicodeName',
     name: 'project-detail',
     component: () => import('@/modules/project/pages/project-detail.vue'),
     meta: {
