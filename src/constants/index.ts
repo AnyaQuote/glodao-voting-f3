@@ -15,6 +15,7 @@ export const WALLET_CONNECTED_SUCCESSFUL = 'connected'
 export const ERROR_MSG_TIMEOUT = 'Process took too long. Please try again.'
 export const ERROR_MSG_LOGIN_TIMEOUT = 'Login took too long to response. Please try again.'
 export const ERROR_MSG_LOGIN_TO_CONTINUE = 'Please sign in to continue to this page.'
+export const ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD = 'Can not calculate average community reward'
 
 export const ERROR_MSG_MISSING_ATTACHED_WALLET =
   'You have not attached any wallet yet. Please set your main wallet to continue.'
