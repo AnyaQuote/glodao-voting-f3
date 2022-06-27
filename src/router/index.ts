@@ -23,7 +23,7 @@ export enum RoutePaths {
 }
 
 const routes: Array<RouteConfig> = [
-  { path: '/', redirect: '/project-list' },
+  { path: '/', redirect: '/projects' },
   {
     path: '/twitter-auth',
     name: 'TwitterAuthentication',
