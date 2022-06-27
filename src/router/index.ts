@@ -23,7 +23,7 @@ export enum RoutePaths {
 }
 
 const routes: Array<RouteConfig> = [
-  { path: '/', redirect: '/voting' },
+  { path: '/', redirect: '/projects' },
   {
     path: '/twitter-auth',
     name: 'TwitterAuthentication',
@@ -160,16 +160,20 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, _, next) => {
   if (!to.name) {
-    next(RoutePaths.not_found)
+    next({ name: RouteName.NOT_FOUND })
   } else {
+    // Currently disable any route that leads to voting list and detail and launchpad apply page
+    if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
+      next({ name: RouteName.COMMING_SOON })
+    }
+    // =====================================================================
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-
     if (requiredAuth && !authStore.jwt) {
       const res = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
       twitterLoginDialogController.close()
 
       // If user denied sign in, redirect to 401 page
-      !res && next(RoutePaths.unauthenticated)
+      !res && next({ name: RouteName.UNAUTHENTICATED })
     }
     next()
   }
