@@ -16,7 +16,7 @@ export interface VotingPool {
   totalMission?: string
   ownerAddress?: string
   poolId?: string
-  status?: string
+  status?: VotingPoolStatus
   type?: string
   startDate?: string
   endDate?: string
@@ -39,4 +39,12 @@ export class Voter {
     this.voted = voted
     this.time = time
   }
+}
+
+export enum VotingPoolStatus {
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  VOTING = 'voting',
+  PENDING = 'pending',
+  CANCELLED = 'cancelled',
 }
