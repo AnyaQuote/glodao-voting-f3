@@ -80,7 +80,7 @@
       </div>
 
       <!-- ----------------------------------- VOTING DURATION --------------------------------------------- -->
-      <div class="mt-2">
+      <!-- <div class="mt-2">
         <span class="font-18 font-weight-bold blue-diversity--text">Voting duration</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
@@ -95,7 +95,7 @@
       <div class="font-18">
         <span class="font-weight-bold">Your project voting will end in: </span>
         <span>{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
-      </div>
+      </div> -->
 
       <!-- ------------------------------------ CAMPAIGN INFORMATION --------------------------------------- -->
       <div class="mt-7">
