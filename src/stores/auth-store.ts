@@ -49,9 +49,9 @@ export class AuthStore {
     router.push(RoutePaths.voting_list)
   }
 
-  @asyncAction *signMessage(account, chainType, nonce, selectedAdapter: any = null) {
-    if (!account) return ''
-    const message = `GloDAO wants to: \n Sign message with account \n ${account} - One time nonce: ${nonce}`
+  @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
+    if (!wallet) return ''
+    const message = `https://glodao.io/bounty wants to: \n Sign message with account \n ${wallet} - One time nonce: ${nonce}`
     const data = new TextEncoder().encode(message)
     if (chainType === 'sol') {
       //solana sign message
@@ -61,7 +61,7 @@ export class AuthStore {
         return ''
       }
       if (window.ethereum) {
-        const request = { method: 'personal_sign', params: [message, account] }
+        const request = { method: 'personal_sign', params: [message, wallet] }
         return yield window.ethereum.request(request)
       } else {
         throw new Error('Plugin Metamask is not installed!')
