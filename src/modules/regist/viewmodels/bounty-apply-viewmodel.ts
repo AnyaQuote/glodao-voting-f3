@@ -183,6 +183,7 @@ export class BountyApplyViewModel {
         images = yield apiService.uploadFile(media)
       }
 
+      const status = 'approved'
       const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
 
       // update voting pool
@@ -193,7 +194,7 @@ export class BountyApplyViewModel {
         ownerAddress,
         tokenAddress: this.projectInfo.tokenAddress,
         tokenName: this.projectInfo.tokenName,
-        status: 'voting',
+        status,
         unicodeName,
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
