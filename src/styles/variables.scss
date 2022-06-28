@@ -1,29 +1,103 @@
 @import "./breakpoint-custom.scss";
 @import "./button-custom.scss";
+@import "./utils.scss";
 
 @font-face {
-  font-family: "refrigerator-deluxe";
-  src: url("~@/assets/fonts/Refrigerator-Deluxe-Light.otf") format("opentype");
-  font-weight: 300;
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Black.ttf") format("truetype");
+  font-weight: 900;
   font-style: normal;
 }
-
 @font-face {
-  font-family: "refrigerator-deluxe";
-  src: url("~@/assets/fonts/Refrigerator-Deluxe-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-BlackIt.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
 }
-
 @font-face {
-  font-family: "refrigerator-deluxe";
-  src: url("~@/assets/fonts/Refrigerator-Deluxe-Bold.otf") format("opentype");
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
-
 @font-face {
-  font-family: "helvetica-neue";
-  src: local("Helvetica-Neue"),
-    url("~@/assets/fonts/HelveticaNeue-Light.ttf") format("truetype");
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-BoldIt.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
 }
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Semibold.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-SemiboldIt.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-RegularIt.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-LightIt.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-ThinIt.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+
+$body-font-family: 'Proxima Nova', sans-serif;
+
+$typoOptions: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6, text-subtitle-1, text-subtitle-2, text-body-1,
+  text-body-2, text-button, text-caption, text-overline, caption, overline;
+*:not(.fa, .fab, .fal, .far, .fas, .v-icon) {
+  font-family: $body-font-family, sans-serif;
+  @each $typoOption in $typoOptions {
+    .#{$typoOption} {
+      font-family: $body-font-family, sans-serif !important;
+    }
+  }
+}
+
+.v-application {
+  [class*='text-'] {
+    font-family: $body-font-family, sans-serif !important;
+  }
+  font-family: $body-font-family, sans-serif !important;
+}
+.v-btn {
+  text-transform: initial;
+  letter-spacing: 0px;
+}
+// ---------------------------------------------------------------------------------------------------------------------------------------
+
+$progress-circular-underlay-stroke: white;

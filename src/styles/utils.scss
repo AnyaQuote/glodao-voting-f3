@@ -1,0 +1,41 @@
+$browser-context: 16;
+$common-gap: em(16);
+$border-radius: 16px;
+
+@function em($pixels, $context: $browser-context) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+
+  @return $pixels / $context * 1em;
+}
+
+@function calculateLineHeight($font-size) {
+  $line-height: $font-size;
+  @if ($font-size < 50) {
+    $line-height: em($font-size + 3)
+  } @else {
+    $line-height: em($font-size + 5)
+  }
+  @return $line-height
+}
+
+@function calculateLetterSpacing($font-size) {
+  $letter-spacing: 0em;
+  @if ($font-size > 65) {
+    $letter-spacing: -0.05em;
+  } @else {
+    $letter-spacing: 0em;
+  }
+  @return $letter-spacing
+}
+
+@mixin text-font-size($font-size) {
+  font-size: em($font-size);
+  line-height: calculateLineHeight($font-size);
+  letter-spacing: calculateLetterSpacing($font-size);
+}

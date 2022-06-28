@@ -11,7 +11,7 @@ declare class Contract {
     byteCode,
     args,
     acc,
-    callback
+    callback,
   }: {
     byteCode: any
     args: any

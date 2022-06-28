@@ -1,0 +1,40 @@
+<template>
+  <v-dialog persistent :max-width="maxWidth" :value="show" @click:outside="close">
+    <slot :close="close"></slot>
+  </v-dialog>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator'
+
+@Component
+export default class AppDialog extends Vue {
+  @Prop({ default: '500' }) maxWidth!: string | number
+  private show = false
+  private request = 0
+
+  increaseRequest() {
+    this.request++
+  }
+
+  decreaseRequest() {
+    this.request--
+  }
+
+  open() {
+    this.show = true
+  }
+
+  close() {
+    if (!this.requesting) {
+      this.show = false
+    }
+  }
+
+  get requesting() {
+    return this.request > 0
+  }
+}
+</script>
+
+<style scoped></style>

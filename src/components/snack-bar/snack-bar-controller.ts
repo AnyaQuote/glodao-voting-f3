@@ -1,5 +1,5 @@
-import { action, observable } from "mobx"
-import _ from "lodash"
+import _ from 'lodash'
+import { action, observable } from 'mobx'
 
 export interface SnakBarConfig {
   icon?: string
@@ -10,14 +10,18 @@ export interface SnakBarConfig {
 
 export class SnackBarController {
   @observable config: SnakBarConfig = {
-    timeout: 5000
+    timeout: 5000,
   }
   @observable show = false
 
   @action commonError(err: any) {
-    let message = "Please try again"
+    let message
+    if (err && typeof err === 'string') message = err
+    else {
+      message = err?.message || err?.msg || 'Please try again'
+    }
     // strapi error
-    const apiError = _.get(err, "response.data.message")
+    const apiError = _.get(err, 'response.data.message')
     console.error(apiError, err)
     if (apiError) {
       if (apiError instanceof Array) {
@@ -26,47 +30,61 @@ export class SnackBarController {
         if (errMsg) errMsg = _.first(errMsg)
         if (errMsg) errMsg = errMsg.message
         if (errMsg) message = errMsg
-      } else if (apiError instanceof String) {
+      } else if (apiError instanceof String || typeof apiError === 'string') {
         message = apiError as string
       }
     }
     this.error(message)
   }
 
+  @action blockchainError(err: any) {
+    this.error(err.msg || err.message || err)
+  }
+
   @action success(message: string) {
     this.config = {
-      icon: "mdi-check-circle",
+      icon: 'check_circle',
       message,
-      color: "success",
-      timeout: 4000
+      color: 'success',
+      timeout: 4000,
     }
     this.show = true
   }
 
   @action addSuccess() {
-    this.success("Insert successed")
+    this.success('Insert successfully')
   }
 
   @action updateSuccess() {
-    this.success("Update successed")
+    this.success('Update successfully')
   }
 
   @action deleteSuccess() {
-    this.success("Delete successed")
+    this.success('Delete successfully')
   }
 
   @action error(message: string) {
     this.config = {
-      icon: "mdi-alert-circle-outline",
+      icon: 'error',
       message,
-      color: "error",
-      timeout: 5000
+      color: 'error',
+      timeout: 5000,
     }
     this.show = true
   }
 
   @action close() {
     this.show = false
+  }
+
+  @action warning(message: string) {
+    this.config = {
+      icon: 'mdi-account-alert-outline',
+      message,
+      color: 'warning',
+      timeout: 5000,
+    }
+    this.show = true
   }
 }
 

@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
-import { loadingController } from "./global-loading-controller"
+import { Component, Vue } from 'vue-property-decorator'
+import { loadingController } from './global-loading-controller'
 
 @Component
 export default class extends Vue {
