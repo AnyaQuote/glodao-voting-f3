@@ -127,9 +127,9 @@ export class NewMissionViewModel {
     let coverUrl
 
     if (imageCover) {
-      coverUrl = this.getImageSource(imageCover)
+      coverUrl = await this.getImageSource(imageCover)
     } else {
-      coverUrl = get(this.pool, 'data.projectCover', '')
+      coverUrl = get(this.pool, 'data.projectCover')
     }
 
     const [data, answer] = await getDataFromQuizFile(quizFile!)
