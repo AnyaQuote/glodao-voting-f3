@@ -46,7 +46,7 @@ export class AuthStore {
     this.resetUser()
     localdata.resetAuth()
 
-    router.push(RoutePaths.voting_list)
+    // router.push(RoutePaths.voting_list)
   }
 
   @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
