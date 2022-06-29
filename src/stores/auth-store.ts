@@ -46,7 +46,13 @@ export class AuthStore {
     this.resetUser()
     localdata.resetAuth()
 
+    // Disable router push since voting page is hidden
+    // '''
     // router.push(RoutePaths.voting_list)
+    // '''
+    // Because of that, now changing to when log out, reload the page
+    // So that twitterLoginDialog can begin checking
+    location.reload()
   }
 
   @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
