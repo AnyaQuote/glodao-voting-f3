@@ -28,7 +28,7 @@
         <div class="mt-6 row no-gutters">
           <div class="col-12 col-sm-6 mb-2 mb-sm-0">
             <div class="black rounded-lg overflow-hidden">
-              <v-img max-height="250" aspect-ratio="1" contain src="@/assets/images/voting-trending--background.png" />
+              <v-img max-height="250" aspect-ratio="1" contain :src="$_get(vm.mission, 'metadata.coverImage')" />
             </div>
           </div>
 
