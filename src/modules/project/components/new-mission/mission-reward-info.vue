@@ -38,7 +38,7 @@
       </div>
       <div class="col-12 col-md-6 pa-0">
         <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
-          <span>Personal reward:</span>
+          <span>Personal priority reward:</span>
           <span class="font-weight-600">
             {{ vm.personalReward | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}
           </span>
