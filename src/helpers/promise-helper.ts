@@ -15,7 +15,7 @@ export const promiseHelper = {
  * @param delay miliseconds to repeat checking interval
  * @returns resolve localdata or reject when timeout
  */
-export const waitForLocalStorage = (delay = 1000) =>
+export const waitForLocalStorage = (delay = 5000) =>
   new Promise<Array<any>>((resolve, reject) => {
     const startTime = new Date().getTime()
 
