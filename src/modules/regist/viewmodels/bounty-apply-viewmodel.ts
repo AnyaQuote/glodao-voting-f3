@@ -15,6 +15,7 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { VotingPoolStatus } from '@/models/VotingModel'
 
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
@@ -182,7 +183,7 @@ export class BountyApplyViewModel {
         media.append('files', this.projectInfo.projectCover)
         images = yield apiService.uploadFile(media)
       }
-
+      const status = VotingPoolStatus.APPROVED
       const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
 
       // update voting pool
@@ -193,7 +194,7 @@ export class BountyApplyViewModel {
         ownerAddress,
         tokenAddress: this.projectInfo.tokenAddress,
         tokenName: this.projectInfo.tokenName,
-        status: 'voting',
+        status,
         unicodeName,
         totalMission: this.projectInfo.totalMissions,
         rewardAmount: this.projectInfo.rewardAmount,
