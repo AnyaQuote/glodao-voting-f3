@@ -28,7 +28,7 @@
                   <v-list-item-content>
                     <v-list-item-title>
                       <router-link
-                        to="/bounty"
+                        :to="`${DEV_BOUNTY_DOMAIN}/bounty`"
                         class="text-decoration-none px-4 text-none text-body-2 d-flex align-center"
                         active-class="filter-bluePrimary black--text font-weight-600"
                       >
@@ -40,7 +40,7 @@
                   <v-list-item-content>
                     <v-list-item-title>
                       <router-link
-                        to="/bounty-history"
+                        :to="`${DEV_BOUNTY_DOMAIN}/bounty-history`"
                         class="text-decoration-none px-4 text-none text-body-2 d-flex align-center"
                         active-class="filter-bluePrimary black--text font-weight-600"
                       >
@@ -247,6 +247,7 @@ export default class NavigationBar extends Vue {
   @Inject() providers!: AppProvider
   authStore = authStore
   chainId = process.env.VUE_APP_CHAIN_ID
+  DEV_BOUNTY_DOMAIN = 'https://dev-bounty.glodao.io'
   openLink(url) {
     window.open(url, '_self')
   }

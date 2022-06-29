@@ -55,13 +55,13 @@
           <template v-slot:appendIcon>
             <v-icon color="bluePrimary">mdi-chevron-down</v-icon>
           </template>
-          <v-list-item active-class="filter-bluePrimary black--text" to="/bounty">
+          <v-list-item active-class="filter-bluePrimary black--text" to="`${DEV_BOUNTY_DOMAIN}/bounty`">
             <v-list-item-icon class="mr-2">
               <v-img :src="require('@/assets/icons/nav-bar/bounty.svg')" class="filter-neutral10 fill-height"></v-img>
             </v-list-item-icon>
             <v-list-item-title class="text-none">Bounty hunter</v-list-item-title>
           </v-list-item>
-          <v-list-item active-class="filter-bluePrimary black--text" to="/bounty-history">
+          <v-list-item active-class="filter-bluePrimary black--text" :to="`${DEV_BOUNTY_DOMAIN}/bounty-history`">
             <v-list-item-icon class="mr-2">
               <v-img
                 :src="require('@/assets/icons/nav-bar/launchpad.svg')"
@@ -233,6 +233,7 @@ export default class NavigationDrawer extends Vue {
   @Inject() providers!: AppProvider
   @Prop(Boolean) value!: boolean
   authStore = this.providers.authStore
+  DEV_BOUNTY_DOMAIN = 'https://dev-bounty.glodao.io'
 
   openLink(url) {
     window.open(url, '_blank')
