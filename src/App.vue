@@ -248,6 +248,14 @@ a {
   background-color: rgba(#101010, 0.5) !important;
 }
 
+.dashed-border {
+  border-style: dashed !important;
+}
+
+.app-flex-grow {
+  flex: 1 1 0px !important;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
