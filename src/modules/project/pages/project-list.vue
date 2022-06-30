@@ -14,7 +14,7 @@
       </div>
 
       <empty-list
-        v-else-if="!vm.loading && !!vm.votingPools.length"
+        v-else-if="!vm.loading && !vm.votingPools.length"
         class="px-3 py-6 pa-sm-6 px-md-3"
         :class="!$vuetify.breakpoint.mdAndUp ? 'neutral-100' : 'mt-98'"
       ></empty-list>
