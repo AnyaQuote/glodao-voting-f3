@@ -5,6 +5,7 @@
     :disabled="disabled"
     depressed
     rounded
+    :height="height"
     @click="walletStore.switchNetwork(chainType, +requiredChainId)"
     :block="block"
     :large="large"
@@ -14,9 +15,10 @@
     <span>{{ connectText || 'Connect Wallet' }}</span>
   </v-btn>
   <v-btn
-    class="text-none btn-text rounded"
+    class="linear-blue--bg text-none btn-text rounded"
     :class="applyClass"
     :disabled="disabled"
+    :height="height"
     depressed
     rounded
     color="primary"
@@ -26,7 +28,9 @@
     :large="large"
     :small="small"
   >
-    <span :class="{ 'small-text font-weight-bold': smallText }">{{ switchText || 'Switch to ' + networkName }}</span>
+    <span class="font-weight-bold" :class="{ 'text-subtitle-2': smallText, 'font-18': !smallText }">{{
+      switchText || 'Switch to ' + networkName
+    }}</span>
   </v-btn>
   <div v-else>
     <slot />
@@ -52,6 +56,7 @@ export default class ConnectMetamask extends Vue {
   @Prop({ default: false }) smallText!: boolean
   @Prop({ default: '' }) applyClass!: string
   @Prop({ default: false }) disabled!: boolean
+  @Prop({ default: '40' }) height!: boolean
 
   walletStore = walletStore
 
