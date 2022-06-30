@@ -252,7 +252,7 @@ a {
   border-style: dashed !important;
 }
 
-.app-flex-grow {
+.flex-grow {
   flex: 1 1 0px !important;
 }
 
