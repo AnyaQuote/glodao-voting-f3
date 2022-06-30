@@ -28,11 +28,9 @@
           </div>
         </v-radio-group>
         <div class="d-flex">
-          <v-btn class="app-flex-grow" outlined depressed @click="close">Cancel</v-btn>
+          <v-btn class="flex-grow" outlined depressed @click="close">Cancel</v-btn>
           <div class="mx-6"></div>
-          <v-btn class="app-flex-grow linear-blue--bg white--text" outlined depressed @click="goToNewMission"
-            >Next</v-btn
-          >
+          <v-btn class="flex-grow linear-blue--bg white--text" outlined depressed @click="goToNewMission">Next</v-btn>
         </div>
       </v-card-text>
     </v-card>
