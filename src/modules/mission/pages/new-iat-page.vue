@@ -9,26 +9,30 @@
         </div>
       </v-col>
       <template v-if="vm.loading">
-        <v-col cols="12" sm="4">
+        <v-col cols="12" sm="3">
           <v-skeleton-loader type="image" />
         </v-col>
-        <v-col cols="12" sm="8">
+        <v-col cols="12" sm="9">
           <v-skeleton-loader type="image, image, image" />
         </v-col>
       </template>
       <template v-else>
-        <v-col cols="12" sm="4">
-          <mission-steppers />
+        <v-col cols="12" sm="3">
+          <mission-steppers :currentStep="vm.step" :data="stepData" @onStepChange="onStepChange" />
         </v-col>
-        <v-col cols="12" sm="8">
-          <v-sheet class="rounded-lg" outlined elevation="3">
+        <v-col cols="12" sm="9">
+          <v-sheet class="rounded-lg mb-16" outlined elevation="3">
             <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
               <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
             </div>
             <v-divider />
-            <v-form class="pa-7 d-flex flex-column">
-              <!-- ------------------------------------ MISSION TYPE -------------------------------------------------- -->
-              <iat-mission-info />
+            <v-form class="pa-7">
+              <!-- ------------------------------------ MISSION FORMS ------------------------------------------------- -->
+              <v-slide-y-transition group hide-on-leave>
+                <iat-mission-info key="1" v-if="vm.step === 1" />
+                <iat-app-info key="2" v-else-if="vm.step === 2" />
+                <iat-task-setting key="3" v-else-if="vm.step === 3" />
+              </v-slide-y-transition>
               <!-- ---------------------------------------------------------------------------------------------------- -->
             </v-form>
           </v-sheet>
@@ -46,12 +50,20 @@ import { RouteName } from '@/router'
 @Observer
 @Component({
   components: {
-    'mission-steppers': () => import('../components/mission-steppers.vue'),
+    'mission-steppers': () => import('../components/common/mission-steppers.vue'),
     'iat-mission-info': () => import('../components/in-app-trial/iat-mission-info.vue'),
+    'iat-app-info': () => import('../components/in-app-trial/iat-app-info.vue'),
+    'iat-task-setting': () => import('../components/in-app-trial/iat-task-setting.vue'),
   },
 })
 export default class NewInAppTrialPage extends Vue {
   @Provide() vm = new NewInAppTrialViewModel()
+
+  readonly stepData = ['Mission info', 'App info', 'Task setting']
+
+  onStepChange(step: number) {
+    this.vm.changeStep(step)
+  }
 
   goBack() {
     this.$router.push({
