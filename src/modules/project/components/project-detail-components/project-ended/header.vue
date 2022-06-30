@@ -61,7 +61,7 @@
           class="text-none white--text text-subtitle-1"
           :class="remainingMission > 0 && 'linear-blue--bg'"
           :disabled="remainingMission === 0"
-          @click="goToNewMission"
+          @click="openSelectMissionDialog"
           height="48"
           depressed
         >
@@ -91,7 +91,7 @@ export default class ProjectEndedHeader extends Vue {
   @Inject() vm!: ProjectDetailViewModel
   @Ref('select-dialog') dialog
 
-  goToNewMission() {
+  openSelectMissionDialog() {
     // this.$router.push(RoutePaths.project_detail + get(this.vm.poolStore, 'unicodeName', null) + RoutePaths.new_mission)
     this.dialog.open()
   }
