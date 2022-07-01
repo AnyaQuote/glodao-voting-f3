@@ -15,8 +15,8 @@
             height="45"
             :rules="rules"
             placeholder="Enter task name"
-            :value="task.name"
-            @change="onTaskChange(`[${index}].name`, $event)"
+            :value="task.context"
+            @change="onTaskChange(`[${index}].context`, $event)"
           />
         </div>
       </div>
@@ -43,10 +43,12 @@
 import { MAX_IN_APP_TRIAL_TASKS } from '@/constants'
 import { set } from 'lodash'
 import { Observer } from 'mobx-vue'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 const defaultProp = () => []
-type Task = { name?: string }
+interface Task {
+  context?: string
+}
 
 @Observer
 @Component
@@ -59,19 +61,24 @@ export default class InAppTrialTaskCollector extends Vue {
   mounted() {
     if (this.value?.length) {
       this.tasks = this.value
-    } else this.tasks = [{ name: '' }]
+    } else this.tasks = [{ context: '' }]
+  }
+
+  @Watch('tasks')
+  onDataChanged(updated) {
+    const data = [...updated]
+    this.$emit('onChange', data)
   }
 
   addTask() {
     if (this.tasks.length < MAX_IN_APP_TRIAL_TASKS) {
-      const newTask = { name: '' }
+      const newTask = { context: '' }
       this.tasks = this.tasks.concat(newTask)
     }
   }
 
   onTaskChange(property: string, value: string) {
     this.tasks = set(this.tasks, property, value)
-    this.$emit('onChange', [...this.tasks])
   }
 
   removeTaskAt(position: number) {
