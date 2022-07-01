@@ -97,7 +97,7 @@ export default class ScreenShotFileUpload extends Vue {
    * Validate files, populate message and emit value to parent
    * @param files
    */
-  @Watch('files', { immediate: true, deep: true })
+  @Watch('files')
   onErrorCheck(files) {
     this.message = ''
     const isExceedMaxSize = files.some((file) => file.size > MAX_IMAGE_FILE_SIZE)
