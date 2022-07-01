@@ -43,17 +43,24 @@
 import { MAX_IN_APP_TRIAL_TASKS } from '@/constants'
 import { set } from 'lodash'
 import { Observer } from 'mobx-vue'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 const defaultProp = () => []
+type Task = { name?: string }
 
 @Observer
 @Component
 export default class InAppTrialTaskCollector extends Vue {
-  @Prop({ default: defaultProp }) value!: ComponentTask[] | null
+  @Prop({ default: defaultProp }) value!: Task[] | null
   @Prop({ default: defaultProp }) rules!: any[]
 
-  tasks: ComponentTask[] = this.value?.length ? this.value : [{ name: '' }]
+  tasks: Task[] = []
+
+  mounted() {
+    if (this.value?.length) {
+      this.tasks = this.value
+    } else this.tasks = [{ name: '' }]
+  }
 
   addTask() {
     if (this.tasks.length < MAX_IN_APP_TRIAL_TASKS) {
@@ -62,30 +69,19 @@ export default class InAppTrialTaskCollector extends Vue {
     }
   }
 
-  @Watch('tasks', { deep: true })
-  onDataChanged(value) {
-    const data = [...value]
-    this.$emit('onChange', data)
-  }
-
-  onTaskChange(property, value) {
+  onTaskChange(property: string, value: string) {
     this.tasks = set(this.tasks, property, value)
+    this.$emit('onChange', [...this.tasks])
   }
 
-  removeTaskAt(postion: number) {
-    if (this.tasks.length > 1) {
-      const updatedTasks = this.tasks.filter((_, index) => index !== postion)
-      this.tasks = updatedTasks
-    }
+  removeTaskAt(position: number) {
+    const updatedTasks = this.tasks.filter((_, index) => index !== position)
+    this.tasks = updatedTasks
   }
 
   get maxTasksReached() {
-    return MAX_IN_APP_TRIAL_TASKS === this.tasks.length
+    return this.tasks?.length === MAX_IN_APP_TRIAL_TASKS
   }
-}
-
-interface ComponentTask {
-  name?: string
 }
 </script>
 
