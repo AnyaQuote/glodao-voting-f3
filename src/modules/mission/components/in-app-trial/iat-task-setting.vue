@@ -20,7 +20,6 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { component } from 'vue/types/umd'
 import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 
 @Observer

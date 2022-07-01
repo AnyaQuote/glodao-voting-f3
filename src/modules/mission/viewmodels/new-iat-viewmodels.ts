@@ -44,5 +44,5 @@ export class NewInAppTrialViewModel {
 }
 interface InAppTrialModel {
   screenShots?: File[] | null
-  tasks?: { name: string }[]
+  tasks?: { name?: string }[]
 }
