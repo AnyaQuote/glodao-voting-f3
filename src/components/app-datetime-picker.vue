@@ -2,7 +2,7 @@
   <!-- <v-sheet class="row ma-0"> -->
   <v-sheet class="d-flex flex-column flex-sm-row">
     <!-- <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0"> -->
-    <div class="app-flex-grow">
+    <div class="flex-grow">
       <div class="font-weight-bold mb-2">{{ dateLabel }}<span class="app-red--text">*</span></div>
       <app-text-field
         readonly
@@ -33,7 +33,7 @@
     </div>
     <div class="px-4" />
     <!-- <div class="col-12 col-md-6 pa-0"> -->
-    <div class="app-flex-grow">
+    <div class="flex-grow">
       <div class="font-weight-bold mb-2">{{ timeLabel }}<span class="app-red--text">*</span></div>
       <app-text-field
         readonly
