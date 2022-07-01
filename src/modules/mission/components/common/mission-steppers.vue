@@ -12,7 +12,10 @@
       >
         <v-sheet
           class="text-center"
-          :class="{ 'blue-diversity white--text': index + 1 === currentStep }"
+          :class="{
+            'blue-diversity white--text': index + 1 === currentStep,
+            'neutral-10--text': index + 1 !== currentStep,
+          }"
           width="35"
           height="35"
           outlined
