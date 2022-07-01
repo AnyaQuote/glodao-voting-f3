@@ -8,7 +8,7 @@
         </v-sheet>
         <div class="flex-grow-1 ml-4">
           <div class="mb-2 font-weight-bold d-flex justify-space-between">
-            <span>Task name</span>
+            <span>Task name<span class="red--text">*</span></span>
             <v-icon v-show="index !== 0" @click="removeTaskAt(index)">mdi-close</v-icon>
           </div>
           <app-text-field
