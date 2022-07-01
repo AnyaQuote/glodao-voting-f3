@@ -1,10 +1,13 @@
+import { set } from 'lodash-es'
 import { action, observable } from 'mobx'
 
 const totalIatStep = 3
 export class NewInAppTrialViewModel {
   @observable loading = false
-  @observable step = 1
-  @observable unlocked = 1
+  @observable step = 2
+  @observable unlocked = 2
+
+  @observable iatInfo: InAppTrialModel = {}
 
   /**
    * Change step to provided value
@@ -26,7 +29,15 @@ export class NewInAppTrialViewModel {
     }
   }
 
+  @action.bound updateAppInfo(property, value) {
+    this.iatInfo = set(this.iatInfo, property, value)
+  }
+
   @action.bound createInAppTrialMission() {
     //
   }
+}
+
+interface InAppTrialModel {
+  screenShots?: File[] | null
 }
