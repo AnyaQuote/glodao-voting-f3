@@ -93,6 +93,10 @@ export default class ScreenShotFileUpload extends Vue {
     }
   }
 
+  /**
+   * Validate files, populate message and emit value to parent
+   * @param files
+   */
   @Watch('files', { immediate: true, deep: true })
   onErrorCheck(files) {
     this.message = ''
@@ -114,7 +118,7 @@ export default class ScreenShotFileUpload extends Vue {
 
   onFileChange(files: any) {
     const acceptedFiles = files.splice(0, MAX_SCREENSHOT_ACCEPTED - this.files.length)
-    this.files = [...this.files, ...acceptedFiles]
+    this.files = this.files.concat(acceptedFiles)
     this.key++
   }
 
