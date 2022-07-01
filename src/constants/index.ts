@@ -7,6 +7,8 @@ export const PAGE_ITEM_LIMIT = 6
 
 export const URL_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
+export const MAX_SCREENSHOT_ACCEPTED = 5
+export const MAX_IMAGE_FILE_SIZE = 1000000
 export const TIME_OUT_SETTING = 10000
 export const SUCCESS_STATUS = 'success'
 export const WALLET_ATTACHED_SUCCESSFUL = 'attached'
@@ -23,6 +25,9 @@ export const ERROR_MSG_DIFFERENT_WALLET_DETECTED =
   'Different wallet account detected. Please change back to your previous attached wallet account to continue.'
 export const ERROR_MSG_NO_WALLET_CONNECTED = 'You have not connected any wallet. Please connect your wallet to continue'
 export const MSG_RELOAD_AFTER_UPDATE_SUCCESS = 'Update successfully. Browser will reload soon...'
+export const ERROR_MSG_FILE_EXCEED_MAX_SIZE = 'File is exceeded 1MB'
+export const ERROR_MSG_FILE_IS_NOT_IMAGE = 'File is not image'
+export const ERROR_MSG_FIELD_REQUIRED = 'This field is required'
 
 export const SOCIAL_ICONS = {
   whitepaper: 'fas fa-file-alt',
