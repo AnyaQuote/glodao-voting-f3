@@ -1,20 +1,30 @@
 <template>
-  <div>
+  <v-form v-model="valid">
     <!-- ------------------------------------ MISSION TYPE -------------------------------------------------- -->
     <div class="title font-weight-bold bluePrimary--text">Mission setting</div>
 
     <!-- ---------------------------------------------------------------------------------------------------- -->
-    <iat-task-collector :value="$_get(vm.iatInfo, 'tasks', [])" @onChange="vm.updateIatInfo('tasks', $event)" />
+    <iat-task-collector
+      :rules="[$rules.required]"
+      :value="$_get(vm.iatInfo, 'tasks', [])"
+      @onChange="vm.updateIatInfo('tasks', $event)"
+    />
 
     <div class="d-flex mt-7">
       <v-btn class="flex-grow" depressed outlined height="40" color="neutral-10" @click="goBack">Cancel</v-btn>
       <div class="mx-4" />
-      <v-btn class="flex-grow text-none linear-blue--bg white--text" height="40" depressed @click="createMission"
+      <v-btn
+        class="flex-grow text-none"
+        :class="{ 'linear-blue--bg white--text': valid }"
+        :disabled="!valid"
+        height="40"
+        depressed
+        @click="createMission"
         >Create</v-btn
       >
     </div>
     <!-- ---------------------------------------------------------------------------------------------------- -->
-  </div>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -30,6 +40,9 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 })
 export default class InAppTrialTaskSetting extends Vue {
   @Inject() vm!: NewInAppTrialViewModel
+
+  valid = false
+
   goBack() {
     this.vm.changeStep(2)
   }
