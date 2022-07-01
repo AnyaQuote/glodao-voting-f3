@@ -1,11 +1,11 @@
+import { TOTAL_IN_APP_TRIAL_STEP } from '@/constants'
 import { set } from 'lodash-es'
 import { action, observable } from 'mobx'
 
-const totalIatStep = 3
 export class NewInAppTrialViewModel {
   @observable loading = false
-  @observable step = 2
-  @observable unlocked = 2
+  @observable step = 3
+  @observable unlocked = 3
 
   @observable iatInfo: InAppTrialModel = {}
 
@@ -22,14 +22,19 @@ export class NewInAppTrialViewModel {
       }
     } else {
       const nextStep = this.step + 1
-      if (nextStep <= totalIatStep) {
+      if (nextStep <= TOTAL_IN_APP_TRIAL_STEP) {
         this.step = nextStep
         this.unlocked = nextStep
       }
     }
   }
 
-  @action.bound updateAppInfo(property, value) {
+  /**
+   * Update property of iatInfo object
+   * @param property property name of iatInfo object
+   * @param value value to assign
+   */
+  @action.bound updateIatInfo(property: string, value: any) {
     this.iatInfo = set(this.iatInfo, property, value)
   }
 
@@ -37,7 +42,7 @@ export class NewInAppTrialViewModel {
     //
   }
 }
-
 interface InAppTrialModel {
   screenShots?: File[] | null
+  tasks?: { context?: string }[]
 }
