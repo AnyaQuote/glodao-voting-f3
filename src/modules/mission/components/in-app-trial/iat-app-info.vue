@@ -24,7 +24,7 @@
     <app-textarea placeholder="Enter short description to describe project" />
     <!-- ---------------------------------------------------------------------------------------------------- -->
     <div class="font-weight-bold mb-2">App Screenshot</div>
-    <screen-shot-file-upload
+    <screenshot-file-upload
       :value="$_get(vm.iatInfo, 'screenShots', null)"
       @onChange="vm.updateAppInfo('screenShots', $event)"
     />
@@ -51,7 +51,7 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 @Component({
   components: {
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
-    'screen-shot-file-upload': () => import('../common/screen-shot-file-upload.vue'),
+    'screenshot-file-upload': () => import('../common/screenshot-file-upload.vue'),
   },
 })
 export default class InAppTrialAppInfo extends Vue {
