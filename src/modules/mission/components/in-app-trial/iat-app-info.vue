@@ -24,38 +24,10 @@
     <app-textarea placeholder="Enter short description to describe project" />
     <!-- ---------------------------------------------------------------------------------------------------- -->
     <div class="font-weight-bold mb-2">App Screenshot</div>
-    <div class="d-flex mr-n4">
-      <v-sheet outlined class="py-1 dashed-border mr-4" rounded="lg" height="120" width="84">
-        <v-img width="100%" height="100%" contain src="@/assets/images/mission/mock-screenshot.jpg">
-          <v-icon class="d-flex fill-height" color="neutral-20">mdi-file-image</v-icon>
-        </v-img>
-      </v-sheet>
-      <v-sheet outlined class="py-1 dashed-border mr-4" rounded="lg" height="120" width="84">
-        <v-img height="100%" width="100%" contain>
-          <v-icon class="d-flex fill-height" color="neutral-20">mdi-file-image</v-icon>
-        </v-img>
-      </v-sheet>
-      <v-sheet outlined class="py-1 dashed-border mr-4" rounded="lg" height="120" width="84">
-        <v-img height="100%" width="100%" contain>
-          <v-icon class="d-flex fill-height" color="neutral-20">mdi-file-image</v-icon>
-        </v-img>
-      </v-sheet>
-      <v-sheet outlined class="py-1 dashed-border mr-4" rounded="lg" height="120" width="84">
-        <v-img height="100%" width="100%" contain>
-          <v-icon class="d-flex fill-height" color="neutral-20">mdi-file-image</v-icon>
-        </v-img>
-      </v-sheet>
-      <v-sheet outlined class="py-1 dashed-border mr-4" rounded="lg" height="120" width="84">
-        <v-img height="100%" width="100%" contain>
-          <v-icon class="d-flex fill-height" color="neutral-20">mdi-file-image</v-icon>
-        </v-img>
-      </v-sheet>
-      <v-sheet outlined class="py-1 dashed-border mr-4" rounded="lg" height="120" width="84">
-        <v-img height="100%" width="100%" contain>
-          <v-icon class="d-flex fill-height" color="neutral-20">mdi-file-image-plus</v-icon>
-        </v-img>
-      </v-sheet>
-    </div>
+    <screen-shot-file-upload
+      :value="$_get(vm.iatInfo, 'screenShots', null)"
+      @onChange="vm.updateAppInfo('screenShots', $event)"
+    />
     <!-- ---------------------------------------------------------------------------------------------------- -->
 
     <v-divider class="dashed-border mt-7" />
@@ -79,6 +51,7 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 @Component({
   components: {
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
+    'screen-shot-file-upload': () => import('../common/screen-shot-file-upload.vue'),
   },
 })
 export default class InAppTrialAppInfo extends Vue {
