@@ -23,7 +23,7 @@
 
     <!-- --------------------------- ADD TASK BUTTON ------------------------------- -->
     <v-sheet
-      class="d-flex py-4 mt-7 align-center justify-center cursor-pointe"
+      class="d-flex py-4 mt-7 align-center justify-center cursor-pointer"
       @click="addTask"
       rounded="lg"
       outlined
