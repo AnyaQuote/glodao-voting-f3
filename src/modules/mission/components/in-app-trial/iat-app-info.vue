@@ -26,7 +26,7 @@
     <div class="font-weight-bold mb-2">App Screenshot</div>
     <screenshot-file-upload
       :value="$_get(vm.iatInfo, 'screenShots', null)"
-      @onChange="vm.updateAppInfo('screenShots', $event)"
+      @onChange="vm.updateIatInfo('screenShots', $event)"
     />
     <!-- ---------------------------------------------------------------------------------------------------- -->
 
