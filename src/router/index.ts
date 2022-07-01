@@ -114,6 +114,16 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/projects/:unicodeName/new-in-app-trial-mission',
+    name: 'iat-mission-apply',
+    component: () => import('@/modules/mission/pages/new-iat-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'In-App-Trial Mission Form',
+    },
+  },
+  {
     path: '/projects/:unicodeName/:id',
     name: 'mission-detail',
     component: () => import('@/modules/project/pages/mission-detail.vue'),
@@ -203,6 +213,7 @@ export enum RouteName {
   PROJECT_LIST = 'project-list',
   PROJECT_DETAIL = 'project-detail',
   NEW_MISSION = 'mission-apply',
+  NEW_IAT_MISSION = 'iat-mission-apply',
   MISSION_DETAIL = 'mission-detail',
   NOT_FOUND = 'not-found',
   UNAUTHENTICATED = 'unauthenticated',

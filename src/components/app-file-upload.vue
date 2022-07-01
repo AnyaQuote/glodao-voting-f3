@@ -38,7 +38,7 @@ export default class AppUploadField extends Vue {
   @Prop({ default: null }) value!: File | null
   @Prop(Boolean) isImageFile!: boolean
   @Prop(Boolean) isQuizFile!: boolean
-  @Prop({ default: [] }) rules!: any
+  @Prop({ default: () => [] }) rules!: any
 
   data = this.value
   config: FileConfig = {
