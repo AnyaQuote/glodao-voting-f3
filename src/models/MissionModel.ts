@@ -47,3 +47,34 @@ export interface Mission {
   type?: string
   missionIndex?: number
 }
+
+export interface InAppTrialMission {
+  screenShots?: File[] | null
+  tasks?: InAppTrialTask[]
+  missionReward?: string
+  maxParticipants?: string
+  startDate?: string
+  endDate?: string
+  appTitle?: string
+  appLogo?: File | null
+  appStoreLink?: string
+  chPlayLink?: string
+  appDescription?: string
+}
+
+export interface InAppTrialTask {
+  context?: string
+}
+
+export type IatInfoProp =
+  | 'screenShots'
+  | 'tasks'
+  | 'missionReward'
+  | 'maxParticipants'
+  | 'startDate'
+  | 'endDate'
+  | 'appTitle'
+  | 'appLogo'
+  | 'appStoreLink'
+  | 'chPlayLink'
+  | 'appDescription'
