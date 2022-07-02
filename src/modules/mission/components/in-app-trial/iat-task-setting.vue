@@ -6,7 +6,7 @@
     <!-- ---------------------------------------------------------------------------------------------------- -->
     <iat-task-collector
       :rules="[$rules.required]"
-      :value="$_get(vm.iatInfo, 'tasks', [])"
+      :value="vm.taskSetting"
       @onChange="vm.updateIatInfo('tasks', $event)"
     />
 

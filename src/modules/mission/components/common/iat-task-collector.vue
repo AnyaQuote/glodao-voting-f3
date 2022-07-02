@@ -12,11 +12,12 @@
             <v-icon v-show="index !== 0" @click="removeTaskAt(index)">mdi-close</v-icon>
           </div>
           <app-text-field
+            :key="index"
             height="45"
             :rules="rules"
             placeholder="Enter task name"
             :value="task.context"
-            @change="onTaskChange(`[${index}].context`, $event)"
+            @change="onTaskChange(index, 'context', $event)"
           />
         </div>
       </div>
@@ -41,22 +42,21 @@
 
 <script lang="ts">
 import { MAX_IN_APP_TRIAL_TASKS } from '@/constants'
+import { InAppTrialTask } from '@/models/MissionModel'
 import { set } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 const defaultProp = () => []
-interface Task {
-  context?: string
-}
 
 @Observer
 @Component
 export default class InAppTrialTaskCollector extends Vue {
-  @Prop({ default: defaultProp }) value!: Task[] | null
+  @Prop({ default: defaultProp }) value!: InAppTrialTask[] | null
   @Prop({ default: defaultProp }) rules!: any[]
 
-  tasks: Task[] = []
+  tasks: InAppTrialTask[] = []
+  // isDirty = false
 
   mounted() {
     if (this.value?.length) {
@@ -64,21 +64,24 @@ export default class InAppTrialTaskCollector extends Vue {
     } else this.tasks = [{ context: '' }]
   }
 
-  @Watch('tasks')
-  onDataChanged(updated) {
-    const data = [...updated]
-    this.$emit('onChange', data)
-  }
+  // @Watch('tasks', { deep: true })
+  // onDataChanged(updated) {
+  //   // if (this.isDirty) {
+  //   //   const data = [...updated]
+  //   //   this.$emit('onChange', data)
+  //   // }
+  // }
 
   addTask() {
     if (this.tasks.length < MAX_IN_APP_TRIAL_TASKS) {
       const newTask = { context: '' }
-      this.tasks = this.tasks.concat(newTask)
+      this.tasks = [...this.tasks, newTask]
     }
   }
 
-  onTaskChange(property: string, value: string) {
-    this.tasks = set(this.tasks, property, value)
+  onTaskChange(position: number, property: string, value: string) {
+    this.tasks = set(this.tasks, `[${position}].${property}`, value)
+    this.$emit('onChange', this.tasks)
   }
 
   removeTaskAt(position: number) {
