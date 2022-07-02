@@ -22,8 +22,9 @@
           <v-img height="100%" aspect-ratio="3/2" src="@/assets/images/voting-home--background.png" />
         </v-sheet>
       </div>
+      <div class="my-1 my-sm-0 ml-0 mx-sm-2" />
       <div class="flex-grow">
-        <v-sheet class="px-4 py-8 d-flex flex-column ml-0 ml-sm-4 fill-height" rounded="lg" outlined>
+        <v-sheet class="px-4 py-8 d-flex flex-column fill-height" rounded="lg" outlined>
           <span class="text-center text-h5 font-weight-600">100000 $HWD</span>
           <span class="text-center">Total reward</span>
           <div class="mt-6 d-flex justify-space-between">
