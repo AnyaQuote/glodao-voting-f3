@@ -138,5 +138,9 @@ export class AuthStore {
   @computed get attachedAddress() {
     return get(this.user, 'projectOwner.address', '')
   }
+
+  @computed get projectOwnerId() {
+    return get(this.user, 'projectOwner.id', '')
+  }
 }
 export const authStore = new AuthStore()
