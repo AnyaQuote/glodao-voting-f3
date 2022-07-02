@@ -1,3 +1,5 @@
+import { VotingPool } from './VotingModel'
+
 export interface Task {
   type?: string
   content?: string
@@ -46,6 +48,7 @@ export interface Mission {
   metadata?: MetaData
   type?: string
   missionIndex?: number
+  votingPool?: VotingPool
 }
 
 export interface InAppTrialInfo {
