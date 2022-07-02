@@ -5,12 +5,12 @@
     <v-sheet class="py-2 px-4 mt-4 d-flex flex-column flex-sm-row text-subtitle-1" outlined rounded="lg">
       <div class="flex-grow font-weight-bold">
         <div class="neutral-10--text mb-1">Project reward</div>
-        <div>100.000.00 $HWD</div>
+        <div>{{ vm.projectReward }} {{ vm.tokenName }}</div>
       </div>
       <div class="mx-0 mx-sm-4 my-2 my-sm-0"></div>
       <div class="flex-grow font-weight-bold">
         <div class="neutral-10--text mb-1">Remaining mission</div>
-        <div>2/5</div>
+        <div>{{ vm.remainingMission }}</div>
       </div>
     </v-sheet>
 
@@ -19,6 +19,8 @@
         <div class="font-weight-bold mb-2">Mission reward<span class="app-red--text">*</span></div>
         <app-text-field
           type="number"
+          :value="vm.missionReward"
+          @change="vm.updateIatInfo('missionReward', $event)"
           :rules="[$rules.required, $rules.floatNumberOnly, $rules.min(0.001)]"
           placeholder="Enter mision reward"
         />
@@ -28,6 +30,8 @@
         <div class="font-weight-bold mb-2">Max participants<span class="app-red--text">*</span></div>
         <app-text-field
           type="number"
+          :value="vm.maxParticipants"
+          @change="vm.updateIatInfo('maxParticipants', $event)"
           :rules="[$rules.required, $rules.integer, $rules.min(1), $rules.max(100)]"
           placeholder="Enter max participants"
         />
@@ -37,12 +41,12 @@
     <v-sheet class="py-2 px-4 d-flex flex-column flex-sm-row text-subtitle-1 blue-2" rounded="lg">
       <div class="font-weight-bold flex-grow">
         <div class="neutral-10--text mb-2">Personal reward</div>
-        <div>100 $HWD</div>
+        <div>{{ vm.personalReward }} {{ vm.tokenName }}</div>
       </div>
       <div class="mx-0 mx-sm-4 my-2 my-sm-0"></div>
       <div class="font-weight-bold flex-grow">
         <div class="neutral-10--text mb-2">Remainning project reward</div>
-        <div>2/5</div>
+        <div>{{ vm.remainingProjectReward }} {{ vm.tokenName }}</div>
       </div>
     </v-sheet>
     <!-- ---------------------------------------------------------------------------------------------------- -->
@@ -50,8 +54,26 @@
     <!-- ---------------------------------------------------------------------------------------------------- -->
 
     <div class="title font-weight-bold bluePrimary--text mt-7">Mission time</div>
-    <app-datetime-picker class="mt-4" dateLabel="Start date" timeLabel="Start time" :rules="[$rules.required]" />
-    <app-datetime-picker dateLabel="End date" timeLabel="End time" :rules="[$rules.required]" />
+    <app-datetime-picker
+      class="mt-4"
+      dateLabel="Start date"
+      timeLabel="Start time"
+      :rules="[$rules.required]"
+      :minDate="vm.projectStartDate"
+      :maxDate="vm.missionEndDate || vm.projectEndDate"
+      :value="vm.missionStartDate"
+      @change="vm.updateIatInfo('startDate', $event)"
+    />
+    <app-datetime-picker
+      dateLabel="End date"
+      timeLabel="End time"
+      :rules="[$rules.required]"
+      :disabled="!vm.missionStartDate"
+      :minDate="vm.missionStartDate"
+      :maxDate="vm.projectStartDate"
+      :value="vm.missionEndDate"
+      @change="vm.updateIatInfo('endDate', $event)"
+    />
     <v-divider class="dashed-border" />
     <div class="d-flex mt-7">
       <v-btn class="flex-grow" depressed outlined height="40" color="neutral-10" @click="goBack">Cancel</v-btn>
