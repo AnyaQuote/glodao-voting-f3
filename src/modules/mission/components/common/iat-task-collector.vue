@@ -45,7 +45,7 @@ import { MAX_IN_APP_TRIAL_TASKS } from '@/constants'
 import { InAppTrialTask } from '@/models/MissionModel'
 import { set } from 'lodash'
 import { Observer } from 'mobx-vue'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 const defaultProp = () => []
 
@@ -56,21 +56,12 @@ export default class InAppTrialTaskCollector extends Vue {
   @Prop({ default: defaultProp }) rules!: any[]
 
   tasks: InAppTrialTask[] = []
-  // isDirty = false
 
   mounted() {
     if (this.value?.length) {
       this.tasks = this.value
     } else this.tasks = [{ context: '' }]
   }
-
-  // @Watch('tasks', { deep: true })
-  // onDataChanged(updated) {
-  //   // if (this.isDirty) {
-  //   //   const data = [...updated]
-  //   //   this.$emit('onChange', data)
-  //   // }
-  // }
 
   addTask() {
     if (this.tasks.length < MAX_IN_APP_TRIAL_TASKS) {
