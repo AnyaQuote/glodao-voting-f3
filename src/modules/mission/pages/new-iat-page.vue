@@ -47,6 +47,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { Observer } from 'mobx-vue'
 import { NewInAppTrialViewModel } from '../viewmodels/new-iat-viewmodels'
 import { RouteName } from '@/router'
+import { get } from 'lodash'
 @Observer
 @Component({
   components: {
@@ -57,7 +58,7 @@ import { RouteName } from '@/router'
   },
 })
 export default class NewInAppTrialPage extends Vue {
-  @Provide() vm = new NewInAppTrialViewModel()
+  @Provide() vm = new NewInAppTrialViewModel(get(this.$route, 'params.unicodeName', ''))
 
   readonly stepData = ['Mission info', 'App info', 'Task setting']
 
