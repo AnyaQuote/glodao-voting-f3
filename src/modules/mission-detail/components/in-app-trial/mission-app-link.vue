@@ -1,5 +1,21 @@
 <template>
-  <div></div>
+  <div class="mt-7 d-flex flex-column flex-sm-row">
+    <v-sheet class="flex-grow pa-6" rounded="lg" outlined>
+      <div class="font-18 font-weight-bold mb-2">App link</div>
+      <div class="d-flex flex-wrap ma-n1">
+        <v-img class="ma-1" max-width="120" src="@/assets/images/mission/appstore-flag.png" />
+        <v-img class="ma-1" max-width="120" src="@/assets/images/mission/googleplay-flag.png" />
+      </div>
+    </v-sheet>
+    <div class="my-2 my-sm-0 mx-0 mx-sm-4" />
+    <div class="flex-grow font-weight-bold font-18">
+      <div>Instruction</div>
+      <div class="d-flex align-center mt-3">
+        <span class="blue-diversity--text mr-2">API Documentation</span>
+        <v-icon color="blue-diversity">mdi-open-in-new</v-icon>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
