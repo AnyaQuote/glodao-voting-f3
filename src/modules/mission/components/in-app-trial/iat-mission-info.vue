@@ -5,7 +5,7 @@
     <v-sheet class="py-2 px-4 mt-4 d-flex flex-column flex-sm-row text-subtitle-1" outlined rounded="lg">
       <div class="flex-grow font-weight-bold">
         <div class="neutral-10--text mb-1">Project reward</div>
-        <div>{{ vm.projectReward }} {{ vm.tokenName }}</div>
+        <div>{{ vm.projectReward | formatNumber(2) }} {{ vm.tokenName }}</div>
       </div>
       <div class="mx-0 mx-sm-4 my-2 my-sm-0"></div>
       <div class="flex-grow font-weight-bold">
@@ -21,7 +21,7 @@
           type="number"
           :value="vm.missionReward"
           @change="vm.updateIatInfo('missionReward', $event)"
-          :rules="[$rules.required, $rules.floatNumberOnly, $rules.min(0.001)]"
+          :rules="[$rules.required, $rules.floatNumberOnly, $rules.min(0.001), $rules.max(vm.projectReward)]"
           placeholder="Enter mision reward"
         />
       </div>
@@ -41,12 +41,12 @@
     <v-sheet class="py-2 px-4 d-flex flex-column flex-sm-row text-subtitle-1 blue-2" rounded="lg">
       <div class="font-weight-bold flex-grow">
         <div class="neutral-10--text mb-2">Personal reward</div>
-        <div>{{ vm.personalReward }} {{ vm.tokenName }}</div>
+        <div>{{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }}</div>
       </div>
       <div class="mx-0 mx-sm-4 my-2 my-sm-0"></div>
       <div class="font-weight-bold flex-grow">
         <div class="neutral-10--text mb-2">Remainning project reward</div>
-        <div>{{ vm.remainingProjectReward }} {{ vm.tokenName }}</div>
+        <div>{{ vm.remainingProjectReward | formatNumber(2) }} {{ vm.tokenName }}</div>
       </div>
     </v-sheet>
     <!-- ---------------------------------------------------------------------------------------------------- -->
