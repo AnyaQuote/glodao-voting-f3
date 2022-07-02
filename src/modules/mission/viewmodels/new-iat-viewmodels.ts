@@ -1,20 +1,22 @@
 import { appProvider } from '@/app-providers'
-import { TOTAL_IN_APP_TRIAL_STEP } from '@/constants'
+import { TOTAL_IN_APP_TRIAL_STEP, Zero } from '@/constants'
 import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { IatInfoProp, InAppTrialMission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
-import { get, isEmpty, set } from 'lodash-es'
+import { FixedNumber } from '@ethersproject/bignumber'
+import { get, isEmpty, set, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
 export class NewInAppTrialViewModel {
   @observable loading = false
-  @observable step = 3
-  @observable unlocked = 3
+  @observable step = 1
+  @observable unlocked = 1
 
   @observable iatInfo: InAppTrialMission = {}
   @observable pool: VotingPool = {}
+  @observable appliedMission = 0
 
   private _auth = appProvider.authStore
   private _api = appProvider.api
@@ -23,28 +25,32 @@ export class NewInAppTrialViewModel {
 
   constructor(unicodeName: string) {
     this.loadPageData(unicodeName)
-    //
   }
 
   @asyncAction *loadPageData(unicodeName: string) {
     try {
       this.loading = true
-
       waitForGlobalLoadingFinished()
-
-      const pools = yield this._api.voting.find({ unicodeName }, { _limit: 1 })
-
+      const pools = yield this._api.voting.find(
+        {
+          unicodeName,
+          projectOwner: this._auth.projectOwnerId,
+        },
+        { _limit: 1 }
+      )
       if (isEmpty(pools)) {
         this._router.replace(RouteName.NOT_FOUND)
       }
-
       this.pool = pools[0]
+      const appliedMission = yield this._api.tasks.count({
+        votingPool: this.pool.id,
+      })
+      this.appliedMission = toNumber(appliedMission)
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
       this.loading = false
     }
-    //
   }
 
   /**
@@ -81,23 +87,37 @@ export class NewInAppTrialViewModel {
   }
 
   @computed get tokenName() {
-    return '$HWD'
+    return get(this.pool, 'tokenName', EMPTY_STRING)
   }
 
   @computed get projectReward() {
-    return '10000000'
+    return get(this.pool, 'rewardAmount', EMPTY_STRING)
   }
 
   @computed get remainingMission() {
-    return '2/5'
+    const totalMission = toNumber(get(this.pool, 'totalMission', EMPTY_STRING))
+    const remainingMission = totalMission - this.appliedMission
+    return `${remainingMission} / ${totalMission}`
   }
 
   @computed get personalReward() {
-    return '100'
+    try {
+      const fxMissionReward = FixedNumber.from(this.missionReward)
+      const fxMaxParticipants = FixedNumber.from(this.maxParticipants)
+      return fxMissionReward.divUnsafe(fxMaxParticipants)._value
+    } catch (_) {
+      return Zero
+    }
   }
 
   @computed get remainingProjectReward() {
-    return '100'
+    try {
+      const fxProjectReward = FixedNumber.from(this.projectReward)
+      const fxMissionReward = FixedNumber.from(this.missionReward)
+      return fxProjectReward.subUnsafe(fxMissionReward)._value
+    } catch (_) {
+      return Zero
+    }
   }
 
   // ======== IN APP TRIAL MISSION INFO START ========
