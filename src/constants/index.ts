@@ -7,6 +7,12 @@ export const PAGE_ITEM_LIMIT = 6
 
 export const URL_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
+export const NULL = null
+export const EMPTY_STRING = ''
+export const EMPTY_ARRAY = []
+export const EMPTY_OBJECT = {}
+export const ZERO_NUM = 0
+
 export const MAX_SCREENSHOT_ACCEPTED = 5
 export const MAX_IMAGE_FILE_SIZE = 1000000
 export const TIME_OUT_SETTING = 10000
