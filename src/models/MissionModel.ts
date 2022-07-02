@@ -48,7 +48,7 @@ export interface Mission {
   missionIndex?: number
 }
 
-export interface InAppTrialMission {
+export interface InAppTrialInfo {
   screenShots?: File[] | null
   tasks?: InAppTrialTask[]
   missionReward?: string
