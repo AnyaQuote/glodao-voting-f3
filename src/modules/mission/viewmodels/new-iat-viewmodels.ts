@@ -1,7 +1,7 @@
 import { appProvider } from '@/app-providers'
-import { TOTAL_IN_APP_TRIAL_STEP, Zero } from '@/constants'
+import { ZERO_NUM, EMPTY_ARRAY, EMPTY_OBJECT, EMPTY_STRING, NULL, TOTAL_IN_APP_TRIAL_STEP, Zero } from '@/constants'
 import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
-import { IatInfoProp, InAppTrialMission } from '@/models/MissionModel'
+import { IatInfoProp, InAppTrialInfo } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
@@ -14,8 +14,8 @@ export class NewInAppTrialViewModel {
   @observable step = 1
   @observable unlocked = 1
 
-  @observable iatInfo: InAppTrialMission = {}
-  @observable pool: VotingPool = {}
+  @observable iatInfo: InAppTrialInfo = EMPTY_OBJECT
+  @observable pool: VotingPool = EMPTY_OBJECT
   @observable appliedMission = 0
 
   private _auth = appProvider.authStore
@@ -95,7 +95,7 @@ export class NewInAppTrialViewModel {
   }
 
   @computed get remainingMission() {
-    const totalMission = toNumber(get(this.pool, 'totalMission', EMPTY_STRING))
+    const totalMission = toNumber(get(this.pool, 'totalMission', ZERO_NUM))
     const remainingMission = totalMission - this.appliedMission
     return `${remainingMission} / ${totalMission}`
   }
@@ -180,7 +180,3 @@ export class NewInAppTrialViewModel {
     return get(this.iatInfo, 'tasks', EMPTY_ARRAY)
   }
 }
-
-const EMPTY_STRING = ''
-const NULL = null
-const EMPTY_ARRAY = []
