@@ -197,7 +197,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, _, next) => {
-  console.log(to)
   if (!to.name) {
     next({ name: RouteName.NOT_FOUND })
   } else {
