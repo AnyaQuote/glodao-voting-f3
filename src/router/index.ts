@@ -22,17 +22,35 @@ export enum RoutePaths {
   unauthenticated = '/401',
 }
 
+export enum RouteName {
+  VOTING_LIST = 'voting-list',
+  VOTING_DETAIL = 'voting-detail',
+  NEW_PROJECT = 'new-project',
+  NEW_LAUNCHPAD_PROJECT = 'launchpad-apply',
+  NEW_BOUNTY_PROJECT = 'bounty-apply',
+  PROJECT_LIST = 'project-list',
+  PROJECT_DETAIL = 'project-detail',
+  NEW_MISSION = 'mission-apply',
+  NEW_IAT_MISSION = 'iat-mission-apply',
+  MISSION_DETAIL = 'mission-detail',
+  MISSION_IAT_DETAIL = 'iat-mission-detail',
+  NOT_FOUND = 'not-found',
+  UNAUTHENTICATED = 'unauthenticated',
+  COMMING_SOON = 'comming-soon',
+  TWITTER_AUTH = 'TwitterAuthentication',
+}
+
 const routes: Array<RouteConfig> = [
   { path: '/', redirect: '/projects' },
   {
     path: '/twitter-auth',
-    name: 'TwitterAuthentication',
+    name: RouteName.TWITTER_AUTH,
     component: () => import('@/modules/auth/pages/twitter-auth.vue'),
   },
   // -------------------- VOTING ROUTER SECTION ---------------------
   {
     path: '/voting',
-    name: 'voting-list',
+    name: RouteName.VOTING_LIST,
     component: () => import('@/modules/voting/pages/voting-home.vue'),
     meta: {
       auth: false,
@@ -42,7 +60,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/voting/:code',
-    name: 'voting-detail',
+    name: RouteName.VOTING_DETAIL,
     component: () => import('@/modules/voting/pages/voting-detail.vue'),
     meta: {
       auth: false,
@@ -53,7 +71,7 @@ const routes: Array<RouteConfig> = [
   // ------------------- APPLICATION ROUTER SECTION -----------------------
   {
     path: '/new-project',
-    name: 'new-project',
+    name: RouteName.NEW_PROJECT,
     component: () => import('@/modules/regist/pages/new-project.vue'),
     meta: {
       auth: true,
@@ -73,7 +91,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/new-project/bounty',
-    name: 'bounty-apply',
+    name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
       auth: true,
@@ -85,7 +103,7 @@ const routes: Array<RouteConfig> = [
   // --------------- PROJECT ROUTER SECTION -------------------
   {
     path: '/projects',
-    name: 'project-list',
+    name: RouteName.PROJECT_LIST,
     component: () => import('@/modules/project/pages/project-list.vue'),
     meta: {
       auth: true,
@@ -95,7 +113,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/projects/:unicodeName',
-    name: 'project-detail',
+    name: RouteName.PROJECT_DETAIL,
     component: () => import('@/modules/project/pages/project-detail.vue'),
     meta: {
       auth: true,
@@ -105,7 +123,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/projects/:code/new-mission',
-    name: 'mission-apply',
+    name: RouteName.NEW_MISSION,
     component: () => import('@/modules/project/pages/new-mission.vue'),
     meta: {
       auth: true,
@@ -114,8 +132,8 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new-in-app-trial-mission',
-    name: 'iat-mission-apply',
+    path: '/projects/:unicodeName/new-app-trial-mission',
+    name: RouteName.NEW_IAT_MISSION,
     component: () => import('@/modules/mission/pages/new-iat-page.vue'),
     meta: {
       auth: true,
@@ -124,7 +142,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/:id',
+    path: '/projects/:unicodeName/mission/:id',
     name: 'mission-detail',
     component: () => import('@/modules/project/pages/mission-detail.vue'),
     meta: {
@@ -134,8 +152,18 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/projects/:unicodeName/app-trial/:id',
+    name: RouteName.MISSION_IAT_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/iat-detail-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'In App Trial Mission detail',
+    },
+  },
+  {
     path: '/comming-soon',
-    name: 'comming-soon',
+    name: RouteName.COMMING_SOON,
     component: () => import('@/modules/error/pages/coming-soon.vue'),
     meta: {
       title: 'Comming soon',
@@ -143,7 +171,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/404',
-    name: 'not-found',
+    name: RouteName.NOT_FOUND,
     component: () => import('@/modules/error/pages/404.vue'),
     meta: {
       title: 'Not found',
@@ -151,7 +179,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/401',
-    name: 'unauthenticated',
+    name: RouteName.UNAUTHENTICATED,
     component: () => import('@/modules/error/pages/401.vue'),
     meta: {
       title: 'Unauthenticated',
@@ -169,6 +197,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, _, next) => {
+  console.log(to)
   if (!to.name) {
     next({ name: RouteName.NOT_FOUND })
   } else {
@@ -203,21 +232,5 @@ router.afterEach(async (to, _) => {
     }
   }
 })
-
-export enum RouteName {
-  VOTING_LIST = 'voting-list',
-  VOTING_DETAIL = 'voting-detail',
-  NEW_PROJECT = 'new-project',
-  NEW_LAUNCHPAD_PROJECT = 'launchpad-apply',
-  NEW_BOUNTY_PROJECT = 'bounty-apply',
-  PROJECT_LIST = 'project-list',
-  PROJECT_DETAIL = 'project-detail',
-  NEW_MISSION = 'mission-apply',
-  NEW_IAT_MISSION = 'iat-mission-apply',
-  MISSION_DETAIL = 'mission-detail',
-  NOT_FOUND = 'not-found',
-  UNAUTHENTICATED = 'unauthenticated',
-  COMMING_SOON = 'comming-soon',
-}
 
 export default router
