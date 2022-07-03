@@ -1,3 +1,5 @@
+import { ProjectOwner } from './ProjectOwnerModel'
+
 export interface QuizData {
   id?: string
   type?: string
@@ -24,6 +26,7 @@ export interface Quiz {
   metadata?: MetaData
   ownerAddress?: string
   userId?: string
+  projectOwner?: ProjectOwner
 }
 
 export interface LearnToEarn {

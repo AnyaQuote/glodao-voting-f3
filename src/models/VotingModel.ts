@@ -1,3 +1,5 @@
+import { ProjectOwner } from './ProjectOwnerModel'
+
 export interface Metadata {
   shortDescription?: string
   fields?: string[]
@@ -27,6 +29,7 @@ export interface VotingPool {
   votingStart?: string
   votingEnd?: string
   data?: Metadata
+  projectOwner?: ProjectOwner
 }
 
 export class Voter {
