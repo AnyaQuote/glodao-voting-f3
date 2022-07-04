@@ -10,10 +10,17 @@ export interface Task {
   embedLink?: string
 }
 
+export interface IatData {
+  code?: string
+  context?: string
+  required?: boolean
+}
+
 export interface Data {
   twitter?: Task[]
   telegram?: Task[]
   quiz?: { type: string; quizId: string }[]
+  iat?: IatData[]
 }
 
 export interface MetaData {
@@ -26,6 +33,7 @@ export interface MetaData {
   rewardToken?: string
   socialLinks?: any
   website?: string
+  screenshots?: string[]
 }
 
 export interface Mission {
@@ -46,7 +54,7 @@ export interface Mission {
   priorityRewardAmount?: string
   data?: Data
   metadata?: MetaData
-  type?: string
+  type?: MissionType
   missionIndex?: number
   votingPool?: VotingPool
 }
@@ -81,3 +89,9 @@ export type IatInfoProp =
   | 'appStoreLink'
   | 'chPlayLink'
   | 'appDescription'
+
+export enum MissionType {
+  LEARN = 'learn',
+  SOCIAL = 'bounty',
+  APP_TRIAL = 'iat',
+}
