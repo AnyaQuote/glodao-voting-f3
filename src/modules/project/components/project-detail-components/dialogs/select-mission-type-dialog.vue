@@ -38,13 +38,17 @@
 </template>
 
 <script lang="ts">
+import { EMPTY_STRING } from '@/constants'
+import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { RouteName } from '@/router'
+import { get } from 'lodash-es'
 import { Observer } from 'mobx-vue'
-import { Component, Ref, Vue } from 'vue-property-decorator'
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 
 @Observer
 @Component
 export default class SelectMissionTypeDialog extends Vue {
+  @Inject() vm!: ProjectDetailViewModel
   @Ref('dialog') dialog
   type = ''
 
@@ -56,10 +60,16 @@ export default class SelectMissionTypeDialog extends Vue {
     if (this.type === '1') {
       this.$router.push({
         name: RouteName.NEW_MISSION,
+        params: {
+          unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
+        },
       })
     } else {
       this.$router.push({
         name: RouteName.NEW_IAT_MISSION,
+        params: {
+          unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
+        },
       })
     }
   }

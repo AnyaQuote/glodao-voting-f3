@@ -122,7 +122,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:code/new-mission',
+    path: '/projects/:unicodeName/new-mission',
     name: RouteName.NEW_MISSION,
     component: () => import('@/modules/project/pages/new-mission.vue'),
     meta: {
