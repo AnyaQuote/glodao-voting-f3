@@ -2,7 +2,12 @@
   <!-- --------------------------------------- HAS MISSIONS --------------------------------------- -->
   <v-row v-if="vm.missions.length">
     <v-col cols="12" md="4" sm="6" v-for="(mission, index) in vm.missions" :key="index">
-      <v-sheet v-ripple class="rounded-lg scale-on-hover" elevation="3" @click="goToMissionDetail(mission.id || '')">
+      <v-sheet
+        @click="goToMissionDetail(mission.type, mission.id)"
+        class="rounded-lg scale-on-hover"
+        elevation="3"
+        v-ripple
+      >
         <v-img max-height="239" aspect-ratio="1" :src="$_get(mission, 'metadata.coverImage')" class="rounded-t-lg">
           <div
             class="d-inline-block rounded pa-2 mt-2 ml-2 text-subtitle-2 text-uppercase black--text"
@@ -57,8 +62,11 @@
 </template>
 
 <script lang="ts">
+import { EMPTY_STRING } from '@/constants'
+import { MissionType } from '@/models/MissionModel'
 import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-detail-viewmodel'
 import { RouteName } from '@/router'
+import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 
@@ -67,14 +75,21 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
-  goToMissionDetail(missionId: string) {
-    this.$router.push({
-      name: RouteName.MISSION_DETAIL,
-      params: {
-        unicodeName: this.vm.poolStore?.unicodeName || '',
-        id: missionId,
-      },
-    })
+  goToMissionDetail(missionType?: string, missionId?: string) {
+    const type = missionType || EMPTY_STRING
+    const id = missionId || EMPTY_STRING
+    const unicodeName = get(this.vm.poolStore, 'unicodeName', EMPTY_STRING)
+    if (type === MissionType.APP_TRIAL) {
+      this.$router.push({
+        name: RouteName.MISSION_IAT_DETAIL,
+        params: { unicodeName, id },
+      })
+    } else {
+      this.$router.push({
+        name: RouteName.MISSION_DETAIL,
+        params: { unicodeName, id },
+      })
+    }
   }
 }
 </script>

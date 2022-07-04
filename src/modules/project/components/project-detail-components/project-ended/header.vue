@@ -61,7 +61,7 @@
           class="text-none white--text text-subtitle-1"
           :class="remainingMission > 0 && 'linear-blue--bg'"
           :disabled="remainingMission === 0"
-          @click="goToNewMission"
+          @click="openSelectMissionDialog"
           height="48"
           depressed
         >
@@ -69,6 +69,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    <select-mission-type-dialog ref="select-dialog" />
   </v-sheet>
   <!-- ------------------------------------------------------------------------------------------------- -->
 </template>
@@ -78,15 +79,21 @@ import { ProjectDetailViewModel } from '@/modules/project/viewmodels/project-det
 import { RoutePaths } from '@/router'
 import { toNumber, get } from 'lodash'
 import { Observer } from 'mobx-vue'
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 
 @Observer
-@Component
+@Component({
+  components: {
+    'select-mission-type-dialog': () => import('../dialogs/select-mission-type-dialog.vue'),
+  },
+})
 export default class ProjectEndedHeader extends Vue {
   @Inject() vm!: ProjectDetailViewModel
+  @Ref('select-dialog') dialog
 
-  goToNewMission() {
-    this.$router.push(RoutePaths.project_detail + get(this.vm.poolStore, 'unicodeName', null) + RoutePaths.new_mission)
+  openSelectMissionDialog() {
+    // this.$router.push(RoutePaths.project_detail + get(this.vm.poolStore, 'unicodeName', null) + RoutePaths.new_mission)
+    this.dialog.open()
   }
 
   get remainingMission() {

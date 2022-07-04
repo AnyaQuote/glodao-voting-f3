@@ -1,3 +1,5 @@
+import { ProjectOwner } from './ProjectOwnerModel'
+
 export interface User {
   avatar?: string
   blocked?: boolean
@@ -13,15 +15,5 @@ export interface User {
   twitterId?: string
   updatedAt?: string
   username?: string
-  projectOwner?: {
-    address?: string
-    createdAt?: string
-    id?: string
-    metadata?: string
-    name?: string
-    nonce?: string
-    status?: string
-    updatedAt?: string
-    user: any
-  }
+  projectOwner?: ProjectOwner
 }
