@@ -3,8 +3,18 @@
     <v-sheet class="flex-grow pa-6" rounded="lg" outlined>
       <div class="font-18 font-weight-bold mb-2">App link</div>
       <div class="d-flex flex-wrap ma-n1">
-        <v-img class="ma-1" max-width="120" src="@/assets/images/mission/appstore-flag.png" />
-        <v-img class="ma-1" max-width="120" src="@/assets/images/mission/googleplay-flag.png" />
+        <v-img
+          class="ma-1"
+          max-width="120"
+          src="@/assets/images/mission/appstore-flag.png"
+          @click="openLink(vm.appStoreLink)"
+        />
+        <v-img
+          class="ma-1"
+          max-width="120"
+          src="@/assets/images/mission/googleplay-flag.png"
+          @click="openLink(vm.googlePlayLink)"
+        />
       </div>
     </v-sheet>
     <div class="my-2 my-sm-0 mx-0 mx-sm-4" />
@@ -27,6 +37,10 @@ import { InAppTrialDetailViewModel } from '../../viewmodels/iat-detail-viewmodel
 @Component
 export default class MissionAppLink extends Vue {
   @Inject() vm!: InAppTrialDetailViewModel
+
+  openLink(url: string) {
+    window.open(url, '_blank')
+  }
 }
 </script>
 

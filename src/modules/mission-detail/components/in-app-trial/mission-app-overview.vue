@@ -4,24 +4,17 @@
     <v-tab>App Screenshot</v-tab>
     <v-tab-item class="pa-6">
       <p>
-        Battle the likes of sozzled bearbearians and nuke-addled snotwolves to protect our glowing green world from the
-        sweaty hands of the Uberlich! Krumit's Tale involves the same core deck building mechanics as Meteorfall:
-        Journeys and the same cast of overly optimistic heroes, but expands the ‘swipe’ mechanic into a dynamic grid
-        based system. This means more depth and longevity – our heroes will have to choose perks to complement their
-        deck-building strategy and carefully manage the board if they wish to triumph. <br /><br />
-        + A follow-up to the popular mobile solo deckbuilding card game - Meteorfall: Journeys! <br />
-        + The brave heroes of Meteorfall return! Play as five different heroes - Bruno, Greybeard, Mischief, Muldorf,
-        and Rose - each with their own cards and a distinct playstyle<br />
-        + More than 30 achievements to unlock <br />
-        + Feeling competitive? Check out the daily challenge mode! Each day has a different set of modifiers which tweak
-        the rules of the game in radical ways. <br />
-        + Mobile optimized gameplay. The game can be played one-handed in portrait mode and auto-saves frequently
+        {{ vm.missionAppDescription }}
       </p>
     </v-tab-item>
-    <v-tab-item class="pa-6 d-flex">
-      <v-sheet class="debug">
-        <!-- <v-img height="200" src="@/assets/images/mission/mock-screenshot.jpg" /> -->
-      </v-sheet>
+    <v-tab-item class="pa-6">
+      <v-slide-group center-active show-arrows>
+        <v-slide-item v-for="(source, index) in vm.missionAppScreenshots" :key="index" class="ma-2">
+          <v-sheet rounded="lg" width="186" height="330">
+            <v-img width="100%" height="100%" contain :src="source" />
+          </v-sheet>
+        </v-slide-item>
+      </v-slide-group>
     </v-tab-item>
   </v-tabs>
 </template>
