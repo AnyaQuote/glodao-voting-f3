@@ -3,7 +3,7 @@
     <v-row>
       <!-- ------------------------------ BREADCRUMBS NAVIGATION START ------------------------------ -->
       <v-col cols="12">
-        <mission-breadcrumb :data="breadcrumbData" />
+        <mission-breadcrumb :data="vm.breadcrumbData" />
       </v-col>
       <!-- ------------------------------ BREADCRUMBS NAVIGATION END ------------------------------- -->
 
@@ -68,34 +68,6 @@ export default class InAppTrialDetailPage extends Vue {
     get(this.$route, 'params.unicodeName', ''),
     get(this.$route, 'params.id', '')
   )
-
-  breadcrumbData = [
-    {
-      active: true,
-      name: 'Your project',
-      onCallback: () => {
-        this.$router.push({
-          name: RouteName.PROJECT_LIST,
-        })
-      },
-    },
-    {
-      active: true,
-      name: get(this.vm.pool, 'projectName', EMPTY_STRING),
-      onCallback: () => {
-        this.$router.push({
-          name: RouteName.PROJECT_DETAIL,
-          params: {
-            unicodename: get(this.vm.pool, 'unicodeName', EMPTY_STRING),
-          },
-        })
-      },
-    },
-    {
-      active: false,
-      name: get(this.vm.mission, 'name', EMPTY_STRING),
-    },
-  ]
 }
 </script>
 
