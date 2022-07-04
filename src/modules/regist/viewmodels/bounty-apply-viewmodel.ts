@@ -15,7 +15,7 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { VotingPoolStatus } from '@/models/VotingModel'
+import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
 
 export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
@@ -168,6 +168,11 @@ export class BountyApplyViewModel {
   @asyncAction *submit() {
     this.creating = true
     try {
+      // Cái nhập vào phải nhỏ hơn cái hiện có
+      if (walletStore.bnbBalance) {
+        //
+      }
+
       const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
         this.projectInfo,
         walletStore.account,
@@ -187,7 +192,7 @@ export class BountyApplyViewModel {
       const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
 
       // update voting pool
-      const data = {
+      const data: VotingPool = {
         projectName: this.projectInfo.projectName?.trim(),
         type: 'bounty',
         poolId,
@@ -202,6 +207,8 @@ export class BountyApplyViewModel {
         votingEnd: moment().add(3, 'd').toISOString(),
         startDate: this.projectInfo.startDate,
         endDate: this.projectInfo.endDate,
+        chain: 'bsc',
+        chainId: '97',
         data: {
           shortDescription: this.projectInfo.shortDescription,
           fields: this.projectInfo.fields,
