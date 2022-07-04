@@ -34,6 +34,8 @@ export interface MetaData {
   socialLinks?: any
   website?: string
   screenshots?: string[]
+  appStoreUrl?: string
+  googlePlayUrl?: string
 }
 
 export interface Mission {
@@ -96,4 +98,9 @@ export enum MissionType {
   LEARN = 'learn',
   SOCIAL = 'bounty',
   APP_TRIAL = 'iat',
+}
+
+export interface DisplayIatData extends IatData {
+  apiURL?: string
+  step?: number
 }
