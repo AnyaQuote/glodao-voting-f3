@@ -7,7 +7,7 @@
           @click="crumb.active ? crumb.onCallback : null"
         >
           {{ crumb.name }}
-          <v-icon v-if="crumb.active" class="ml-2 debug ml-sm-5" size="2">mdi-chevron-right</v-icon>
+          <v-icon v-if="crumb.active" class="ml-2 ml-sm-5" size="2">mdi-chevron-right</v-icon>
         </span>
       </div>
     </div>
