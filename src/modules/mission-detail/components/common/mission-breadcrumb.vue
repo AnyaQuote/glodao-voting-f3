@@ -1,18 +1,15 @@
 <template>
   <div class="mb-10 mt-4">
     <div class="d-flex align-center font-weight-medium">
-      <template v-for="(crumb, index) in data">
+      <div v-for="(crumb, index) in data" :key="index" class="text-truncate">
         <span
-          v-if="crumb.active"
-          class="text-truncate"
           :class="{ 'blue-diversity--text mr-5 cursor-pointer ': crumb.active, 'neutral10--text': !crumb.active }"
           @click="crumb.active ? crumb.onCallback : null"
-          :key="index"
         >
           {{ crumb.name }}
-          <v-icon v-if="crumb.active" class="mx-5" size="22">mdi-chevron-right</v-icon>
+          <v-icon v-if="crumb.active" class="ml-2 debug ml-sm-5" size="2">mdi-chevron-right</v-icon>
         </span>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -27,7 +24,6 @@ const defaultProp = () => ({})
 @Component
 export default class MissionBreadcrumb extends Vue {
   @Prop({ default: defaultProp }) data!: Breadcrumb[]
-  id = 0
 }
 
 interface Breadcrumb {

@@ -119,4 +119,30 @@ export class InAppTrialDetailViewModel {
   @computed get missionAppScreenshots() {
     return get(this.mission, 'metadata.screenshots', EMPTY_ARRAY)
   }
+
+  @computed get breadcrumbData() {
+    return [
+      {
+        active: true,
+        name: 'Your project',
+        onCallback: () => {
+          this._router.push({ name: RouteName.PROJECT_LIST })
+        },
+      },
+      {
+        active: true,
+        name: get(this.pool, 'projectName', EMPTY_STRING),
+        onCallback: () => {
+          this._router.push({
+            name: RouteName.PROJECT_DETAIL,
+            params: { unicodename: get(this.pool, 'unicodeName', EMPTY_STRING) },
+          })
+        },
+      },
+      {
+        active: false,
+        name: this.missionName,
+      },
+    ]
+  }
 }
