@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { SUCCESS_STATUS, URL_ENDPOINT } from '@/constants'
+import { SUCCESS_STATUS, API_ENDPOINT } from '@/constants'
 import { waitForLocalStorage } from '@/helpers/promise-helper'
 
 import { action, observable } from 'mobx'
@@ -40,7 +40,7 @@ export class TwitterLoginDialogController {
       this.isProcessing = true
       const redirectUrl = 'https://dev-dao-voting.netlify.app/twitter-auth'
       const URL = `https://dev-bounty.glodao.io/twitter-login?callback_url=${redirectUrl}`
-      // window.open(`${URL_ENDPOINT}connect/twitter`, '_blank')
+      window.open(`${API_ENDPOINT}connect/twitter`, '_blank')
       window.open(URL, '_blank')
       appProvider.authStore.clearLocalStorage()
       const res = await waitForLocalStorage()
