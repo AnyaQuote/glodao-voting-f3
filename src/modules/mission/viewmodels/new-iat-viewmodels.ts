@@ -159,7 +159,7 @@ export class NewInAppTrialViewModel {
       // [0] app Logo, [...rest] screenshots
       const sources = await this.getImageSources(uploadFiles)
       const missionModel = this.getModel(this.iatInfo, this.pool, sources)
-      await this._api.createInAppTrialTask(missionModel)
+      await this._api.createTask(missionModel)
       this._snackbar.addSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,

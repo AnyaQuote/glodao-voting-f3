@@ -306,15 +306,6 @@ export class ApiService {
     return res.data
   }
 
-  async createInAppTrialTask(model) {
-    const res = await this.axios.post('tasks/createInAppTrialTask', model, {
-      headers: {
-        Authorization: `Bearer ${authStore.jwt}`,
-      },
-    })
-    return res.data
-  }
-
   /**
    * Get average applied community reward
    * @param limit number of tasks to calculate average from
