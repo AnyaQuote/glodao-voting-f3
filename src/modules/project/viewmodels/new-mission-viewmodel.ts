@@ -1,6 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
-import { Data } from '@/models/MissionModel'
+import { Data, MissionType } from '@/models/MissionModel'
 import {
   Quiz,
   LearnToEarn,
@@ -65,6 +65,7 @@ export class NewMissionViewModel {
       if (get(avgCommunityReward, 'code') === '500') {
         throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
       }
+      console.log('avgCommunityReward', avgCommunityReward)
       this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
@@ -208,7 +209,7 @@ export class NewMissionViewModel {
     const isSocialMission = missionInfo.type === 'social'
 
     // Type of the mission
-    const type = isSocialMission ? 'bounty' : 'learn'
+    const type = isSocialMission ? MissionType.SOCIAL : MissionType.LEARN
 
     // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value

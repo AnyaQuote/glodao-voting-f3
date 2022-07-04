@@ -57,6 +57,8 @@ export interface Mission {
   type?: MissionType
   missionIndex?: number
   votingPool?: VotingPool
+  // Id only
+  projectOwner?: string
 }
 
 export interface InAppTrialInfo {
