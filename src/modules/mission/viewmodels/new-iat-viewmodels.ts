@@ -6,7 +6,7 @@ import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { get, isEmpty, kebabCase, set, toNumber } from 'lodash-es'
+import { get, isEmpty, set, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { generateRandomString } from '@/helpers'
@@ -115,6 +115,8 @@ export class NewInAppTrialViewModel {
       caption: info.appDescription,
       decimals: pool.data!.decimals,
       rewardToken: pool.tokenName,
+      appStoreUrl: info.appStoreLink,
+      googlePlayUrl: info.chPlayLink,
       screenshots,
       socialLinks,
       coverImage,
