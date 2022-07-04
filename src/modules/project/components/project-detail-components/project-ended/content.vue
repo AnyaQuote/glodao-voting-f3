@@ -26,7 +26,7 @@
               <div class="font-weight-bold">{{ $_get(mission, 'rewardAmount') | formatNumber(2) }}</div>
             </div>
 
-            <div v-if="mission.type === 'learn'" class="d-flex justify-space-between mb-2">
+            <div v-if="mission.type === 'learn' || mission.type === 'iat'" class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Max participants</div>
               <div class="font-weight-bold">{{ $_get(mission, 'maxParticipants', 0) }}</div>
             </div>
