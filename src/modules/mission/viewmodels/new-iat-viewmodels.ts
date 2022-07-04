@@ -133,6 +133,7 @@ export class NewInAppTrialViewModel {
     const data: Data = { iat: iatData }
     // Populate mission model
     const model: Mission = {
+      projectOwner: this._auth.projectOwnerId,
       rewardAmount: info.missionReward,
       maxParticipants,
       maxPriorityParticipants: 0,
