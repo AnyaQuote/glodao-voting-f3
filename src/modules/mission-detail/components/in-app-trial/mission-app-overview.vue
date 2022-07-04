@@ -7,7 +7,7 @@
         {{ vm.missionAppDescription }}
       </p>
     </v-tab-item>
-    <v-tab-item class="pa-6 d-flex">
+    <v-tab-item class="pa-6">
       <v-slide-group center-active show-arrows>
         <v-slide-item v-for="(source, index) in vm.missionAppScreenshots" :key="index" class="ma-2">
           <v-sheet rounded="lg" width="186" height="330">
