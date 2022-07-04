@@ -9,7 +9,7 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import { get, isEmpty, kebabCase, set, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import moment from 'moment'
+import { generateRandomString } from '@/helpers'
 
 export class NewInAppTrialViewModel {
   @observable loading = false
@@ -123,11 +123,10 @@ export class NewInAppTrialViewModel {
     }
     // Populate app trial task data
     const iatData: IatData[] = info.tasks!.map((task) => {
-      const code = kebabCase(info.appTitle) + moment.unix.toString()
       return {
+        code: generateRandomString(),
         context: task.context!,
         required: true,
-        code,
       }
     })
     const data: Data = { iat: iatData }
