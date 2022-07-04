@@ -70,7 +70,7 @@
       :rules="[$rules.required]"
       :disabled="!vm.missionStartDate"
       :minDate="vm.missionStartDate"
-      :maxDate="vm.projectStartDate"
+      :maxDate="vm.projectEndDate"
       :value="vm.missionEndDate"
       @change="vm.updateIatInfo('endDate', $event)"
     />
