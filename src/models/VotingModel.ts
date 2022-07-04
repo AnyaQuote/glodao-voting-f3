@@ -8,6 +8,10 @@ export interface Metadata {
   socialLinks?: any
   poolType?: string
   decimals?: number
+  optionalRewardTokenDecimals?: string | number
+  optionalTokenAddress?: string | number
+  optionalRewardAmount?: string | number
+  optionalTokenName?: string | number
 }
 
 export interface VotingPool {
