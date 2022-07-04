@@ -3,11 +3,13 @@
     <div class="d-flex align-center flex-wrap">
       <!-- ============================== PROJECT LOGO AND NAME END ============================== -->
       <v-avatar size="76">
-        <v-img src="@/assets/images/project/image-1.png" />
+        <v-img :src="vm.projectLogo" />
       </v-avatar>
       <div class="d-flex flex-column justify-space-between ml-2 ml-sm-4 flex-grow-1">
-        <span class="text-h5 font-weight-bold">Moverse: Move to earn app</span>
-        <span class="font-weight-bold neutral-10--text">Jan 21st 2022 - Jan 21st 2023</span>
+        <span class="text-h5 font-weight-bold">{{ vm.missionName }}</span>
+        <span class="font-weight-bold neutral-10--text">
+          {{ vm.missionStartDate | datetime }} - {{ vm.missionEndDate | datetime }}
+        </span>
       </div>
       <v-sheet color="blue-2" class="mt-2 mt-sm-0 blue-diversity--text font-weight-600 pa-2" rounded>
         App Trial Mission
@@ -19,13 +21,13 @@
     <div class="mt-6 d-flex flex-column flex-sm-row">
       <div class="flex-grow">
         <v-sheet height="250" class="black rounded-lg overflow-hidden">
-          <v-img height="100%" aspect-ratio="3/2" src="@/assets/images/voting-home--background.png" />
+          <v-img height="100%" :aspect-ratio="1.5" :src="vm.missionAppLogo" />
         </v-sheet>
       </div>
       <div class="my-1 my-sm-0 ml-0 mx-sm-2" />
       <div class="flex-grow">
         <v-sheet class="px-4 py-8 d-flex flex-column fill-height" rounded="lg" outlined>
-          <span class="text-center text-h5 font-weight-600">100000 $HWD</span>
+          <span class="text-center text-h5 font-weight-600">{{ vm.missionReward }} {{ vm.missionTokenName }}</span>
           <span class="text-center">Total reward</span>
           <div class="mt-6 d-flex justify-space-between">
             <span>Priority (30%):</span>
