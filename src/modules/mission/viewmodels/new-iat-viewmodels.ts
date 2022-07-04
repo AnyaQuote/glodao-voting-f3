@@ -1,13 +1,15 @@
+import { MetaData, MissionType, IatInfoProp, InAppTrialInfo, Mission, Data, IatData } from '@/models/MissionModel'
+import { getApiFileUrl } from './../../../helpers/file-helper'
 import { appProvider } from '@/app-providers'
 import { ZERO_NUM, EMPTY_ARRAY, EMPTY_OBJECT, EMPTY_STRING, NULL, TOTAL_IN_APP_TRIAL_STEP, Zero } from '@/constants'
 import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
-import { IatInfoProp, InAppTrialInfo } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { get, isEmpty, set, toNumber } from 'lodash-es'
+import { get, isEmpty, kebabCase, set, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
+import moment from 'moment'
 
 export class NewInAppTrialViewModel {
   @observable loading = false
@@ -17,6 +19,7 @@ export class NewInAppTrialViewModel {
   @observable iatInfo: InAppTrialInfo = EMPTY_OBJECT
   @observable pool: VotingPool = EMPTY_OBJECT
   @observable appliedMission = 0
+  @observable btnLoading = false
 
   private _auth = appProvider.authStore
   private _api = appProvider.api
@@ -82,8 +85,92 @@ export class NewInAppTrialViewModel {
     this.iatInfo = set(this.iatInfo, property, value)
   }
 
+  /**
+   * Upload images and return image sources from server
+   * @param files array of files/blobs
+   * @returns array of image sources
+   */
+  async getImageSources(files: File[]) {
+    const media = new FormData()
+    files.forEach((file) => {
+      media.append('files', file)
+    })
+    const images = (await this._api.uploadFile(media)) as Array<any>
+    const sources = images.map((image) => getApiFileUrl(image))
+    return sources
+  }
+
+  getModel(info: InAppTrialInfo, pool: VotingPool, imageSources: string[]) {
+    const type = MissionType.APP_TRIAL
+    const maxParticipants = toNumber(info.maxParticipants)
+    const tokenBasePrice = '1'
+    const status = 'upcomming'
+    const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
+    const [coverImage, ...screenshots] = imageSources
+    const { website, ...socialLinks } = pool.data?.socialLinks
+    // Populate app trial task metadata
+    const metadata: MetaData = {
+      shortDescription: info.appDescription,
+      projectLogo: pool.data!.projectLogo,
+      caption: info.appDescription,
+      decimals: pool.data!.decimals,
+      rewardToken: pool.tokenName,
+      screenshots,
+      socialLinks,
+      coverImage,
+      tokenLogo,
+      website,
+    }
+    // Populate app trial task data
+    const iatData: IatData[] = info.tasks!.map((task) => {
+      const code = kebabCase(info.appTitle) + moment.unix.toString()
+      return {
+        context: task.context!,
+        required: true,
+        code,
+      }
+    })
+    const data: Data = { iat: iatData }
+    // Populate mission model
+    const model: Mission = {
+      rewardAmount: info.missionReward,
+      maxParticipants,
+      maxPriorityParticipants: 0,
+      priorityRewardAmount: '0',
+      tokenBasePrice,
+      startTime: info.startDate,
+      endTime: info.endDate,
+      name: info.appTitle,
+      chainId: pool.chainId,
+      poolId: pool.id,
+      metadata,
+      status,
+      data,
+      type,
+    }
+    return model
+  }
+
   @action async createInAppTrialMission() {
-    //
+    try {
+      this.btnLoading = true
+      const uploadFiles = [this.iatInfo.appLogo!, ...this.iatInfo.screenShots!]
+      // [0] app Logo, [...rest] screenshots
+      const sources = await this.getImageSources(uploadFiles)
+      const missionModel = this.getModel(this.iatInfo, this.pool, sources)
+      await this._api.createInAppTrialTask(missionModel)
+      this._snackbar.addSuccess()
+      this._router.push({
+        name: RouteName.PROJECT_DETAIL,
+        params: {
+          unicodeName: get(this.pool, 'unicodeName', EMPTY_STRING),
+        },
+      })
+    } catch (error) {
+      this._snackbar.commonError(error)
+    } finally {
+      this.btnLoading = false
+    }
   }
 
   @computed get tokenName() {
