@@ -81,7 +81,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/new-project/launchpad',
-    name: 'launchpad-apply',
+    name: RouteName.NEW_LAUNCHPAD_PROJECT,
     component: () => import('@/modules/regist/pages/launchpad-form.vue'),
     meta: {
       auth: true,
@@ -122,7 +122,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new-mission',
+    path: '/projects/:unicodeName/new/mission',
     name: RouteName.NEW_MISSION,
     component: () => import('@/modules/project/pages/new-mission.vue'),
     meta: {
@@ -132,7 +132,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new-app-trial-mission',
+    path: '/projects/:unicodeName/new/app-trial',
     name: RouteName.NEW_IAT_MISSION,
     component: () => import('@/modules/mission/pages/new-iat-page.vue'),
     meta: {
@@ -143,7 +143,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/projects/:unicodeName/mission/:id',
-    name: 'mission-detail',
+    name: RouteName.MISSION_DETAIL,
     component: () => import('@/modules/project/pages/mission-detail.vue'),
     meta: {
       auth: true,
