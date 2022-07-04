@@ -1,7 +1,8 @@
-import { EMPTY_STRING } from './../../../constants/index'
-import { waitForGlobalLoadingFinished } from './../../../helpers/promise-helper'
+import { API_ENDPOINT } from '@/constants/index'
+import { EMPTY_STRING, EMPTY_ARRAY } from '@/constants/index'
+import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { appProvider } from '@/app-providers'
-import { Mission } from '@/models/MissionModel'
+import { DisplayIatData, Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
 import { action, computed, observable } from 'mobx'
 import { get, isEmpty } from 'lodash-es'
@@ -89,13 +90,33 @@ export class InAppTrialDetailViewModel {
   // ==================== IAT MISSION INFO END ========================
 
   @computed get appStoreLink() {
-    return get(this.mission, 'metadata.appStoreLink', EMPTY_STRING)
+    return get(this.mission, 'metadata.googlePlayUrl', EMPTY_STRING)
   }
 
   @computed get googlePlayLink() {
-    return get(this.mission, 'metadata.googlePlay', EMPTY_STRING)
+    return get(this.mission, 'metadata.appStoreUrl', EMPTY_STRING)
   }
 
-  // ==================== IAT MISSION INFO END ========================
-  // ==================== IAT MISSION INFO END ========================
+  // ==================== IAT APP SETTING START =======================
+  @computed get missionTaskSetting() {
+    const tasks = get(this.mission, 'data.iat', EMPTY_ARRAY)
+    const mappedData: DisplayIatData[] = tasks.map((task, index) => {
+      const apiURL = `${API_ENDPOINT}/tasks/updateInAppTrialTask?api_key=${this.apiKey.key}&secret=${this.apiKey.secret}`
+      return {
+        step: index + 1,
+        apiURL,
+        ...task,
+      }
+    })
+    return mappedData
+  }
+  // ==================== IAT APP SETTING END =========================
+
+  @computed get missionAppDescription() {
+    return get(this.mission, 'metadata.shortDescription', EMPTY_STRING)
+  }
+
+  @computed get missionAppScreenshots() {
+    return get(this.mission, 'metadata.screenshots', EMPTY_ARRAY)
+  }
 }
