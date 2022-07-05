@@ -60,3 +60,27 @@ export enum VotingPoolType {
   BOUNTY = 'bounty',
   LAUNCHPAD = 'launchpad',
 }
+
+export class ProjectInfo {
+  projectName?: string
+  shortDescription?: string
+  projectCover?: any
+  projectLogo?: any
+  fields?: any[]
+  socialLinks?: any
+
+  tokenName?: string
+  rewardAmount?: string
+  tokenAddress?: string
+
+  optionalTokenName?: string
+  optionalRewardAmount?: string
+  optionalTokenAddress?: string
+
+  votingStart?: string
+  votingEnd?: string
+
+  startDate?: string
+  endDate?: string
+  totalMissions?: string
+}

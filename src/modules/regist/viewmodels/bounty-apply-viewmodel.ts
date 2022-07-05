@@ -1,4 +1,4 @@
-import { VotingPoolType } from '@/models/VotingModel'
+import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
 import { APP_CHAIN, APP_CHAIN_ID } from '@/constants/index'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
@@ -311,28 +311,4 @@ export class BountyApplyViewModel {
       return Zero
     }
   }
-}
-
-export class ProjectInfo {
-  projectName?: string
-  shortDescription?: string
-  projectCover?: any
-  projectLogo?: any
-  fields?: any[]
-  socialLinks?: any
-
-  tokenName?: string
-  rewardAmount?: string
-  tokenAddress?: string
-
-  optionalTokenName?: string
-  optionalRewardAmount?: string
-  optionalTokenAddress?: string
-
-  votingStart?: string
-  votingEnd?: string
-
-  startDate?: string
-  endDate?: string
-  totalMissions?: string
 }
