@@ -135,6 +135,7 @@ export class NewMissionViewModel {
 
     const [data, answer] = await getDataFromQuizFile(quizFile!)
     const learningInformation = await getTextData(learningFile!)
+    const projectOwnerId = this._auth.projectOwnerId
 
     const quiz: Quiz = {
       name,
@@ -142,6 +143,7 @@ export class NewMissionViewModel {
       learningInformation,
       data,
       answer,
+      projectOwner: projectOwnerId,
       metadata: {
         coverImage: coverUrl,
         tags: get(this.pool, 'data.fields', []),
