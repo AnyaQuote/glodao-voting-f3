@@ -27,9 +27,11 @@
       <div class="my-1 my-sm-0 ml-0 mx-sm-2" />
       <div class="flex-grow">
         <v-sheet class="px-4 py-8 d-flex flex-column fill-height" rounded="lg" outlined>
-          <span class="text-center text-h5 font-weight-600">{{ vm.missionReward }} {{ vm.missionTokenName }}</span>
+          <span class="text-center text-h5 font-weight-600"
+            >{{ vm.missionReward | formatNumber(2) }} {{ vm.missionTokenName }}</span
+          >
           <span class="text-center">Total reward</span>
-          <div class="mt-6 d-flex justify-space-between">
+          <!-- <div class="mt-6 d-flex justify-space-between">
             <span>Priority (30%):</span>
             <span class="font-weight-600">0</span>
           </div>
@@ -40,7 +42,7 @@
           <div class="d-flex justify-space-between">
             <span>Max priority participants:</span>
             <span class="font-weight-600">0</span>
-          </div>
+          </div> -->
         </v-sheet>
       </div>
     </div>
