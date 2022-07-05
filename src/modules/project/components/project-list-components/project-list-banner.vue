@@ -8,8 +8,6 @@
     <div v-if="vm.votingPools.length">
       <connect-wallet v-if="!walletStore.account" :height="37" btnClass="font-weight-bold" />
       <connect-metamask
-        :requiredChain="'bsc'"
-        :requiredChainId="97"
         :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
       >
@@ -31,8 +29,6 @@
       <div v-if="vm.votingPools.length">
         <connect-wallet v-if="!walletStore.account" btnClass="font-18 font-weight-bold" />
         <connect-metamask
-          :requiredChain="'bsc'"
-          :requiredChainId="97"
           :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
           :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
         >
