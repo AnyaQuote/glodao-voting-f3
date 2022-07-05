@@ -39,7 +39,8 @@
             >
               <div>
                 <div class="text-center text-h5 font-weight-600">
-                  {{ $_get(vm.mission, 'rewardAmount') }} {{ $_get(vm.mission, 'metadata.rewardToken') }}
+                  {{ $_get(vm.mission, 'rewardAmount') | formatNumber(2) }}
+                  {{ $_get(vm.mission, 'metadata.rewardToken') }}
                 </div>
                 <div class="text-center">Total reward</div>
               </div>
