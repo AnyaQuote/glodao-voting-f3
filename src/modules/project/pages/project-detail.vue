@@ -40,6 +40,7 @@ import { ProjectDetailViewModel } from '../viewmodels/project-detail-viewmodel'
 import { get } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Observer } from 'mobx-vue'
+import { EMPTY_STRING } from '@/constants'
 
 @Observer
 @Component({
@@ -52,7 +53,7 @@ import { Observer } from 'mobx-vue'
   },
 })
 export default class ProjectDetailPage extends Vue {
-  @Provide() vm = new ProjectDetailViewModel(get(this.$route, 'params.code'))
+  @Provide() vm = new ProjectDetailViewModel(get(this.$route, 'params.unicodeName', EMPTY_STRING))
 
   goToProjects() {
     this.$router.push(RoutePaths.project_list)
