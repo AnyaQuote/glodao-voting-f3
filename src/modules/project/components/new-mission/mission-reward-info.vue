@@ -24,7 +24,7 @@
           type="number"
           :rules="[$rules.required, $rules.integer, $rules.min(1), $rules.max(vm.maxPriorityParticipantsLimit)]"
           :value="$_get(vm.missionInfo, 'maxPriorityParticipants')"
-          @input="vm.changeMissionInfo('maxPriorityParticipants', $event)"
+          @change="vm.changeMissionInfo('maxPriorityParticipants', $event)"
           placeholder="Enter participants"
         />
       </div>
@@ -33,7 +33,9 @@
       <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
         <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
           <span>Community amount:</span>
-          <span class="font-weight-600">{{ vm.communityAmount }} {{ $_get(vm.pool, 'tokenName') }}</span>
+          <span class="font-weight-600"
+            >{{ vm.communityAmount | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}</span
+          >
         </v-sheet>
       </div>
       <div class="col-12 col-md-6 pa-0">
