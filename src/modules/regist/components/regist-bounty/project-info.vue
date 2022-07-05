@@ -60,7 +60,7 @@
       <!-- ===== SOCIAL LINKS FIELDS ===== -->
       <div class="d-flex flex-column flex-md-row align-md-center justify-space-between">
         <span class="font-18 font-weight-bold"> Website and social link<span class="app-red--text">*</span></span>
-        <i class="text-subtitle-2 font-weight-regular">*Select a link for each types</i>
+        <i class="text-subtitle-2 font-weight-regular">*Website link is required</i>
       </div>
       <app-socials-field
         :value="$_get(vm.projectInfo, 'socialLinks')"
