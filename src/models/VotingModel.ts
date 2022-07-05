@@ -23,7 +23,7 @@ export interface VotingPool {
   ownerAddress?: string
   poolId?: string
   status?: VotingPoolStatus
-  type?: string
+  type?: VotingPoolType
   startDate?: string
   endDate?: string
   unicodeName?: string
@@ -54,4 +54,9 @@ export enum VotingPoolStatus {
   VOTING = 'voting',
   PENDING = 'pending',
   CANCELLED = 'cancelled',
+}
+
+export enum VotingPoolType {
+  BOUNTY = 'bounty',
+  LAUNCHPAD = 'launchpad',
 }
