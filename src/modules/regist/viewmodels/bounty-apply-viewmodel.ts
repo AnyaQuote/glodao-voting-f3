@@ -1,3 +1,5 @@
+import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
+import { APP_CHAIN, APP_CHAIN_ID } from '@/constants/index'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase, toNumber, isEmpty } from 'lodash'
@@ -9,7 +11,7 @@ import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
-import { RoutePaths } from '@/router'
+import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
@@ -18,6 +20,10 @@ import { promiseHelper } from '@/helpers/promise-helper'
 import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
 
 export class BountyApplyViewModel {
+  private _auth = appProvider.authStore
+  private _api = appProvider.api
+  private _router = appProvider.router
+  private _snackbar = appProvider.snackbar
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
   tokenTestnetList = [
@@ -153,6 +159,22 @@ export class BountyApplyViewModel {
   }
 
   /**
+   * Upload image to media library and get source path
+   * @param projectLogo selected logo image file
+   * @param projectCover selected cover image file
+   * @returns array of image sources in order pass in
+   */
+  async getImageSources(projectLogo: File, projectCover: File) {
+    const media = new FormData()
+    media.append('files', projectLogo)
+    media.append('files', projectCover)
+    const uploadedMedia = await this._api.uploadFile(media)
+    const logoSource = getApiFileUrl(uploadedMedia[0])
+    const coverSource = getApiFileUrl(uploadedMedia[1])
+    return [logoSource, coverSource]
+  }
+
+  /**
    * Check if existed a unicode name
    * If existed, return kebab case project name postfix with unix from moment
    * Else return kebab case project name
@@ -165,6 +187,64 @@ export class BountyApplyViewModel {
     return isEmpty(res) ? unicodeName : unicodeName + moment().unix().toString()
   }
 
+  /**
+   * Get and map data to voting pool model
+   * @returns populated voting pool model
+   */
+  @asyncAction *getVotingPoolModel() {
+    const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
+      this.projectInfo,
+      walletStore.account,
+      this.rewardTokenDecimals,
+      this.optionalRewardTokenDecimals
+    )
+
+    // upload image
+    const [projectLogo, projectCover] = yield this.getImageSources(
+      this.projectInfo.projectLogo,
+      this.projectInfo.projectCover
+    )
+    const status = VotingPoolStatus.APPROVED
+    const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
+    const votingStart = moment().toISOString()
+    const votingEnd = moment().add(3, 'd').toISOString()
+
+    // update voting pool
+    const data: VotingPool = {
+      projectOwner: this._auth.projectOwnerId,
+      projectName: this.projectInfo.projectName?.trim(),
+      type: VotingPoolType.BOUNTY,
+      poolId,
+      ownerAddress,
+      tokenAddress: this.projectInfo.tokenAddress,
+      tokenName: this.projectInfo.tokenName,
+      status,
+      unicodeName,
+      totalMission: this.projectInfo.totalMissions,
+      rewardAmount: this.projectInfo.rewardAmount,
+      votingStart,
+      votingEnd,
+      startDate: this.projectInfo.startDate,
+      endDate: this.projectInfo.endDate,
+      chain: APP_CHAIN,
+      chainId: APP_CHAIN_ID,
+      data: {
+        shortDescription: this.projectInfo.shortDescription,
+        fields: this.projectInfo.fields,
+        socialLinks: this.projectInfo.socialLinks,
+        projectLogo,
+        projectCover,
+        poolType,
+        decimals: this.rewardTokenDecimals,
+        optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
+        optionalTokenAddress: this.projectInfo.optionalTokenAddress,
+        optionalRewardAmount: this.projectInfo.optionalRewardAmount,
+        optionalTokenName: this.projectInfo.optionalTokenName,
+      },
+    }
+    return data
+  }
+
   @asyncAction *submit() {
     this.creating = true
     try {
@@ -172,62 +252,15 @@ export class BountyApplyViewModel {
       if (walletStore.bnbBalance) {
         //
       }
-
-      const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
-        this.projectInfo,
-        walletStore.account,
-        this.rewardTokenDecimals,
-        this.optionalRewardTokenDecimals
-      )
-
-      // upload image
-      let images
-      if (this.projectInfo.projectLogo && this.projectInfo.projectCover) {
-        const media = new FormData()
-        media.append('files', this.projectInfo.projectLogo)
-        media.append('files', this.projectInfo.projectCover)
-        images = yield apiService.uploadFile(media)
-      }
-      const status = VotingPoolStatus.APPROVED
-      const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
-
-      // update voting pool
-      const data: VotingPool = {
-        projectName: this.projectInfo.projectName?.trim(),
-        type: 'bounty',
-        poolId,
-        ownerAddress,
-        tokenAddress: this.projectInfo.tokenAddress,
-        tokenName: this.projectInfo.tokenName,
-        status,
-        unicodeName,
-        totalMission: this.projectInfo.totalMissions,
-        rewardAmount: this.projectInfo.rewardAmount,
-        votingStart: moment().toISOString(),
-        votingEnd: moment().add(3, 'd').toISOString(),
-        startDate: this.projectInfo.startDate,
-        endDate: this.projectInfo.endDate,
-        chain: 'bsc',
-        chainId: '97',
-        data: {
-          shortDescription: this.projectInfo.shortDescription,
-          fields: this.projectInfo.fields,
-          socialLinks: this.projectInfo.socialLinks,
-          projectLogo: images ? getApiFileUrl(images[0]) : null,
-          projectCover: images ? getApiFileUrl(images[1]) : null,
-          poolType,
-          decimals: this.rewardTokenDecimals,
-          optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
-          optionalTokenAddress: this.projectInfo.optionalTokenAddress,
-          optionalRewardAmount: this.projectInfo.optionalRewardAmount,
-          optionalTokenName: this.projectInfo.optionalTokenName,
-        },
-      }
-      yield apiService.createOrUpdateVotingPool(data)
-      appProvider.router.push(RoutePaths.project_list)
+      const votingPoolModel = yield this.getVotingPoolModel()
+      yield this._api.createOrUpdateVotingPool(votingPoolModel)
+      this._snackbar.addSuccess()
+      promiseHelper.delay(500)
+      this._router.push({
+        name: RouteName.PROJECT_LIST,
+      })
     } catch (error) {
-      console.error(error)
-      snackController.commonError(error)
+      this._snackbar.commonError(error)
     } finally {
       this.creating = false
     }
@@ -235,8 +268,9 @@ export class BountyApplyViewModel {
 
   @action.bound changeStep(value: number) {
     if (this.creating) return
-    if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
-    else this.step = value
+    if (value <= this.unlockedStep) {
+      this.step = value
+    }
   }
 
   @action.bound changeProjectInfo(property: string, value: any) {
@@ -264,7 +298,8 @@ export class BountyApplyViewModel {
   }
 
   @action nextStep(value: number) {
-    this.unlockedStep = this.step = value
+    this.unlockedStep = value
+    this.step = value
   }
 
   @computed get rewardPerMission() {
@@ -276,28 +311,4 @@ export class BountyApplyViewModel {
       return Zero
     }
   }
-}
-
-export class ProjectInfo {
-  projectName?: string
-  shortDescription?: string
-  projectCover?: any
-  projectLogo?: any
-  fields?: any[]
-  socialLinks?: any
-
-  tokenName?: string
-  rewardAmount?: string
-  tokenAddress?: string
-
-  optionalTokenName?: string
-  optionalRewardAmount?: string
-  optionalTokenAddress?: string
-
-  votingStart?: string
-  votingEnd?: string
-
-  startDate?: string
-  endDate?: string
-  totalMissions?: string
 }

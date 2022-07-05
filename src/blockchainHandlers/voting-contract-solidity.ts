@@ -2,7 +2,7 @@
 import { ETHER_ZERO_ADDRESS, HUNDRED, Zero } from '@/constants'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { ProjectInfo } from '@/modules/regist/viewmodels/bounty-apply-viewmodel'
+import { ProjectInfo } from '@/models/VotingModel'
 import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { chunk, toNumber } from 'lodash-es'
