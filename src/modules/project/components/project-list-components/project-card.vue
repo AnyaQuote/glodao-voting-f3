@@ -15,7 +15,7 @@
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-2 text-md-subtitle-1 neutral-10--text font-weight-regular">
-          {{ $_get(pool, 'shortDescription') }}
+          <span class="two-line">{{ $_get(pool, 'shortDescription') }}</span>
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-1" :class="$vuetify.breakpoint.mobile && 'border-bottom'">
