@@ -44,7 +44,9 @@
       </v-sheet>
     </div>
     <v-slide-y-transition hide-on-leave>
-      <v-sheet height="12" class="app-red--text text-subtitle-2 font-weight-regular mt-1">{{ message }}</v-sheet>
+      <v-sheet height="12" class="app-red--text text-subtitle-2 font-weight-regular mt-1">{{
+        isDirty ? message : ''
+      }}</v-sheet>
     </v-slide-y-transition>
   </div>
 </template>
@@ -83,26 +85,15 @@ export default class ScreenShotFileUpload extends Vue {
   }
 
   /**
-   * Check first time error when files is empty or null
-   * @param flag isDirty
-   */
-  @Watch('isDirty')
-  onDirtyCheck(flag: boolean) {
-    if (flag && (!this.files || !this.files.length)) {
-      this.message = ERROR_MSG_FIELD_REQUIRED
-    }
-  }
-
-  /**
    * Validate files, populate message and emit value to parent
    * @param files
    */
-  @Watch('files')
+  @Watch('files', { immediate: true })
   onErrorCheck(files) {
     this.message = ''
     const isExceedMaxSize = files.some((file) => file.size > MAX_IMAGE_FILE_SIZE)
     const isNotImageFile = files.some((file) => /^(image)\/.*$/.test(file.type) === false)
-    if (this.isDirty && (!this.files || !this.files.length)) {
+    if (!this.files || !this.files.length) {
       this.message = ERROR_MSG_FIELD_REQUIRED
       this.$emit('onChange', null)
     } else if (isNotImageFile) {
