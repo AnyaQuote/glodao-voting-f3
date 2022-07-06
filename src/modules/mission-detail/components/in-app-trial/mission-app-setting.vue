@@ -7,11 +7,11 @@
     <code-container>{{ vm.api_key }}</code-container>
     <div class="font-weight-medium mt-4">Your Secret Key</div>
     <code-container>{{ vm.secret_key }}</code-container>
-    <div class="font-weight-medium mt-2">Your Task Code</div>
+    <div class="font-weight-medium mt-4">Your Task Code</div>
     <code-container>{{ vm.taskCode }}</code-container>
     <!-- =================== API KEY DATA END =================== -->
 
-    <v-sheet class="pa-6 mt-4" outlined rounded="lg">
+    <v-sheet class="pa-6 mt-7" outlined rounded="lg">
       <div v-for="task in vm.missionTaskSetting" :key="task.step">
         <div class="d-flex align-center font-18">
           <v-sheet min-width="40" height="40" rounded="lg" class="blue-2 d-flex">
