@@ -65,7 +65,7 @@ export class NewMissionViewModel {
       if (get(avgCommunityReward, 'code') === '500') {
         throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
       }
-      console.log('avgCommunityReward', avgCommunityReward)
+      // console.log('avgCommunityReward', avgCommunityReward)
       this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
