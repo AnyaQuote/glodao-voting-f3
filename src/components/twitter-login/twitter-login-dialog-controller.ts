@@ -40,7 +40,6 @@ export class TwitterLoginDialogController {
       this.isProcessing = true
       const redirectUrl = 'https://dev-dao-voting.netlify.app/twitter-auth'
       const URL = `https://dev-bounty.glodao.io/twitter-login?callback_url=${redirectUrl}`
-      window.open(`${API_ENDPOINT}connect/twitter`, '_blank')
       window.open(URL, '_blank')
       appProvider.authStore.clearLocalStorage()
       const res = await waitForLocalStorage()
