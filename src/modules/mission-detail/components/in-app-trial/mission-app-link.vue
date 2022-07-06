@@ -4,14 +4,14 @@
       <div class="font-18 font-weight-bold mb-2">App link</div>
       <div class="d-flex flex-wrap ma-n1">
         <v-img
-          class="ma-1"
           max-width="120"
+          class="ma-1 cursor-pointer"
           src="@/assets/images/mission/appstore-flag.png"
           @click="openLink(vm.appStoreLink)"
         />
         <v-img
-          class="ma-1"
           max-width="120"
+          class="ma-1 cursor-pointer"
           src="@/assets/images/mission/googleplay-flag.png"
           @click="openLink(vm.googlePlayLink)"
         />
