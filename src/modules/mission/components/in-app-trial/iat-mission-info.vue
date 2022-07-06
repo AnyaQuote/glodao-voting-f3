@@ -16,20 +16,17 @@
 
     <div class="d-flex flex-column flex-sm-row mt-4">
       <div class="flex-grow">
-        <div class="font-weight-bold mb-2">Mission reward<span class="app-red--text">*</span></div>
-        <app-text-field
-          type="number"
-          :value="vm.missionReward"
-          @change="vm.updateIatInfo('missionReward', $event)"
-          :rules="[$rules.required, $rules.floatNumberOnly, $rules.min(0.001), $rules.max(vm.projectReward)]"
-          placeholder="Enter mision reward"
-        />
+        <div class="font-weight-bold mb-2">Mission reward</div>
+        <v-sheet class="font-weight-bold d-flex align-center pl-4" outlined height="56" rounded="lg">
+          {{ vm.missionReward | formatNumber(2) }} {{ vm.tokenName }}
+        </v-sheet>
       </div>
       <div class="d-none d-sm-block mx-4"></div>
       <div class="flex-grow">
         <div class="font-weight-bold mb-2">Max participants<span class="app-red--text">*</span></div>
         <app-text-field
           type="number"
+          class="font-weight-bold"
           :value="vm.maxParticipants"
           @change="vm.updateIatInfo('maxParticipants', $event)"
           :rules="[$rules.required, $rules.integer, $rules.min(1), $rules.max(100)]"
