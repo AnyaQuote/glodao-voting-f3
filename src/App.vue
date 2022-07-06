@@ -313,4 +313,8 @@ a {
     background: transparent !important;
   }
 }
+
+.v-slide-group__prev {
+  display: none !important;
+}
 </style>
