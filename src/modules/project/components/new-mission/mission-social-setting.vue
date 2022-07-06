@@ -120,11 +120,12 @@
       </switch-field>
 
       <!-- ---------------------------------------------------------------------------------------------------- -->
-      <div class="row no-gutters mt-7">
-        <div class="col-6 pr-4">
-          <v-btn class="col-6" depressed outlined height="40" color="neutral-10" block @click="back"> Back </v-btn>
+      <div class="d-flex mt-7">
+        <div class="flex-grow">
+          <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Back </v-btn>
         </div>
-        <div class="col-6">
+        <div class="px-4" />
+        <div class="flex-grow">
           <v-btn
             class="text-none"
             :class="vm.isValid(formState) && 'linear-blue--bg white--text'"
@@ -135,7 +136,7 @@
             depressed
             block
           >
-            Next
+            Create
           </v-btn>
         </div>
         <!-- ---------------------------------------------------------------------------------------------------- -->
