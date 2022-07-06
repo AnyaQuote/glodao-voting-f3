@@ -110,8 +110,8 @@ export class InAppTrialDetailViewModel {
   @computed get missionTaskSetting() {
     const tasks = get(this.mission, 'data.iat', EMPTY_ARRAY)
     const mappedData: DisplayIatData[] = tasks.map((task, index) => {
-      const fullApiUrl = `${API_ENDPOINT}/tasks/updateInAppTrialTask?api_key=${this.apiKey.key}&secret_key=${this.apiKey.secret}`
-      const displayApiUrl = `${API_ENDPOINT}/tasks/updateInAppTrialTask?api_key="API_KEY"&secret="SECRET_KEY"`
+      const fullApiUrl = `${API_ENDPOINT}tasks/updateInAppTrialTask?api_key=${this.apiKey.key}&secret_key=${this.apiKey.secret}`
+      const displayApiUrl = `${API_ENDPOINT}tasks/updateInAppTrialTask?api_key="API_KEY"&secret="SECRET_KEY"`
       return {
         step: index + 1,
         fullApiUrl,
