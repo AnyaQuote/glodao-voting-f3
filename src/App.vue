@@ -256,6 +256,10 @@ a {
   flex: 1 1 0px !important;
 }
 
+.wspace-preline {
+  white-space: pre-line;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
