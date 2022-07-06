@@ -26,7 +26,7 @@
       </div>
       <div class="my-1 my-sm-0 ml-0 mx-sm-2" />
       <div class="flex-grow">
-        <v-sheet class="px-4 py-8 d-flex flex-column fill-height" rounded="lg" outlined>
+        <v-sheet class="px-4 py-8 d-flex flex-column justify-center fill-height" rounded="lg" outlined>
           <span class="text-center text-h5 font-weight-600"
             >{{ vm.missionReward | formatNumber(2) }} {{ vm.missionTokenName }}</span
           >
