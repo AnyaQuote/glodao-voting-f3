@@ -52,7 +52,7 @@
   <div v-else class="mt-7">
     <div class="title font-weight-bold blue-diversity--text">Reward information</div>
     <div class="font-18 font-weight-bold mt-4">
-      <span>Reward mission: {{ vm.rewardPerMission }} {{ $_get(vm.pool, 'tokenName') }}</span>
+      <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}</span>
     </div>
     <div class="mt-4 row no-gutters">
       <div class="col-12">
