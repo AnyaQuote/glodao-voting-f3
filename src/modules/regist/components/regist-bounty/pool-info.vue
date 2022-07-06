@@ -167,7 +167,7 @@ export default class RaisingInfo extends Vue {
   @Ref('confirm-dialog') dialog
   @Ref('fund-info-form') form
   valid = false
-  tokens = ['GLD', 'BUSD', 'USDT']
+  tokens = ['BUSD']
   submit() {
     this.form.validate() && this.dialog.open()
   }
