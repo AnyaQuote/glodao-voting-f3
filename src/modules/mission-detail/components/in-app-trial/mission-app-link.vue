@@ -20,7 +20,7 @@
     <div class="my-2 my-sm-0 mx-0 mx-sm-4" />
     <div class="flex-grow font-weight-bold font-18">
       <div>Instruction</div>
-      <div class="d-flex align-center mt-3">
+      <div class="d-flex align-center mt-3 cursor-pointer" @click="openDocument">
         <span class="blue-diversity--text mr-2">API Documentation</span>
         <v-icon color="blue-diversity">mdi-open-in-new</v-icon>
       </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts">
+import { API_DOCUMENT_URL } from '@/constants'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { InAppTrialDetailViewModel } from '../../viewmodels/iat-detail-viewmodel'
@@ -40,6 +41,10 @@ export default class MissionAppLink extends Vue {
 
   openLink(url: string) {
     window.open(url, '_blank')
+  }
+
+  openDocument() {
+    window.open(API_DOCUMENT_URL, '_blank')
   }
 }
 </script>
