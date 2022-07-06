@@ -153,6 +153,7 @@ export class InAppTrialDetailViewModel {
           this._router.push({ name: RouteName.PROJECT_LIST })
         },
       },
+      { divider: true },
       {
         active: true,
         name: get(this.pool, 'projectName', EMPTY_STRING),
@@ -163,6 +164,7 @@ export class InAppTrialDetailViewModel {
           })
         },
       },
+      { divider: true },
       {
         active: false,
         name: this.missionName,
