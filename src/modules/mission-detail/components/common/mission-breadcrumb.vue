@@ -4,7 +4,7 @@
       <div v-for="(crumb, index) in data" :key="index" class="text-truncate">
         <span
           :class="{ 'blue-diversity--text mr-5 cursor-pointer ': crumb.active, 'neutral10--text': !crumb.active }"
-          @click="crumb.active ? crumb.onCallback : null"
+          @click="crumb.active ? crumb.onCallback() : null"
         >
           {{ crumb.name }}
           <v-icon v-if="crumb.active" class="ml-2 ml-sm-5" size="22">mdi-chevron-right</v-icon>
