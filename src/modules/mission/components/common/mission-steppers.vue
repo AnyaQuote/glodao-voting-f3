@@ -1,6 +1,6 @@
 <template>
   <v-sheet outlined rounded="lg" elevation="3">
-    <div class="text-center py-5 text-h6 font-weight-bold">New Mission</div>
+    <div class="text-center py-5 text-h6 font-weight-bold">New mission</div>
     <v-divider />
     <div class="py-7 px-2 pl-sm-0 d-flex flex-column ml-5">
       <div

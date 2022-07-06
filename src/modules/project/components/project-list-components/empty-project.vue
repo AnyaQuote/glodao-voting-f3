@@ -8,8 +8,6 @@
         on Bounty Hunter or Launchpad.
       </div>
       <connect-metamask
-        :requiredChain="'bsc'"
-        :requiredChainId="97"
         :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
       >
@@ -44,6 +42,8 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class extends Vue {
   wallet = walletStore
+
+  // Check ENV CHAIN / CHAINID và gắn giá trị đấy vào chỗ chuyển mạng (connect metamask)
 
   goToNewProject() {
     this.$router.push(RoutePaths.new_application)

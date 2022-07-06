@@ -19,6 +19,7 @@
         :disabled="!valid"
         height="40"
         depressed
+        :loading="vm.btnLoading"
         @click="createMission"
         >Create</v-btn
       >

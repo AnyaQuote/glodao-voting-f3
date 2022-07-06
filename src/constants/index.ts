@@ -15,6 +15,8 @@ export const EMPTY_ARRAY = []
 export const EMPTY_OBJECT = {}
 export const ZERO_NUM = 0
 
+export const INPUT_MODE = 'input'
+export const OUTPUT_MODE = 'output'
 export const MAX_SCREENSHOT_ACCEPTED = 5
 export const MAX_IMAGE_FILE_SIZE = 1000000
 export const TIME_OUT_SETTING = 10000

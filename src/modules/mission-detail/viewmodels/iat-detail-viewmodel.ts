@@ -5,9 +5,9 @@ import { appProvider } from '@/app-providers'
 import { DisplayIatData, Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
 import { action, computed, observable } from 'mobx'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, find } from 'lodash-es'
 import { RouteName } from '@/router'
-import { APIKey } from '@/models/ApiKeyModel'
+import { APIKey, ReferenceTask } from '@/models/ApiKeyModel'
 
 export class InAppTrialDetailViewModel {
   @observable loading = false
@@ -59,6 +59,15 @@ export class InAppTrialDetailViewModel {
     }
   }
 
+  @action.bound async copyToClipboard(url: string) {
+    try {
+      await navigator.clipboard.writeText(url)
+      this._snackbar.success('Copied')
+    } catch (error) {
+      this._snackbar.error('Cannot copy')
+    }
+  }
+
   // ==================== IAT MISSION INFO START ======================
   @computed get projectLogo() {
     return get(this.mission, 'metadata.projectLogo', EMPTY_STRING)
@@ -101,14 +110,29 @@ export class InAppTrialDetailViewModel {
   @computed get missionTaskSetting() {
     const tasks = get(this.mission, 'data.iat', EMPTY_ARRAY)
     const mappedData: DisplayIatData[] = tasks.map((task, index) => {
-      const apiURL = `${API_ENDPOINT}/tasks/updateInAppTrialTask?api_key=${this.apiKey.key}&secret=${this.apiKey.secret}`
+      const fullApiUrl = `${API_ENDPOINT}tasks/updateInAppTrial?api_key=${this.apiKey.key}&secret_key=${this.apiKey.secret}`
+      const displayApiUrl = `${API_ENDPOINT}tasks/updateInAppTrial?api_key="API_KEY"&secret="SECRET_KEY"`
       return {
         step: index + 1,
-        apiURL,
+        fullApiUrl,
+        displayApiUrl,
         ...task,
       }
     })
     return mappedData
+  }
+
+  @computed get taskCode() {
+    const myTask = find(this.apiKey.tasks, (item: any) => item.id === this.mission.id)
+    return get(myTask, 'code', 'undefined')
+  }
+
+  @computed get api_key() {
+    return get(this.apiKey, 'key', EMPTY_STRING)
+  }
+
+  @computed get secret_key() {
+    return get(this.apiKey, 'secret', EMPTY_STRING)
   }
   // ==================== IAT APP SETTING END =========================
 

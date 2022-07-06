@@ -65,7 +65,7 @@ export class NewMissionViewModel {
       if (get(avgCommunityReward, 'code') === '500') {
         throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
       }
-      console.log('avgCommunityReward', avgCommunityReward)
+      // console.log('avgCommunityReward', avgCommunityReward)
       this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
@@ -135,6 +135,7 @@ export class NewMissionViewModel {
 
     const [data, answer] = await getDataFromQuizFile(quizFile!)
     const learningInformation = await getTextData(learningFile!)
+    const projectOwnerId = this._auth.projectOwnerId
 
     const quiz: Quiz = {
       name,
@@ -142,6 +143,7 @@ export class NewMissionViewModel {
       learningInformation,
       data,
       answer,
+      projectOwner: projectOwnerId,
       metadata: {
         coverImage: coverUrl,
         tags: get(this.pool, 'data.fields', []),

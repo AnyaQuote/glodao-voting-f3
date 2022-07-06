@@ -1,3 +1,4 @@
+import { RouteName } from './../../../router/index'
 import { appProvider } from '@/app-providers'
 import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
 import { asyncAction } from 'mobx-utils'
@@ -11,10 +12,11 @@ import { PoolStore } from '@/stores/pool-store'
 import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
-import { authStore } from '@/stores/auth-store'
 import { promiseHelper } from '@/helpers/promise-helper'
 
 export class ProjectDetailViewModel {
+  private _auth = appProvider.authStore
+  private _router = appProvider.router
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
 
@@ -43,12 +45,17 @@ export class ProjectDetailViewModel {
 
   @asyncAction *fetchProjectDetail(unicodeName: string) {
     try {
-      let res
       this.loading = true
+      let res
+      if (!unicodeName) {
+        this._router.replace({
+          name: RouteName.NOT_FOUND,
+        })
+      }
       res = yield appProvider.api.voting.find(
         {
           unicodeName,
-          ownerAddress: authStore.attachedAddress,
+          projectOwner: this._auth.projectOwnerId,
         },
         { _limit: 1 }
       )

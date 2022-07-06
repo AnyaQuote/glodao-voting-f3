@@ -15,7 +15,7 @@
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-2 text-md-subtitle-1 neutral-10--text font-weight-regular">
-          {{ $_get(pool, 'shortDescription') }}
+          <span class="two-line">{{ $_get(pool, 'shortDescription') }}</span>
         </div>
         <div class="border-bottom"></div>
         <div class="pa-4 text-subtitle-1" :class="$vuetify.breakpoint.mobile && 'border-bottom'">
@@ -82,15 +82,22 @@
       </v-col>
     </v-row>
     <div class="border-bottom"></div>
-    <router-link :to="`/projects/${pool.unicodeName}`">
-      <div class="d-flex align-center justify-center blue-2 blue-diversity--text font-weight-600" style="height: 56px">
-        View detail
-      </div>
-    </router-link>
+    <!-- <router-link :to="`/projects/${pool.unicodeName}`"> -->
+    <v-sheet
+      v-ripple
+      height="56"
+      @click="goToProjectDetail"
+      class="d-flex align-center justify-center cursor-pointer blue-2 blue-diversity--text font-weight-600"
+    >
+      View detail
+    </v-sheet>
+    <!-- </router-link> -->
   </div>
 </template>
 
 <script lang="ts">
+import { EMPTY_STRING } from '@/constants'
+import { RouteName } from '@/router'
 import { PoolStore } from '@/stores/pool-store'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -104,6 +111,15 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 })
 export default class extends Vue {
   @Prop({ required: true }) pool!: PoolStore
+
+  goToProjectDetail() {
+    this.$router.push({
+      name: RouteName.PROJECT_DETAIL,
+      params: {
+        unicodeName: this.pool.unicodeName || EMPTY_STRING,
+      },
+    })
+  }
 }
 </script>
 

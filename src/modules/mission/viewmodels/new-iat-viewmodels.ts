@@ -135,7 +135,7 @@ export class NewInAppTrialViewModel {
     // Populate mission model
     const model: Mission = {
       projectOwner: this._auth.projectOwnerId,
-      rewardAmount: info.missionReward,
+      rewardAmount: this.missionReward,
       maxParticipants,
       maxPriorityParticipants: 0,
       priorityRewardAmount: '0',
@@ -180,11 +180,15 @@ export class NewInAppTrialViewModel {
   }
 
   @computed get projectReward() {
-    return get(this.pool, 'rewardAmount', EMPTY_STRING)
+    return get(this.pool, 'rewardAmount', ZERO_NUM)
+  }
+
+  @computed get poolTotalMissions() {
+    return get(this.pool, 'totalMission', ZERO_NUM)
   }
 
   @computed get remainingMission() {
-    const totalMission = toNumber(get(this.pool, 'totalMission', ZERO_NUM))
+    const totalMission = toNumber(this.poolTotalMissions)
     const remainingMission = totalMission - this.appliedMission
     return `${remainingMission} / ${totalMission}`
   }
@@ -212,7 +216,13 @@ export class NewInAppTrialViewModel {
   // ======== IN APP TRIAL MISSION INFO START ========
 
   @computed get missionReward() {
-    return get(this.iatInfo, 'missionReward', EMPTY_STRING)
+    try {
+      const fxProjectReward = FixedNumber.from(this.projectReward)
+      const fxTotalMission = FixedNumber.from(this.poolTotalMissions)
+      return fxProjectReward.divUnsafe(fxTotalMission)._value
+    } catch (_) {
+      return Zero._value
+    }
   }
 
   @computed get maxParticipants() {
