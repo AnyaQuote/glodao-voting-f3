@@ -4,7 +4,7 @@ import { get } from 'lodash'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
 const extractRegex = /(?:([^\s|\|].+?)(?=\s*\|\s*))|(?<=\n?)(\d)(?!\s*\|\s*)/g
-const validateRegex = /^(.+?(?<=\|)){1}(.+?(?<=\|)){2,6}\d$/
+const validateRegex = /^(.+?(?<=\|)){1}(.+?(?<=\|)){2,6}\s*\d$/
 
 export const getApiFileUrl = (model: any) => {
   if (typeof model === 'string') {
