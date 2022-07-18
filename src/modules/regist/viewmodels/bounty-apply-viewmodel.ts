@@ -27,21 +27,21 @@ export class BountyApplyViewModel {
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
   tokenTestnetList = [
-    {
-      tokenName: 'GLD',
-      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-gld',
-      decimals: 18,
-    },
+    // {
+    //   tokenName: 'GLD',
+    //   tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-gld',
+    //   decimals: 18,
+    // },
     {
       tokenName: 'BUSD',
       tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
       decimals: 18,
     },
-    {
-      tokenName: 'USDT',
-      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-usdt',
-      decimals: 18,
-    },
+    // {
+    //   tokenName: 'USDT',
+    //   tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-usdt',
+    //   decimals: 18,
+    // },
   ]
 
   tokenList = this.tokenTestnetList
