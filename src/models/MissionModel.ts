@@ -61,6 +61,8 @@ export interface Mission {
   votingPool?: VotingPool
   // Id only
   projectOwner?: string
+  //
+  optionalTokens?: OptionalTokenItem[]
 }
 
 export interface InAppTrialInfo {
@@ -103,4 +105,14 @@ export enum MissionType {
 export interface DisplayIatData extends IatData {
   apiURL?: string
   step?: number
+}
+
+export interface OptionalTokenItem {
+  rewardToken?: string
+  tokenBasePrice?: string
+  tokenLogo?: string
+  rewardAmount?: number | string
+  priorityRewardAmount?: number | string
+  tokenContractAddress?: string | number
+  decimal?: string | number
 }
