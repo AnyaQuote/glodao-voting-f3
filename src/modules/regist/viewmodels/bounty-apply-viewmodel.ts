@@ -234,7 +234,7 @@ export class BountyApplyViewModel {
       status,
       unicodeName,
       totalMission: this.projectInfo.totalMissions,
-      rewardAmount: this.projectInfo.rewardAmount,
+      rewardAmount: this.rewardAmount,
       votingStart,
       votingEnd,
       startDate: this.projectInfo.startDate,
@@ -331,8 +331,8 @@ export class BountyApplyViewModel {
 
   @computed get rewardAmount() {
     if (this.projectInfo.totalMissions) {
-      return +this.projectInfo.totalMissions * 50
+      return (+this.projectInfo.totalMissions * 50).toString()
     }
-    return 0
+    return '0'
   }
 }
