@@ -61,7 +61,7 @@
         </div>
         <app-file-upload
           isImageFile
-          :rules="[$rules.required, $rules.maxSize(1000000), $rules.isImage]"
+          :rules="[$rules.required, $rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage]"
           :value="$_get(vm.missionInfo, 'missionCover', null)"
           @change="vm.changeMissionInfo('missionCover', $event)"
           class="mt-2"
@@ -135,6 +135,7 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
+import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 
 @Observer
 @Component({
@@ -147,6 +148,7 @@ import { Observer } from 'mobx-vue'
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
   valid = true
+  MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   next() {
     this.valid && this.vm.changeStep(2)
   }
