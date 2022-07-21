@@ -52,9 +52,9 @@ export class NewMissionViewModel {
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
-      const [pools, avgCommunityReward] = yield Promise.all([
+      const [pools] = yield Promise.all([
         this._api.voting.find({ unicodeName, ownerAddress: this._auth.attachedAddress }, { _limit: 1 }),
-        this._api.getAverageCommunityReward(10),
+        // this._api.getAverageCommunityReward(10),
       ])
 
       if (isEmpty(pools)) {
@@ -62,11 +62,11 @@ export class NewMissionViewModel {
       }
       this.pool = pools[0]
 
-      if (get(avgCommunityReward, 'code') === '500') {
-        throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
-      }
-      // console.log('avgCommunityReward', avgCommunityReward)
-      this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
+      // if (get(avgCommunityReward, 'code') === '500') {
+      //   throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
+      // }
+      // // console.log('avgCommunityReward', avgCommunityReward)
+      // this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
@@ -325,18 +325,18 @@ export class NewMissionViewModel {
     }
   }
 
-  @computed get maxPriorityParticipantsLimit() {
-    try {
-      const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
-      const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
-      const limit = ceil(toNumber(fxparticipantLimit._value))
-      if (limit === 0) {
-        throw null
-      } else return limit
-    } catch (_) {
-      return 200
-    }
-  }
+  // @computed get maxPriorityParticipantsLimit() {
+  //   try {
+  //     const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
+  //     const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
+  //     const limit = ceil(toNumber(fxparticipantLimit._value))
+  //     if (limit === 0) {
+  //       throw null
+  //     } else return limit
+  //   } catch (_) {
+  //     return 200
+  //   }
+  // }
 
   @computed get isValid() {
     return (formState) =>
