@@ -1,6 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
-import { Data, MissionType } from '@/models/MissionModel'
+import { Data, MissionType, OptionalTokenItem } from '@/models/MissionModel'
 import {
   Quiz,
   LearnToEarn,
@@ -225,6 +225,21 @@ export class NewMissionViewModel {
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
+    const optRewardAmount = pool.data?.optionalRewardAmount
+    const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
+    const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
+    const optTokenAddress = pool.data?.optionalTokenAddress
+    const optTokenLogo = pool.data?.optionalTokenLogo
+    const optTokenBasePrice = '0.018'
+    const optionalToken: OptionalTokenItem = {
+      rewardAmount: optRewardAmount,
+      decimal: optTokenDecimal,
+      priorityRewardAmount: optTokenPriorityRewardAmount,
+      tokenContractAddress: optTokenAddress,
+      tokenLogo: optTokenLogo,
+      tokenBasePrice: optTokenBasePrice,
+    }
+
     const mission: Mission = {
       rewardAmount,
       maxParticipants,
@@ -239,6 +254,7 @@ export class NewMissionViewModel {
       poolId: pool.id,
       data: setting,
       status,
+      optionalTokens: [optionalToken],
       metadata: {
         shortDescription: missionInfo.shortDescription,
         projectLogo: pool.data?.projectLogo,
