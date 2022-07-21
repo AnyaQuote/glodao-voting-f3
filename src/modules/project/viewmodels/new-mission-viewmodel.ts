@@ -203,10 +203,16 @@ export class NewMissionViewModel {
     }
   }
 
+  async getTokenBasePriceValue(address: string) {
+    const res = await this._api.getTokenPrice(address)
+    return res.price._value
+  }
+
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
-    const status = 'draft'
-    const tokenBasePrice = '1'
+    const status = 'upcomming'
+
+    const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
     const isSocialMission = missionInfo.type === 'social'
 
@@ -230,7 +236,7 @@ export class NewMissionViewModel {
     const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
     const optTokenAddress = pool.data?.optionalTokenAddress
     const optTokenLogo = pool.data?.optionalTokenLogo
-    const optTokenBasePrice = '0.018'
+    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
     const optionalToken: OptionalTokenItem = {
       rewardAmount: optRewardAmount,
       decimal: optTokenDecimal,
