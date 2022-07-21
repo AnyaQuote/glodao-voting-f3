@@ -19,7 +19,7 @@
       <v-col cols="6" sm="4" md="2">
         <div class="text-subtitle-1 neutral-10--text">Total reward amount</div>
         <div class="text-h6 font-weight-bold">
-          {{ $_get(vm.poolStore, 'requiredAmount') | formatNumber(2, 2) }}
+          {{ $_get(vm.poolStore, 'tokenAAmount') | formatNumber(2, 2) }}
           {{ $_get(vm.poolStore, 'tokenName') }}
         </div>
       </v-col>

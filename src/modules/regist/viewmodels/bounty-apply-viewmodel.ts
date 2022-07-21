@@ -196,7 +196,8 @@ export class BountyApplyViewModel {
       this.projectInfo,
       walletStore.account,
       this.rewardTokenDecimals,
-      this.optionalRewardTokenDecimals
+      this.optionalRewardTokenDecimals,
+      this.projectInfo.totalMissions
     )
 
     // upload image
