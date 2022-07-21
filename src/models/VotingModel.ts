@@ -12,6 +12,7 @@ export interface Metadata {
   optionalTokenAddress?: string | number
   optionalRewardAmount?: string | number
   optionalTokenName?: string | number
+  optionalTokenLogo?: string
 }
 
 export interface VotingPool {
@@ -76,6 +77,7 @@ export class ProjectInfo {
   optionalTokenName?: string
   optionalRewardAmount?: string
   optionalTokenAddress?: string
+  optionalTokenLogo?: File
 
   votingStart?: string
   votingEnd?: string
