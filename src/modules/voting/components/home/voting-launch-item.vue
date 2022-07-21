@@ -19,7 +19,7 @@
                   <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     <span class="mr-1"
-                      >{{ $_get(pool, 'requiredAmount', 0) | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}</span
+                      >{{ $_get(pool, 'tokenAAmount', 0) | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}</span
                     >
                     <v-img src="@/assets/icons/crypto.svg" max-width="24" max-height="24" />
                   </div>
@@ -45,7 +45,7 @@
                   <span class="text-subtitle-2 white--text">Total reward </span>
                   <div class="text-h6 d-flex white--text align-center justify-center">
                     
-                    <span class="mr-1">{{ $_get(pool, 'requiredAmount') | formatNumber }}</span>
+                    <span class="mr-1">{{ $_get(pool, 'tokenAAmount') | formatNumber }}</span>
                     <v-img src="@/assets/icons/bsc-icon.svg" max-width="24" max-height="24" />
                   </div>
                 </div> -->

@@ -27,7 +27,7 @@
           <div>
             <span class="neutral-10--text font-weight-medium">Total reward amount: </span>
             <span class="font-weight-600"
-              >{{ $_get(pool, 'requiredAmount') | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}</span
+              >{{ $_get(pool, 'tokenAAmount') | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}</span
             >
           </div>
           <!--======================-->
