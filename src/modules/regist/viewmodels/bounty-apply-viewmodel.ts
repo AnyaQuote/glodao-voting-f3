@@ -18,6 +18,7 @@ import moment from 'moment'
 import web3 from 'web3'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
+import { get } from 'lodash-es'
 
 export class BountyApplyViewModel {
   private _auth = appProvider.authStore
@@ -323,7 +324,6 @@ export class BountyApplyViewModel {
     this.step = value
   }
 
-  // Hard coded each mission cost 50$
   @computed get rewardPerMission() {
     try {
       return FixedNumber.from(this.projectInfo?.optionalRewardAmount).divUnsafe(
@@ -332,6 +332,10 @@ export class BountyApplyViewModel {
     } catch (error) {
       return Zero
     }
+  }
+
+  @computed get tokenName() {
+    return get(this.projectInfo, 'optionalTokenName', '')
   }
 
   @computed get missionFee() {
