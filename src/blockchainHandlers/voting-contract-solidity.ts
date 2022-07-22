@@ -12,6 +12,7 @@ import { IVotingContract, PoolInfo } from './ido-contract-interface'
 
 class PoolType {
   creationFee?: FixedNumber
+  feePerMission?: FixedNumber
   cancelationFeePercent?: FixedNumber
   minTime?: string
   maxTime?: string
@@ -72,6 +73,7 @@ export class VotingHandler implements IVotingContract {
     const poolType = await this.votingContract.methods.poolTypeInfos(0).call()
     this.poolType = {
       creationFee: bnHelper.fromDecimals(poolType.creationFee),
+      feePerMission: bnHelper.fromDecimals(poolType.feePerMission),
       minTime: poolType.minTime,
       targetPercentShare: bnHelper.fromDecimals(poolType.targetPercentShare),
     }
@@ -154,6 +156,10 @@ export class VotingHandler implements IVotingContract {
     optionalTokenDecimals = 18,
     missionLength
   ) {
+    if (!this.poolType.creationFee) {
+      await this.getPoolType()
+    }
+
     if (this.poolType.creationFee) {
       const bnbFee = bnHelper.toDecimalString(this.poolType.creationFee)
       const f = this.votingContract.methods.createPool(
@@ -169,7 +175,6 @@ export class VotingHandler implements IVotingContract {
       const res = await sendRequest(f, account, bnbFee)
 
       const poolCreatedEvent = (res as any).events['PoolCreated']
-      // console.log('poolCreatedEvent: ', poolCreatedEvent.returnValues)
       const poolId = poolCreatedEvent.returnValues.id as string
       const ownerAddress = poolCreatedEvent.returnValues.owner as string
       const poolType = poolCreatedEvent.returnValues.poolType as string

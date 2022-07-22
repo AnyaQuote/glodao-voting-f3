@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { SUCCESS_STATUS, API_ENDPOINT } from '@/constants'
+import { SUCCESS_STATUS } from '@/constants'
 import { waitForLocalStorage } from '@/helpers/promise-helper'
 
 import { action, observable } from 'mobx'

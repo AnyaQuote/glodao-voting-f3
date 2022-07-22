@@ -1,5 +1,4 @@
 import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
-import { APP_CHAIN, APP_CHAIN_ID } from '@/constants/index'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase, toNumber, isEmpty } from 'lodash'
@@ -61,6 +60,7 @@ export class BountyApplyViewModel {
   @observable optionalApproving = false
 
   @observable bnbFee = Zero
+  @observable feePerMission = Zero
   @observable rewardTokenBalance = Zero
   @observable rewardTokenDecimals = 18
   @observable optionalRewardTokenBalance = Zero
@@ -81,15 +81,17 @@ export class BountyApplyViewModel {
     this._disposers.forEach((d) => d())
   }
 
-  async loadData() {
+  @asyncAction *loadData() {
     if (walletStore.chainType === 'sol') {
       //
     } else {
       const address = process.env.VUE_APP_VOTING_SOLIDITY
       const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(walletStore.chainId)!)
       this.votingHandler = votingHandler
-      await this.votingHandler.getPoolType()
+      yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
+      this.feePerMission = this.votingHandler.poolType.feePerMission!
+
       this._disposers.push(
         when(
           () => walletStore.walletConnected,
@@ -243,8 +245,8 @@ export class BountyApplyViewModel {
       votingEnd,
       startDate: this.projectInfo.startDate,
       endDate: this.projectInfo.endDate,
-      chain: APP_CHAIN,
-      chainId: APP_CHAIN_ID,
+      chain: process.env.VUE_APP_CHAIN,
+      chainId: process.env.VUE_APP_CHAIN_ID,
       data: {
         shortDescription: this.projectInfo.shortDescription,
         fields: this.projectInfo.fields,
@@ -270,7 +272,6 @@ export class BountyApplyViewModel {
   @asyncAction *submit() {
     this.creating = true
     try {
-      // Cái nhập vào phải nhỏ hơn cái hiện có
       if (walletStore.bnbBalance) {
         //
       }
@@ -316,8 +317,7 @@ export class BountyApplyViewModel {
       set(this.projectInfo, 'tokenName', token?.tokenName)
       this.rewardTokenDecimals = token?.decimals || 18
     } else if (property === 'totalMissions') {
-      const feePerMission = '50'
-      const computedValue = FixedNumber.from(value).mulUnsafe(FixedNumber.from(feePerMission))
+      const computedValue = FixedNumber.from(value).mulUnsafe(this.feePerMission)
       this.projectInfo = set(this.projectInfo, 'rewardAmount', computedValue._value)
     }
     this.projectInfo = set(this.projectInfo, property, value)

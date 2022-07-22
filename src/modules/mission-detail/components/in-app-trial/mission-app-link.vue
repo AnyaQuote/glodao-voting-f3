@@ -29,7 +29,6 @@
 </template>
 
 <script lang="ts">
-import { API_DOCUMENT_URL } from '@/constants'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { InAppTrialDetailViewModel } from '../../viewmodels/iat-detail-viewmodel'
@@ -44,7 +43,7 @@ export default class MissionAppLink extends Vue {
   }
 
   openDocument() {
-    window.open(API_DOCUMENT_URL, '_blank')
+    window.open(process.env.VUE_APP_API_DOCUMENT, '_blank')
   }
 }
 </script>

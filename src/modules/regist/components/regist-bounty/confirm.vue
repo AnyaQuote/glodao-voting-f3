@@ -57,7 +57,7 @@
             >
           </div>
           <div class="mb-3 d-flex">
-            <span class="neutral10--text">Total mission fees:</span>
+            <span class="neutral10--text">Total mission fee:</span>
             <span class="app-blue--text flex-grow-1 text-end">
               {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
             </span>

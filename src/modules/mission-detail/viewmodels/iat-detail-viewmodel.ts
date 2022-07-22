@@ -1,4 +1,3 @@
-import { API_ENDPOINT } from '@/constants/index'
 import { EMPTY_STRING, EMPTY_ARRAY } from '@/constants/index'
 import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { appProvider } from '@/app-providers'
@@ -110,8 +109,8 @@ export class InAppTrialDetailViewModel {
   @computed get missionTaskSetting() {
     const tasks = get(this.mission, 'data.iat', EMPTY_ARRAY)
     const mappedData: DisplayIatData[] = tasks.map((task, index) => {
-      const fullApiUrl = `${API_ENDPOINT}tasks/updateInAppTrial?api_key=${this.apiKey.key}&secret_key=${this.apiKey.secret}`
-      const displayApiUrl = `${API_ENDPOINT}tasks/updateInAppTrial?api_key="API_KEY"&secret_key="SECRET_KEY"`
+      const fullApiUrl = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}tasks/updateInAppTrial?api_key=${this.apiKey.key}&secret_key=${this.apiKey.secret}`
+      const displayApiUrl = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}tasks/updateInAppTrial?api_key="API_KEY"&secret_key="SECRET_KEY"`
       return {
         step: index + 1,
         fullApiUrl,

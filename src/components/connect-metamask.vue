@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import { blockchainHandler, ChainType } from '@/blockchainHandlers'
-import { APP_CHAIN, APP_CHAIN_ID } from '@/constants'
 import { walletStore } from '@/stores/wallet-store'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -47,8 +46,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 @Observer
 @Component
 export default class ConnectMetamask extends Vue {
-  @Prop({ default: APP_CHAIN }) requiredChain!: ChainType
-  @Prop({ default: APP_CHAIN_ID }) requiredChainId!: number
+  @Prop({ default: process.env.VUE_APP_CHAIN }) requiredChain!: ChainType
+  @Prop({ default: process.env.VUE_APP_CHAIN_ID }) requiredChainId!: number
   @Prop({ default: '' }) connectText!: string
   @Prop({ default: '' }) switchText!: string
   @Prop({ default: false }) block!: boolean
