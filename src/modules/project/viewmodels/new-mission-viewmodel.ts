@@ -184,7 +184,7 @@ export class NewMissionViewModel {
       if (this.quoteTweet.enabled) {
         socialSetting = set(socialSetting, 'twitter', [
           ...get(socialSetting, 'twitter', []),
-          { ...this.quoteTweet.setting, hastag: [this.quoteTweet.setting.hashtag] },
+          { ...this.quoteTweet.setting, hashtag: [this.quoteTweet.setting.hashtag] },
         ])
       }
       if (this.commentTweet.enabled) {
