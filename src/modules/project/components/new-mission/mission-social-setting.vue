@@ -48,7 +48,7 @@
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.followTwitter, 'setting.link')"
           @change="vm.changeFollowTwitterSetting('setting.link', $event)"
-          placeholder="Enter your twitter projects link"
+          placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
       </switch-field>
@@ -68,7 +68,7 @@
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.quoteTweet, 'setting.link')"
           @change="vm.changeQuoteTweetSetting('setting.link', $event)"
-          placeholder="Enter twitter link"
+          placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
         <div class="font-18 font-weight-bold mt-6">Twitter hastag</div>
@@ -95,7 +95,7 @@
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.commentTweet, 'setting.link')"
           @change="vm.changeCommentTweetSetting('setting.link', $event)"
-          placeholder="Enter your tweet link"
+          placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
       </switch-field>
