@@ -1,6 +1,4 @@
 import { appProvider } from '@/app-providers'
-import { waitForWalletAccount } from '@/helpers/promise-helper'
-import { authStore } from '@/stores/auth-store'
 import { PoolStore } from '@/stores/pool-store'
 import { observable, action, computed, IReactionDisposer } from 'mobx'
 export class ProjectListViewModel {
@@ -11,6 +9,10 @@ export class ProjectListViewModel {
   @observable votingPools: PoolStore[] = []
   @observable loading = false
 
+  private _auth = appProvider.authStore
+  private _api = appProvider.api
+  private _snackbar = appProvider.snackbar
+
   constructor() {
     this.fetchMyProject()
   }
@@ -18,8 +20,7 @@ export class ProjectListViewModel {
   @action async fetchMyProject() {
     try {
       this.loading = true
-      if (!authStore.attachedAddress) return
-      const pools = await appProvider.api.voting.find({ ownerAddress: authStore.attachedAddress }, { _limit: -1 })
+      const pools = await this._api.voting.find({ projectOwner: this._auth.projectOwnerId }, { _limit: -1 })
       if (pools && pools.length) {
         this.votingPools = pools.map((pool: any) => {
           const poolStore = new PoolStore(pool)
@@ -27,7 +28,7 @@ export class ProjectListViewModel {
         })
       }
     } catch (error) {
-      appProvider.snackbar.commonError(error)
+      this._snackbar.commonError(error)
     } finally {
       this.loading = false
     }
