@@ -28,7 +28,7 @@
         :value="prop.link"
         @change="onChange(index, 'link', $event)"
         :rules="[$rules.required, $rules.url]"
-        placeholder="Enter link"
+        placeholder="Enter link (https://yourdomain)"
       >
         <template v-slot:append>
           <v-hover v-slot="{ hover }">
