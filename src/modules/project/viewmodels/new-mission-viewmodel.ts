@@ -271,7 +271,7 @@ export class NewMissionViewModel {
         caption: missionInfo.shortDescription,
         // OPTIONAL TO MAIN
         decimals: toNumber(optTokenDecimal),
-        rewardToken: optTokenName,
+        rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
         // ===============
         socialLinks: socialLinks || [],
@@ -336,6 +336,10 @@ export class NewMissionViewModel {
     } catch (_) {
       return Zero
     }
+  }
+
+  @computed get tokenName() {
+    return get(this.pool, 'data.optionalTokenName', '')
   }
 
   // @computed get maxPriorityParticipantsLimit() {
