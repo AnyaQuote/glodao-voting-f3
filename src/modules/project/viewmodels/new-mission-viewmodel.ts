@@ -203,9 +203,20 @@ export class NewMissionViewModel {
     }
   }
 
+  /**
+   * Get token base price
+   * If address from testnet, api wont wỏk
+   * @param address token address
+   * @returns price value of token
+   */
   async getTokenBasePriceValue(address: string) {
-    const res = await this._api.getTokenPrice(address)
-    return res.price._value
+    try {
+      const res = await this._api.getTokenPrice(address)
+      return res.price._value
+    } catch (_) {
+      // Incase testnet failed, return 1
+      return '1'
+    }
   }
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
