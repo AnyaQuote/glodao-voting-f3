@@ -88,8 +88,6 @@
           dateLabel="Start date"
           timeLabel="Start time"
           :rules="[$rules.required]"
-          :minDate="$_get(vm.pool, 'startDate')"
-          :maxDate="$_get(vm.missionInfo, 'endDate') || $_get(vm.pool, 'endDate')"
           :value="$_get(vm.missionInfo, 'startDate')"
           @change="vm.changeMissionInfo('startDate', $event)"
         />
@@ -98,8 +96,6 @@
           timeLabel="End time"
           :rules="[$rules.required]"
           :disabled="!$_get(vm.missionInfo, 'startDate')"
-          :minDate="$_get(vm.missionInfo, 'startDate')"
-          :maxDate="$_get(vm.pool, 'endDate')"
           :value="$_get(vm.missionInfo, 'endDate')"
           @change="vm.changeMissionInfo('endDate', $event)"
         />
