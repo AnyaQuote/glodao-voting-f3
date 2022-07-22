@@ -35,7 +35,7 @@
       </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.maxSize(1000000), $rules.isImage, $rules.required]"
+        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'projectLogo', null)"
         @change="vm.changeProjectInfo('projectLogo', $event)"
       />
@@ -49,7 +49,7 @@
       </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.maxSize(1000000), $rules.isImage, $rules.required]"
+        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'projectCover', null)"
         @change="vm.changeProjectInfo('projectCover', $event)"
       />
@@ -84,6 +84,7 @@
 </template>
 
 <script lang="ts">
+import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
@@ -99,7 +100,7 @@ export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('project-info-form') form
   valid = false
-
+  MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   submit() {
     this.form.validate() && this.vm.nextStep(1.2)
   }

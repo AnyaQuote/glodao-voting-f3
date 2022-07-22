@@ -9,9 +9,10 @@ export interface Metadata {
   poolType?: string
   decimals?: number
   optionalRewardTokenDecimals?: string | number
-  optionalTokenAddress?: string | number
+  optionalTokenAddress?: string
   optionalRewardAmount?: string | number
-  optionalTokenName?: string | number
+  optionalTokenName?: string
+  optionalTokenLogo?: string
 }
 
 export interface VotingPool {
@@ -76,6 +77,7 @@ export class ProjectInfo {
   optionalTokenName?: string
   optionalRewardAmount?: string
   optionalTokenAddress?: string
+  optionalTokenLogo?: File
 
   votingStart?: string
   votingEnd?: string

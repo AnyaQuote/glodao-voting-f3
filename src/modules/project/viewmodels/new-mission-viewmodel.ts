@@ -1,6 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
-import { Data, MissionType } from '@/models/MissionModel'
+import { Data, MissionType, OptionalTokenItem } from '@/models/MissionModel'
 import {
   Quiz,
   LearnToEarn,
@@ -52,9 +52,9 @@ export class NewMissionViewModel {
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
-      const [pools, avgCommunityReward] = yield Promise.all([
+      const [pools] = yield Promise.all([
         this._api.voting.find({ unicodeName, ownerAddress: this._auth.attachedAddress }, { _limit: 1 }),
-        this._api.getAverageCommunityReward(10),
+        // this._api.getAverageCommunityReward(10),
       ])
 
       if (isEmpty(pools)) {
@@ -62,11 +62,11 @@ export class NewMissionViewModel {
       }
       this.pool = pools[0]
 
-      if (get(avgCommunityReward, 'code') === '500') {
-        throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
-      }
-      // console.log('avgCommunityReward', avgCommunityReward)
-      this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
+      // if (get(avgCommunityReward, 'code') === '500') {
+      //   throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
+      // }
+      // // console.log('avgCommunityReward', avgCommunityReward)
+      // this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
@@ -203,10 +203,16 @@ export class NewMissionViewModel {
     }
   }
 
+  async getTokenBasePriceValue(address: string) {
+    const res = await this._api.getTokenPrice(address)
+    return res.price._value
+  }
+
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
-    const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
-    const status = 'draft'
-    const tokenBasePrice = '1'
+    // const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
+    const status = 'upcomming'
+
+    // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
     const isSocialMission = missionInfo.type === 'social'
 
@@ -225,12 +231,30 @@ export class NewMissionViewModel {
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
+    // const optRewardAmount = pool.data?.optionalRewardAmount
+    const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
+    // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
+    const optTokenAddress = pool.data?.optionalTokenAddress
+    const optTokenLogo = pool.data?.optionalTokenLogo
+    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
+    const optTokenName = pool.data?.optionalTokenName
+    // const optionalToken: OptionalTokenItem = {
+    //   rewardAmount: optRewardAmount,
+    //   decimal: optTokenDecimal,
+    //   priorityRewardAmount: optTokenPriorityRewardAmount,
+    //   tokenContractAddress: optTokenAddress,
+    //   tokenLogo: optTokenLogo,
+    //   tokenBasePrice: optTokenBasePrice,
+    // }
+
     const mission: Mission = {
+      // OPTIONAL TO MAIN TOKEN FOR MISSION
       rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
-      tokenBasePrice,
+      tokenBasePrice: optTokenBasePrice,
+      // ==================================
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
@@ -239,16 +263,19 @@ export class NewMissionViewModel {
       poolId: pool.id,
       data: setting,
       status,
+      optionalTokens: [],
       metadata: {
         shortDescription: missionInfo.shortDescription,
         projectLogo: pool.data?.projectLogo,
         coverImage,
         caption: missionInfo.shortDescription,
-        decimals: pool.data?.decimals,
-        rewardToken: pool.tokenName,
+        // OPTIONAL TO MAIN
+        decimals: toNumber(optTokenDecimal),
+        rewardToken: optTokenName,
+        tokenLogo: optTokenLogo,
+        // ===============
         socialLinks: socialLinks || [],
         website: website || '#',
-        tokenLogo,
       },
     }
     return mission
@@ -285,7 +312,9 @@ export class NewMissionViewModel {
 
   @computed get rewardPerMission() {
     try {
-      return FixedNumber.from(this.pool?.rewardAmount).divUnsafe(FixedNumber.from(this.pool?.totalMission))
+      return FixedNumber.from(this.pool?.data?.optionalRewardAmount).divUnsafe(
+        FixedNumber.from(this.pool?.totalMission)
+      )
     } catch (_) {
       return Zero
     }
@@ -309,18 +338,18 @@ export class NewMissionViewModel {
     }
   }
 
-  @computed get maxPriorityParticipantsLimit() {
-    try {
-      const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
-      const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
-      const limit = ceil(toNumber(fxparticipantLimit._value))
-      if (limit === 0) {
-        throw null
-      } else return limit
-    } catch (_) {
-      return 200
-    }
-  }
+  // @computed get maxPriorityParticipantsLimit() {
+  //   try {
+  //     const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
+  //     const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
+  //     const limit = ceil(toNumber(fxparticipantLimit._value))
+  //     if (limit === 0) {
+  //       throw null
+  //     } else return limit
+  //   } catch (_) {
+  //     return 200
+  //   }
+  // }
 
   @computed get isValid() {
     return (formState) =>

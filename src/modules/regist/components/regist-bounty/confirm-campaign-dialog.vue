@@ -12,7 +12,7 @@
           <span class="font-weight-600">Total reward:</span>
           <v-spacer />
           <span class="font-weight-bold neutral-0--text"
-            >{{ $_get(vm.projectInfo, 'rewardAmount') }} {{ $_get(vm.projectInfo, 'tokenName') }}</span
+            >{{ $_get(vm.projectInfo, 'optionalRewardAmount') }} {{ $_get(vm.projectInfo, 'optionalTokenName') }}</span
           >
         </div>
 

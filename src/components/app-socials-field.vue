@@ -106,7 +106,6 @@ export default class SocialLinkFields extends Vue {
         return current.type ? { ...acc, [typeName]: current.link } : acc
       }, EMPTY_OBJECT)
     }
-    console.log(result)
     return result
   }
 

@@ -162,16 +162,24 @@ export class BountyApplyViewModel {
    * Upload image to media library and get source path
    * @param projectLogo selected logo image file
    * @param projectCover selected cover image file
+   * @param tokenLogo selected cover image file
    * @returns array of image sources in order pass in
    */
-  async getImageSources(projectLogo: File, projectCover: File) {
+  async getImageSources(projectLogo: File, projectCover: File, tokenLogo?: File) {
     const media = new FormData()
     media.append('files', projectLogo)
     media.append('files', projectCover)
+    if (tokenLogo) {
+      media.append('files', tokenLogo)
+    }
+    const sources: string[] = []
     const uploadedMedia = await this._api.uploadFile(media)
-    const logoSource = getApiFileUrl(uploadedMedia[0])
-    const coverSource = getApiFileUrl(uploadedMedia[1])
-    return [logoSource, coverSource]
+    sources.push(getApiFileUrl(uploadedMedia[0]))
+    sources.push(getApiFileUrl(uploadedMedia[1]))
+    if (tokenLogo) {
+      sources.push(getApiFileUrl(uploadedMedia[2]))
+    } else sources.push('')
+    return sources
   }
 
   /**
@@ -181,10 +189,14 @@ export class BountyApplyViewModel {
    * @param projectName Name of the project
    * @returns projectName converted to kebase case
    */
-  @asyncAction *checkUnicodeDuplicate(projectName: string) {
+  @asyncAction *getUnicodeName(projectName: string) {
     const unicodeName = kebabCase(projectName)
-    const [_, res] = yield promiseHelper.handle(apiService.voting.find({ unicodeName }, { _limit: 1 }))
-    return isEmpty(res) ? unicodeName : unicodeName + moment().unix().toString()
+    const res = yield apiService.voting.find({ unicodeName }, { _limit: 1 })
+    if (isEmpty(res)) {
+      return unicodeName
+    } else {
+      return unicodeName + moment().unix().toString()
+    }
   }
 
   /**
@@ -196,32 +208,36 @@ export class BountyApplyViewModel {
       this.projectInfo,
       walletStore.account,
       this.rewardTokenDecimals,
-      this.optionalRewardTokenDecimals
+      this.optionalRewardTokenDecimals,
+      this.projectInfo.totalMissions
     )
 
     // upload image
-    const [projectLogo, projectCover] = yield this.getImageSources(
+    const [projectLogo, projectCover, optionalTokenLogo] = yield this.getImageSources(
       this.projectInfo.projectLogo,
-      this.projectInfo.projectCover
+      this.projectInfo.projectCover,
+      this.projectInfo.optionalTokenLogo
     )
     const status = VotingPoolStatus.APPROVED
-    const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
+    const unicodeName = yield this.getUnicodeName(this.projectInfo.projectName!)
     const votingStart = moment().toISOString()
     const votingEnd = moment().add(3, 'd').toISOString()
 
     // update voting pool
     const data: VotingPool = {
+      ownerAddress,
       projectOwner: this._auth.projectOwnerId,
       projectName: this.projectInfo.projectName?.trim(),
       type: VotingPoolType.BOUNTY,
       poolId,
-      ownerAddress,
-      tokenAddress: this.projectInfo.tokenAddress,
-      tokenName: this.projectInfo.tokenName,
       status,
+      // TOKEN A
+      tokenAddress: this.projectInfo.tokenAddress,
+      rewardAmount: this.projectInfo.rewardAmount,
+      tokenName: this.projectInfo.tokenName,
+      // ========
       unicodeName,
       totalMission: this.projectInfo.totalMissions,
-      rewardAmount: this.projectInfo.rewardAmount,
       votingStart,
       votingEnd,
       startDate: this.projectInfo.startDate,
@@ -235,11 +251,16 @@ export class BountyApplyViewModel {
         projectLogo,
         projectCover,
         poolType,
+        // TOKEN A
         decimals: this.rewardTokenDecimals,
+        // =======
+        // TOKEN B
         optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
         optionalTokenAddress: this.projectInfo.optionalTokenAddress,
         optionalRewardAmount: this.projectInfo.optionalRewardAmount,
         optionalTokenName: this.projectInfo.optionalTokenName,
+        optionalTokenLogo: optionalTokenLogo,
+        // ======
       },
     }
     return data
@@ -302,13 +323,21 @@ export class BountyApplyViewModel {
     this.step = value
   }
 
+  // Hard coded each mission cost 50$
   @computed get rewardPerMission() {
     try {
-      return FixedNumber.from(this.projectInfo?.rewardAmount).divUnsafe(
+      return FixedNumber.from(this.projectInfo?.optionalRewardAmount).divUnsafe(
         FixedNumber.from(this.projectInfo?.totalMissions)
       )
     } catch (error) {
       return Zero
     }
+  }
+
+  @computed get missionFee() {
+    if (this.projectInfo.totalMissions) {
+      return (+this.projectInfo.totalMissions * 50).toString()
+    }
+    return '0'
   }
 }

@@ -18,9 +18,7 @@
         <!-- <v-icon color="neutral10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">$HWD</div> -->
         <v-icon color="neutral-10">mdi-circle-small</v-icon>
-        <div class="neutral10--text text-h5 font-weight-bold">
-          {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
-        </div>
+        <div class="neutral10--text text-h5 font-weight-bold">{{ vm.rewardAmount }} {{ vm.projectInfo.tokenName }}</div>
       </div>
 
       <div class="ma-7">
@@ -47,7 +45,9 @@
         <v-sheet outlined class="pa-3 rounded-lg font-18 font-weight-600 mt-6">
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total campaign reward:</span>
-            <span class="flex-grow-1 text-end">{{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}</span>
+            <span class="flex-grow-1 text-end"
+              >{{ vm.projectInfo.optionalRewardAmount }} {{ vm.projectInfo.optionalTokenName }}</span
+            >
           </div>
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total send:</span>
@@ -61,10 +61,10 @@
           </div>
         </v-sheet>
 
-        <ul class="mt-6">
+        <!-- <ul class="mt-6">
           <li class="mb-2 font-weight-600">Project will published immediately after creating pool</li>
           <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
-        </ul>
+        </ul> -->
 
         <v-btn
           v-if="!vm.approved"

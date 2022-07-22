@@ -9,7 +9,7 @@
           <div class="spacer text-truncate">
             <div class="text-h6 text-sm-h5 font-weight-bold text-truncate">{{ $_get(pool, 'projectName') }}</div>
             <div class="text-subtitle-1 text-sm-h6 neutral10--text font-weight-medium">
-              ${{ $_get(pool, 'tokenName') }}
+              ${{ $_get(pool, 'tokenBName') }}
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
           <div>
             <span class="neutral-10--text font-weight-medium">Total reward amount: </span>
             <span class="font-weight-600"
-              >{{ $_get(pool, 'requiredAmount') | formatNumber(2) }} {{ $_get(pool, 'tokenName') }}</span
+              >{{ $_get(pool, 'tokenBAmount') | formatNumber(2) }} {{ $_get(pool, 'tokenBName') }}</span
             >
           </div>
           <!--======================-->
