@@ -89,10 +89,10 @@
           />
         </div>
       </div>
-      <div class="font-18 font-weight-bold mb-2">Token logo</div>
+      <div class="font-18 font-weight-bold mb-2">Token logo<span class="app-red--text">*</span></div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage]"
+        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'optionalTokenLogo', null)"
         @change="vm.changeProjectInfo('optionalTokenLogo', $event)"
       />
