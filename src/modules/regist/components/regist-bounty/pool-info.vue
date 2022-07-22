@@ -34,9 +34,9 @@
         <div class="flex-grow-1">
           <div class="font-18 font-weight-bold mb-2">Mission fee amount</div>
           <app-text-field
+            readonly
             :rules="[$rules.required, $rules.floatNumberOnly]"
             :value="vm.missionFee"
-            readonly
             placeholder="Enter amount"
             class="pb-0"
           ></app-text-field>

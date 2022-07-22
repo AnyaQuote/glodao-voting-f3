@@ -48,7 +48,7 @@ export class BountyApplyViewModel {
   tokenList = this.tokenTestnetList
 
   @observable step = 1.1
-  @observable unlockedStep = 1.1
+  @observable unlockedStep = 2.1
   @observable projectInfo: ProjectInfo = {
     votingStart: moment().toISOString(),
     votingEnd: moment().add(3, 'd').toISOString(),
@@ -315,6 +315,10 @@ export class BountyApplyViewModel {
       const token = this.tokenList.find((item) => item.tokenAddress == value)
       set(this.projectInfo, 'tokenName', token?.tokenName)
       this.rewardTokenDecimals = token?.decimals || 18
+    } else if (property === 'totalMissions') {
+      const feePerMission = '50'
+      const computedValue = FixedNumber.from(value).mulUnsafe(FixedNumber.from(feePerMission))
+      this.projectInfo = set(this.projectInfo, 'rewardAmount', computedValue._value)
     }
     this.projectInfo = set(this.projectInfo, property, value)
   }
@@ -339,9 +343,6 @@ export class BountyApplyViewModel {
   }
 
   @computed get missionFee() {
-    if (this.projectInfo.totalMissions) {
-      return (+this.projectInfo.totalMissions * 50).toString()
-    }
-    return '0'
+    return get(this.projectInfo, 'rewardAmount', '')
   }
 }
