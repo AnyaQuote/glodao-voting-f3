@@ -10,7 +10,7 @@
       <v-radio-group mandatory :value="vm.missionInfo.type" @change="vm.changeMissionInfo('type', $event)">
         <div class="row no-gutters">
           <div class="col-6 pr-4">
-            <v-sheet class="rounded pa-5" outlined :class="isActive('social')">
+            <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('social')">
               <v-radio color="blue-diversity" value="social">
                 <template #label>
                   <span class="font-18 font-weight-bold" :class="isActive('social')">Social mission</span>
