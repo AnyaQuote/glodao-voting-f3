@@ -17,7 +17,7 @@
               </v-radio>
               <div class="text-subtitle-2 font-weight-regular">Setting social tasks or learn to earn tasks</div>
             </v-sheet>
-            <v-sheet v-bind="attrs" v-on="on" class="rounded pa-5 fill-heigh mt-4" outlined :class="isActive('2')">
+            <v-sheet class="rounded pa-5 fill-heigh mt-4" outlined :class="isActive('2')">
               <v-radio color="blue-diversity" value="2" disabled>
                 <template #label>
                   <span class="font-18 font-weight-bold" :class="isActive('2')">
