@@ -1,7 +1,7 @@
 <template>
   <v-sheet elevation="3" class="rounded-lg">
     <!-- --------------------------------------------- TOP --------------------------------------------- -->
-    <v-row dense class="blue-2 rounded-t-lg pa-6 ma-0">
+    <v-row dense class="blue-2 rounded-t-lg pa-6 ma-0" align="end">
       <v-col cols="12" md="6" class="d-flex align-center">
         <v-sheet max-width="80" max-height="80" class="neutral-100 rounded-lg pa-1 mr-4">
           <v-img :src="$_get(vm.poolStore, 'projectLogo')" />
