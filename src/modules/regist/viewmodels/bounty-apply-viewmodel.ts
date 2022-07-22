@@ -35,7 +35,7 @@ export class BountyApplyViewModel {
     // },
     {
       tokenName: 'BUSD',
-      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
+      tokenAddress: process.env.VUE_APP_BUSD_ADDRESS,
       decimals: 18,
     },
     // {
