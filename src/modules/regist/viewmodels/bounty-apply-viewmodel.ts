@@ -18,6 +18,7 @@ import web3 from 'web3'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
 import { get } from 'lodash-es'
+import { bnHelper } from '@/helpers/bignumber-helper'
 
 export class BountyApplyViewModel {
   private _auth = appProvider.authStore
@@ -270,11 +271,21 @@ export class BountyApplyViewModel {
   }
 
   @asyncAction *submit() {
+    if (bnHelper.lt(walletStore.bnbBalance, this.bnbFee)) {
+      snackController.error('BNB - Balance Insufficient')
+      return
+    }
+    if (bnHelper.lt(this.rewardTokenBalance, FixedNumber.from(this.projectInfo.rewardAmount))) {
+      snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
+      return
+    }
+    if (bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))) {
+      snackController.error(`${this.projectInfo.optionalTokenName} - Balance Insufficient`)
+      return
+    }
+
     this.creating = true
     try {
-      if (walletStore.bnbBalance) {
-        //
-      }
       const votingPoolModel = yield this.getVotingPoolModel()
       yield this._api.createOrUpdateVotingPool(votingPoolModel)
       this._snackbar.addSuccess()
