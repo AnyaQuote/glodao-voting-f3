@@ -36,7 +36,7 @@
           <app-text-field
             :rules="[$rules.required, $rules.floatNumberOnly]"
             :value="vm.missionFee"
-            disabled
+            readonly
             placeholder="Enter amount"
             class="pb-0"
           ></app-text-field>

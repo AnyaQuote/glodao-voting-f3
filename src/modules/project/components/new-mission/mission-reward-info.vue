@@ -2,15 +2,13 @@
   <div v-if="vm.missionInfo.type === 'social'" class="d-flex flex-column mt-7">
     <div class="title font-weight-bold blue-diversity--text">Reward information</div>
     <div class="font-18 font-weight-bold mt-4">
-      <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}</span>
+      <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
     </div>
     <div class="mt-4 row no-gutters">
       <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
         <span class="font-18 font-weight-bold">Priority amount (30%)</span>
         <v-sheet class="rounded px-3 d-flex justify-space-between mt-2 py-14px" height="56" outlined>
-          <span class="font-weight-600"
-            >{{ vm.priorityAmount | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}</span
-          >
+          <span class="font-weight-600">{{ vm.priorityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
         </v-sheet>
       </div>
 
@@ -33,17 +31,13 @@
       <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
         <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
           <span>Community amount:</span>
-          <span class="font-weight-600"
-            >{{ vm.communityAmount | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}</span
-          >
+          <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
         </v-sheet>
       </div>
       <div class="col-12 col-md-6 pa-0">
         <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
           <span>Personal priority reward:</span>
-          <span class="font-weight-600">
-            {{ vm.personalReward | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}
-          </span>
+          <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
         </v-sheet>
       </div>
     </div>
@@ -52,7 +46,7 @@
   <div v-else class="mt-7">
     <div class="title font-weight-bold blue-diversity--text">Reward information</div>
     <div class="font-18 font-weight-bold mt-4">
-      <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ $_get(vm.pool, 'tokenName') }}</span>
+      <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
     </div>
     <div class="mt-4 row no-gutters">
       <div class="col-12">

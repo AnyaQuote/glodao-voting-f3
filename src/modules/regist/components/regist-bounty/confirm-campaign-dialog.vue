@@ -12,7 +12,7 @@
           <span class="font-weight-600">Total reward:</span>
           <v-spacer />
           <span class="font-weight-bold neutral-0--text"
-            >{{ $_get(vm.projectInfo, 'optionalRewardAmount') }} {{ $_get(vm.projectInfo, 'optionalTokenName') }}</span
+            >{{ $_get(vm.projectInfo, 'optionalRewardAmount') }} {{ vm.tokenName }}</span
           >
         </div>
 
@@ -26,7 +26,7 @@
           <span class="font-weight-600">Reward per mission:</span>
           <v-spacer />
           <span class="font-weight-bold neutral-0--text">
-            {{ vm.rewardPerMission | formatNumber(2) }} {{ $_get(vm.projectInfo, 'tokenName') }}
+            {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}
           </span>
         </div>
 
