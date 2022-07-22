@@ -5,7 +5,7 @@
       <v-col cols="12" md="4" class="d-flex flex-md-column justify-space-between mb-2 mb-md-0">
         <div class="neutral-10--text mb-md-1">Total reward amount</div>
         <div class="font-weight-bold">
-          {{ $_get(vm.poolStore, 'tokenAAmount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
+          {{ $_get(vm.poolStore, 'tokenBAmount') | formatNumber }} {{ $_get(vm.poolStore, 'tokenBName') }}
         </div>
       </v-col>
       <v-col cols="12" md="4" class="d-flex flex-md-column justify-space-between mb-2 mb-md-0">
@@ -15,7 +15,7 @@
       <v-col cols="12" md="4" class="d-flex flex-md-column justify-space-between">
         <div class="neutral-10--text mb-md-1">Reward/mission</div>
         <div class="font-weight-bold">
-          {{ $_get(vm.poolStore, 'rewardPerMission') | formatNumber }} {{ $_get(vm.poolStore, 'tokenName') }}
+          {{ $_get(vm.poolStore, 'rewardPerMissionB') | formatNumber }} {{ $_get(vm.poolStore, 'tokenBName') }}
         </div>
       </v-col>
     </v-row>

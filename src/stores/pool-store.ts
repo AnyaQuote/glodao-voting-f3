@@ -153,12 +153,22 @@ export class PoolStore {
   @computed get tokenName() {
     return this.poolData.tokenName
   }
+  @computed get tokenBName() {
+    return this.poolData.data?.optionalTokenName
+  }
   @computed get totalMission() {
     return this.poolData.totalMission
   }
-  @computed get rewardPerMission() {
+  @computed get rewardPerMissionA() {
     try {
       return this.tokenAAmount.divUnsafe(FixedNumber.from(this.totalMission))
+    } catch (error) {
+      return Zero
+    }
+  }
+  @computed get rewardPerMissionB() {
+    try {
+      return this.tokenBAmount.divUnsafe(FixedNumber.from(this.totalMission))
     } catch (error) {
       return Zero
     }
