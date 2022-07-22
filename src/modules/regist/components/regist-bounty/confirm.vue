@@ -35,8 +35,8 @@
           <span class="font-weight-medium">{{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
 
-        <div class="font-18">
-          <span class="mr-2">BUSD Balance:</span>
+        <div class="font-18 mb-2">
+          <span class="mr-2">{{ vm.projectInfo.tokenName }} Balance:</span>
           <span class="font-weight-medium">
             {{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}
           </span>
