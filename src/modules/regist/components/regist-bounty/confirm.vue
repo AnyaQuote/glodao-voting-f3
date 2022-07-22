@@ -34,11 +34,18 @@
           <span class="mr-2">BNB balance:</span>
           <span class="font-weight-medium">{{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
-
+        <!-- 
         <div class="font-18">
           <span class="mr-2">Reward Token Balance:</span>
           <span class="font-weight-medium">
             {{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}
+          </span>
+        </div> -->
+
+        <div class="font-18">
+          <span class="mr-2">Project reward token Balance:</span>
+          <span class="font-weight-medium">
+            {{ vm.optionalRewardTokenBalance | formatNumber }} {{ vm.projectInfo.optionalTokenName }}
           </span>
         </div>
 
@@ -49,12 +56,12 @@
               >{{ vm.projectInfo.optionalRewardAmount }} {{ vm.projectInfo.optionalTokenName }}</span
             >
           </div>
-          <div class="mb-3 d-flex">
+          <!-- <div class="mb-3 d-flex">
             <span class="neutral10--text">Total send:</span>
             <span class="app-blue--text flex-grow-1 text-end">
               {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
             </span>
-          </div>
+          </div> -->
           <div class="d-flex">
             <span class="neutral10--text">Creating pool fee:</span>
             <span class="app-blue--text flex-grow-1 text-end">{{ vm.bnbFee | formatNumber }} BNB</span>
