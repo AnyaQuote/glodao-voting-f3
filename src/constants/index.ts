@@ -5,11 +5,6 @@ export const PRIORITY_AMOUNT_RATIO = FixedNumber.from('0.3')
 export const ETHER_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const PAGE_ITEM_LIMIT = 6
 
-export const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
-export const APP_CHAIN_ID = process.env.VUE_APP_CHAIN_ID
-export const APP_CHAIN = process.env.VUE_APP_CHAIN
-export const API_DOCUMENT_URL = process.env.VUE_APP_API_DOCUMENT
-
 export const NULL = null
 export const EMPTY_STRING = ''
 export const EMPTY_ARRAY = []
