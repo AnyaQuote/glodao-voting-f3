@@ -34,13 +34,13 @@
           <span class="mr-2">BNB balance:</span>
           <span class="font-weight-medium">{{ walletStore.bnbBalance | formatNumber }} BNB</span>
         </div>
-        <!-- 
+
         <div class="font-18">
-          <span class="mr-2">Reward Token Balance:</span>
+          <span class="mr-2">BUSD Balance:</span>
           <span class="font-weight-medium">
             {{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}
           </span>
-        </div> -->
+        </div>
 
         <div class="font-18">
           <span class="mr-2">Project reward token Balance:</span>
@@ -56,12 +56,12 @@
               >{{ vm.projectInfo.optionalRewardAmount }} {{ vm.projectInfo.optionalTokenName }}</span
             >
           </div>
-          <!-- <div class="mb-3 d-flex">
-            <span class="neutral10--text">Total send:</span>
+          <div class="mb-3 d-flex">
+            <span class="neutral10--text">Total mission fees:</span>
             <span class="app-blue--text flex-grow-1 text-end">
               {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
             </span>
-          </div> -->
+          </div>
           <div class="d-flex">
             <span class="neutral10--text">Creating pool fee:</span>
             <span class="app-blue--text flex-grow-1 text-end">{{ vm.bnbFee | formatNumber }} BNB</span>
@@ -69,7 +69,7 @@
         </v-sheet>
 
         <!-- <ul class="mt-6">
-          <li class="mb-2 font-weight-600">Project will published immediately after creating pool</li>
+          <li class="mb-2 font-weight-600"></li>
           <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
         </ul> -->
 
