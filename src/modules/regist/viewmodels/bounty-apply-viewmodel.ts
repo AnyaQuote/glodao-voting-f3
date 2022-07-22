@@ -48,7 +48,7 @@ export class BountyApplyViewModel {
   tokenList = this.tokenTestnetList
 
   @observable step = 1.1
-  @observable unlockedStep = 2.1
+  @observable unlockedStep = 1.1
   @observable projectInfo: ProjectInfo = {
     votingStart: moment().toISOString(),
     votingEnd: moment().add(3, 'd').toISOString(),
