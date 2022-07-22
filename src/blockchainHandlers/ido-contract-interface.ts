@@ -2,10 +2,10 @@ import { FixedNumber } from '@ethersproject/bignumber'
 
 export class PoolInfo {
   owner?: string
-  requiredAmount?: FixedNumber
-  optionalAmount?: FixedNumber
-  requiredErc20?: string
-  optionalErc20?: string
+  tokenAAmount?: FixedNumber
+  tokenBAmount?: FixedNumber
+  tokenA?: string
+  tokenB?: string
   poolType?: string
   votedYesPercent?: FixedNumber
   votedYesWeight?: FixedNumber

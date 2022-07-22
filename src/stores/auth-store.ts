@@ -46,7 +46,13 @@ export class AuthStore {
     this.resetUser()
     localdata.resetAuth()
 
-    router.push(RoutePaths.voting_list)
+    // Disable router push since voting page is hidden
+    // '''
+    // router.push(RoutePaths.voting_list)
+    // '''
+    // Because of that, now changing to when log out, reload the page
+    // So that twitterLoginDialog can begin checking
+    location.reload()
   }
 
   @asyncAction *signMessage(wallet, chainType, nonce, selectedAdapter: any = null) {
@@ -131,6 +137,10 @@ export class AuthStore {
 
   @computed get attachedAddress() {
     return get(this.user, 'projectOwner.address', '')
+  }
+
+  @computed get projectOwnerId() {
+    return get(this.user, 'projectOwner.id', '')
   }
 }
 export const authStore = new AuthStore()

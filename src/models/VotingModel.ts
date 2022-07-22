@@ -1,3 +1,5 @@
+import { ProjectOwner } from './ProjectOwnerModel'
+
 export interface Metadata {
   shortDescription?: string
   fields?: string[]
@@ -6,6 +8,11 @@ export interface Metadata {
   socialLinks?: any
   poolType?: string
   decimals?: number
+  optionalRewardTokenDecimals?: string | number
+  optionalTokenAddress?: string
+  optionalRewardAmount?: string | number
+  optionalTokenName?: string
+  optionalTokenLogo?: string
 }
 
 export interface VotingPool {
@@ -17,7 +24,7 @@ export interface VotingPool {
   ownerAddress?: string
   poolId?: string
   status?: VotingPoolStatus
-  type?: string
+  type?: VotingPoolType
   startDate?: string
   endDate?: string
   unicodeName?: string
@@ -27,6 +34,7 @@ export interface VotingPool {
   votingStart?: string
   votingEnd?: string
   data?: Metadata
+  projectOwner?: ProjectOwner
 }
 
 export class Voter {
@@ -47,4 +55,34 @@ export enum VotingPoolStatus {
   VOTING = 'voting',
   PENDING = 'pending',
   CANCELLED = 'cancelled',
+}
+
+export enum VotingPoolType {
+  BOUNTY = 'bounty',
+  LAUNCHPAD = 'launchpad',
+}
+
+export class ProjectInfo {
+  projectName?: string
+  shortDescription?: string
+  projectCover?: any
+  projectLogo?: any
+  fields?: any[]
+  socialLinks?: any
+
+  tokenName?: string
+  rewardAmount?: string
+  tokenAddress?: string
+
+  optionalTokenName?: string
+  optionalRewardAmount?: string
+  optionalTokenAddress?: string
+  optionalTokenLogo?: File
+
+  votingStart?: string
+  votingEnd?: string
+
+  startDate?: string
+  endDate?: string
+  totalMissions?: string
 }

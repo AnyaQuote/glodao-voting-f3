@@ -2,7 +2,7 @@
 import { ETHER_ZERO_ADDRESS, HUNDRED, Zero } from '@/constants'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { ProjectInfo } from '@/modules/regist/viewmodels/bounty-apply-viewmodel'
+import { ProjectInfo } from '@/models/VotingModel'
 import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { chunk, toNumber } from 'lodash-es'
@@ -25,8 +25,8 @@ export class VotingHandler implements IVotingContract {
   web3: any
 
   _owner = ''
-  _requiredAmount = Zero
-  _optionalAmount = Zero
+  _tokenAAmount = Zero
+  _tokenBAmount = Zero
   _poolType = '0'
   _votedPercent = Zero
   _createdAt = ''
@@ -132,8 +132,8 @@ export class VotingHandler implements IVotingContract {
     }
 
     this._owner = (votingPoolInfo as any).owner
-    this._requiredAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).requiredAmount)
-    this._optionalAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).optionalAmount)
+    this._tokenAAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenAAmount)
+    this._tokenBAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenBAmount)
     this._poolType = (votingPoolInfo as PoolInfo).poolType!
     this._votedYesPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedYesPercent).mulUnsafe(HUNDRED)
     this._votedYesWeight = votedYesWeight
@@ -147,13 +147,20 @@ export class VotingHandler implements IVotingContract {
     this._rejectedUsers = rejectedUsers
   }
 
-  async createPool(poolInfo: ProjectInfo, account: string, requiredTokenDecimals = 18, optionalTokenDecimals = 18) {
+  async createPool(
+    poolInfo: ProjectInfo,
+    account: string,
+    requiredTokenDecimals = 18,
+    optionalTokenDecimals = 18,
+    missionLength
+  ) {
     if (this.poolType.creationFee) {
       const bnbFee = bnHelper.toDecimalString(this.poolType.creationFee)
       const f = this.votingContract.methods.createPool(
         0,
         poolInfo.tokenAddress,
         bnHelper.toDecimalString(poolInfo.rewardAmount!.toString(), requiredTokenDecimals),
+        missionLength,
         poolInfo.optionalTokenAddress ? poolInfo.optionalTokenAddress : ETHER_ZERO_ADDRESS,
         poolInfo.optionalTokenAddress
           ? bnHelper.toDecimalString(poolInfo.optionalRewardAmount!.toString(), optionalTokenDecimals)
@@ -162,6 +169,7 @@ export class VotingHandler implements IVotingContract {
       const res = await sendRequest(f, account, bnbFee)
 
       const poolCreatedEvent = (res as any).events['PoolCreated']
+      // console.log('poolCreatedEvent: ', poolCreatedEvent.returnValues)
       const poolId = poolCreatedEvent.returnValues.id as string
       const ownerAddress = poolCreatedEvent.returnValues.owner as string
       const poolType = poolCreatedEvent.returnValues.poolType as string
@@ -211,8 +219,8 @@ export class VotingHandler implements IVotingContract {
   get poolInfo() {
     return {
       owner: this._owner,
-      requiredAmount: this._requiredAmount,
-      optionalAmount: this._optionalAmount,
+      tokenAAmount: this._tokenAAmount,
+      tokenBAmount: this._tokenBAmount,
       poolType: this._poolType,
       votedYesPercent: this._votedYesPercent,
       votedYesWeight: this._votedYesWeight,

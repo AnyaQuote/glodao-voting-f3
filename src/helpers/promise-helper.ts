@@ -4,6 +4,8 @@ import { walletStore } from '@/stores/wallet-store'
 import { isEmpty } from 'lodash-es'
 import { localdata } from './local-data'
 
+const TEMP_TIMEOUT = 15000
+
 export const promiseHelper = {
   delay: (miniseconds: number) => new Promise((resolve) => setTimeout(resolve, miniseconds)),
   handle: (promise: any) => promise.then((res) => [undefined, res]).catch((err) => [err, undefined]),
@@ -25,8 +27,8 @@ export const waitForLocalStorage = (delay = 1000) =>
         resolve([localdata.jwt, localdata.user])
       }
 
-      // Time out when reach 10 seconds
-      if (new Date().getTime() - startTime > TIME_OUT_SETTING) {
+      // Time out when reach 15 seconds
+      if (new Date().getTime() - startTime > TEMP_TIMEOUT) {
         clearInterval(intervalId)
         reject(ERROR_MSG_LOGIN_TIMEOUT)
       }

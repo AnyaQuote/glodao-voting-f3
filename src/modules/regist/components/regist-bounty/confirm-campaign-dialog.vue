@@ -12,7 +12,7 @@
           <span class="font-weight-600">Total reward:</span>
           <v-spacer />
           <span class="font-weight-bold neutral-0--text"
-            >{{ $_get(vm.projectInfo, 'rewardAmount') }} {{ $_get(vm.projectInfo, 'tokenName') }}</span
+            >{{ $_get(vm.projectInfo, 'optionalRewardAmount') }} {{ vm.tokenName }}</span
           >
         </div>
 
@@ -26,7 +26,7 @@
           <span class="font-weight-600">Reward per mission:</span>
           <v-spacer />
           <span class="font-weight-bold neutral-0--text">
-            {{ vm.rewardPerMission | formatNumber }} {{ $_get(vm.projectInfo, 'tokenName') }}
+            {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}
           </span>
         </div>
 
@@ -53,8 +53,6 @@
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Ref, Inject } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
-import { toISO } from '@/helpers/date-helper'
-import { toNumber } from 'lodash'
 
 @Observer
 @Component

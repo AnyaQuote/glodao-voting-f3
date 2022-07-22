@@ -11,27 +11,38 @@
 
     <v-form ref="fund-info-form" v-model="valid" class="pa-6">
       <!-- ----------------------------------- REWARD INFORMATION ----------------------------------------- -->
-      <div class="blue-diversity--text font-18 font-weight-bold">Reward Information</div>
-      <!-- <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+      <div class="blue-diversity--text font-18 font-weight-bold">Mission Information</div>
+      <div class="flex-grow-1 mb-2 d-flex justify-space-between">
+        <span class="font-weight-bold font-18 mr-1">Total missions<span class="app-red--text">*</span></span>
+        <i class="red--text">*Each mission requires amount of 50 BUSD</i>
+      </div>
       <app-text-field
+        class="font-18"
+        :rules="[$rules.required, $rules.integer, $rules.min(1)]"
+        :value="$_get(vm.projectInfo, 'totalMissions')"
+        @input="vm.changeProjectInfo('totalMissions', $event)"
+        placeholder="Enter number of missions"
+      ></app-text-field>
+      <!-- <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div> -->
+      <!-- <app-text-field
         :rules="[$rules.required, $rules.isAddress]"
         :value="$_get(vm.projectInfo, 'tokenAddress')"
-        @input="vm.changeProjectInfo('tokenAddress', $event)"
+        @change="vm.changeProjectInfo('tokenAddress', $event)"
         placeholder="Enter address"
       ></app-text-field> -->
       <div class="d-flex flex-column flex-sm-row">
         <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
+          <div class="font-18 font-weight-bold mb-2">Mission fee amount</div>
           <app-text-field
+            readonly
             :rules="[$rules.required, $rules.floatNumberOnly]"
-            :value="$_get(vm.projectInfo, 'rewardAmount')"
-            @input="vm.changeProjectInfo('rewardAmount', $event)"
+            :value="vm.missionFee"
             placeholder="Enter amount"
             class="pb-0"
           ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Token reward<span class="app-red--text">*</span></div>
+          <div class="font-18 font-weight-bold mb-2">Token name<span class="app-red--text">*</span></div>
           <v-autocomplete
             item-text="tokenName"
             item-value="tokenAddress"
@@ -49,27 +60,27 @@
       <!-- ----------------------------------- PROJECT REWARD --------------------------------------------- -->
       <div class="mt-2">
         <span class="font-18 font-weight-bold blue-diversity--text">Project reward</span>
-        <i class="neutral-10--text ml-2">(optional)</i>
+        <!-- <i class="neutral-10--text ml-2">(optional)</i> -->
       </div>
-      <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+      <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
       <app-text-field
-        :rules="[$rules.isAddress]"
+        :rules="[$rules.isAddress, $rules.required]"
         :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
         @input="vm.changeProjectInfo('optionalTokenAddress', $event)"
         placeholder="Enter address"
       ></app-text-field>
       <div class="d-flex flex-column flex-sm-row">
         <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward amount</div>
+          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
           <app-text-field
-            :rules="[$rules.floatNumberOnly]"
+            :rules="[$rules.floatNumberOnly, $rules.required]"
             :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
             @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
             placeholder="Enter amount"
           ></app-text-field>
         </div>
         <div class="pl-sm-6 flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward token symbol</div>
+          <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
           <app-text-field
             :value="$_get(vm.projectInfo, 'optionalTokenName')"
             :loading="vm.tokenInfoLoading"
@@ -78,6 +89,13 @@
           />
         </div>
       </div>
+      <div class="font-18 font-weight-bold mb-2">Token logo<span class="app-red--text">*</span></div>
+      <app-file-upload
+        isImageFile
+        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
+        :value="$_get(vm.projectInfo, 'optionalTokenLogo', null)"
+        @change="vm.changeProjectInfo('optionalTokenLogo', $event)"
+      />
 
       <!-- ----------------------------------- VOTING DURATION --------------------------------------------- -->
       <!-- <div class="mt-2">
@@ -122,17 +140,6 @@
         :value="$_get(vm.projectInfo, 'endDate')"
         @change="vm.changeProjectInfo('endDate', $event)"
       />
-
-      <div class="flex-grow-1 mb-2">
-        <span class="font-weight-bold font-18 mr-1">Total missions<span class="app-red--text">*</span></span>
-      </div>
-      <app-text-field
-        class="font-18"
-        :rules="[$rules.required, $rules.integer, $rules.min(1)]"
-        :value="$_get(vm.projectInfo, 'totalMissions')"
-        @input="vm.changeProjectInfo('totalMissions', $event)"
-        placeholder="Enter number of missions"
-      ></app-text-field>
       <!-- ------------------------------------------------------------------------------------------------- -->
 
       <v-btn
@@ -151,6 +158,7 @@
 </template>
 
 <script lang="ts">
+import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
@@ -160,6 +168,7 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
   components: {
     'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
+    'app-file-upload': () => import('@/components/app-file-upload.vue'),
   },
 })
 export default class RaisingInfo extends Vue {
@@ -167,7 +176,7 @@ export default class RaisingInfo extends Vue {
   @Ref('confirm-dialog') dialog
   @Ref('fund-info-form') form
   valid = false
-  tokens = ['GLD', 'BUSD', 'USDT']
+  MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   submit() {
     this.form.validate() && this.dialog.open()
   }

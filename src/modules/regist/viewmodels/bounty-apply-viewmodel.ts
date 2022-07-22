@@ -1,3 +1,5 @@
+import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
+import { APP_CHAIN, APP_CHAIN_ID } from '@/constants/index'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase, toNumber, isEmpty } from 'lodash'
@@ -9,33 +11,38 @@ import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
 import { Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
-import { RoutePaths } from '@/router'
+import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
 import { FixedNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import web3 from 'web3'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { VotingPoolStatus } from '@/models/VotingModel'
+import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
+import { get } from 'lodash-es'
 
 export class BountyApplyViewModel {
+  private _auth = appProvider.authStore
+  private _api = appProvider.api
+  private _router = appProvider.router
+  private _snackbar = appProvider.snackbar
   _disposers: IReactionDisposer[] = []
   private _unsubcrible = new Subject()
   tokenTestnetList = [
-    {
-      tokenName: 'GLD',
-      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-gld',
-      decimals: 18,
-    },
+    // {
+    //   tokenName: 'GLD',
+    //   tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-gld',
+    //   decimals: 18,
+    // },
     {
       tokenName: 'BUSD',
-      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf',
+      tokenAddress: process.env.VUE_APP_BUSD_ADDRESS,
       decimals: 18,
     },
-    {
-      tokenName: 'USDT',
-      tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-usdt',
-      decimals: 18,
-    },
+    // {
+    //   tokenName: 'USDT',
+    //   tokenAddress: '0x1fa6283ec7fbb012407e7a5fc44a78b065b2a1cf-usdt',
+    //   decimals: 18,
+    // },
   ]
 
   tokenList = this.tokenTestnetList
@@ -153,74 +160,129 @@ export class BountyApplyViewModel {
   }
 
   /**
+   * Upload image to media library and get source path
+   * @param projectLogo selected logo image file
+   * @param projectCover selected cover image file
+   * @param tokenLogo selected cover image file
+   * @returns array of image sources in order pass in
+   */
+  async getImageSources(projectLogo: File, projectCover: File, tokenLogo?: File) {
+    const media = new FormData()
+    media.append('files', projectLogo)
+    media.append('files', projectCover)
+    if (tokenLogo) {
+      media.append('files', tokenLogo)
+    }
+    const sources: string[] = []
+    const uploadedMedia = await this._api.uploadFile(media)
+    sources.push(getApiFileUrl(uploadedMedia[0]))
+    sources.push(getApiFileUrl(uploadedMedia[1]))
+    if (tokenLogo) {
+      sources.push(getApiFileUrl(uploadedMedia[2]))
+    } else sources.push('')
+    return sources
+  }
+
+  /**
    * Check if existed a unicode name
    * If existed, return kebab case project name postfix with unix from moment
    * Else return kebab case project name
    * @param projectName Name of the project
    * @returns projectName converted to kebase case
    */
-  @asyncAction *checkUnicodeDuplicate(projectName: string) {
+  @asyncAction *getUnicodeName(projectName: string) {
     const unicodeName = kebabCase(projectName)
-    const [_, res] = yield promiseHelper.handle(apiService.voting.find({ unicodeName }, { _limit: 1 }))
-    return isEmpty(res) ? unicodeName : unicodeName + moment().unix().toString()
+    const res = yield apiService.voting.find({ unicodeName }, { _limit: 1 })
+    if (isEmpty(res)) {
+      return unicodeName
+    } else {
+      return unicodeName + moment().unix().toString()
+    }
+  }
+
+  /**
+   * Get and map data to voting pool model
+   * @returns populated voting pool model
+   */
+  @asyncAction *getVotingPoolModel() {
+    const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
+      this.projectInfo,
+      walletStore.account,
+      this.rewardTokenDecimals,
+      this.optionalRewardTokenDecimals,
+      this.projectInfo.totalMissions
+    )
+
+    // upload image
+    const [projectLogo, projectCover, optionalTokenLogo] = yield this.getImageSources(
+      this.projectInfo.projectLogo,
+      this.projectInfo.projectCover,
+      this.projectInfo.optionalTokenLogo
+    )
+    const status = VotingPoolStatus.APPROVED
+    const unicodeName = yield this.getUnicodeName(this.projectInfo.projectName!)
+    const votingStart = moment().toISOString()
+    const votingEnd = moment().add(3, 'd').toISOString()
+
+    // update voting pool
+    const data: VotingPool = {
+      ownerAddress,
+      projectOwner: this._auth.projectOwnerId,
+      projectName: this.projectInfo.projectName?.trim(),
+      type: VotingPoolType.BOUNTY,
+      poolId,
+      status,
+      // TOKEN A
+      tokenAddress: this.projectInfo.tokenAddress,
+      rewardAmount: this.projectInfo.rewardAmount,
+      tokenName: this.projectInfo.tokenName,
+      // ========
+      unicodeName,
+      totalMission: this.projectInfo.totalMissions,
+      votingStart,
+      votingEnd,
+      startDate: this.projectInfo.startDate,
+      endDate: this.projectInfo.endDate,
+      chain: APP_CHAIN,
+      chainId: APP_CHAIN_ID,
+      data: {
+        shortDescription: this.projectInfo.shortDescription,
+        fields: this.projectInfo.fields,
+        socialLinks: this.projectInfo.socialLinks,
+        projectLogo,
+        projectCover,
+        poolType,
+        // TOKEN A
+        decimals: this.rewardTokenDecimals,
+        // =======
+        // TOKEN B
+        optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
+        optionalTokenAddress: this.projectInfo.optionalTokenAddress,
+        optionalRewardAmount: this.projectInfo.optionalRewardAmount,
+        optionalTokenName: this.projectInfo.optionalTokenName,
+        optionalTokenLogo: optionalTokenLogo,
+        // ======
+      },
+    }
+    return data
   }
 
   @asyncAction *submit() {
     this.creating = true
     try {
-      const { poolId, ownerAddress, poolType } = yield this.votingHandler?.createPool(
-        this.projectInfo,
-        walletStore.account,
-        this.rewardTokenDecimals,
-        this.optionalRewardTokenDecimals
-      )
-
-      // upload image
-      let images
-      if (this.projectInfo.projectLogo && this.projectInfo.projectCover) {
-        const media = new FormData()
-        media.append('files', this.projectInfo.projectLogo)
-        media.append('files', this.projectInfo.projectCover)
-        images = yield apiService.uploadFile(media)
+      // Cái nhập vào phải nhỏ hơn cái hiện có
+      if (walletStore.bnbBalance) {
+        //
       }
-      const status = VotingPoolStatus.APPROVED
-      const unicodeName = yield this.checkUnicodeDuplicate(this.projectInfo.projectName!)
-
-      // update voting pool
-      const data = {
-        projectName: this.projectInfo.projectName?.trim(),
-        type: 'bounty',
-        poolId,
-        ownerAddress,
-        tokenAddress: this.projectInfo.tokenAddress,
-        tokenName: this.projectInfo.tokenName,
-        status,
-        unicodeName,
-        totalMission: this.projectInfo.totalMissions,
-        rewardAmount: this.projectInfo.rewardAmount,
-        votingStart: moment().toISOString(),
-        votingEnd: moment().add(3, 'd').toISOString(),
-        startDate: this.projectInfo.startDate,
-        endDate: this.projectInfo.endDate,
-        data: {
-          shortDescription: this.projectInfo.shortDescription,
-          fields: this.projectInfo.fields,
-          socialLinks: this.projectInfo.socialLinks,
-          projectLogo: images ? getApiFileUrl(images[0]) : null,
-          projectCover: images ? getApiFileUrl(images[1]) : null,
-          poolType,
-          decimals: this.rewardTokenDecimals,
-          optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
-          optionalTokenAddress: this.projectInfo.optionalTokenAddress,
-          optionalRewardAmount: this.projectInfo.optionalRewardAmount,
-          optionalTokenName: this.projectInfo.optionalTokenName,
-        },
-      }
-      yield apiService.createOrUpdateVotingPool(data)
-      appProvider.router.push(RoutePaths.project_list)
+      const votingPoolModel = yield this.getVotingPoolModel()
+      yield this._api.createOrUpdateVotingPool(votingPoolModel)
+      this._snackbar.addSuccess()
+      promiseHelper.delay(500)
+      this._router.push({
+        name: RouteName.PROJECT_LIST,
+      })
     } catch (error) {
-      console.error(error)
-      snackController.commonError(error)
+      this._snackbar.commonError(error)
     } finally {
       this.creating = false
     }
@@ -228,8 +290,9 @@ export class BountyApplyViewModel {
 
   @action.bound changeStep(value: number) {
     if (this.creating) return
-    if (value > this.unlockedStep) snackController.commonError('You have not completed current step yet!')
-    else this.step = value
+    if (value <= this.unlockedStep) {
+      this.step = value
+    }
   }
 
   @action.bound changeProjectInfo(property: string, value: any) {
@@ -252,45 +315,34 @@ export class BountyApplyViewModel {
       const token = this.tokenList.find((item) => item.tokenAddress == value)
       set(this.projectInfo, 'tokenName', token?.tokenName)
       this.rewardTokenDecimals = token?.decimals || 18
+    } else if (property === 'totalMissions') {
+      const feePerMission = '50'
+      const computedValue = FixedNumber.from(value).mulUnsafe(FixedNumber.from(feePerMission))
+      this.projectInfo = set(this.projectInfo, 'rewardAmount', computedValue._value)
     }
     this.projectInfo = set(this.projectInfo, property, value)
   }
 
   @action nextStep(value: number) {
-    this.unlockedStep = this.step = value
+    this.unlockedStep = value
+    this.step = value
   }
 
   @computed get rewardPerMission() {
     try {
-      return FixedNumber.from(this.projectInfo?.rewardAmount).divUnsafe(
+      return FixedNumber.from(this.projectInfo?.optionalRewardAmount).divUnsafe(
         FixedNumber.from(this.projectInfo?.totalMissions)
       )
     } catch (error) {
       return Zero
     }
   }
-}
 
-export class ProjectInfo {
-  projectName?: string
-  shortDescription?: string
-  projectCover?: any
-  projectLogo?: any
-  fields?: any[]
-  socialLinks?: any
+  @computed get tokenName() {
+    return get(this.projectInfo, 'optionalTokenName', '')
+  }
 
-  tokenName?: string
-  rewardAmount?: string
-  tokenAddress?: string
-
-  optionalTokenName?: string
-  optionalRewardAmount?: string
-  optionalTokenAddress?: string
-
-  votingStart?: string
-  votingEnd?: string
-
-  startDate?: string
-  endDate?: string
-  totalMissions?: string
+  @computed get missionFee() {
+    return get(this.projectInfo, 'rewardAmount', '')
+  }
 }

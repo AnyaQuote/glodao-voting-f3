@@ -28,27 +28,28 @@
         <div class="mt-6 row no-gutters">
           <div class="col-12 col-sm-6 mb-2 mb-sm-0">
             <div class="black rounded-lg overflow-hidden">
-              <v-img max-height="250" aspect-ratio="1" contain src="@/assets/images/voting-trending--background.png" />
+              <v-img max-height="250" aspect-ratio="1" contain :src="$_get(vm.mission, 'metadata.coverImage')" />
             </div>
           </div>
 
           <div class="col-12 col-sm-6">
             <v-sheet class="px-4 py-8 d-flex flex-column ml-0 ml-sm-4 fill-height" rounded="lg" outlined>
               <span class="text-center text-h5 font-weight-600"
-                >{{ $_get(vm.mission, 'rewardAmount') }} {{ $_get(vm.mission, 'metadata.rewardToken') }}</span
+                >{{ $_get(vm.mission, 'rewardAmount') | formatNumber(2) }}
+                {{ $_get(vm.mission, 'metadata.rewardToken') }}</span
               >
               <span class="text-center">Total reward</span>
               <div class="mt-6 d-flex justify-space-between">
                 <span>Priority (30%):</span>
                 <span class="font-weight-600"
-                  >{{ $_get(vm.mission, 'priorityRewardAmount', 0) }}
+                  >{{ $_get(vm.mission, 'priorityRewardAmount', 0) | formatNumber(2) }}
                   {{ $_get(vm.mission, 'metadata.rewardToken') }}</span
                 >
               </div>
               <div class="d-flex justify-space-between">
                 <span>Community (70%):</span>
                 <span class="font-weight-600"
-                  >{{ vm.communityAmount }} {{ $_get(vm.mission, 'metadata.rewardToken') }}</span
+                  >{{ vm.communityAmount | formatNumber(2) }} {{ $_get(vm.mission, 'metadata.rewardToken') }}</span
                 >
               </div>
               <div class="d-flex justify-space-between">

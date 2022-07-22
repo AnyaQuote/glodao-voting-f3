@@ -248,6 +248,18 @@ a {
   background-color: rgba(#101010, 0.5) !important;
 }
 
+.dashed-border {
+  border-style: dashed !important;
+}
+
+.flex-grow {
+  flex: 1 1 0px !important;
+}
+
+.wspace-preline {
+  white-space: pre-line;
+}
+
 /* ----------------------------------------------------------------------------------------------- */
 .debug {
   border: 1px solid red !important;
@@ -304,5 +316,9 @@ a {
   .v-list-item__action .v-simple-checkbox {
     background: transparent !important;
   }
+}
+
+.v-slide-group__prev {
+  display: none !important;
 }
 </style>

@@ -49,19 +49,25 @@
         <v-list-group no-action>
           <template v-slot:activator>
             <v-list-item class="ml-0 pl-0">
-              <v-list-item-title class="nav-btn-text text-none bluePrimary--text">Bounty hunter</v-list-item-title>
+              <v-list-item-title class="nav-btn-text text-none neutral-10--text">Bounty hunter</v-list-item-title>
             </v-list-item>
           </template>
           <template v-slot:appendIcon>
             <v-icon color="bluePrimary">mdi-chevron-down</v-icon>
           </template>
-          <v-list-item active-class="filter-bluePrimary black--text" to="/bounty">
+          <v-list-item
+            active-class="filter-bluePrimary black--text"
+            @click="openLink('https://dev-bounty.glodao.io/bounty')"
+          >
             <v-list-item-icon class="mr-2">
               <v-img :src="require('@/assets/icons/nav-bar/bounty.svg')" class="filter-neutral10 fill-height"></v-img>
             </v-list-item-icon>
             <v-list-item-title class="text-none">Bounty hunter</v-list-item-title>
           </v-list-item>
-          <v-list-item active-class="filter-bluePrimary black--text" to="/bounty-history">
+          <v-list-item
+            active-class="filter-bluePrimary black--text"
+            @click="openLink('https://dev-bounty.glodao.io/bounty-history')"
+          >
             <v-list-item-icon class="mr-2">
               <v-img
                 :src="require('@/assets/icons/nav-bar/launchpad.svg')"
@@ -134,7 +140,9 @@
         <v-list-group no-action class="">
           <template v-slot:activator>
             <v-list-item class="ml-0 pl-0">
-              <v-list-item-title class="nav-btn-text text-none neutral10--text">DAO Voting</v-list-item-title>
+              <v-list-item-title class="nav-btn-text text-none neutral10--text blue-diversity--text"
+                >DAO Voting</v-list-item-title
+              >
             </v-list-item>
           </template>
           <template v-slot:appendIcon>
@@ -235,7 +243,7 @@ export default class NavigationDrawer extends Vue {
   authStore = this.providers.authStore
 
   openLink(url) {
-    window.open(url, '_blank')
+    window.open(url, '_self')
   }
   changeTheme() {
     this.providers.toggleLightMode(this.$vuetify)

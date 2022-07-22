@@ -10,7 +10,7 @@
       <v-radio-group mandatory :value="vm.missionInfo.type" @change="vm.changeMissionInfo('type', $event)">
         <div class="row no-gutters">
           <div class="col-6 pr-4">
-            <v-sheet class="rounded pa-5" outlined :class="isActive('social')">
+            <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('social')">
               <v-radio color="blue-diversity" value="social">
                 <template #label>
                   <span class="font-18 font-weight-bold" :class="isActive('social')">Social mission</span>
@@ -21,11 +21,14 @@
               </div>
             </v-sheet>
           </div>
+
           <div class="col-6">
             <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('lte')">
-              <v-radio color="blue-diversity" value="lte">
+              <v-radio color="blue-diversity" value="lte" disabled>
                 <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('lte')">Learn to earn mission</span>
+                  <span class="font-18 font-weight-bold" :class="isActive('lte')">
+                    <span> Learn to earn mission (Comming soon)</span>
+                  </span>
                 </template>
               </v-radio>
               <div class="text-subtitle-2 font-weight-regular">Setting the project document and the quiz</div>
@@ -61,7 +64,7 @@
         </div>
         <app-file-upload
           isImageFile
-          :rules="[$rules.required, $rules.maxSize(1000000), $rules.isImage]"
+          :rules="[$rules.required, $rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage]"
           :value="$_get(vm.missionInfo, 'missionCover', null)"
           @change="vm.changeMissionInfo('missionCover', $event)"
           class="mt-2"
@@ -105,11 +108,12 @@
       <v-divider class="dashed-border" />
 
       <!-- -------------------------------------- BUTTONS --------------------------------------------------------- -->
-      <div class="row no-gutters mt-7">
-        <div class="col-6 pr-4">
-          <v-btn class="col-6" depressed outlined height="40" color="neutral-10" block @click="back"> Cancel </v-btn>
+      <div class="d-flex mt-7">
+        <div class="flex-grow">
+          <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Cancel </v-btn>
         </div>
-        <div class="col-6">
+        <div class="px-4" />
+        <div class="flex-grow">
           <v-btn
             class="text-none"
             :class="valid && 'linear-blue--bg white--text'"
@@ -134,6 +138,7 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
 import { Observer } from 'mobx-vue'
+import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 
 @Observer
 @Component({
@@ -146,6 +151,7 @@ import { Observer } from 'mobx-vue'
 export default class MissionInfoForm extends Vue {
   @Inject() vm!: NewMissionViewModel
   valid = true
+  MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   next() {
     this.valid && this.vm.changeStep(2)
   }

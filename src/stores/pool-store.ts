@@ -15,8 +15,8 @@ import { takeUntil, takeWhile } from 'rxjs/operators'
 export class PoolStore {
   @observable poolData: VotingPool
   @observable participants = 0
-  @observable requiredAmount = Zero
-  @observable optionalAmount = Zero
+  @observable tokenAAmount = Zero
+  @observable tokenBAmount = Zero
   @observable votedYesPercent = Zero
   @observable votedYesWeight = Zero
   @observable votedNoPercent = Zero
@@ -86,8 +86,8 @@ export class PoolStore {
     if (contract) {
       const {
         owner,
-        requiredAmount,
-        optionalAmount,
+        tokenAAmount,
+        tokenBAmount,
         poolType,
         votedYesPercent,
         votedYesWeight,
@@ -104,8 +104,8 @@ export class PoolStore {
       this.votedNoWeight = votedNoWeight!
       this.completed = completed!
       this.cancelled = cancelled!
-      this.requiredAmount = requiredAmount!
-      this.optionalAmount = optionalAmount!
+      this.tokenAAmount = tokenAAmount!
+      this.tokenBAmount = tokenBAmount!
       this.approvedUsers = approvedUsers!
       this.rejectedUsers = rejectedUsers!
     }
@@ -153,12 +153,22 @@ export class PoolStore {
   @computed get tokenName() {
     return this.poolData.tokenName
   }
+  @computed get tokenBName() {
+    return this.poolData.data?.optionalTokenName
+  }
   @computed get totalMission() {
     return this.poolData.totalMission
   }
-  @computed get rewardPerMission() {
+  @computed get rewardPerMissionA() {
     try {
-      return this.requiredAmount.divUnsafe(FixedNumber.from(this.totalMission))
+      return this.tokenAAmount.divUnsafe(FixedNumber.from(this.totalMission))
+    } catch (error) {
+      return Zero
+    }
+  }
+  @computed get rewardPerMissionB() {
+    try {
+      return this.tokenBAmount.divUnsafe(FixedNumber.from(this.totalMission))
     } catch (error) {
       return Zero
     }

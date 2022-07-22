@@ -35,7 +35,7 @@
       </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.maxSize(1000000), $rules.isImage, $rules.required]"
+        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'projectLogo', null)"
         @change="vm.changeProjectInfo('projectLogo', $event)"
       />
@@ -49,30 +49,18 @@
       </div>
       <app-file-upload
         isImageFile
-        :rules="[$rules.maxSize(1000000), $rules.isImage, $rules.required]"
+        :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
         :value="$_get(vm.projectInfo, 'projectCover', null)"
         @change="vm.changeProjectInfo('projectCover', $event)"
       />
 
       <div class="font-18 font-weight-bold mt-6">Field of project</div>
-      <div class="neutral10--text font-weight-light mb-1">Select some keyword about your project</div>
-      <v-autocomplete
-        :value="$_get(vm.projectInfo, 'fields')"
-        @change="vm.changeProjectInfo('fields', $event)"
-        :items="fields"
-        deletable-chips
-        multiple
-        small-chips
-        solo
-        flat
-        outlined
-      >
-      </v-autocomplete>
+      <app-autocomplete :value="$_get(vm.projectInfo, 'fields')" @onChange="vm.changeProjectInfo('fields', $event)" />
 
       <!-- ===== SOCIAL LINKS FIELDS ===== -->
       <div class="d-flex flex-column flex-md-row align-md-center justify-space-between">
         <span class="font-18 font-weight-bold"> Website and social link<span class="app-red--text">*</span></span>
-        <i class="text-subtitle-2 font-weight-regular">*Select a link for each types</i>
+        <i class="text-subtitle-2 font-weight-regular">*Website link is required</i>
       </div>
       <app-socials-field
         :value="$_get(vm.projectInfo, 'socialLinks')"
@@ -96,6 +84,7 @@
 </template>
 
 <script lang="ts">
+import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 
@@ -104,14 +93,14 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
     'image-upload-field': () => import('@/components/image-upload-field.vue'),
     'app-socials-field': () => import('@/components/app-socials-field.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
+    'app-autocomplete': () => import('../common/app-autocomplete.vue'),
   },
 })
 export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('project-info-form') form
   valid = false
-  fields = ['Gaming', 'NFT', 'Finance']
-
+  MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   submit() {
     this.form.validate() && this.vm.nextStep(1.2)
   }

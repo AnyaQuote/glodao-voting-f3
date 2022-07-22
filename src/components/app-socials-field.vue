@@ -14,11 +14,11 @@
         placeholder="Choose platform"
       >
         <template v-slot:selection="{ item }">
-          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referenceData, `${item}.icon`) }}</v-icon>
+          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referrenceIcons, `${item}`) }}</v-icon>
           <span class="text-truncate text-subtitle-1 neutral-10--text text-capitalize">{{ item }}</span>
         </template>
         <template v-slot:item="{ item }">
-          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referenceData, `${item}.icon`) }}</v-icon>
+          <v-icon color="blue-diversity" class="mr-3">{{ $_get(referrenceIcons, `${item}`) }}</v-icon>
           <span class="text-subtitle-1 neutral10--text text-capitalize">{{ item }}</span>
         </template>
       </app-select>
@@ -52,7 +52,8 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { set } from 'lodash-es'
+import { set, toNumber } from 'lodash-es'
+import { EMPTY_ARRAY, EMPTY_OBJECT, INPUT_MODE, OUTPUT_MODE, SOCIAL_ICONS } from '@/constants'
 
 interface LinkInput {
   type?: string
@@ -63,66 +64,61 @@ interface LinkInput {
 
 const defaultLinks = {
   website: '',
-  telegram: '',
-  twitter: '',
-  discord: '',
-  whitepaper: '',
-}
-
-const INPUT_MODE = 'input'
-const OUTPUT_MODE = 'output'
-const mapSocialLinks = (mode: string, obj: LinkInput[], required = false) => {
-  return mode === INPUT_MODE
-    ? Object.entries(obj).reduce(
-        (acc: any, current) => [...acc, { type: current[0], link: current[1], id: 0, required }],
-        []
-      )
-    : obj.reduce((acc: any, current: LinkInput) => {
-        const typeName = current.id ? `${current.type}-${current.id}` : `${current.type}`
-        return current.type ? { ...acc, [typeName]: current.link } : acc
-      }, {})
 }
 
 @Observer
 @Component
 export default class SocialLinkFields extends Vue {
   @Prop({ required: true }) value!: any
-  readonly platforms = [
-    'website',
-    'reddit',
-    'facebook',
-    'twitter',
-    'discord',
-    'youtube',
-    'github',
-    'telegram',
-    'whitepaper',
-    'others',
-  ]
-  referenceData = {
-    website: { icon: 'fas fa-globe', id: 0 },
-    reddit: { icon: 'fab fa-reddit', id: 0 },
-    facebook: { icon: 'fab fa-facebook', id: 0 },
-    twitter: { icon: 'fab fa-twitter', id: 0 },
-    discord: { icon: 'fab fa-discord', id: 0 },
-    telegram: { icon: 'fab fa-telegram', id: 0 },
-    youtube: { icon: 'fab fa-youtube', id: 0 },
-    github: { icon: 'fab fa-github', id: 0 },
-    whitepaper: { icon: 'fas fa-file-alt', id: 0 },
-    others: { icon: 'fas fa-link', id: 0 },
+  readonly referrenceIcons = SOCIAL_ICONS
+  readonly platforms = Object.keys(this.referrenceIcons)
+  data: LinkInput[] = []
+  id = {
+    website: 0,
+    reddit: 0,
+    facebook: 0,
+    twitter: 0,
+    discord: 0,
+    telegram: 0,
+    youtube: 0,
+    github: 0,
+    whitepaper: 0,
+    others: 0,
   }
 
-  data: LinkInput[] = []
+  mapSocialLinks(mode: string, obj: LinkInput[], requiredType = ['website']) {
+    let result
+    if (mode === INPUT_MODE) {
+      result = Object.entries(obj).reduce((acc: any, current) => {
+        // For `website-1`, `website-2`, isRequired will evaluate to false
+        // Until type is exactly as `website`, than isRequired will evaluate to true
+        // In short, only the first `website` without numbered is accepted as required
+        const isRequired = requiredType.includes(current[0])
+        const [type, strTypeId] = current[0].split('-')
+        const typeId = toNumber(strTypeId || 0)
+        const link = current[1]
+        this.id[type] = Math.max(this.id[type], typeId)
+        return [...acc, { type, link, id: typeId, required: isRequired }]
+      }, EMPTY_ARRAY)
+    } else {
+      result = obj.reduce((acc: any, current: LinkInput) => {
+        const typeName = current.id ? `${current.type}-${current.id}` : `${current.type}`
+        return current.type ? { ...acc, [typeName]: current.link } : acc
+      }, EMPTY_OBJECT)
+    }
+    return result
+  }
 
   mounted() {
-    this.data = mapSocialLinks(INPUT_MODE, this.value || defaultLinks, true)
+    this.data = this.mapSocialLinks(INPUT_MODE, this.value || defaultLinks)
   }
 
   onChange(position: number, property: string, value: string) {
-    property === 'type' && (this.data[position].id = ++this.referenceData[value].id)
-
+    if (property === 'type') {
+      this.data[position].id = ++this.id[value]
+    }
     set(this.data[position], property, value)
-    this.$emit('change', mapSocialLinks(OUTPUT_MODE, this.data))
+    this.$emit('change', this.mapSocialLinks(OUTPUT_MODE, this.data))
   }
 
   add() {

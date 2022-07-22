@@ -5,6 +5,7 @@
     :disabled="disabled"
     depressed
     rounded
+    :height="height"
     @click="walletStore.switchNetwork(chainType, +requiredChainId)"
     :block="block"
     :large="large"
@@ -14,9 +15,10 @@
     <span>{{ connectText || 'Connect Wallet' }}</span>
   </v-btn>
   <v-btn
-    class="text-none btn-text rounded"
+    class="linear-blue--bg text-none btn-text rounded"
     :class="applyClass"
     :disabled="disabled"
+    :height="height"
     depressed
     rounded
     color="primary"
@@ -26,7 +28,9 @@
     :large="large"
     :small="small"
   >
-    <span :class="{ 'small-text font-weight-bold': smallText }">{{ switchText || 'Switch to ' + networkName }}</span>
+    <span class="font-weight-bold" :class="{ 'text-subtitle-2': smallText, 'font-18': !smallText }">{{
+      switchText || 'Switch to ' + networkName
+    }}</span>
   </v-btn>
   <div v-else>
     <slot />
@@ -35,6 +39,7 @@
 
 <script lang="ts">
 import { blockchainHandler, ChainType } from '@/blockchainHandlers'
+import { APP_CHAIN, APP_CHAIN_ID } from '@/constants'
 import { walletStore } from '@/stores/wallet-store'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -42,8 +47,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 @Observer
 @Component
 export default class ConnectMetamask extends Vue {
-  @Prop() requiredChain!: ChainType
-  @Prop() requiredChainId!: number
+  @Prop({ default: APP_CHAIN }) requiredChain!: ChainType
+  @Prop({ default: APP_CHAIN_ID }) requiredChainId!: number
   @Prop({ default: '' }) connectText!: string
   @Prop({ default: '' }) switchText!: string
   @Prop({ default: false }) block!: boolean
@@ -52,6 +57,7 @@ export default class ConnectMetamask extends Vue {
   @Prop({ default: false }) smallText!: boolean
   @Prop({ default: '' }) applyClass!: string
   @Prop({ default: false }) disabled!: boolean
+  @Prop({ default: '40' }) height!: boolean
 
   walletStore = walletStore
 
