@@ -209,10 +209,10 @@ export class NewMissionViewModel {
   }
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
-    const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
+    // const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'upcomming'
 
-    const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
+    // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
     const isSocialMission = missionInfo.type === 'social'
 
@@ -233,25 +233,28 @@ export class NewMissionViewModel {
 
     const optRewardAmount = pool.data?.optionalRewardAmount
     const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
-    const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
+    // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
     const optTokenAddress = pool.data?.optionalTokenAddress
     const optTokenLogo = pool.data?.optionalTokenLogo
     const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
-    const optionalToken: OptionalTokenItem = {
-      rewardAmount: optRewardAmount,
-      decimal: optTokenDecimal,
-      priorityRewardAmount: optTokenPriorityRewardAmount,
-      tokenContractAddress: optTokenAddress,
-      tokenLogo: optTokenLogo,
-      tokenBasePrice: optTokenBasePrice,
-    }
+    const optTokenName = pool.data?.optionalTokenName
+    // const optionalToken: OptionalTokenItem = {
+    //   rewardAmount: optRewardAmount,
+    //   decimal: optTokenDecimal,
+    //   priorityRewardAmount: optTokenPriorityRewardAmount,
+    //   tokenContractAddress: optTokenAddress,
+    //   tokenLogo: optTokenLogo,
+    //   tokenBasePrice: optTokenBasePrice,
+    // }
 
     const mission: Mission = {
-      rewardAmount,
+      // OPTIONAL TO MAIN TOKEN FOR MISSION
+      rewardAmount: optRewardAmount?.toString(),
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
-      tokenBasePrice,
+      tokenBasePrice: optTokenBasePrice,
+      // ==================================
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
@@ -260,17 +263,19 @@ export class NewMissionViewModel {
       poolId: pool.id,
       data: setting,
       status,
-      optionalTokens: [optionalToken],
+      optionalTokens: [],
       metadata: {
         shortDescription: missionInfo.shortDescription,
         projectLogo: pool.data?.projectLogo,
         coverImage,
         caption: missionInfo.shortDescription,
-        decimals: pool.data?.decimals,
-        rewardToken: pool.tokenName,
+        // OPTIONAL TO MAIN
+        decimals: toNumber(optTokenDecimal),
+        rewardToken: optTokenName,
+        tokenLogo: optTokenLogo,
+        // ===============
         socialLinks: socialLinks || [],
         website: website || '#',
-        tokenLogo,
       },
     }
     return mission

@@ -11,7 +11,7 @@ export interface Metadata {
   optionalRewardTokenDecimals?: string | number
   optionalTokenAddress?: string | number
   optionalRewardAmount?: string | number
-  optionalTokenName?: string | number
+  optionalTokenName?: string
   optionalTokenLogo?: string
 }
 
