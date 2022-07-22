@@ -307,7 +307,9 @@ export class NewMissionViewModel {
 
   @computed get rewardPerMission() {
     try {
-      return FixedNumber.from(this.pool?.rewardAmount).divUnsafe(FixedNumber.from(this.pool?.totalMission))
+      return FixedNumber.from(this.pool?.data?.optionalRewardAmount).divUnsafe(
+        FixedNumber.from(this.pool?.totalMission)
+      )
     } catch (_) {
       return Zero
     }
