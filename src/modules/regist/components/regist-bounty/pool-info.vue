@@ -11,10 +11,10 @@
 
     <v-form ref="fund-info-form" v-model="valid" class="pa-6">
       <!-- ----------------------------------- REWARD INFORMATION ----------------------------------------- -->
-      <div class="blue-diversity--text font-18 font-weight-bold">Reward Information</div>
+      <div class="blue-diversity--text font-18 font-weight-bold">Mission Information</div>
       <div class="flex-grow-1 mb-2 d-flex justify-space-between">
         <span class="font-weight-bold font-18 mr-1">Total missions<span class="app-red--text">*</span></span>
-        <i class="neutral-10--text">*Each mission requires amount of 50$</i>
+        <i class="red--text">*Each mission requires amount of 50 BUSD</i>
       </div>
       <app-text-field
         class="font-18"
@@ -32,10 +32,10 @@
       ></app-text-field> -->
       <div class="d-flex flex-column flex-sm-row">
         <div class="flex-grow-1">
-          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
+          <div class="font-18 font-weight-bold mb-2">Mission fee amount</div>
           <app-text-field
             :rules="[$rules.required, $rules.floatNumberOnly]"
-            :value="vm.rewardAmount"
+            :value="vm.missionFee"
             disabled
             placeholder="Enter amount"
             class="pb-0"

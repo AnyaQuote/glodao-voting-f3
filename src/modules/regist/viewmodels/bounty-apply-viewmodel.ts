@@ -225,17 +225,19 @@ export class BountyApplyViewModel {
 
     // update voting pool
     const data: VotingPool = {
+      ownerAddress,
       projectOwner: this._auth.projectOwnerId,
       projectName: this.projectInfo.projectName?.trim(),
       type: VotingPoolType.BOUNTY,
       poolId,
-      ownerAddress,
-      tokenAddress: this.projectInfo.tokenAddress,
-      tokenName: this.projectInfo.tokenName,
       status,
+      // TOKEN A
+      tokenAddress: this.projectInfo.tokenAddress,
+      rewardAmount: this.projectInfo.rewardAmount,
+      tokenName: this.projectInfo.tokenName,
+      // ========
       unicodeName,
       totalMission: this.projectInfo.totalMissions,
-      rewardAmount: this.rewardAmount,
       votingStart,
       votingEnd,
       startDate: this.projectInfo.startDate,
@@ -249,12 +251,16 @@ export class BountyApplyViewModel {
         projectLogo,
         projectCover,
         poolType,
+        // TOKEN A
         decimals: this.rewardTokenDecimals,
+        // =======
+        // TOKEN B
         optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
         optionalTokenAddress: this.projectInfo.optionalTokenAddress,
         optionalRewardAmount: this.projectInfo.optionalRewardAmount,
         optionalTokenName: this.projectInfo.optionalTokenName,
         optionalTokenLogo: optionalTokenLogo,
+        // ======
       },
     }
     return data
@@ -319,10 +325,8 @@ export class BountyApplyViewModel {
 
   // Hard coded each mission cost 50$
   @computed get rewardPerMission() {
-    return '50'
-
     try {
-      return FixedNumber.from(this.projectInfo?.rewardAmount).divUnsafe(
+      return FixedNumber.from(this.projectInfo?.optionalRewardAmount).divUnsafe(
         FixedNumber.from(this.projectInfo?.totalMissions)
       )
     } catch (error) {
@@ -330,7 +334,7 @@ export class BountyApplyViewModel {
     }
   }
 
-  @computed get rewardAmount() {
+  @computed get missionFee() {
     if (this.projectInfo.totalMissions) {
       return (+this.projectInfo.totalMissions * 50).toString()
     }
