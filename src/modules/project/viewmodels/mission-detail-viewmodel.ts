@@ -19,6 +19,7 @@ export class MissionDetailViewModel {
   private _snackbar = appProvider.snackbar
   private _api = appProvider.api
   private _router = appProvider.router
+  private _auth = appProvider.authStore
 
   constructor(unicodeName: string, missionId: string) {
     this.fetchMissionDetail(unicodeName, missionId)
@@ -29,14 +30,17 @@ export class MissionDetailViewModel {
       this.loading = true
       yield waitForGlobalLoadingFinished()
       // Get pool
-      const pools = yield this._api.voting.find<VotingPool>({ unicodeName }, { _limit: 1 })
+      const pools = yield this._api.voting.find<VotingPool>(
+        { unicodeName, projectOwner: this._auth.projectOwnerId },
+        { _limit: 1 }
+      )
       if (isEmpty(pools)) {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.pool = pools[0]
 
       // Get mission
-      const missions = yield this._api.tasks.find<Mission>({ poolId: this.pool.id, id: missionId }, { _limit: 1 })
+      const missions = yield this._api.tasks.find<Mission>({ votingPool: this.pool.id, id: missionId }, { _limit: 1 })
       if (isEmpty(missions)) {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
