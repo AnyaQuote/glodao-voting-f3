@@ -231,7 +231,7 @@ export class NewMissionViewModel {
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
-    const optRewardAmount = pool.data?.optionalRewardAmount
+    // const optRewardAmount = pool.data?.optionalRewardAmount
     const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
     // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
     const optTokenAddress = pool.data?.optionalTokenAddress
@@ -249,7 +249,7 @@ export class NewMissionViewModel {
 
     const mission: Mission = {
       // OPTIONAL TO MAIN TOKEN FOR MISSION
-      rewardAmount: optRewardAmount?.toString(),
+      rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
