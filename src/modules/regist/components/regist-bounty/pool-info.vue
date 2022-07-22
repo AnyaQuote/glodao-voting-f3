@@ -14,7 +14,7 @@
       <div class="blue-diversity--text font-18 font-weight-bold">Mission Information</div>
       <div class="flex-grow-1 mb-2 d-flex justify-space-between">
         <span class="font-weight-bold font-18 mr-1">Total missions<span class="app-red--text">*</span></span>
-        <i class="red--text">*Each mission requires amount of 50 BUSD</i>
+        <i class="red--text">*Each mission requires amount of {{ vm.feePerMission }} BUSD</i>
       </div>
       <app-text-field
         class="font-18"
