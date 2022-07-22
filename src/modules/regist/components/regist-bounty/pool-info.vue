@@ -125,9 +125,9 @@
         dateLabel="Start date"
         timeLabel="Start time"
         :rules="[$rules.required]"
-        :minDate="$_get(vm.projectInfo, 'votingStart')"
-        :maxDate="$_get(vm.projectInfo, 'endDate')"
-        :value="$_get(vm.projectInfo, 'startDate')"
+        :minDate="vm.votingStart"
+        :maxDate="vm.projectEndDate"
+        :value="vm.projectStartDate"
         @change="vm.changeProjectInfo('startDate', $event)"
       />
       <app-datetime-picker
@@ -135,9 +135,9 @@
         dateLabel="End date"
         timeLabel="End time"
         :rules="[$rules.required]"
-        :disabled="!$_get(vm.projectInfo, 'startDate')"
-        :minDate="$_get(vm.projectInfo, 'startDate')"
-        :value="$_get(vm.projectInfo, 'endDate')"
+        :disabled="!vm.projectStartDate"
+        :minDate="vm.projectStartDate"
+        :value="vm.projectEndDate"
         @change="vm.changeProjectInfo('endDate', $event)"
       />
       <!-- ------------------------------------------------------------------------------------------------- -->

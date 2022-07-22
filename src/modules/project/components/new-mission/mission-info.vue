@@ -87,16 +87,20 @@
           class="mt-4"
           dateLabel="Start date"
           timeLabel="Start time"
+          :minDate="vm.projectStartDate"
+          :maxDate="vm.missionStartMaxDate"
           :rules="[$rules.required]"
-          :value="$_get(vm.missionInfo, 'startDate')"
+          :value="vm.missionStartDate"
           @change="vm.changeMissionInfo('startDate', $event)"
         />
         <app-datetime-picker
           dateLabel="End date"
           timeLabel="End time"
           :rules="[$rules.required]"
-          :disabled="!$_get(vm.missionInfo, 'startDate')"
-          :value="$_get(vm.missionInfo, 'endDate')"
+          :minDate="vm.missionStartDate"
+          :maxDate="vm.projectEndDate"
+          :disabled="!vm.missionStartDate"
+          :value="vm.missionEndDate"
           @change="vm.changeMissionInfo('endDate', $event)"
         />
       </div>

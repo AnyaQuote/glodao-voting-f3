@@ -52,8 +52,9 @@ export class NewMissionViewModel {
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
       this.pageLoading = true
+
       const [pools] = yield Promise.all([
-        this._api.voting.find({ unicodeName, ownerAddress: this._auth.attachedAddress }, { _limit: 1 }),
+        this._api.voting.find({ unicodeName, projectOwner: this._auth.projectOwnerId }, { _limit: 1 }),
         // this._api.getAverageCommunityReward(10),
       ])
 
@@ -374,5 +375,25 @@ export class NewMissionViewModel {
         this.quoteTweet.enabled ||
         this.commentTweet.enabled ||
         this.telegramChat.enabled)
+  }
+
+  @computed get projectStartDate() {
+    return get(this.pool, 'startDate', '')
+  }
+
+  @computed get projectEndDate() {
+    return get(this.pool, 'endDate', '')
+  }
+
+  @computed get missionStartDate() {
+    return get(this.missionInfo, 'startDate', '')
+  }
+
+  @computed get missionStartMaxDate() {
+    return this.missionEndDate || this.projectEndDate
+  }
+
+  @computed get missionEndDate() {
+    return get(this.missionInfo, 'endDate', '')
   }
 }

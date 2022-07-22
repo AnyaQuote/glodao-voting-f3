@@ -24,8 +24,8 @@
         <v-date-picker
           reactive
           :color="pickerBackground"
-          :min="minDate"
-          :max="maxDate"
+          :min="localMinDate"
+          :max="localMaxDate"
           :value="data.date"
           @input="onDateTimeChange('date', $event)"
         />
@@ -54,7 +54,7 @@
         :close-on-content-click="false"
       >
         <v-time-picker
-          format="ampm"
+          format="24hr"
           :color="pickerBackground"
           :value="data.time"
           @input="onDateTimeChange('time', $event)"
@@ -68,7 +68,7 @@
 import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { getValueByFormat, toISO, isDateInRange } from '@/helpers/date-helper'
+import { getValueByFormat, toISO, isDateInRange, toMoment } from '@/helpers/date-helper'
 import moment from 'moment'
 
 @Observer
@@ -110,14 +110,6 @@ export default class AppDateTimePicker extends Vue {
     })
   }
 
-  // /**
-  //  * Check if all values in object is not empty string
-  //  * @param value object
-  //  */
-  // checkPropNotEmpty(value: { [key: string]: string }) {
-  //   return Object.values(value).every((x) => x !== '')
-  // }
-
   onDateTimeChange(property: string, value: string) {
     this.data = set(this.data, property, value)
     if (this.data.date && this.data.time && !this.errorMessage) {
@@ -131,10 +123,10 @@ export default class AppDateTimePicker extends Vue {
 
   get errorMessage() {
     if (this.data.date && this.data.time) {
-      if (this.minDate && !moment(toISO(this.data)).isAfter(moment(this.minDate))) {
-        return `Selected date must be after ${moment(this.minDate).format('DD/MM/YYYY HH:mm')}`
-      } else if (this.maxDate && !moment(toISO(this.data)).isBefore(moment(this.maxDate))) {
-        return `Selected date must be before ${moment(this.maxDate).format('DD/MM/YYYY HH:mm')}`
+      if (this.minDate && !toMoment(this.data).isAfter(moment(this.minDate))) {
+        return `Start date must be after ${moment(this.minDate).format('DD/MM/YYYY HH:mm')}`
+      } else if (this.maxDate && !toMoment(this.data).isBefore(moment(this.maxDate))) {
+        return `End date must be before ${moment(this.maxDate).format('DD/MM/YYYY HH:mm')}`
       }
     }
     return ''
@@ -142,6 +134,14 @@ export default class AppDateTimePicker extends Vue {
 
   get pickerBackground() {
     return this.$vuetify.theme.dark ? 'blue-2 white--text' : 'blue-diversity white--text'
+  }
+
+  get localMinDate() {
+    return moment(this.minDate).local().format().slice(0, 10)
+  }
+
+  get localMaxDate() {
+    return moment(this.maxDate).local().format().slice(0, 10)
   }
 }
 </script>
