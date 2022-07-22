@@ -356,4 +356,16 @@ export class BountyApplyViewModel {
   @computed get missionFee() {
     return get(this.projectInfo, 'rewardAmount', '')
   }
+
+  @computed get votingStart() {
+    return get(this.projectInfo, 'votingStart', '')
+  }
+
+  @computed get projectStartDate() {
+    return get(this.projectInfo, 'startDate', '')
+  }
+
+  @computed get projectEndDate() {
+    return get(this.projectInfo, 'endDate', '')
+  }
 }
