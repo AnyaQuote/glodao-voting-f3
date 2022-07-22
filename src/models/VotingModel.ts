@@ -9,7 +9,7 @@ export interface Metadata {
   poolType?: string
   decimals?: number
   optionalRewardTokenDecimals?: string | number
-  optionalTokenAddress?: string | number
+  optionalTokenAddress?: string
   optionalRewardAmount?: string | number
   optionalTokenName?: string
   optionalTokenLogo?: string
