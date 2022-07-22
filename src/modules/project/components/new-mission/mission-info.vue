@@ -21,11 +21,14 @@
               </div>
             </v-sheet>
           </div>
+
           <div class="col-6">
             <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('lte')">
-              <v-radio color="blue-diversity" value="lte">
+              <v-radio color="blue-diversity" value="lte" disabled>
                 <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('lte')">Learn to earn mission</span>
+                  <span class="font-18 font-weight-bold" :class="isActive('lte')">
+                    <span> Learn to earn mission (Comming soon)</span>
+                  </span>
                 </template>
               </v-radio>
               <div class="text-subtitle-2 font-weight-regular">Setting the project document and the quiz</div>
