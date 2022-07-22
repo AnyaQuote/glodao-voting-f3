@@ -23,7 +23,9 @@
           <div class="text-subtitle-1">
             <div class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Total reward</div>
-              <div class="font-weight-bold">{{ $_get(mission, 'rewardAmount') | formatNumber(2) }}</div>
+              <div class="font-weight-bold">
+                {{ $_get(mission, 'rewardAmount') | formatNumber(2) }} {{ $_get(mission, 'metadata.rewardToken') }}
+              </div>
             </div>
 
             <div v-if="mission.type === 'learn' || mission.type === 'iat'" class="d-flex justify-space-between mb-2">
@@ -32,7 +34,10 @@
             </div>
             <div v-else class="d-flex justify-space-between mb-2">
               <div class="neutral10--text">Priority reward</div>
-              <div class="font-weight-bold">{{ $_get(mission, 'priorityRewardAmount', 0) }}</div>
+              <div class="font-weight-bold">
+                {{ $_get(mission, 'priorityRewardAmount', 0) | formatNumber(2) }}
+                {{ $_get(mission, 'metadata.rewardToken') }}
+              </div>
             </div>
 
             <div class="d-flex justify-space-between mb-2">
