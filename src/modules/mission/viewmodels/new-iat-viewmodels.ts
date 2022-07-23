@@ -108,6 +108,7 @@ export class NewInAppTrialViewModel {
     const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const [coverImage, ...screenshots] = imageSources
     const { website, ...socialLinks } = pool.data?.socialLinks
+    const optTokenAddress = pool.data?.optionalTokenAddress
     // Populate app trial task metadata
     const metadata: MetaData = {
       shortDescription: info.appDescription,
@@ -117,6 +118,7 @@ export class NewInAppTrialViewModel {
       rewardToken: pool.tokenName,
       appStoreUrl: info.appStoreLink,
       googlePlayUrl: info.chPlayLink,
+      tokenContractAddress: optTokenAddress,
       screenshots,
       socialLinks,
       coverImage,
