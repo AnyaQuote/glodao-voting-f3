@@ -181,7 +181,8 @@ export class VotingHandler implements IVotingContract {
         poolInfo.optionalTokenAddress ? poolInfo.optionalTokenAddress : ETHER_ZERO_ADDRESS,
         poolInfo.optionalTokenAddress
           ? bnHelper.toDecimalString(poolInfo.optionalRewardAmount!.toString(), optionalTokenDecimals)
-          : 0
+          : 0,
+        true
       )
       const res = await sendRequest(f, account, bnbFee)
 
