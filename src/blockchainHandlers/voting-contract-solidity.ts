@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { appProvider } from '@/app-providers'
 import { ETHER_ZERO_ADDRESS, HUNDRED, Zero } from '@/constants'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { ProjectInfo } from '@/models/VotingModel'
 import { walletStore } from '@/stores/wallet-store'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { chunk, toNumber } from 'lodash-es'
+import { chunk, get } from 'lodash-es'
 import Web3 from 'web3'
 import { blockchainHandler } from '.'
 import { IVotingContract, PoolInfo } from './ido-contract-interface'
@@ -95,6 +96,16 @@ export class VotingHandler implements IVotingContract {
   }
 
   async getPoolInfo(poolId) {
+    const votingPools = await appProvider.api.voting.find(
+      {
+        poolId,
+      },
+      { _limit: 1 }
+    )
+    const votingPool: any = votingPools[0]
+    const tokenADecimals = get(votingPool, 'data.decimals', 18)
+    const tokenBDecimals = get(votingPool, 'data.optionalRewardTokenDecimals', 18)
+
     const [votingPoolInfo, approvedUsers, rejectedUsers, stakePoolInfo] = await blockchainHandler.etherBatchRequest(
       this.web3,
       [
@@ -134,8 +145,8 @@ export class VotingHandler implements IVotingContract {
     }
 
     this._owner = (votingPoolInfo as any).owner
-    this._tokenAAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenAAmount)
-    this._tokenBAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenBAmount)
+    this._tokenAAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenAAmount, tokenADecimals)
+    this._tokenBAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenBAmount, tokenBDecimals)
     this._poolType = (votingPoolInfo as PoolInfo).poolType!
     this._votedYesPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedYesPercent).mulUnsafe(HUNDRED)
     this._votedYesWeight = votedYesWeight
