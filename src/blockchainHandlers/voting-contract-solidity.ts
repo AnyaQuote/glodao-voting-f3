@@ -47,10 +47,10 @@ export class VotingHandler implements IVotingContract {
     this.web3 = web3
     try {
       this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), address)
-      this.stakingContract = new web3.eth.Contract(
-        require('./abis/stake.abi.json'),
-        process.env.VUE_APP_STAKE_CONTRACT_ADDRESS
-      )
+      // this.stakingContract = new web3.eth.Contract(
+      //   require('./abis/stake.abi.json'),
+      //   process.env.VUE_APP_STAKE_CONTRACT_ADDRESS
+      // )
     } catch (error) {
       console.error(error)
     }
@@ -64,10 +64,10 @@ export class VotingHandler implements IVotingContract {
     const web3 = walletStore.web3 as any
     this.web3 = web3
     this.votingContract = new web3.eth.Contract(require('./abis/voting.abi.json'), process.env.VUE_APP_VOTING_SOLIDITY)
-    this.stakingContract = new web3.eth.Contract(
-      require('./abis/stake.abi.json'),
-      process.env.VUE_APP_STAKE_CONTRACT_ADDRESS
-    )
+    // this.stakingContract = new web3.eth.Contract(
+    //   require('./abis/stake.abi.json'),
+    //   process.env.VUE_APP_STAKE_CONTRACT_ADDRESS
+    // )
   }
 
   async getPoolType() {
@@ -106,15 +106,11 @@ export class VotingHandler implements IVotingContract {
     const tokenADecimals = get(votingPool, 'data.decimals', 18)
     const tokenBDecimals = get(votingPool, 'data.optionalRewardTokenDecimals', 18)
 
-    const [votingPoolInfo, approvedUsers, rejectedUsers, stakePoolInfo] = await blockchainHandler.etherBatchRequest(
-      this.web3,
-      [
-        this.votingContract.methods.poolInfos(poolId),
-        this.votingContract.methods.getApproveds(poolId),
-        this.votingContract.methods.getRejects(poolId),
-        this.stakingContract.methods.poolInfo(0),
-      ]
-    )
+    const [votingPoolInfo, approvedUsers, rejectedUsers] = await blockchainHandler.etherBatchRequest(this.web3, [
+      this.votingContract.methods.poolInfos(poolId),
+      this.votingContract.methods.getApproveds(poolId),
+      this.votingContract.methods.getRejects(poolId),
+    ])
 
     // get weight
     let votedYesWeight = Zero
@@ -181,7 +177,8 @@ export class VotingHandler implements IVotingContract {
         poolInfo.optionalTokenAddress ? poolInfo.optionalTokenAddress : ETHER_ZERO_ADDRESS,
         poolInfo.optionalTokenAddress
           ? bnHelper.toDecimalString(poolInfo.optionalRewardAmount!.toString(), optionalTokenDecimals)
-          : 0
+          : 0,
+        true
       )
       const res = await sendRequest(f, account, bnbFee)
 
