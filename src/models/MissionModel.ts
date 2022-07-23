@@ -32,6 +32,7 @@ export interface MetaData {
   caption?: string
   rewardToken?: string
   socialLinks?: any
+  tokenContractAddress?: string
   website?: string
   screenshots?: string[]
   appStoreUrl?: string

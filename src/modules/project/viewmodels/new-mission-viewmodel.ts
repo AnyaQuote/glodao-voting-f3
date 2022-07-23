@@ -285,6 +285,7 @@ export class NewMissionViewModel {
         decimals: toNumber(optTokenDecimal),
         rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
+        tokenContractAddress: optTokenAddress,
         // ===============
         socialLinks: socialLinks || [],
         website: website || '#',
