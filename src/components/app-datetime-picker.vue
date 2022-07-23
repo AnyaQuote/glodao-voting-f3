@@ -41,7 +41,7 @@
         :disabled="disabled"
         :value="data.time"
         :error-messages="errorMessage"
-        placeholder="hh:mm (am - pm)"
+        placeholder="HH:mm"
         @click="show('timePickerConfig', $event)"
       />
       <v-menu
