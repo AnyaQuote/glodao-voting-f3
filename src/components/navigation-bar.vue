@@ -29,7 +29,7 @@
                     <v-list-item-title>
                       <div
                         class="text-decoration-none px-4 text-none text-body-2 d-flex align-center cursor-pointer"
-                        @click="openLink('https://dev-bounty.glodao.io/bounty')"
+                        @click="openLink(`${bountyUrlDomain}/bounty`)"
                       >
                         <img :src="require('@/assets/icons/nav-bar/bounty.svg')" class="filter-neutral10 mr-1" />
                         Bounty project
@@ -40,7 +40,7 @@
                     <v-list-item-title>
                       <div
                         class="text-decoration-none px-4 text-none text-body-2 d-flex align-center cursor-pointer"
-                        @click="openLink('https://dev-bounty.glodao.io/bounty-history')"
+                        @click="openLink(`${bountyUrlDomain}/bounty-history`)"
                       >
                         <img :src="require('@/assets/icons/nav-bar/launchpad.svg')" class="filter-neutral10 mr-1" />
                         Bounty history
@@ -245,6 +245,7 @@ export default class NavigationBar extends Vue {
   @Inject() providers!: AppProvider
   authStore = authStore
   chainId = process.env.VUE_APP_CHAIN_ID
+  bountyUrlDomain = process.env.VUE_APP_BOUNTY_DOMAIN
 
   openLink(url) {
     console.log('test')
