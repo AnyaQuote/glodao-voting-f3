@@ -53,7 +53,7 @@ export default class AppAutoComplete extends Vue {
   @Prop({ default: defaultValue }) rules!: any[]
   @Prop({ default: defaultValue }) value!: string[]
   @Prop({ default: 'Enter keywords' }) placeholder!: string
-  @Prop({ default: 0 }) limit!: number
+  @Prop({ default: null }) limit!: number
   model: string[] = EMPTY_ARRAY
   search = NULL
 
@@ -68,25 +68,19 @@ export default class AppAutoComplete extends Vue {
   }
 
   @Watch('model')
-  onModelUpdate(value) {
-    if (value.length > this.limit) {
+  onModelUpdate(value: string[]) {
+    if (this.limit && value.length > this.limit) {
       this.$nextTick(() => this.model.pop())
     }
     this.$emit('onChange', this.model)
   }
 
   get hint() {
-    if (this.limit) {
-      return `Maximum of ${this.limit} tags`
-    }
-    return 'Press ENTER to input tag, BACKSPACE to delete tag'
+    return this.limit ? `Maximum of ${this.limit} tags` : 'Press ENTER to input tag, BACKSPACE to delete tag'
   }
 
   get appendIcon() {
-    if (this.items.length > 0) {
-      return 'mdi-chevron-down'
-    }
-    return ''
+    return this.items.length > 0 ? 'mdi-chevron-down' : ''
   }
 }
 </script>
