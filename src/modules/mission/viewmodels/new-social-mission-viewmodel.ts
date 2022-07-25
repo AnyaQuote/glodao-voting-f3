@@ -22,11 +22,10 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import { EMPTY_STRING, ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
 export class NewSocialMissionViewModel {
-  @observable step = 2
+  @observable step = 1
 
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
-  // @observable learnToEarn: LearnToEarn = {}
   @observable joinTelegram = joinTelegramDefault
   @observable followTwitter = followTwitterDefault
   @observable quoteTweet = quoteTweetDefault
@@ -35,10 +34,6 @@ export class NewSocialMissionViewModel {
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
-
-  // PREVIEW QUIZ VARIABLES
-  // @observable previewQuiz: PreviewQuiz[] = []
-  // previewSampleSize = 10
 
   private _snackbar = appProvider.snackbar
   private _router = appProvider.router
@@ -136,7 +131,7 @@ export class NewSocialMissionViewModel {
     if (this.quoteTweet.enabled) {
       socialSetting = set(socialSetting, 'twitter', [
         ...get(socialSetting, 'twitter', []),
-        { ...this.quoteTweet.setting, hashtag: [this.quoteTweet.setting.hashtag] },
+        { ...this.quoteTweet.setting },
       ])
     }
     if (this.commentTweet.enabled) {
@@ -152,7 +147,6 @@ export class NewSocialMissionViewModel {
       ])
     }
     return socialSetting
-    // }
   }
 
   /**
@@ -176,7 +170,6 @@ export class NewSocialMissionViewModel {
 
     // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-    // const isSocialMission = missionInfo.type === 'social'
 
     // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value
