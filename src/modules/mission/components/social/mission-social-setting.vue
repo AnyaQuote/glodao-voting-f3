@@ -77,7 +77,7 @@
           :rules="[(v) => !!(v && v.length) || 'This field is required']"
           placeholder="Enter your hastag"
           :value="$_get(vm.quoteTweet, 'setting.hashtag')"
-          @change="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
+          @onChange="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
         />
       </switch-field>
 
