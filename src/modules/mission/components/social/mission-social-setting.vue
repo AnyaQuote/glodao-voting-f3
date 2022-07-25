@@ -72,13 +72,12 @@
           append-icon="mdi-link"
         />
         <div class="font-18 font-weight-bold mt-6">Twitter hastag</div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
+        <app-autocomplete
+          :items="[]"
+          :rules="[(v) => !!(v && v.length) || 'This field is required']"
+          placeholder="Enter your hastag"
           :value="$_get(vm.quoteTweet, 'setting.hashtag')"
           @change="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
-          placeholder="Enter your hastag"
-          append-icon="fa-solid fa-hashtag"
         />
       </switch-field>
 
@@ -154,6 +153,7 @@ import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-v
 @Component({
   components: {
     'switch-field': () => import('../common/switch-field.vue'),
+    'app-autocomplete': () => import('@/modules/regist/components/common/app-autocomplete.vue'),
   },
 })
 export default class MissionSocialSetting extends Vue {

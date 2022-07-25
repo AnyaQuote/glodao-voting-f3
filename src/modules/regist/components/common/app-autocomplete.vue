@@ -6,15 +6,17 @@
       :items="items"
       :search-input.sync="search"
       hide-selected
-      :hint="config.hint"
-      :label="config.placeholder"
-      multiple
+      :append-icon="appendIcon"
+      :hint="hint"
+      :label="placeholder"
+      :rules="rules"
       persistent-hint
+      multiple
       small-chips
       outlined
     >
       <template v-slot:no-data>
-        <v-list-item>
+        <v-list-item v-if="items.length > 0">
           <v-list-item-content>
             <v-list-item-title>
               No results matching "<strong>{{ search }}</strong
@@ -48,11 +50,10 @@ const defaultValue = () => []
 @Component
 export default class AppAutoComplete extends Vue {
   @Prop({ default: defaultItems }) items!: string[]
+  @Prop({ default: defaultValue }) rules!: any[]
   @Prop({ default: defaultValue }) value!: string[]
-  readonly config = {
-    hint: 'Maximum of 5 tags',
-    placeholder: 'Enter keywords describe your project',
-  }
+  @Prop({ default: 'Enter keywords' }) placeholder!: string
+  @Prop({ default: 0 }) limit!: number
   model: string[] = EMPTY_ARRAY
   search = NULL
 
@@ -62,7 +63,7 @@ export default class AppAutoComplete extends Vue {
     }
   }
 
-  onChange(value) {
+  onChange(value: string[]) {
     this.model = value
   }
 
@@ -72,6 +73,20 @@ export default class AppAutoComplete extends Vue {
       this.$nextTick(() => this.model.pop())
     }
     this.$emit('onChange', this.model)
+  }
+
+  get hint() {
+    if (this.limit) {
+      return `Maximum of ${this.limit} tags`
+    }
+    return 'Press ENTER to input tag, BACKSPACE to delete tag'
+  }
+
+  get appendIcon() {
+    if (this.items.length > 0) {
+      return 'mdi-chevron-down'
+    }
+    return ''
   }
 }
 </script>
