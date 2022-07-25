@@ -9,24 +9,36 @@
         <div class="text-h6 font-weight-bold text-center">Please select type of mission to start creating</div>
         <v-radio-group mandatory v-model="type">
           <div class="d-flex flex-column">
-            <v-sheet class="rounded pa-5" outlined :class="isActive('1')">
-              <v-radio color="blue-diversity" value="1">
+            <!-- ==================================================================================================================== -->
+            <v-sheet class="rounded pa-5" outlined :class="isActive('social')">
+              <v-radio color="blue-diversity" value="social">
                 <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('1')">Social & Learn mission</span>
+                  <span class="font-18 font-weight-bold" :class="isActive('social')">Social & Learn mission</span>
                 </template>
               </v-radio>
               <div class="text-subtitle-2 font-weight-regular">Setting social tasks or learn to earn tasks</div>
             </v-sheet>
-            <v-sheet class="rounded pa-5 fill-heigh mt-4" outlined :class="isActive('2')">
-              <v-radio color="blue-diversity" value="2" disabled>
+            <!-- ==================================================================================================================== -->
+            <v-sheet class="rounded pa-5 mt-4" outlined :class="isActive('learn')">
+              <v-radio color="blue-diversity" value="learn">
                 <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('2')">
+                  <span class="font-18 font-weight-bold" :class="isActive('learn')">Learn mission</span>
+                </template>
+              </v-radio>
+              <div class="text-subtitle-2 font-weight-regular">Setting learn to earn tasks</div>
+            </v-sheet>
+            <!-- ==================================================================================================================== -->
+            <v-sheet class="rounded pa-5 fill-heigh mt-4" outlined :class="isActive('iat')">
+              <v-radio color="blue-diversity" value="iat" disabled>
+                <template #label>
+                  <span class="font-18 font-weight-bold" :class="isActive('iat')">
                     <span>Trial mission app (Comming soon)</span>
                   </span>
                 </template>
               </v-radio>
               <div class="text-subtitle-2 font-weight-regular">Setting tasks</div>
             </v-sheet>
+            <!-- ==================================================================================================================== -->
           </div>
         </v-radio-group>
         <div class="d-flex">
@@ -59,20 +71,31 @@ export default class SelectMissionTypeDialog extends Vue {
   }
 
   goToNewMission() {
-    if (this.type === '1') {
-      this.$router.push({
-        name: RouteName.NEW_MISSION,
-        params: {
-          unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
-        },
-      })
-    } else {
-      this.$router.push({
-        name: RouteName.NEW_IAT_MISSION,
-        params: {
-          unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
-        },
-      })
+    switch (this.type) {
+      case 'social':
+        this.$router.push({
+          name: RouteName.NEW_SOCIAL_MISSION,
+          params: {
+            unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
+          },
+        })
+        break
+      case 'learn':
+        this.$router.push({
+          name: RouteName.NEW_LEARN_MISSION,
+          params: {
+            unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
+          },
+        })
+        break
+      case 'iat':
+        this.$router.push({
+          name: RouteName.NEW_IAT_MISSION,
+          params: {
+            unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
+          },
+        })
+        break
     }
   }
 
