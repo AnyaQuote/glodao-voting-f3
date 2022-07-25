@@ -279,7 +279,10 @@ export class BountyApplyViewModel {
       snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
       return
     }
-    if (bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))) {
+    if (
+      this.projectInfo.optionalRewardAmount &&
+      bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))
+    ) {
       snackController.error(`${this.projectInfo.optionalTokenName} - Balance Insufficient`)
       return
     }
