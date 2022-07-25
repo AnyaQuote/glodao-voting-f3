@@ -38,7 +38,7 @@ export class TwitterLoginDialogController {
   @action.bound async handleTwitterLogin() {
     try {
       this.isProcessing = true
-      const redirectUrl = `${process.env.VUE_APP_WEB_HOST}/twitter-auth`
+      const redirectUrl = `http://localhost:8080/twitter-auth`
       const URL = `https://dev-bounty.glodao.io/twitter-login?callback_url=${redirectUrl}`
       window.open(URL, '_blank')
       appProvider.authStore.clearLocalStorage()

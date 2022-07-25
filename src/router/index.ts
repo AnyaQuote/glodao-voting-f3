@@ -30,7 +30,6 @@ export enum RouteName {
   NEW_BOUNTY_PROJECT = 'bounty-apply',
   PROJECT_LIST = 'project-list',
   PROJECT_DETAIL = 'project-detail',
-  NEW_MISSION = 'mission-apply',
   NEW_SOCIAL_MISSION = 'social-mission-apply',
   NEW_LEARN_MISSION = 'learn-mission-apply',
   NEW_IAT_MISSION = 'iat-mission-apply',
