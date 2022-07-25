@@ -69,7 +69,7 @@ export default class AppAutoComplete extends Vue {
 
   @Watch('model')
   onModelUpdate(value) {
-    if (value.length > 5) {
+    if (value.length > this.limit) {
       this.$nextTick(() => this.model.pop())
     }
     this.$emit('onChange', this.model)
