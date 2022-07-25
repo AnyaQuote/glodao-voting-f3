@@ -34,7 +34,8 @@ export enum RouteName {
   NEW_SOCIAL_MISSION = 'social-mission-apply',
   NEW_LEARN_MISSION = 'learn-mission-apply',
   NEW_IAT_MISSION = 'iat-mission-apply',
-  MISSION_DETAIL = 'mission-detail',
+  MISSION_LEARN_DETAIL = 'learn-mission-detail',
+  MISSION_SOCIAL_DETAIL = 'social-mission-detail',
   MISSION_IAT_DETAIL = 'iat-mission-detail',
   NOT_FOUND = 'not-found',
   UNAUTHENTICATED = 'unauthenticated',
@@ -155,12 +156,22 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/projects/:unicodeName/mission/:id',
-    name: RouteName.MISSION_DETAIL,
-    component: () => import('@/modules/project/pages/mission-detail.vue'),
+    name: RouteName.MISSION_LEARN_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/learn-detail-page.vue'),
     meta: {
       auth: true,
       wallet: true,
-      title: 'Mission detail',
+      title: 'Learn Mission detail',
+    },
+  },
+  {
+    path: '/projects/:unicodeName/mission/:id',
+    name: RouteName.MISSION_SOCIAL_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/social-detail-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Social Mission detail',
     },
   },
   {
