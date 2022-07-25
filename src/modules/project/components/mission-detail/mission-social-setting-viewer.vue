@@ -15,7 +15,7 @@
       <!-- </div> -->
       <div v-if="'quote' === task.type" class="mt-2 text-subtitle-2 font-weight-600">
         <span>Hastag:&nbsp;</span>
-        <span class="blue-diversity--text">#{{ task.hashtag }}</span>
+        <span v-for="(item, index) in task.hashtag" :key="index" class="blue-diversity--text">#{{ item }}&nbsp;</span>
       </div>
     </v-sheet>
     <!-- ------------------------------------------------------------------------------------------------------ -->

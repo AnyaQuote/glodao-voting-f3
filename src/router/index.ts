@@ -31,6 +31,8 @@ export enum RouteName {
   PROJECT_LIST = 'project-list',
   PROJECT_DETAIL = 'project-detail',
   NEW_MISSION = 'mission-apply',
+  NEW_SOCIAL_MISSION = 'social-mission-apply',
+  NEW_LEARN_MISSION = 'learn-mission-apply',
   NEW_IAT_MISSION = 'iat-mission-apply',
   MISSION_DETAIL = 'mission-detail',
   MISSION_IAT_DETAIL = 'iat-mission-detail',
@@ -122,13 +124,23 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new/mission',
-    name: RouteName.NEW_MISSION,
-    component: () => import('@/modules/project/pages/new-mission.vue'),
+    path: '/projects/:unicodeName/new/social',
+    name: RouteName.NEW_SOCIAL_MISSION,
+    component: () => import('@/modules/mission/pages/new-social-page.vue'),
     meta: {
       auth: true,
       wallet: true,
-      title: 'Mission Form',
+      title: 'Social Mission Form',
+    },
+  },
+  {
+    path: '/projects/:unicodeName/new/learn',
+    name: RouteName.NEW_LEARN_MISSION,
+    component: () => import('@/modules/mission/pages/new-learn-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Learn Mission Form',
     },
   },
   {
@@ -224,6 +236,7 @@ router.afterEach(async (to, _) => {
     if (status === WALLET_ATTACHED_SUCCESSFUL) {
       attachWalletDialogController.close()
       promiseHelper.delay(500)
+      // Should renew user object instead of reload
       location.reload()
     } else if (status === WALLET_CONNECTED_SUCCESSFUL) {
       attachWalletDialogController.disposeReaction()
