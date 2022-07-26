@@ -34,6 +34,7 @@
           :loading="vm.tokenInfoLoading"
           :disabled="vm.disableTokenSymbol"
           :rules="[$rules.required]"
+          @change="vm.changeProjectInfo('optionalTokenName', $event)"
           placeholder="Token symbol"
         />
       </div>
