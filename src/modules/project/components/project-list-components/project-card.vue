@@ -26,9 +26,7 @@
           <!-- PROJECT TOTAL REWARD -->
           <div>
             <span class="neutral-10--text font-weight-medium">Total reward amount: </span>
-            <span class="font-weight-600"
-              >{{ $_get(pool, 'tokenBAmount') | formatNumber(2) }} {{ $_get(pool, 'tokenBName') }}</span
-            >
+            <span class="font-weight-600">{{ tokenBAmount | formatNumber(2) }} {{ $_get(pool, 'tokenBName') }}</span>
           </div>
           <!--======================-->
         </div>
@@ -99,6 +97,7 @@
 import { EMPTY_STRING } from '@/constants'
 import { RouteName } from '@/router'
 import { PoolStore } from '@/stores/pool-store'
+import { FixedNumber } from '@ethersproject/bignumber'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -119,6 +118,19 @@ export default class extends Vue {
         unicodeName: this.pool.unicodeName || EMPTY_STRING,
       },
     })
+  }
+
+  // Display tokenBAmount manually (not through contract)
+  get tokenBAmount() {
+    return FixedNumber.from(this.pool.poolData.data?.optionalRewardAmount)
+  }
+
+  get tokenBSingleMissionAmount() {
+    try {
+      return this.tokenBAmount.divUnsafe(FixedNumber.from(this.pool.poolData.totalMission))
+    } catch (_) {
+      return 0
+    }
   }
 }
 </script>

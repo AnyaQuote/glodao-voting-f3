@@ -281,7 +281,10 @@ export class BountyApplyViewModel {
       snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
       return
     }
+    // If token address is not input, don't check balance
+    // Because the system will get tokenAddress to check balance
     if (
+      this.projectInfo.optionalTokenAddress &&
       this.projectInfo.optionalRewardAmount &&
       bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))
     ) {
@@ -386,7 +389,7 @@ export class BountyApplyViewModel {
     return get(this.projectInfo, 'endDate', '')
   }
 
-  @computed get disableTokenSymbol() {
+  @computed get generateWithTokenAddress() {
     return !!this.projectInfo.optionalTokenAddress
   }
 }

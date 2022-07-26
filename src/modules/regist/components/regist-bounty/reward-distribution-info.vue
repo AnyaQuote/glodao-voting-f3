@@ -30,10 +30,10 @@
       <div class="pl-sm-6 flex-grow-1">
         <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
         <app-text-field
-          :value="$_get(vm.projectInfo, 'optionalTokenName')"
-          :loading="vm.tokenInfoLoading"
-          :disabled="vm.disableTokenSymbol"
           :rules="[$rules.required]"
+          :loading="vm.tokenInfoLoading"
+          :disabled="vm.generateWithTokenAddress"
+          :value="$_get(vm.projectInfo, 'optionalTokenName')"
           @change="vm.changeProjectInfo('optionalTokenName', $event)"
           placeholder="Token symbol"
         />
