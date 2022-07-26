@@ -32,7 +32,6 @@ export class NewLearnMissionViewModel {
   @observable quoteTweet = quoteTweetDefault
   @observable commentTweet = commentTweetDefault
   @observable telegramChat = telegramChatDefault
-  @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
 
@@ -62,12 +61,6 @@ export class NewLearnMissionViewModel {
         this._router.replace(RoutePaths.not_found)
       }
       this.pool = pools[0]
-
-      // if (get(avgCommunityReward, 'code') === '500') {
-      //   throw ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD
-      // }
-      // // console.log('avgCommunityReward', avgCommunityReward)
-      // this.fxAvgCommunityReward = FixedNumber.from(get(avgCommunityReward, 'data.result', '0'))
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
@@ -158,49 +151,14 @@ export class NewLearnMissionViewModel {
   }
 
   async getMissionSetting() {
-    if (this.learnToEarn.enabled) {
-      const quizId = await this.getQuizId()
-      return {
-        quiz: [
-          {
-            type: 'quiz',
-            quizId,
-          },
-        ],
-      }
-    } else {
-      let socialSetting = {}
-      if (this.joinTelegram.enabled) {
-        socialSetting = set(socialSetting, 'telegram', [
-          ...get(socialSetting, 'telegram', []),
-          { ...this.joinTelegram.setting },
-        ])
-      }
-      if (this.followTwitter.enabled) {
-        socialSetting = set(socialSetting, 'twitter', [
-          ...get(socialSetting, 'twitter', []),
-          { ...this.followTwitter.setting },
-        ])
-      }
-      if (this.quoteTweet.enabled) {
-        socialSetting = set(socialSetting, 'twitter', [
-          ...get(socialSetting, 'twitter', []),
-          { ...this.quoteTweet.setting, hashtag: [this.quoteTweet.setting.hashtag] },
-        ])
-      }
-      if (this.commentTweet.enabled) {
-        socialSetting = set(socialSetting, 'twitter', [
-          ...get(socialSetting, 'twitter', []),
-          { ...this.commentTweet.setting },
-        ])
-      }
-      if (this.telegramChat.enabled) {
-        socialSetting = set(socialSetting, 'telegram', [
-          ...get(socialSetting, 'telegram', []),
-          { ...this.telegramChat.setting },
-        ])
-      }
-      return socialSetting
+    const quizId = await this.getQuizId()
+    return {
+      quiz: [
+        {
+          type: 'quiz',
+          quizId,
+        },
+      ],
     }
   }
 
@@ -226,20 +184,16 @@ export class NewLearnMissionViewModel {
 
     // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-    const isSocialMission = missionInfo.type === 'social'
-
-    // Type of the mission
-    const type = isSocialMission ? MissionType.SOCIAL : MissionType.LEARN
 
     // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value
 
     // Learn to earn mission needs maxParticipants
-    const maxParticipants = isSocialMission ? 0 : toNumber(missionInfo.maxParticipants)
+    const maxParticipants = toNumber(missionInfo.maxParticipants)
 
     // Social mission needs maxPriorityParticipants and priorityRewardAmount field
-    const maxPriorityParticipants = isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0
-    const priorityRewardAmount = isSocialMission ? this.priorityAmount._value : '0'
+    const maxPriorityParticipants = 0
+    const priorityRewardAmount = '0'
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
@@ -250,14 +204,6 @@ export class NewLearnMissionViewModel {
     const optTokenLogo = pool.data?.optionalTokenLogo
     const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
     const optTokenName = pool.data?.optionalTokenName
-    // const optionalToken: OptionalTokenItem = {
-    //   rewardAmount: optRewardAmount,
-    //   decimal: optTokenDecimal,
-    //   priorityRewardAmount: optTokenPriorityRewardAmount,
-    //   tokenContractAddress: optTokenAddress,
-    //   tokenLogo: optTokenLogo,
-    //   tokenBasePrice: optTokenBasePrice,
-    // }
 
     const mission: Mission = {
       // OPTIONAL TO MAIN TOKEN FOR MISSION
@@ -271,7 +217,7 @@ export class NewLearnMissionViewModel {
       endTime: missionInfo.endDate,
       name: missionInfo.name,
       chainId: pool.chain,
-      type,
+      type: MissionType.LEARN,
       poolId: pool.id,
       data: setting,
       status,
@@ -328,24 +274,6 @@ export class NewLearnMissionViewModel {
       return FixedNumber.from(this.pool?.data?.optionalRewardAmount).divUnsafe(
         FixedNumber.from(this.pool?.totalMission)
       )
-    } catch (_) {
-      return Zero
-    }
-  }
-
-  @computed get priorityAmount() {
-    return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
-  }
-
-  @computed get communityAmount() {
-    const roundedValue = parseFloat(this.priorityAmount._value).toFixed(2)
-    const fxRoundedValue = FixedNumber.from(roundedValue)
-    return this.rewardPerMission.subUnsafe(fxRoundedValue)
-  }
-
-  @computed get personalReward() {
-    try {
-      return this.priorityAmount.divUnsafe(FixedNumber.from(this.missionInfo.maxPriorityParticipants))
     } catch (_) {
       return Zero
     }
