@@ -78,7 +78,7 @@ export const quoteTweetDefault = {
   enabled: false,
   setting: {
     type: 'quote',
-    content: [],
+    content: '',
     page: '',
     hashtag: [],
     link: '',
@@ -92,7 +92,7 @@ export const commentTweetDefault = {
   setting: {
     type: 'comment',
     page: '',
-    content: [],
+    content: '',
     embedLink: '',
     link: '',
     required: true,

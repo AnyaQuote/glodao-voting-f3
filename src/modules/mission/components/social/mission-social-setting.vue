@@ -117,7 +117,7 @@
           :value="$_get(vm.quoteTweet, 'setting.hashtag')"
           @onChange="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
         />
-        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-6">
+        <!-- <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-6">
           <span>Required content</span>
           <v-spacer />
           <i class="text-subtitle-2 font-weight-regular neutral-10--text"
@@ -129,7 +129,7 @@
           placeholder="Enter content keywords"
           :value="$_get(vm.quoteTweet, 'setting.content')"
           @onChange="vm.changeQuoteTweetSetting('setting.content', $event)"
-        />
+        /> -->
       </switch-field>
 
       <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
@@ -160,7 +160,7 @@
           placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
-        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-2">
+        <!-- <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-2">
           <span>Required content</span>
           <v-spacer />
           <i class="text-subtitle-2 font-weight-regular neutral-10--text"
@@ -172,7 +172,7 @@
           placeholder="Enter content keywords"
           :value="$_get(vm.commentTweet, 'setting.content')"
           @onChange="vm.changeCommentTweetSetting('setting.content', $event)"
-        />
+        /> -->
       </switch-field>
 
       <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
