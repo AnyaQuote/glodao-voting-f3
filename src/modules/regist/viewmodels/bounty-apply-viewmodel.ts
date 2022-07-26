@@ -88,7 +88,7 @@ export class BountyApplyViewModel {
       //
     } else {
       const address = process.env.VUE_APP_VOTING_SOLIDITY
-      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(walletStore.chainId)!)
+      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
