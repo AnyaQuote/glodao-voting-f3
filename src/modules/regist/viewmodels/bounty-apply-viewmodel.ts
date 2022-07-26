@@ -1,4 +1,4 @@
-import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
+import { ProjectInfo, RewardDistributionType, VotingPoolType } from '@/models/VotingModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase, toNumber, isEmpty } from 'lodash'
@@ -47,8 +47,8 @@ export class BountyApplyViewModel {
 
   tokenList = this.tokenTestnetList
 
-  @observable step = 1.1
-  @observable unlockedStep = 1.1
+  @observable step = 1.2
+  @observable unlockedStep = 2.1
   @observable projectInfo: ProjectInfo = {
     votingStart: moment().toISOString(),
     votingEnd: moment().add(3, 'd').toISOString(),
@@ -308,6 +308,26 @@ export class BountyApplyViewModel {
     if (value <= this.unlockedStep) {
       this.step = value
     }
+  }
+
+  /**
+   * Set up form data when user select reward distribution type
+   * @param type busd | token
+   * @param resetValidation undefined | void Function() trigger form reset validation
+   */
+  @action.bound setUpRewardInfoForm(type: string, resetValidation?: VoidFunction) {
+    let tokenAddress = '',
+      tokenName = '',
+      tokenDecimal = 0
+    if (type === RewardDistributionType.BUSD) {
+      tokenAddress = process.env.VUE_APP_BUSD_ADDRESS!
+      tokenDecimal = 18
+      tokenName = 'BUSD'
+    }
+    this.changeProjectInfo('optionalTokenAddress', tokenAddress)
+    this.changeProjectInfo('optionalTokenDecimals', tokenDecimal)
+    this.changeProjectInfo('optionalTokenName', tokenName)
+    resetValidation?.()
   }
 
   @action.bound changeProjectInfo(property: string, value: any) {
