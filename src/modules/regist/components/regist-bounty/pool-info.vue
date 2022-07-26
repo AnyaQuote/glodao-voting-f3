@@ -75,8 +75,12 @@
         <span>{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
       </div> -->
 
+      <!-- ----------------------------------- PROJECT REWARD ---------------------------------------------- -->
+      <reward-distribution-info />
+      <!-- ------------------------------------------------------------------------------------------------- -->
+
       <!-- ------------------------------------ CAMPAIGN INFORMATION --------------------------------------- -->
-      <div class="mt-2">
+      <div class="mt-7">
         <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
@@ -100,10 +104,6 @@
         :value="vm.projectEndDate"
         @change="vm.changeProjectInfo('endDate', $event)"
       />
-      <!-- ------------------------------------------------------------------------------------------------- -->
-
-      <!-- ----------------------------------- PROJECT REWARD ---------------------------------------------- -->
-      <reward-distribution-info />
       <!-- ------------------------------------------------------------------------------------------------- -->
 
       <v-btn
