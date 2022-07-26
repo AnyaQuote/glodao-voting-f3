@@ -6,7 +6,7 @@
         <v-img src="@/assets/icons/twitter.svg" max-width="24" max-height="24" />
         <span class="ml-2 font-weight-600"> Twitter task</span>
         <v-sheet width="4" height="4" rounded="circle" class="neutral-10 mx-sm-4 mx-2" />
-        <span class="neutral-10--text text-subtitle-2 text-capitalize">{{ task.type }} project twitter</span>
+        <span class="neutral-10--text text-subtitle-2 text-capitalize">{{ twitterTaskName(task.type) }}</span>
       </div>
       <div class="mt-2 text-truncate text-subtitle-2 font-weight-600" :style="`max-width: ${linkWidth}`">
         <span>Twitter link:&nbsp;</span>
@@ -33,7 +33,7 @@
         <span class="ml-2 font-weight-600"> Telegram task</span>
         <v-sheet width="4" height="4" rounded="circle" class="neutral-10 mx-sm-3 mx-1" />
         <span class="neutral-10--text text-subtitle-2 text-capitalize">
-          {{ task.type === 'follow' ? 'Join' : task.type }} telegram group
+          {{ telegramTaskName(task.type) }}
         </span>
       </div>
       <div class="mt-2 text-truncate text-subtitle-2 font-weight-600" :style="`max-width: ${linkWidth}`">
@@ -62,8 +62,35 @@ export default class MissionSocialSettingViewer extends Vue {
 
   created() {
     this.twitterSetting = get(this.data, 'twitter', [])
+    console.log('this.twitterSetting: ', this.twitterSetting)
     this.telegramSetting = get(this.data, 'telegram', [])
     // this.discordSetting = get(this.data, 'discord', [])
+  }
+
+  get twitterTaskName() {
+    return (taskType) => {
+      switch (taskType) {
+        case 'comment':
+          return 'Like and reply a post'
+        case 'quote':
+          return 'Quote a tweet'
+        case 'follow':
+          return 'Follow project twitter'
+        default:
+          return `${taskType} twitter`
+      }
+    }
+  }
+
+  get telegramTaskName() {
+    return (taskType) => {
+      switch (taskType) {
+        case 'follow':
+          return 'Join telegram group'
+        default:
+          return `${taskType} telegram group`
+      }
+    }
   }
 
   get linkWidth() {
