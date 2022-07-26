@@ -260,8 +260,9 @@ export class BountyApplyViewModel {
         decimals: this.rewardTokenDecimals,
         // =======
         // TOKEN B
-        optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
-        optionalTokenAddress: this.projectInfo.optionalTokenAddress,
+        // Incase do not input optional token address, decimal and token address is set to default 0 and ''
+        optionalRewardTokenDecimals: this.projectInfo.optionalTokenAddress ? this.optionalRewardTokenDecimals : 0,
+        optionalTokenAddress: this.projectInfo.optionalTokenAddress || '',
         optionalRewardAmount: this.projectInfo.optionalRewardAmount,
         optionalTokenName: this.projectInfo.optionalTokenName,
         optionalTokenLogo: optionalTokenLogo,
