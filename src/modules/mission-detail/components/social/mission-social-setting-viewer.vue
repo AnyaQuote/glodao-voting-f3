@@ -62,7 +62,6 @@ export default class MissionSocialSettingViewer extends Vue {
 
   created() {
     this.twitterSetting = get(this.data, 'twitter', [])
-    console.log('this.twitterSetting: ', this.twitterSetting)
     this.telegramSetting = get(this.data, 'telegram', [])
     // this.discordSetting = get(this.data, 'discord', [])
   }

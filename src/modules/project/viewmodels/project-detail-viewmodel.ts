@@ -68,7 +68,6 @@ export class ProjectDetailViewModel {
       const votingPool = get(res, '[0]')
       this.poolStore = new PoolStore(votingPool)
       this.poolInfo = this.poolStore.poolData
-      console.log({ ...this.poolInfo })
       if (votingPool.status === 'approved') {
         res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1, _sort: 'startTime:asc' })
         this.missions = res || []
