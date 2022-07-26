@@ -9,6 +9,7 @@ export const rules = {
   minLength: (length: number) => (v: string) => (v && v.length >= length) || !v || `Min ${length} characters`,
   max: (number: number) => (v: number) => v <= number || `Must be lower than or equal to ${number}`,
   min: (number: number) => (v: number) => v >= number || `Must be greater than or equal to ${number}`,
+  gt: (number: number) => (v: number) => v > number || `Must be greater than ${number}`,
   email: (v: string) =>
     (v &&
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
