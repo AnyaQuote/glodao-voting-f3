@@ -4,80 +4,81 @@
       <span class="font-18 font-weight-bold blue-diversity--text">Project reward</span>
       <!-- <i class="neutral-10--text ml-2">(optional)</i> -->
     </div>
-    <div class="neutral-10--text text-subtitle-1">I want to distribute project reward with:</div>
-    <distribution-type :value="type" @change="switchType" />
+    <!-- <div class="neutral-10--text text-subtitle-1">I want to distribute project reward with:</div> -->
+    <!-- <distribution-type :value="vm.rewardType" @change="vm.switchType" /> -->
     <!-- --------------------------------------- PROJECT TOKEN FORM START --------------------------------------- -->
-    <v-form ref="reward-type-form">
-      <div v-if="type === tokenType">
-        <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
+
+    <!-- <div v-if="vm.rewardType === tokenType"> -->
+    <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+    <app-text-field
+      :rules="[$rules.isAddress]"
+      :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
+      @input="vm.changeProjectInfo('optionalTokenAddress', $event)"
+      placeholder="Enter address"
+    ></app-text-field>
+    <div class="d-flex flex-column flex-sm-row">
+      <div class="flex-grow-1">
+        <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
         <app-text-field
-          :rules="[$rules.isAddress, $rules.required]"
-          :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
-          @input="vm.changeProjectInfo('optionalTokenAddress', $event)"
-          placeholder="Enter address"
+          type="number"
+          :rules="[$rules.floatNumberOnly, $rules.required]"
+          :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
+          @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
+          placeholder="Enter amount"
         ></app-text-field>
-        <div class="d-flex flex-column flex-sm-row">
-          <div class="flex-grow-1">
-            <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
-            <app-text-field
-              type="number"
-              :rules="[$rules.floatNumberOnly, $rules.required]"
-              :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
-              @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
-              placeholder="Enter amount"
-            ></app-text-field>
-          </div>
-          <div class="pl-sm-6 flex-grow-1">
-            <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
-            <app-text-field
-              :value="$_get(vm.projectInfo, 'optionalTokenName')"
-              :loading="vm.tokenInfoLoading"
-              disabled
-              placeholder="Token symbol"
-            />
-          </div>
-        </div>
-        <div class="font-18 font-weight-bold mb-2">Token logo<span class="app-red--text">*</span></div>
-        <app-file-upload
-          isImageFile
-          :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
-          :value="$_get(vm.projectInfo, 'optionalTokenLogo', null)"
-          @change="vm.changeProjectInfo('optionalTokenLogo', $event)"
+      </div>
+      <div class="pl-sm-6 flex-grow-1">
+        <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
+        <app-text-field
+          :value="$_get(vm.projectInfo, 'optionalTokenName')"
+          :loading="vm.tokenInfoLoading"
+          :disabled="vm.disableTokenSymbol"
+          :rules="[$rules.required]"
+          placeholder="Token symbol"
         />
       </div>
-      <!-- --------------------------------------- PROJECT TOKEN FORM END --------------------------------------- -->
+    </div>
+    <div class="font-18 font-weight-bold mb-2">Token logo<span class="app-red--text">*</span></div>
+    <app-file-upload
+      isImageFile
+      :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
+      :value="$_get(vm.projectInfo, 'optionalTokenLogo', null)"
+      @change="vm.changeProjectInfo('optionalTokenLogo', $event)"
+    />
+  </div>
+  <!-- --------------------------------------- PROJECT TOKEN FORM END --------------------------------------- -->
 
-      <!-- --------------------------------------- BUSD FORM START ---------------------------------------------- -->
-      <div v-else>
-        <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
-        <app-text-field
-          :rules="[$rules.required, $rules.isAddress]"
-          :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
-          @change="vm.changeProjectInfo('optionalTokenAddress', $event)"
-          disabled
-          placeholder="Enter address"
-        ></app-text-field>
-        <div class="d-flex">
-          <div class="flex-grow">
-            <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
-            <app-text-field
-              type="number"
-              :rules="[$rules.floatNumberOnly, $rules.required]"
-              :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
-              @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
-              placeholder="Enter amount"
-            ></app-text-field>
-          </div>
-          <div class="mx-3" />
-          <div class="flex-grow">
-            <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
-            <app-text-field :value="$_get(vm.projectInfo, 'optionalTokenName')" disabled placeholder="Token symbol" />
-          </div>
+  <!-- --------------------------------------- BUSD FORM START ---------------------------------------------- -->
+  <!-- <div v-else>
+      <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
+      <app-text-field
+        :rules="[$rules.required, $rules.isAddress]"
+        :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
+        @change="vm.changeProjectInfo('optionalTokenAddress', $event)"
+        disabled
+        placeholder="Enter address"
+      ></app-text-field>
+      <div class="d-flex">
+        <div class="flex-grow">
+          <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
+          <app-text-field
+            type="number"
+            :rules="[$rules.floatNumberOnly, $rules.required]"
+            :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
+            @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
+            placeholder="Enter amount"
+          ></app-text-field>
+        </div>
+        <div class="mx-3" />
+        <div class="flex-grow">
+          <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
+          <app-text-field :value="$_get(vm.projectInfo, 'optionalTokenName')" disabled placeholder="Token symbol" />
         </div>
       </div>
-    </v-form>
-    <!-- --------------------------------------- BUSD FORM START ---------------------------------------------- -->
-  </div>
+    </div> -->
+
+  <!-- --------------------------------------- BUSD FORM START ---------------------------------------------- -->
+  <!-- </div> -->
 </template>
 
 <script lang="ts">
@@ -96,14 +97,8 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 })
 export default class RewardDistributionInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
-  @Ref('reward-type-form') form
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
-  type = ''
   readonly tokenType = RewardDistributionType.TOKEN
-  switchType(value: string) {
-    this.vm.setUpRewardInfoForm(value, this.form.resetValidation)
-    this.type = value
-  }
 }
 </script>
 

@@ -71,6 +71,7 @@ export class BountyApplyViewModel {
   @observable approveChecking = false
 
   @observable votingHandler?: VotingHandler
+  // @observable rewardType = RewardDistributionType.TOKEN
 
   constructor() {
     this.loadData()
@@ -310,25 +311,17 @@ export class BountyApplyViewModel {
     }
   }
 
-  /**
-   * Set up form data when user select reward distribution type
-   * @param type busd | token
-   * @param resetValidation undefined | void Function() trigger form reset validation
-   */
-  @action.bound setUpRewardInfoForm(type: string, resetValidation?: VoidFunction) {
-    let tokenAddress = '',
-      tokenName = '',
-      tokenDecimal = 0
-    if (type === RewardDistributionType.BUSD) {
-      tokenAddress = process.env.VUE_APP_BUSD_ADDRESS!
-      tokenDecimal = 18
-      tokenName = 'BUSD'
-    }
-    this.changeProjectInfo('optionalTokenAddress', tokenAddress)
-    this.changeProjectInfo('optionalTokenDecimals', tokenDecimal)
-    this.changeProjectInfo('optionalTokenName', tokenName)
-    resetValidation?.()
-  }
+  // @action.bound switchType(value: RewardDistributionType) {
+  //   this.rewardType = value
+
+  //   if (value === RewardDistributionType.BUSD) {
+  //     // Set BUSDF optionalTokenAddress  optional token (tokenAddress, decimals)
+  //     this.changeProjectInfo('optionalTokenAddress', process.env.VUE_APP_BUSD_ADDRESS!)
+  //     this.optionalRewardTokenDecimals = 18
+  //   } else {
+  //     this.changeProjectInfo('optionalTokenAddress', null)
+  //   }
+  // }
 
   @action.bound changeProjectInfo(property: string, value: any) {
     if (property === 'optionalTokenAddress') {
@@ -344,7 +337,7 @@ export class BountyApplyViewModel {
           })
         })
       } else {
-        runInAction(() => (this.projectInfo = { ...this.projectInfo, tokenName: '' }))
+        runInAction(() => (this.projectInfo = { ...this.projectInfo, optionalTokenName: '' }))
       }
     } else if (property === 'tokenAddress') {
       const token = this.tokenList.find((item) => item.tokenAddress == value)
@@ -390,5 +383,9 @@ export class BountyApplyViewModel {
 
   @computed get projectEndDate() {
     return get(this.projectInfo, 'endDate', '')
+  }
+
+  @computed get disableTokenSymbol() {
+    return !!this.projectInfo.optionalTokenAddress
   }
 }
