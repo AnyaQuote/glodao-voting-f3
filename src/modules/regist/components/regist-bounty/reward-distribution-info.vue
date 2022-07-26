@@ -17,17 +17,18 @@
       placeholder="Enter address"
     ></app-text-field>
     <div class="d-flex flex-column flex-sm-row">
-      <div class="flex-grow-1">
+      <div class="flex-grow">
         <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
         <app-text-field
           type="number"
-          :rules="[$rules.floatNumberOnly, $rules.required]"
+          :rules="[$rules.floatNumberOnly, $rules.required, $rules.min(1)]"
           :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
           @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
           placeholder="Enter amount"
         ></app-text-field>
       </div>
-      <div class="pl-sm-6 flex-grow-1">
+      <div class="pl-sm-6" />
+      <div class="flex-grow">
         <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
         <app-text-field
           :rules="[$rules.required]"
