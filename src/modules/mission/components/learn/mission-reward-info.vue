@@ -43,36 +43,18 @@
     </div>
   </div>
 
-  <div v-else class="mt-7">
-    <div class="title font-weight-bold blue-diversity--text">Reward information</div>
-    <div class="font-18 font-weight-bold mt-4">
-      <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
-    </div>
-    <div class="mt-4 row no-gutters">
-      <div class="col-12">
-        <span class="font-18 font-weight-bold">Max participants<span class="app-red--text">*</span></span>
-        <app-text-field
-          class="mt-2"
-          type="number"
-          :rules="[$rules.required, $rules.integer, $rules.min(1)]"
-          :value="$_get(vm.missionInfo, 'maxParticipants')"
-          @input="vm.changeMissionInfo('maxParticipants', $event)"
-          placeholder="Enter participants"
-        />
-      </div>
-    </div>
-  </div>
+  <div v-else class="mt-7"></div>
 </template>
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
+import { NewLearnMissionViewModel } from '../../viewmodels/new-learn-mission-viewmodel'
 
 @Observer
 @Component
 export default class RewardInfoForm extends Vue {
-  @Inject() vm!: NewMissionViewModel
+  @Inject() vm!: NewLearnMissionViewModel
 }
 </script>
 

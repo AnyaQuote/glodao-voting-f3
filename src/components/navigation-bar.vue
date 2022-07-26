@@ -247,7 +247,6 @@ export default class NavigationBar extends Vue {
   chainId = process.env.VUE_APP_CHAIN_ID
 
   openLink(url) {
-    console.log('test')
     window.open(url, '_self')
   }
   changeTheme() {

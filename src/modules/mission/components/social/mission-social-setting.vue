@@ -72,13 +72,12 @@
           append-icon="mdi-link"
         />
         <div class="font-18 font-weight-bold mt-6">Twitter hastag</div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.quoteTweet, 'setting.hashtag')"
-          @change="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
+        <app-autocomplete
+          :items="[]"
+          :rules="[(v) => !!(v && v.length) || 'This field is required']"
           placeholder="Enter your hastag"
-          append-icon="fa-solid fa-hashtag"
+          :value="$_get(vm.quoteTweet, 'setting.hashtag')"
+          @onChange="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
         />
       </switch-field>
 
@@ -148,16 +147,17 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
+import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-viewmodel'
 
 @Observer
 @Component({
   components: {
-    'switch-field': () => import('./common/switch-field.vue'),
+    'switch-field': () => import('../common/switch-field.vue'),
+    'app-autocomplete': () => import('@/modules/regist/components/common/app-autocomplete.vue'),
   },
 })
 export default class MissionSocialSetting extends Vue {
-  @Inject() vm!: NewMissionViewModel
+  @Inject() vm!: NewSocialMissionViewModel
   formState = false
 
   beforeDestroy() {

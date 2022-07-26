@@ -17,12 +17,12 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { MissionDetailViewModel } from '../../viewmodels/mission-detail-viewmodel'
+import { LearnMissionDetailViewModel } from '../../viewmodels/learn-detail-viewmodel'
 
 @Observer
 @Component
 export default class MissionLteOverview extends Vue {
-  @Inject() vm!: MissionDetailViewModel
+  @Inject() vm!: LearnMissionDetailViewModel
 }
 </script>
 

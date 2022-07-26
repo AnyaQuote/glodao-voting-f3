@@ -30,9 +30,11 @@ export enum RouteName {
   NEW_BOUNTY_PROJECT = 'bounty-apply',
   PROJECT_LIST = 'project-list',
   PROJECT_DETAIL = 'project-detail',
-  NEW_MISSION = 'mission-apply',
+  NEW_SOCIAL_MISSION = 'social-mission-apply',
+  NEW_LEARN_MISSION = 'learn-mission-apply',
   NEW_IAT_MISSION = 'iat-mission-apply',
-  MISSION_DETAIL = 'mission-detail',
+  MISSION_LEARN_DETAIL = 'learn-mission-detail',
+  MISSION_SOCIAL_DETAIL = 'social-mission-detail',
   MISSION_IAT_DETAIL = 'iat-mission-detail',
   NOT_FOUND = 'not-found',
   UNAUTHENTICATED = 'unauthenticated',
@@ -122,13 +124,23 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new/mission',
-    name: RouteName.NEW_MISSION,
-    component: () => import('@/modules/project/pages/new-mission.vue'),
+    path: '/projects/:unicodeName/new/social',
+    name: RouteName.NEW_SOCIAL_MISSION,
+    component: () => import('@/modules/mission/pages/new-social-page.vue'),
     meta: {
       auth: true,
       wallet: true,
-      title: 'Mission Form',
+      title: 'Social Mission Form',
+    },
+  },
+  {
+    path: '/projects/:unicodeName/new/learn',
+    name: RouteName.NEW_LEARN_MISSION,
+    component: () => import('@/modules/mission/pages/new-learn-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Learn Mission Form',
     },
   },
   {
@@ -142,17 +154,27 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/mission/:id',
-    name: RouteName.MISSION_DETAIL,
-    component: () => import('@/modules/project/pages/mission-detail.vue'),
+    path: '/projects/:unicodeName/mission/learn/:id',
+    name: RouteName.MISSION_LEARN_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/learn-detail-page.vue'),
     meta: {
       auth: true,
       wallet: true,
-      title: 'Mission detail',
+      title: 'Learn Mission detail',
     },
   },
   {
-    path: '/projects/:unicodeName/app-trial/:id',
+    path: '/projects/:unicodeName/mission/social/:id',
+    name: RouteName.MISSION_SOCIAL_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/social-detail-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Social Mission detail',
+    },
+  },
+  {
+    path: '/projects/:unicodeName/app-trial/iat/:id',
     name: RouteName.MISSION_IAT_DETAIL,
     component: () => import('@/modules/mission-detail/pages/iat-detail-page.vue'),
     meta: {
@@ -224,6 +246,7 @@ router.afterEach(async (to, _) => {
     if (status === WALLET_ATTACHED_SUCCESSFUL) {
       attachWalletDialogController.close()
       promiseHelper.delay(500)
+      // Should renew user object instead of reload
       location.reload()
     } else if (status === WALLET_CONNECTED_SUCCESSFUL) {
       attachWalletDialogController.disposeReaction()

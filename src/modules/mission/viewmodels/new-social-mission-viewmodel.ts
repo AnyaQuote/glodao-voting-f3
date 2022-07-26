@@ -19,14 +19,13 @@ import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
+import { EMPTY_STRING, ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
 
-export class NewMissionViewModel {
+export class NewSocialMissionViewModel {
   @observable step = 1
 
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
-  @observable learnToEarn: LearnToEarn = {}
   @observable joinTelegram = joinTelegramDefault
   @observable followTwitter = followTwitterDefault
   @observable quoteTweet = quoteTweetDefault
@@ -35,10 +34,6 @@ export class NewMissionViewModel {
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
-
-  // PREVIEW QUIZ VARIABLES
-  @observable previewQuiz: PreviewQuiz[] = []
-  previewSampleSize = 10
 
   private _snackbar = appProvider.snackbar
   private _router = appProvider.router
@@ -100,10 +95,6 @@ export class NewMissionViewModel {
     this.telegramChat = set(this.telegramChat, property, value)
   }
 
-  @action.bound changeLearnToEarnInfo(property: string, value: string | boolean) {
-    this.learnToEarn = set(this.learnToEarn, property, value)
-  }
-
   @action changeStep(step: number) {
     this.step = step
   }
@@ -123,85 +114,39 @@ export class NewMissionViewModel {
     return getApiFileUrl(imageResult[0])
   }
 
-  async getQuizId() {
-    if (!this.learnToEarn.setting) return null
-    const { quizFile, learningFile, imageCover, name, description } = this.learnToEarn.setting
-    let coverUrl
-
-    if (imageCover) {
-      coverUrl = await this.getImageSource(imageCover)
-    } else {
-      coverUrl = get(this.pool, 'data.projectCover')
-    }
-
-    const [data, answer] = await getDataFromQuizFile(quizFile!)
-    const learningInformation = await getTextData(learningFile!)
-    const projectOwnerId = this._auth.projectOwnerId
-
-    const quiz: Quiz = {
-      name,
-      description,
-      learningInformation,
-      data,
-      answer,
-      projectOwner: projectOwnerId,
-      metadata: {
-        coverImage: coverUrl,
-        tags: get(this.pool, 'data.fields', []),
-      },
-    }
-    const res = await this._api.createQuiz({
-      ownerAddress: this._auth.attachedAddress,
-      ...quiz,
-    })
-    return res.id
-  }
-
   async getMissionSetting() {
-    if (this.learnToEarn.enabled) {
-      const quizId = await this.getQuizId()
-      return {
-        quiz: [
-          {
-            type: 'quiz',
-            quizId,
-          },
-        ],
-      }
-    } else {
-      let socialSetting = {}
-      if (this.joinTelegram.enabled) {
-        socialSetting = set(socialSetting, 'telegram', [
-          ...get(socialSetting, 'telegram', []),
-          { ...this.joinTelegram.setting },
-        ])
-      }
-      if (this.followTwitter.enabled) {
-        socialSetting = set(socialSetting, 'twitter', [
-          ...get(socialSetting, 'twitter', []),
-          { ...this.followTwitter.setting },
-        ])
-      }
-      if (this.quoteTweet.enabled) {
-        socialSetting = set(socialSetting, 'twitter', [
-          ...get(socialSetting, 'twitter', []),
-          { ...this.quoteTweet.setting, hashtag: [this.quoteTweet.setting.hashtag] },
-        ])
-      }
-      if (this.commentTweet.enabled) {
-        socialSetting = set(socialSetting, 'twitter', [
-          ...get(socialSetting, 'twitter', []),
-          { ...this.commentTweet.setting },
-        ])
-      }
-      if (this.telegramChat.enabled) {
-        socialSetting = set(socialSetting, 'telegram', [
-          ...get(socialSetting, 'telegram', []),
-          { ...this.telegramChat.setting },
-        ])
-      }
-      return socialSetting
+    let socialSetting = {}
+    if (this.joinTelegram.enabled) {
+      socialSetting = set(socialSetting, 'telegram', [
+        ...get(socialSetting, 'telegram', []),
+        { ...this.joinTelegram.setting },
+      ])
     }
+    if (this.followTwitter.enabled) {
+      socialSetting = set(socialSetting, 'twitter', [
+        ...get(socialSetting, 'twitter', []),
+        { ...this.followTwitter.setting },
+      ])
+    }
+    if (this.quoteTweet.enabled) {
+      socialSetting = set(socialSetting, 'twitter', [
+        ...get(socialSetting, 'twitter', []),
+        { ...this.quoteTweet.setting },
+      ])
+    }
+    if (this.commentTweet.enabled) {
+      socialSetting = set(socialSetting, 'twitter', [
+        ...get(socialSetting, 'twitter', []),
+        { ...this.commentTweet.setting },
+      ])
+    }
+    if (this.telegramChat.enabled) {
+      socialSetting = set(socialSetting, 'telegram', [
+        ...get(socialSetting, 'telegram', []),
+        { ...this.telegramChat.setting },
+      ])
+    }
+    return socialSetting
   }
 
   /**
@@ -221,25 +166,20 @@ export class NewMissionViewModel {
   }
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
-    // const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'upcomming'
 
     // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-    const isSocialMission = missionInfo.type === 'social'
-
-    // Type of the mission
-    const type = isSocialMission ? MissionType.SOCIAL : MissionType.LEARN
 
     // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value
 
     // Learn to earn mission needs maxParticipants
-    const maxParticipants = isSocialMission ? 0 : toNumber(missionInfo.maxParticipants)
+    const maxParticipants = toNumber(missionInfo.maxParticipants)
 
     // Social mission needs maxPriorityParticipants and priorityRewardAmount field
-    const maxPriorityParticipants = isSocialMission ? toNumber(missionInfo.maxPriorityParticipants) : 0
-    const priorityRewardAmount = isSocialMission ? this.priorityAmount._value : '0'
+    const maxPriorityParticipants = toNumber(missionInfo.maxPriorityParticipants)
+    const priorityRewardAmount = this.priorityAmount._value
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
@@ -250,14 +190,6 @@ export class NewMissionViewModel {
     const optTokenLogo = pool.data?.optionalTokenLogo
     const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
     const optTokenName = pool.data?.optionalTokenName
-    // const optionalToken: OptionalTokenItem = {
-    //   rewardAmount: optRewardAmount,
-    //   decimal: optTokenDecimal,
-    //   priorityRewardAmount: optTokenPriorityRewardAmount,
-    //   tokenContractAddress: optTokenAddress,
-    //   tokenLogo: optTokenLogo,
-    //   tokenBasePrice: optTokenBasePrice,
-    // }
 
     const mission: Mission = {
       // OPTIONAL TO MAIN TOKEN FOR MISSION
@@ -271,7 +203,7 @@ export class NewMissionViewModel {
       endTime: missionInfo.endDate,
       name: missionInfo.name,
       chainId: pool.chain,
-      type,
+      type: MissionType.SOCIAL,
       poolId: pool.id,
       data: setting,
       status,
@@ -304,7 +236,7 @@ export class NewMissionViewModel {
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
         params: {
-          unicodeName: get(this.pool, 'unicodeName', ''),
+          unicodeName: get(this.pool, 'unicodeName', EMPTY_STRING),
         },
       })
     } catch (error) {
@@ -312,15 +244,6 @@ export class NewMissionViewModel {
     } finally {
       this.btnLoading = false
     }
-  }
-
-  /**
-   * Process file and return JSON data of preview quiz
-   */
-  @asyncAction *prepareQuizPreview() {
-    if (!this.learnToEarn.setting?.quizFile) return false
-    const res = yield getPreviewFromQuizFile(this.learnToEarn.setting.quizFile)
-    this.previewQuiz = sampleSize(res, 10)
   }
 
   @computed get rewardPerMission() {

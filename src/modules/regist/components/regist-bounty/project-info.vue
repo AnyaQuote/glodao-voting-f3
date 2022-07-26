@@ -55,7 +55,11 @@
       />
 
       <div class="font-18 font-weight-bold mt-6">Field of project</div>
-      <app-autocomplete :value="$_get(vm.projectInfo, 'fields')" @onChange="vm.changeProjectInfo('fields', $event)" />
+      <app-autocomplete
+        limit="5"
+        :value="$_get(vm.projectInfo, 'fields')"
+        @onChange="vm.changeProjectInfo('fields', $event)"
+      />
 
       <!-- ===== SOCIAL LINKS FIELDS ===== -->
       <div class="d-flex flex-column flex-md-row align-md-center justify-space-between">

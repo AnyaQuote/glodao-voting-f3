@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Observer } from 'mobx-vue'
-import { Component, Vue, Prop, PropSync } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Observer
 @Component

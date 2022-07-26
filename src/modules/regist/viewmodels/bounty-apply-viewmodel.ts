@@ -1,4 +1,4 @@
-import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
+import { ProjectInfo, RewardDistributionType, VotingPoolType } from '@/models/VotingModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase, toNumber, isEmpty } from 'lodash'
@@ -71,6 +71,7 @@ export class BountyApplyViewModel {
   @observable approveChecking = false
 
   @observable votingHandler?: VotingHandler
+  // @observable rewardType = RewardDistributionType.TOKEN
 
   constructor() {
     this.loadData()
@@ -259,8 +260,9 @@ export class BountyApplyViewModel {
         decimals: this.rewardTokenDecimals,
         // =======
         // TOKEN B
-        optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
-        optionalTokenAddress: this.projectInfo.optionalTokenAddress,
+        // Incase do not input optional token address, decimal and token address is set to default 0 and ''
+        optionalRewardTokenDecimals: this.projectInfo.optionalTokenAddress ? this.optionalRewardTokenDecimals : 0,
+        optionalTokenAddress: this.projectInfo.optionalTokenAddress || '',
         optionalRewardAmount: this.projectInfo.optionalRewardAmount,
         optionalTokenName: this.projectInfo.optionalTokenName,
         optionalTokenLogo: optionalTokenLogo,
@@ -279,7 +281,13 @@ export class BountyApplyViewModel {
       snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
       return
     }
-    if (bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))) {
+    // If token address is not input, don't check balance
+    // Because the system will get tokenAddress to check balance
+    if (
+      this.projectInfo.optionalTokenAddress &&
+      this.projectInfo.optionalRewardAmount &&
+      bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))
+    ) {
       snackController.error(`${this.projectInfo.optionalTokenName} - Balance Insufficient`)
       return
     }
@@ -307,6 +315,18 @@ export class BountyApplyViewModel {
     }
   }
 
+  // @action.bound switchType(value: RewardDistributionType) {
+  //   this.rewardType = value
+
+  //   if (value === RewardDistributionType.BUSD) {
+  //     // Set BUSDF optionalTokenAddress  optional token (tokenAddress, decimals)
+  //     this.changeProjectInfo('optionalTokenAddress', process.env.VUE_APP_BUSD_ADDRESS!)
+  //     this.optionalRewardTokenDecimals = 18
+  //   } else {
+  //     this.changeProjectInfo('optionalTokenAddress', null)
+  //   }
+  // }
+
   @action.bound changeProjectInfo(property: string, value: any) {
     if (property === 'optionalTokenAddress') {
       if (web3.utils.isAddress(value)) {
@@ -321,7 +341,7 @@ export class BountyApplyViewModel {
           })
         })
       } else {
-        runInAction(() => (this.projectInfo = { ...this.projectInfo, tokenName: '' }))
+        runInAction(() => (this.projectInfo = { ...this.projectInfo, optionalTokenName: '' }))
       }
     } else if (property === 'tokenAddress') {
       const token = this.tokenList.find((item) => item.tokenAddress == value)
@@ -367,5 +387,9 @@ export class BountyApplyViewModel {
 
   @computed get projectEndDate() {
     return get(this.projectInfo, 'endDate', '')
+  }
+
+  @computed get generateWithTokenAddress() {
+    return !!this.projectInfo.optionalTokenAddress
   }
 }

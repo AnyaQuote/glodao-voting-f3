@@ -13,6 +13,9 @@ import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { Zero, ZERO_NUM } from '@/constants'
+import { FixedNumber } from '@ethersproject/bignumber'
+import { VotingPool } from '@/models/VotingModel'
 
 export class ProjectDetailViewModel {
   private _auth = appProvider.authStore
@@ -31,7 +34,7 @@ export class ProjectDetailViewModel {
   // Withdraw dialog
   @observable withdrawDialog = false
 
-  @observable poolInfo: any = {}
+  @observable poolInfo: VotingPool = {}
 
   constructor(unicodeName: string) {
     this.fetchProjectDetail(unicodeName)
@@ -64,7 +67,7 @@ export class ProjectDetailViewModel {
       }
       const votingPool = get(res, '[0]')
       this.poolStore = new PoolStore(votingPool)
-
+      this.poolInfo = this.poolStore.poolData
       if (votingPool.status === 'approved') {
         res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1, _sort: 'startTime:asc' })
         this.missions = res || []
@@ -247,6 +250,19 @@ export class ProjectDetailViewModel {
       snackController.commonError(error)
     } finally {
       this.saving = false
+    }
+  }
+
+  @computed get tokenBAmount() {
+    const value = get(this.poolInfo, 'data.optionalRewardAmount', ZERO_NUM)
+    return FixedNumber.from(value)
+  }
+
+  @computed get tokenBSingleMissionAmount() {
+    try {
+      return this.tokenBAmount.divUnsafe(FixedNumber.from(this.poolInfo.totalMission))
+    } catch (_) {
+      return Zero
     }
   }
 }
