@@ -154,7 +154,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/mission/:id',
+    path: '/projects/:unicodeName/mission/learn/:id',
     name: RouteName.MISSION_LEARN_DETAIL,
     component: () => import('@/modules/mission-detail/pages/learn-detail-page.vue'),
     meta: {
@@ -164,7 +164,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/mission/:id',
+    path: '/projects/:unicodeName/mission/social/:id',
     name: RouteName.MISSION_SOCIAL_DETAIL,
     component: () => import('@/modules/mission-detail/pages/social-detail-page.vue'),
     meta: {
@@ -174,7 +174,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/app-trial/:id',
+    path: '/projects/:unicodeName/app-trial/iat/:id',
     name: RouteName.MISSION_IAT_DETAIL,
     component: () => import('@/modules/mission-detail/pages/iat-detail-page.vue'),
     meta: {
