@@ -15,10 +15,9 @@
       </v-col>
 
       <!-- ---------------- FORM CONTENT ---------------- -->
-      <v-col v-else cols="8">
+      <v-col v-else cols="12" md="8">
         <mission-info v-if="vm.step === 1" />
-        <mission-lte-setting v-else-if="vm.step === 2 && vm.missionInfo.type === 'lte'" />
-        <mission-social-setting v-else />
+        <mission-social-setting v-else-if="vm.step === 2" />
       </v-col>
     </v-row>
   </v-container>
