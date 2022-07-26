@@ -56,7 +56,7 @@
               <!-- PROJECT LOGO AND NAME END  -->
 
               <!-- DESCRIPTION START -->
-              <div class="mt-7 neutral-10--text">
+              <div class="mt-7 neutral-10--text wspace-preline">
                 {{ $_get(vm.mission, 'metadata.shortDescription') }}
               </div>
               <!-- DESCRIPTION END -->
