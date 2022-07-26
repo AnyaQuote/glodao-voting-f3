@@ -21,7 +21,7 @@
         <div class="font-18 font-weight-bold mb-2">Reward amount<span class="app-red--text">*</span></div>
         <app-text-field
           type="number"
-          :rules="[$rules.floatNumberOnly, $rules.required, $rules.min(1)]"
+          :rules="[$rules.floatNumberOnly, $rules.required, $rules.gt(0)]"
           :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
           @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
           placeholder="Enter amount"
