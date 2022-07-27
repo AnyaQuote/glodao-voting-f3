@@ -13,6 +13,7 @@
     <snack-bar />
     <alert />
     <global-loading />
+    <confirm-dialog />
   </v-app>
 </template>
 
@@ -26,6 +27,7 @@ import { AppProvider } from './app-providers'
   components: {
     'twitter-login-dialog': () => import('@/components/twitter-login/twitter-login-dialog.vue'),
     'attach-wallet-dialog': () => import('@/components/attach-wallet/attach-wallet-dialog.vue'),
+    'confirm-dialog': () => import('@/components/confirm-dialog/confirm-dialog.vue'),
   },
 })
 export default class App extends Vue {
