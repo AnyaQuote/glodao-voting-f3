@@ -58,7 +58,6 @@ class LocalData {
   removeWalletConnect() {
     localStorage.removeItem('walletconnect')
   }
-
 }
 
 export const localdata = new LocalData()

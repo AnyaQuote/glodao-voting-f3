@@ -78,10 +78,12 @@ export class WalletStore {
       }
     )
 
+    console.log('localdata.walletConnect: ', localdata.walletConnect)
     if (localdata.walletConnect) {
       const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
       const walletConnectParsed = JSON.parse(walletConnect)
-      this.web3 = new Web3(this.walletConnectProvider)
+
+      this.web3 = localdata.web3Provider
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
     }
@@ -94,6 +96,7 @@ export class WalletStore {
     }
   }
   @asyncAction *start() {
+    console.log('start: ')
     try {
       if (this.chainType === 'bsc' || this.chainType === 'eth') {
         this.app.start()
@@ -185,6 +188,7 @@ export class WalletStore {
       const walletConnectParsed = JSON.parse(walletConnect)
 
       this.web3 = new Web3(this.walletConnectProvider)
+      localdata.web3Provider = this.web3
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
 
