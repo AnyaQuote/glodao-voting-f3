@@ -31,6 +31,7 @@ import { asyncAction } from 'mobx-utils'
 import { Subscription, timer } from 'rxjs'
 import Web3 from 'web3'
 import { authStore } from './auth-store'
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 export class WalletStore {
   ethereum: any = window.ethereum
@@ -60,6 +61,14 @@ export class WalletStore {
   @observable selectedAdapter: WalletAdapter | SignerWalletAdapter | MessageSignerWalletAdapter | null = null
 
   private _bnbBalanceSubscription: Subscription | undefined
+  walletConnectProvider = new WalletConnectProvider({
+    rpc: {
+      97: 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet',
+      56: 'https://bsc-dataseed.binance.org/',
+      43114: 'https://api.avax.network/ext/bc/C/rpc',
+      137: 'https://rpc-mainnet.maticvigil.com/'
+    }
+  } as any) as any
 
   constructor() {
     reaction(
@@ -153,6 +162,70 @@ export class WalletStore {
   //     } else {
   //       return yield a._wallet.signMessage(data)
   //     }
+  //   }
+  // }
+
+  @asyncAction *connectViaWalletConnect() {
+    try {
+      loadingController.increaseRequest()
+      yield this.walletConnectProvider.enable()
+      const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+      const walletConnectParsed = JSON.parse(walletConnect)
+      this.account = walletConnectParsed.accounts[0]
+      this.chainId = walletConnectParsed.chainId
+      this.web3 = new Web3(this.walletConnectProvider)
+      this.changeShowConnectDialog(false)
+      this.walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
+        window.location.reload()
+      })
+      this.walletConnectProvider.on('chainChanged', (chainId: number) => {
+        window.location.reload()
+      })
+    } catch (error) {
+      // error.message && snackController.error(error.message)
+      return false
+    } finally {
+      loadingController.decreaseRequest()
+    }
+  }
+
+  // @action connectViaWalletConnect() {
+  //   try {
+  //     if (!connector.connected) {
+  //       console.log("========createSession")
+  //       connector.createSession()
+  //     }
+  //     connector.on('connect', (error, payload) => {
+  //       // Subscribe to connection events
+  //       console.log(payload)
+  //       this.account = payload?.params[0].accounts[0]
+
+  //       console.log("======this.account", this.account)
+  //       // this.web3 = new Web3(connector)
+  //       this.web3 = new Web3()
+  //       this.changeShowConnectDialog(false)
+  //       if (error) {
+  //         throw error
+  //       }
+  //     })
+
+  //     connector.on('session_update', (error, payload) => {
+  //       if (error) {
+  //         throw error
+  //       }
+  //     })
+
+  //     connector.on('disconnect', (error, payload) => {
+  //       if (error) {
+  //         throw error
+  //       }
+  //       if (payload.params[0]?.message === 'Session update rejected') snackController.error('User reject request')
+  //       // else this.disconnect()
+  //     })
+  //   } catch (error) {
+  //     snackController.commonError(error)
+  //   } finally {
+  //     //
   //   }
   // }
 

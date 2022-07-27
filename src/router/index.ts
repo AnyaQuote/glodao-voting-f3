@@ -254,10 +254,14 @@ router.beforeEach(async (to, from, next) => {
     }
     // =====================================================================
     // Currently disable any route that leads to voting list and detail and launchpad apply page
-    if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
-      return next({ name: RouteName.COMMING_SOON })
+    if (
+      to.name === RouteName.VOTING_LIST ||
+      to.name === RouteName.VOTING_DETAIL ||
+      to.name === RouteName.NEW_LAUNCHPAD_PROJECT
+    ) {
+      return next(false)
     }
-    if (to.name === 'bounty-apply') {
+    if (to.name === RouteName.NEW_BOUNTY_PROJECT) {
       next()
     } else {
       // =====================================================================
@@ -271,10 +275,10 @@ router.beforeEach(async (to, from, next) => {
           return next({ name: RouteName.UNAUTHENTICATED })
         }
       }
+      next()
+      return
+      // =====================================================================
     }
-    next()
-    return
-    // =====================================================================
   }
 })
 

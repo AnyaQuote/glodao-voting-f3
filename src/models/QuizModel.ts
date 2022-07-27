@@ -110,3 +110,8 @@ export const telegramChatDefault = {
     required: true,
   },
 }
+
+export const facebookFollowSetting = {
+  enabled: false,
+  setting: { type: 'follow', page: '', required: true, link: '' },
+}
