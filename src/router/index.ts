@@ -24,7 +24,7 @@ export enum RoutePaths {
   project_detail = '/projects/',
   new_mission = '/new-mission',
   new_application = '/new-project',
-  new_bounty_application = '/new-project/bounty',
+  new_bounty_application = '/new-project-bounty',
   new_launchpad_application = '/new-project/launchpad',
   comming_soon = '/comming-soon',
   not_found = '/404',
@@ -102,7 +102,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-project/bounty',
+    path: '/new-project-bounty',
     name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
@@ -257,15 +257,19 @@ router.beforeEach(async (to, from, next) => {
     if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
       return next({ name: RouteName.COMMING_SOON })
     }
-    // =====================================================================
-    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    if (requiredAuth && !authStore.jwt) {
-      const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
-      // twitterLoginDialogController.close()
+    if (to.name === 'bounty-apply') {
+      next()
+    } else {
+      // =====================================================================
+      const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+      if (requiredAuth && !authStore.jwt) {
+        const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
+        // twitterLoginDialogController.close()
 
-      // If user denied sign in, redirect to 401 page
-      if (!dialogStatus) {
-        return next({ name: RouteName.UNAUTHENTICATED })
+        // If user denied sign in, redirect to 401 page
+        if (!dialogStatus) {
+          return next({ name: RouteName.UNAUTHENTICATED })
+        }
       }
     }
     next()
