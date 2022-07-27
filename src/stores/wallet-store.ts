@@ -31,7 +31,13 @@ import { asyncAction } from 'mobx-utils'
 import { Subscription, timer } from 'rxjs'
 import Web3 from 'web3'
 import { authStore } from './auth-store'
+import WalletConnect from '@walletconnect/client'
+import QRCodeModal from '@walletconnect/qrcode-modal'
 
+const connector = new WalletConnect({
+  bridge: "https://bridge.walletconnect.org", // Required
+  qrcodeModal: QRCodeModal,
+});
 export class WalletStore {
   ethereum: any = window.ethereum
 
@@ -153,6 +159,74 @@ export class WalletStore {
   //     } else {
   //       return yield a._wallet.signMessage(data)
   //     }
+  //   }
+  // }
+
+  @action connectViaWalletConnect() {
+    try {
+      if (!connector.connected) {
+        console.log("========createSession")
+        connector.createSession()
+      }
+      connector.on('connect', (error, payload) => {
+        // Subscribe to connection events
+        // const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+        // const walletConnectParsed = JSON.parse(walletConnect)
+        // this.account = walletConnectParsed.accounts[0]
+        // this.chainId = walletConnectParsed.chainId
+        // console.log("======this.account", this.account)
+        // this.web3 = new Web3(connector)
+        // this.changeShowConnectDialog(false)
+        if (error) {
+          throw error
+        }
+      })
+
+      connector.on('session_update', (error, payload) => {
+        if (error) {
+          throw error
+        }
+      })
+
+      connector.on('disconnect', (error, payload) => {
+        if (error) {
+          throw error
+        }
+        if (payload.params[0]?.message === 'Session update rejected') snackController.error('User reject request')
+        // else this.disconnect()
+      })
+    } catch (error) {
+      snackController.commonError(error)
+    } finally {
+      //
+    }
+  }
+  // @asyncAction *connectViaWalletConnect() {
+  //   try {
+  //     loadingController.increaseRequest()
+  //     // yield this.walletConnectProvider.enable()
+  //     yield this.walletConnectProvider.createSession()
+
+  // const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+  // const walletConnectParsed = JSON.parse(walletConnect)
+  // this.account = walletConnectParsed.accounts[0]
+  // this.chainId = walletConnectParsed.chainId
+  // this.web3 = new Web3(this.walletConnectProvider)
+  // this.changeShowConnectDialog(false)
+  //     // console.log('========this.account', this.account)
+  //     // this.walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
+  //     //   console.log('==========1')
+  //     //   // window.location.reload()
+  //     // })
+  //     // this.walletConnectProvider.on('chainChanged', (chainId: number) => {
+  //     //   console.log('========2')
+  //     //   // window.location.reload()
+  //     // })
+  //   } catch (error) {
+  //     // error.message && snackController.error(error.message)
+  //     return false
+  //   } finally {
+  //     loadingController.decreaseRequest()
   //   }
   // }
 
