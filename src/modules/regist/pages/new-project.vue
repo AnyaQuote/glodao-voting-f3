@@ -13,9 +13,12 @@
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
-                @click="openBountyForm"
               >
-                <div class="pa-6 neutral-100 rounded-lg">
+                <router-link
+                  tag="div"
+                  class="d-flex flex-column align-center pa-6 neutral-100 rounded-lg elevation-3 cursor-pointer"
+                  to="/new-project/bounty"
+                >
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
@@ -24,18 +27,21 @@
                   <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
                     Bounty Hunter
                   </div>
-                  <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
+                  <!-- <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
                     Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
                     duis enim velit mollit.
-                  </div>
-                </div>
+                  </div> -->
+                </router-link>
               </v-col>
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
-                @click="openLaunchpadForm"
               >
-                <div class="pa-6 neutral-100 rounded-lg">
+                <router-link
+                  tag="div"
+                  class="d-flex flex-column align-center pa-6 neutral-100 rounded-lg elevation-3 cursor-pointer"
+                  to="/new-project/launchpad"
+                >
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
@@ -44,11 +50,11 @@
                   <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
                     Launchpad Hunter
                   </div>
-                  <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
+                  <!-- <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
                     Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
                     duis enim velit mollit.
-                  </div>
-                </div></v-col
+                  </div> -->
+                </router-link></v-col
               >
             </v-row>
           </div>
@@ -78,19 +84,19 @@ export default class ProjectRegist extends Vue {
 
   walletStore = walletStore
 
-  openBountyForm() {
-    try {
-      this.$router.push('/new-project-bounty')
-    } catch (error) {
-      snackController.error(error as string)
-    }
-  }
+  // openBountyForm() {
+  //   try {
+  //     this.$router.push('/new-project-bounty')
+  //   } catch (error) {
+  //     snackController.error(error as string)
+  //   }
+  // }
 
-  openLaunchpadForm() {
-    this.$router.push(RoutePaths.new_launchpad_application).catch(() => {
-      //
-    })
-  }
+  // openLaunchpadForm() {
+  //   this.$router.push(RoutePaths.new_launchpad_application).catch(() => {
+  //     //
+  //   })
+  // }
 }
 </script>
 

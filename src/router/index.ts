@@ -102,7 +102,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-project-bounty',
+    path: '/new-project/bounty',
     name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
