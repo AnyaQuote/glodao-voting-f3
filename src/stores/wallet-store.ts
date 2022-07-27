@@ -78,12 +78,21 @@ export class WalletStore {
       }
     )
 
-    console.log('localdata.walletConnect: ', localdata.walletConnect)
     if (localdata.walletConnect) {
+      console.log('localdata.walletConnect: ', localdata.walletConnect)
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc: {
+          97: 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet',
+          56: 'https://bsc-dataseed.binance.org/',
+          43114: 'https://api.avax.network/ext/bc/C/rpc',
+          137: 'https://rpc-mainnet.maticvigil.com/',
+        },
+      } as any) as any
+
       const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
       const walletConnectParsed = JSON.parse(walletConnect)
 
-      this.web3 = localdata.web3Provider
+      this.web3 = new Web3(walletConnectProvider)
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
     }
@@ -103,7 +112,7 @@ export class WalletStore {
         this.web3 = this.app.web3
         if (yield this.app.getAddress()) {
           if (localdata.walletConnect) {
-            yield this.connectViaWalletConnect()
+            // yield this.connectViaWalletConnect()
           } else {
             yield this.connectSolidity()
           }
@@ -188,10 +197,6 @@ export class WalletStore {
       const walletConnectParsed = JSON.parse(walletConnect)
 
       this.web3 = new Web3(this.walletConnectProvider)
-      console.log('this.walletConnectProvider: ', this.walletConnectProvider)
-      console.log('stringify .walletConnectProvider: ', JSON.stringify(this.walletConnectProvider))
-      localdata.web3Provider = this.walletConnectProvider
-      console.log('localdata.web3Provider: ', localdata.web3Provider)
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
 
@@ -202,10 +207,12 @@ export class WalletStore {
 
       this.changeShowConnectDialog(false)
       this.walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
-        window.location.reload()
+        console.log('accountsChanged: ')
+        // window.location.reload()
       })
       this.walletConnectProvider.on('chainChanged', (chainId: number) => {
-        window.location.reload()
+        console.log('chainChanged: ')
+        // window.location.reload()
       })
     } catch (error) {
       console.error(error)
