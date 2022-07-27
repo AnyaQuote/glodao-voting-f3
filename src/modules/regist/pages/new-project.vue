@@ -59,6 +59,7 @@
 
 <script lang="ts">
 import { AppProvider } from '@/app-providers'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { RoutePaths } from '@/router'
 import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Inject, Provide } from 'vue-property-decorator'
@@ -76,7 +77,11 @@ export default class ProjectRegist extends Vue {
   walletStore = walletStore
 
   openBountyForm() {
-    this.providers.router.push(RoutePaths.new_bounty_application)
+    try {
+      this.providers.router.push(RoutePaths.new_bounty_application)
+    } catch (error) {
+      snackController.error(error as string)
+    }
   }
 
   openLaunchpadForm() {
