@@ -170,11 +170,11 @@ export class WalletStore {
       }
       connector.on('connect', (error, payload) => {
         // Subscribe to connection events
-        // const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
-        // const walletConnectParsed = JSON.parse(walletConnect)
-        // this.account = walletConnectParsed.accounts[0]
-        // this.chainId = walletConnectParsed.chainId
-        // console.log("======this.account", this.account)
+        const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+        const walletConnectParsed = JSON.parse(walletConnect)
+        this.account = walletConnectParsed.accounts[0]
+        this.chainId = walletConnectParsed.chainId
+        console.log("======this.account", this.account)
         // this.web3 = new Web3(connector)
         // this.changeShowConnectDialog(false)
         if (error) {
