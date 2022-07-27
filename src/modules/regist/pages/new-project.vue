@@ -14,7 +14,7 @@
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
               >
-                <div class="pa-6 neutral-100 rounded-lg" @click.stop="openBountyForm">
+                <div class="pa-6 neutral-100 rounded-lg" @click="openBountyForm">
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
@@ -33,7 +33,7 @@
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
               >
-                <div class="pa-6 neutral-100 rounded-lg" @click.stop="openLaunchpadForm">
+                <div class="pa-6 neutral-100 rounded-lg" @click="openLaunchpadForm">
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
