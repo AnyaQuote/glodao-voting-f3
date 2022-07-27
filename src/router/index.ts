@@ -5,6 +5,7 @@ import { attachWalletDialogController } from '@/components/attach-wallet/attach-
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
 import { ERROR_MSG_LOGIN_TO_CONTINUE, WALLET_ATTACHED_SUCCESSFUL, WALLET_CONNECTED_SUCCESSFUL } from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 
 Vue.use(VueRouter)
 
@@ -224,11 +225,14 @@ router.beforeEach(async (to, _, next) => {
   } else {
     // Currently disable any route that leads to voting list and detail and launchpad apply page
     if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
+      snackController.success('comming soon')
       next({ name: RouteName.COMMING_SOON })
     }
     if (to.name === 'bounty-apply') {
+      snackController.success('Bounty Application')
       next()
     } else {
+      snackController.error('normal route')
       // =====================================================================
       const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
       if (requiredAuth && !authStore.jwt) {
