@@ -44,7 +44,7 @@ class LocalData {
   }
 
   get walletConnect() {
-    return JSON.parse(localStorage.getItem('walletconnect') || '')
+    return localStorage.getItem('walletconnect')
   }
 
   set web3Provider(value: any) {
@@ -52,7 +52,7 @@ class LocalData {
   }
 
   get web3Provider() {
-    return localStorage.getItem('web3Provider')
+    return JSON.parse(localStorage.getItem('web3Provider') || '')
   }
 
   removeWalletConnect() {
