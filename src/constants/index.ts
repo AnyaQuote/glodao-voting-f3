@@ -24,7 +24,7 @@ export const MAX_IN_APP_TRIAL_TASKS = 5
 export const PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT =
   'All your changes will be lost. Are you sure you want to exit the page?'
 export const PROMPT_FORM_ON_LEAVE_DIALOG_TITLE = 'Warning'
-export const PROMPT_FORM_ON_LEAVE_DIALOG_DONT_TEXT = 'Confirm'
+export const PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT = 'Confirm'
 export const ALLOW_PASS_THROUGH = 'true'
 
 export const ERROR_MSG_TIMEOUT = 'Process took too long. Please try again.'

@@ -7,7 +7,7 @@ import {
   ALLOW_PASS_THROUGH,
   ERROR_MSG_LOGIN_TO_CONTINUE,
   PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
-  PROMPT_FORM_ON_LEAVE_DIALOG_DONT_TEXT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
   PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
   WALLET_ATTACHED_SUCCESSFUL,
   WALLET_CONNECTED_SUCCESSFUL,
@@ -245,7 +245,7 @@ router.beforeEach(async (to, from, next) => {
         const confirm = await confirmDialogController.openAsync({
           title: PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
           content: PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
-          doneText: PROMPT_FORM_ON_LEAVE_DIALOG_DONT_TEXT,
+          doneText: PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
         })
         if (confirm === false) {
           return next(false)
