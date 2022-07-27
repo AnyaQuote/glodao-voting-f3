@@ -31,7 +31,7 @@ import { asyncAction } from 'mobx-utils'
 import { Subscription, timer } from 'rxjs'
 import Web3 from 'web3'
 import { authStore } from './auth-store'
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectProvider from '@walletconnect/web3-provider'
 
 export class WalletStore {
   ethereum: any = window.ethereum
@@ -66,8 +66,8 @@ export class WalletStore {
       97: 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet',
       56: 'https://bsc-dataseed.binance.org/',
       43114: 'https://api.avax.network/ext/bc/C/rpc',
-      137: 'https://rpc-mainnet.maticvigil.com/'
-    }
+      137: 'https://rpc-mainnet.maticvigil.com/',
+    },
   } as any) as any
 
   constructor() {
@@ -77,6 +77,14 @@ export class WalletStore {
         localdata.lastChain = x as any
       }
     )
+
+    if (localdata.walletConnect) {
+      const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+      const walletConnectParsed = JSON.parse(walletConnect)
+      this.account = walletConnectParsed.accounts[0]
+      this.chainId = walletConnectParsed.chainId
+      this.web3 = new Web3(this.walletConnectProvider)
+    }
   }
 
   @action.bound changeShowConnectDialog(value: boolean) {
