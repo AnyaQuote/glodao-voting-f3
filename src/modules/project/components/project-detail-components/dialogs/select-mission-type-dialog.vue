@@ -13,10 +13,10 @@
             <v-sheet class="rounded pa-5" outlined :class="isActive('social')">
               <v-radio color="blue-diversity" value="social">
                 <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('social')">Social & Learn mission</span>
+                  <span class="font-18 font-weight-bold" :class="isActive('social')">Social mission</span>
                 </template>
               </v-radio>
-              <div class="text-subtitle-2 font-weight-regular">Setting social tasks or learn to earn tasks</div>
+              <div class="text-subtitle-2 font-weight-regular">Setting social tasks</div>
             </v-sheet>
             <!-- ==================================================================================================================== -->
             <v-sheet class="rounded pa-5 mt-4" outlined :class="isActive('learn')">

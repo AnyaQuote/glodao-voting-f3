@@ -64,23 +64,23 @@ export const joinTelegramDefault = {
   setting: {
     type: 'follow',
     link: '',
-    page: 'GloDAO Chanel',
+    page: '',
     required: true,
   },
 }
 
 export const followTwitterDefault = {
   enabled: false,
-  setting: { type: 'follow', page: 'GloDAO', required: true, link: '' },
+  setting: { type: 'follow', page: '', required: true, link: '' },
 }
 
 export const quoteTweetDefault = {
   enabled: false,
   setting: {
     type: 'quote',
-    content: 'GloDAO',
-    page: 'GloDAO',
-    hashtag: '',
+    content: '',
+    page: '',
+    hashtag: [],
     link: '',
     embedLink: '',
     required: true,
@@ -91,8 +91,8 @@ export const commentTweetDefault = {
   enabled: false,
   setting: {
     type: 'comment',
-    page: 'GloDAO',
-    content: 'GloDAO',
+    page: '',
+    content: '',
     embedLink: '',
     link: '',
     required: true,
@@ -103,8 +103,8 @@ export const telegramChatDefault = {
   enabled: false,
   setting: {
     type: 'comment',
-    page: 'GloDAO',
-    content: 'GloDAO',
+    page: '',
+    content: '',
     embedLink: '',
     link: '',
     required: true,

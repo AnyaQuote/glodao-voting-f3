@@ -1,16 +1,20 @@
 <template>
   <v-sheet class="rounded-lg" outlined>
-    <div class="pa-6 text-center rounded-lg rounded-b-0 blue-2 d-flex align-center">
-      <div class="d-flex align-center cursor-pointer" @click="back">
+    <div
+      class="pa-6 text-center rounded-lg rounded-b-0 blue-2 d-flex flex-column flex-sm-row align-center justify-space-between"
+    >
+      <div class="d-flex align-self-start align-self-sm-center cursor-pointer" @click="back">
         <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
         <span class="text-subtitle-2">Create mission</span>
       </div>
-      <div
+      <!-- <div
         class="p-absolute text-h5 font-weight-bold blue-diversity--text"
         style="left: 50%; transform: translateX(-50%)"
       >
         Social mission
-      </div>
+      </div> -->
+      <div class="my-2 my-sm-0" />
+      <div class="text-h5 font-weight-bold blue-diversity--text">Social mission</div>
     </div>
     <v-divider />
 
@@ -26,11 +30,22 @@
         :value="vm.joinTelegram.enabled"
         @change="vm.changeJoinTelegramSetting('enabled', $event)"
       >
+        <div class="font-18 font-weight-bold">Telegram group name<span class="red--text">*</span></div>
         <app-text-field
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.joinTelegram, 'setting.page')"
+          @change="vm.changeJoinTelegramSetting('setting.page', $event)"
+          placeholder="GLODAO Channel"
+        />
+
+        <div class="font-18 font-weight-bold">Telegram group link<span class="red--text">*</span></div>
+        <app-text-field
+          class="mt-2"
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.joinTelegram, 'setting.link')"
           @change="vm.changeJoinTelegramSetting('setting.link', $event)"
-          placeholder="Enter telegram group link"
+          placeholder="https://t.me/GloDAO_Group"
           append-icon="mdi-link"
         />
       </switch-field>
@@ -44,7 +59,20 @@
         :value="vm.followTwitter.enabled"
         @change="vm.changeFollowTwitterSetting('enabled', $event)"
       >
+        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
+          Project from twitter page name<span class="red--text">*</span>
+        </div>
         <app-text-field
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.followTwitter, 'setting.page')"
+          @change="vm.changeFollowTwitterSetting('setting.page', $event)"
+          placeholder="GLODAO Channel"
+        />
+
+        <div class="font-18 font-weight-bold">Twitter project link<span class="red--text">*</span></div>
+        <app-text-field
+          class="mt-2"
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.followTwitter, 'setting.link')"
           @change="vm.changeFollowTwitterSetting('setting.link', $event)"
@@ -62,7 +90,17 @@
         :value="vm.quoteTweet.enabled"
         @change="vm.changeQuoteTweetSetting('enabled', $event)"
       >
-        <div class="font-18 font-weight-bold">Twitter link</div>
+        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
+          Tweet from twitter page name<span class="red--text">*</span>
+        </div>
+        <app-text-field
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.quoteTweet, 'setting.page')"
+          @change="vm.changeQuoteTweetSetting('setting.page', $event)"
+          placeholder="GLODAO Channel"
+        />
+        <div class="font-18 font-weight-bold mt-2">Twitter link<span class="red--text">*</span></div>
         <app-text-field
           class="mt-2"
           :rules="[$rules.required, $rules.url]"
@@ -71,7 +109,7 @@
           placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
-        <div class="font-18 font-weight-bold mt-6">Twitter hastag</div>
+        <div class="font-18 font-weight-bold mt-2">Twitter hastag<span class="red--text">*</span></div>
         <app-autocomplete
           :items="[]"
           :rules="[(v) => !!(v && v.length) || 'This field is required']"
@@ -79,6 +117,19 @@
           :value="$_get(vm.quoteTweet, 'setting.hashtag')"
           @onChange="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
         />
+        <!-- <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-6">
+          <span>Required content</span>
+          <v-spacer />
+          <i class="text-subtitle-2 font-weight-regular neutral-10--text"
+            >*System will check if user's quote contains these keywords</i
+          >
+        </div>
+        <app-autocomplete
+          :items="[]"
+          placeholder="Enter content keywords"
+          :value="$_get(vm.quoteTweet, 'setting.content')"
+          @onChange="vm.changeQuoteTweetSetting('setting.content', $event)"
+        /> -->
       </switch-field>
 
       <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
@@ -90,13 +141,38 @@
         :value="vm.commentTweet.enabled"
         @change="vm.changeCommentTweetSetting('enabled', $event)"
       >
+        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
+          Tweet from twitter page name<span class="red--text">*</span>
+        </div>
         <app-text-field
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.commentTweet, 'setting.page')"
+          @change="vm.changeCommentTweetSetting('setting.page', $event)"
+          placeholder="GLODAO Channel"
+        />
+        <div class="font-18 font-weight-bold mt-2">Twitter post link<span class="red--text">*</span></div>
+        <app-text-field
+          class="mt-2"
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.commentTweet, 'setting.link')"
           @change="vm.changeCommentTweetSetting('setting.link', $event)"
           placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
+        <!-- <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-2">
+          <span>Required content</span>
+          <v-spacer />
+          <i class="text-subtitle-2 font-weight-regular neutral-10--text"
+            >*System will check if user's reply contains these keywords</i
+          >
+        </div>
+        <app-autocomplete
+          :items="[]"
+          placeholder="Enter content keywords"
+          :value="$_get(vm.commentTweet, 'setting.content')"
+          @onChange="vm.changeCommentTweetSetting('setting.content', $event)"
+        /> -->
       </switch-field>
 
       <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
