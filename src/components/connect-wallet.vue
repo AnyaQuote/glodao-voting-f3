@@ -103,7 +103,7 @@
             <div class="d-flex align-center ma-4">
               <img width="24" :src="require('@/assets/icons/metamask-fox.svg')" />
             </div>
-            <span>MetaMask </span>
+            <span>WalletConnect </span>
             <v-spacer></v-spacer>
             <span v-if="walletStore.solidityConnected" class="success--text caption font-weight-medium caption">
               Connected
