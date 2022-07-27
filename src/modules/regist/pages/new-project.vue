@@ -12,25 +12,6 @@
             <v-row no-gutters>
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
-                :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
-              >
-                <div class="pa-6 neutral-100 rounded-lg" @click="openBountyForm">
-                  <v-img
-                    :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
-                    :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
-                    src="@/assets/icons/bulleyes.svg"
-                  />
-                  <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
-                    Bounty Hunter
-                  </div>
-                  <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
-                    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
-                    duis enim velit mollit.
-                  </div>
-                </div>
-              </v-col>
-              <v-col
-                :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
               >
                 <div class="pa-6 neutral-100 rounded-lg" @click="openLaunchpadForm">
@@ -48,6 +29,25 @@
                   </div>
                 </div></v-col
               >
+              <v-col
+                :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
+                :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
+              >
+                <div class="pa-6 neutral-100 rounded-lg" @click="openBountyForm">
+                  <v-img
+                    :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
+                    :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
+                    src="@/assets/icons/bulleyes.svg"
+                  />
+                  <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
+                    Bounty Hunter
+                  </div>
+                  <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
+                    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
+                    duis enim velit mollit.
+                  </div>
+                </div>
+              </v-col>
             </v-row>
           </div>
         </v-col>
