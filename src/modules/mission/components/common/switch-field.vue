@@ -11,6 +11,7 @@
             contain
             :src="require('@/assets/icons/telegram.svg')"
           />
+          <v-icon v-else-if="type === 'facebook'" v-html="'fab fa-facebook'" size="48" color="app-blue" />
           <img v-else width="48" height="48" contain :src="require('@/assets/icons/learn-to-earn.svg')" />
         </slot>
       </div>

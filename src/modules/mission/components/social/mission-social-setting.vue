@@ -175,7 +175,37 @@
         /> -->
       </switch-field>
 
-      <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
+      <!-- ------------------------------------------------------------------------------------------------- -->
+
+      <switch-field
+        class="mt-4"
+        type="facebook"
+        title="Facebook task"
+        subtitle="Follow fanpage"
+        :value="vm.facebookFollow.enabled"
+        @change="vm.changeFacebookFollowSetting('enabled', $event)"
+      >
+        <div class="font-18 font-weight-bold mt-2">Facebook page name<span class="red--text">*</span></div>
+        <app-text-field
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.facebookFollow, 'setting.page')"
+          @change="vm.changeFacebookFollowSetting('setting.page', $event)"
+          placeholder="Enter your facebook page name"
+        />
+
+        <div class="font-18 font-weight-bold mt-2">Facebook page link<span class="red--text">*</span></div>
+        <app-text-field
+          class="mt-2"
+          :rules="[$rules.required, $rules.url]"
+          :value="$_get(vm.facebookFollow, 'setting.link')"
+          @change="vm.changeFacebookFollowSetting('setting.link', $event)"
+          placeholder="https://www.facebook.com/groups/1021901785231713"
+          append-icon="mdi-link"
+        />
+      </switch-field>
+
+      <!-- ------------------------------------------------------------------------------------------------- -->
       <switch-field
         readonly
         class="mt-4"
@@ -237,7 +267,7 @@ export default class MissionSocialSetting extends Vue {
   formState = false
 
   beforeDestroy() {
-    this.vm.resetSocialSetting()
+    // this.vm.resetSocialSetting()
   }
 
   submit() {
