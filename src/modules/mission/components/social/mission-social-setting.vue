@@ -20,8 +20,7 @@
 
     <v-form v-model="formState" class="pa-7">
       <div class="title font-weight-bold blue-diversity--text">Mission setting</div>
-
-      <!-- -------------------------------------- Join telegram -------------------------------------- -->
+      <!-- ====================================== Join telegram ====================================== -->
       <switch-field
         class="mt-4"
         type="telegram"
@@ -49,8 +48,29 @@
           append-icon="mdi-link"
         />
       </switch-field>
+      <!-- ================================================================================================ -->
 
-      <!-- -------------------------------------- Follow twitter -------------------------------------- -->
+      <!-- ======================================= CHAT TELEGRAM ========================================== -->
+      <switch-field
+        readonly
+        class="mt-4"
+        type="telegram"
+        title="Telegram task"
+        subtitle="Chat in group (Comming soon)"
+        :value="vm.telegramChat.enabled"
+        @change="vm.changeTelegramChatSetting('enabled', $event)"
+      >
+        <app-text-field
+          :rules="[$rules.required, $rules.url]"
+          :value="$_get(vm.telegramChat, 'setting.link')"
+          @change="vm.changeTelegramChatSetting('setting.link', $event)"
+          placeholder="Enter your tweet link"
+          append-icon="mdi-link"
+        />
+      </switch-field>
+      <!-- ============================================================================================== -->
+
+      <!-- ======================================= Follow twitter ======================================= -->
       <switch-field
         class="mt-4"
         type="twitter"
@@ -80,8 +100,9 @@
           append-icon="mdi-link"
         />
       </switch-field>
+      <!-- =========================================================================================== -->
 
-      <!-- -------------------------------------- Quote tweet -------------------------------------- -->
+      <!-- ======================================= Quote tweet ======================================= -->
       <switch-field
         class="mt-4"
         type="twitter"
@@ -131,8 +152,9 @@
           @onChange="vm.changeQuoteTweetSetting('setting.content', $event)"
         /> -->
       </switch-field>
+      <!-- =============================================================================================== -->
 
-      <!-- -------------------------------------- Like and repost tweet -------------------------------------- -->
+      <!-- ======================================= Like and repost tweet ================================= -->
       <switch-field
         class="mt-4"
         type="twitter"
@@ -174,9 +196,9 @@
           @onChange="vm.changeCommentTweetSetting('setting.content', $event)"
         /> -->
       </switch-field>
+      <!-- =============================================================================================== -->
 
-      <!-- ------------------------------------------------------------------------------------------------- -->
-
+      <!-- ======================================= Facebook follow ======================================= -->
       <switch-field
         class="mt-4"
         type="facebook"
@@ -204,27 +226,47 @@
           append-icon="mdi-link"
         />
       </switch-field>
+      <!-- ============================================================================================= -->
 
-      <!-- ------------------------------------------------------------------------------------------------- -->
+      <!-- ======================================= CUSTOM TASK ========================================= -->
       <switch-field
-        readonly
         class="mt-4"
-        type="telegram"
-        title="Telegram task"
-        subtitle="Chat in group (Comming soon)"
-        :value="vm.telegramChat.enabled"
-        @change="vm.changeTelegramChatSetting('enabled', $event)"
+        type="other"
+        title="Custom task"
+        subtitle="Customize your task"
+        :value="vm.customTask.enabled"
+        @change="vm.changeCustomTaskSetting('enabled', $event)"
       >
+        <div class="font-18 font-weight-bold mt-2">Task name<span class="red--text">*</span></div>
         <app-text-field
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.telegramChat, 'setting.link')"
-          @change="vm.changeTelegramChatSetting('setting.link', $event)"
-          placeholder="Enter your tweet link"
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.customTask, 'setting.name')"
+          @change="vm.changeCustomTaskSetting('setting.name', $event)"
+          placeholder="Enter your task name"
+        />
+
+        <div class="font-18 font-weight-bold mt-2">Task description<span class="red--text">*</span></div>
+        <app-textarea
+          class="mt-2"
+          :rules="[$rules.required]"
+          :value="$_get(vm.customTask, 'setting.description')"
+          @change="vm.changeCustomTaskSetting('setting.description', $event)"
+          placeholder="Describe your custom task"
+        />
+
+        <div class="font-18 font-weight-bold mt-2">Task link<span class="red--text">*</span></div>
+        <app-text-field
+          class="mt-2"
+          :rules="[$rules.url, $rules.required]"
+          :value="$_get(vm.customTask, 'setting.link')"
+          @change="vm.changeCustomTaskSetting('setting.link', $event)"
+          placeholder="Enter your link"
           append-icon="mdi-link"
         />
       </switch-field>
+      <!-- ============================================================================================= -->
 
-      <!-- ---------------------------------------------------------------------------------------------------- -->
       <div class="d-flex mt-7">
         <div class="flex-grow">
           <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Back </v-btn>

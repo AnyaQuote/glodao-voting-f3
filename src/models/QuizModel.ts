@@ -115,3 +115,16 @@ export const facebookFollowSetting = {
   enabled: false,
   setting: { type: 'follow', page: '', required: true, link: '' },
 }
+
+export const customTaskSetting = {
+  enabled: false,
+  setting: {
+    type: 'custom',
+    requiredContent: '',
+    description: '',
+    link: '',
+    page: '',
+    icon: 'website',
+    isLinkRequired: false,
+  },
+}

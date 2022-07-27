@@ -75,6 +75,39 @@
       </div>
     </v-sheet>
     <!-- ------------------------------------------------------------------------------------------------------ -->
+
+    <!-- ----------------------------- DISPLAY CUSTOM SETTING ----------------------------------------------- -->
+    <v-sheet
+      v-for="(task, index) in customTaskSetting"
+      :key="index + twitterSetting.length + facebookSetting.length + customTaskSetting.length"
+      class="pa-5 mt-2"
+      rounded="lg"
+      outlined
+    >
+      <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
+        <v-icon
+          v-html="'mdi-checkbox-marked-circle'"
+          max-width="24"
+          max-height="24"
+          color="app-blue"
+          class="d-none d-sm-block"
+        />
+        <div class="ml-0 ml-sm-2" />
+        <span class="font-weight-600">Custom task</span>
+        <v-sheet width="4" height="4" rounded="circle" class="d-none d-sm-block neutral-10 mx-sm-3 mx-1" />
+        <span class="neutral-10--text text-subtitle-2 text-capitalize">
+          {{ task.name }}
+        </span>
+      </div>
+      <div class="mt-2 d-flex text-subtitle-2 font-weight-medium neutral-10--text font-weight-600 wspace-preline">
+        {{ task.description }}
+      </div>
+      <div class="mt-2 text-truncate text-subtitle-2 font-weight-600" :style="`max-width: ${linkWidth}`">
+        <span>Task link:&nbsp;</span>
+        <a class="blue-diversity--text" :href="task.link">{{ task.link }}</a>
+      </div>
+    </v-sheet>
+    <!-- ------------------------------------------------------------------------------------------------------ -->
   </div>
 </template>
 
@@ -92,12 +125,14 @@ export default class MissionSocialSettingViewer extends Vue {
   twitterSetting: Task[] = []
   telegramSetting: Task[] = []
   facebookSetting: Task[] = []
+  customTaskSetting: Task[] = []
   // discordSetting: Task[] = []
 
   created() {
     this.twitterSetting = get(this.data, 'twitter', [])
     this.telegramSetting = get(this.data, 'telegram', [])
     this.facebookSetting = get(this.data, 'facebook', [])
+    this.customTaskSetting = get(this.data, 'optional', [])
     // this.discordSetting = get(this.data, 'discord', [])
   }
 

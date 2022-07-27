@@ -9,6 +9,7 @@ import {
   commentTweetDefault,
   telegramChatDefault,
   facebookFollowSetting,
+  customTaskSetting,
 } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
@@ -28,6 +29,17 @@ import {
 export class NewSocialMissionViewModel {
   @observable step = 1
 
+  // Setting must match observeable variable's name below
+  readonly missionSettings = [
+    'joinTelegram',
+    'followTwitter',
+    'quoteTweet',
+    'commentTweet',
+    'telegramChat',
+    'facebookFollow',
+    'customTask',
+  ]
+
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
   @observable joinTelegram = joinTelegramDefault
@@ -36,6 +48,7 @@ export class NewSocialMissionViewModel {
   @observable commentTweet = commentTweetDefault
   @observable telegramChat = telegramChatDefault
   @observable facebookFollow = facebookFollowSetting
+  @observable customTask = customTaskSetting
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
@@ -104,18 +117,13 @@ export class NewSocialMissionViewModel {
     this.facebookFollow = set(this.facebookFollow, property, value)
   }
 
+  @action.bound changeCustomTaskSetting(property: string, value: string | boolean) {
+    this.customTask = set(this.customTask, property, value)
+  }
+
   @action changeStep(step: number) {
     this.step = step
   }
-
-  // @action resetSocialSetting() {
-  //   this.changeJoinTelegramSetting('enabled', false)
-  //   this.changeCommentTweetSetting('enabled', false)
-  //   this.changeFollowTwitterSetting('enabled', false)
-  //   this.changeQuoteTweetSetting('enabled', false)
-  //   this.changeTelegramChatSetting('enabled', false)
-  //   this.changeFacebookFollowSetting('enabled', false)
-  // }
 
   async getImageSource(imageFile: File) {
     const media = new FormData()
@@ -124,7 +132,7 @@ export class NewSocialMissionViewModel {
     return getApiFileUrl(imageResult[0])
   }
 
-  async getMissionSetting() {
+  getMissionSetting() {
     let socialSetting = {}
     if (this.joinTelegram.enabled) {
       socialSetting = set(socialSetting, 'telegram', [
@@ -160,6 +168,12 @@ export class NewSocialMissionViewModel {
       socialSetting = set(socialSetting, 'facebook', [
         ...get(socialSetting, 'facebook', []),
         { ...this.facebookFollow.setting },
+      ])
+    }
+    if (this.customTask.enabled) {
+      socialSetting = set(socialSetting, 'optional', [
+        ...get(socialSetting, 'optional', []),
+        { ...this.customTask.setting },
       ])
     }
     return socialSetting
@@ -309,14 +323,9 @@ export class NewSocialMissionViewModel {
   // }
 
   @computed get isValid() {
-    return (isFormValidated) =>
-      isFormValidated &&
-      (this.joinTelegram.enabled ||
-        this.followTwitter.enabled ||
-        this.quoteTweet.enabled ||
-        this.commentTweet.enabled ||
-        this.telegramChat.enabled ||
-        this.facebookFollow.enabled)
+    return (isFormValidated) => {
+      return this.missionSettings.some((task) => this[task].enabled) && isFormValidated
+    }
   }
 
   @computed get projectStartDate() {
