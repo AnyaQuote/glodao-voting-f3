@@ -137,7 +137,7 @@
             DAO voting (Coming soon)
           </v-list-item-title>
         </v-list-item> -->
-        <v-list-group no-action class="">
+        <v-list-group no-action>
           <template v-slot:activator>
             <v-list-item class="ml-0 pl-0">
               <v-list-item-title class="nav-btn-text text-none neutral10--text blue-diversity--text"
@@ -162,7 +162,7 @@
           <v-list-item active-class="filter-bluePrimary">
             <v-list-item-icon> <v-icon>mdi-application-edit-outline</v-icon> </v-list-item-icon>
             <v-list-item-title>
-              <router-link tag="div" to="/projects/hydro-wind-enegry-10">
+              <router-link tag="div" to="/projects">
                 <div class="neutral10--text">Your project</div>
               </router-link>
             </v-list-item-title>
