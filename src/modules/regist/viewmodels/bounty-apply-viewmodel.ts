@@ -89,7 +89,6 @@ export class BountyApplyViewModel {
     } else {
       const address = process.env.VUE_APP_VOTING_SOLIDITY
       const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
-      console.log('process.env.VUE_APP_CHAIN_ID: ', process.env.VUE_APP_CHAIN_ID)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
@@ -104,11 +103,19 @@ export class BountyApplyViewModel {
           }
         )
       )
+
+      this._disposers.push(
+        reaction(
+          () => walletStore.account,
+          async () => {
+            votingHandler.injectProvider()
+          }
+        )
+      )
     }
   }
 
   @asyncAction *loadConfirmData() {
-    console.log('loadConfirmData: ')
     try {
       this.approveChecking = true
       yield Promise.all([this.getRewardTokenInfo(), this.checkApproved(), this.checkOptionalApproved()])

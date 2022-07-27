@@ -180,9 +180,9 @@ export class WalletStore {
       const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
       const walletConnectParsed = JSON.parse(walletConnect)
 
+      this.web3 = new Web3(this.walletConnectProvider)
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
-      this.web3 = new Web3(this.walletConnectProvider)
 
       this._bnbBalanceSubscription?.unsubscribe()
       this._bnbBalanceSubscription = timer(0, 5000).subscribe(() => {
@@ -412,8 +412,11 @@ export class WalletStore {
   };
 
   @asyncAction *getBnbBalance() {
+    console.log('this.account: ', this.account)
+    console.log('this.web3: ', this.web3)
     const result = yield this.web3?.eth.getBalance(this.account as any)
     this.bnbBalance = FixedNumber.from(this.web3?.utils.fromWei(result, 'ether'))
+    console.log('this.bnbBalance: ', this.bnbBalance)
   }
 
   //#region computed
