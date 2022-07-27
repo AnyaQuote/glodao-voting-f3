@@ -99,7 +99,11 @@ export class WalletStore {
         this.app.start()
         this.web3 = this.app.web3
         if (yield this.app.getAddress()) {
-          yield this.connectSolidity()
+          if (localdata.walletConnect) {
+            yield this.connectViaWalletConnect()
+          } else {
+            yield this.connectSolidity()
+          }
         }
       }
     } catch (error) {
@@ -412,8 +416,6 @@ export class WalletStore {
   };
 
   @asyncAction *getBnbBalance() {
-    console.log('this.account: ', this.account)
-    console.log('this.web3: ', this.web3)
     const result = yield this.web3?.eth.getBalance(this.account as any)
     this.bnbBalance = FixedNumber.from(this.web3?.utils.fromWei(result, 'ether'))
     console.log('this.bnbBalance: ', this.bnbBalance)
