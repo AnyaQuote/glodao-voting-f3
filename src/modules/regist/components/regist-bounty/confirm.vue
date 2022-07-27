@@ -64,7 +64,6 @@
           </div>
           <div class="d-flex">
             <span class="neutral10--text">Creating pool fee:</span>
-            {{ vm.bnbFee.toString() }}
             <span class="app-blue--text flex-grow-1 text-end">{{ vm.bnbFee | formatNumber }} BNB</span>
           </div>
         </v-sheet>
