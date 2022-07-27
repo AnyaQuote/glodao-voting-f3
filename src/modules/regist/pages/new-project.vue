@@ -15,7 +15,7 @@
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
                 @click="openBountyForm"
               >
-                <div class="pa-6 neutral-100 rounded-lg" @click="openBountyForm">
+                <div class="pa-6 neutral-100 rounded-lg">
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
@@ -80,15 +80,16 @@ export default class ProjectRegist extends Vue {
 
   openBountyForm() {
     try {
-      snackController.success('go to new bounty form')
-      this.$router.push(RoutePaths.new_bounty_application)
+      this.$router.replace(RoutePaths.new_bounty_application)
     } catch (error) {
       snackController.error(error as string)
     }
   }
 
   openLaunchpadForm() {
-    this.$router.push(RoutePaths.new_launchpad_application)
+    this.$router.push(RoutePaths.new_launchpad_application).catch(() => {
+      //
+    })
   }
 }
 </script>
