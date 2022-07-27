@@ -189,7 +189,8 @@ export class WalletStore {
 
       this.web3 = new Web3(this.walletConnectProvider)
       console.log('this.web3: ', this.web3)
-      localdata.web3Provider = JSON.stringify(this.web3)
+      console.log('JSON.stringify(this.web3)', JSON.stringify(this.web3))
+      localdata.web3Provider = this.web3
       console.log('localdata.web3Provider: ', localdata.web3Provider)
       this.account = walletConnectParsed.accounts[0]
       console.log('this.account: ', this.account)

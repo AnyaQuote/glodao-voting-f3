@@ -48,7 +48,7 @@ class LocalData {
   }
 
   set web3Provider(value: any) {
-    localStorage.setItem('web3Provider', value)
+    localStorage.setItem('web3Provider', JSON.stringify(value))
   }
 
   get web3Provider() {
