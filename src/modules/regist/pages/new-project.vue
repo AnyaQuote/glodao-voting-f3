@@ -80,7 +80,7 @@ export default class ProjectRegist extends Vue {
 
   openBountyForm() {
     try {
-      this.$router.push('/new-project/bounty')
+      this.$router.push('/new-project-bounty')
     } catch (error) {
       snackController.error(error as string)
     }

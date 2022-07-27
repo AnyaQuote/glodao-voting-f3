@@ -16,7 +16,7 @@ export enum RoutePaths {
   project_detail = '/projects/',
   new_mission = '/new-mission',
   new_application = '/new-project',
-  new_bounty_application = '/new-project/bounty',
+  new_bounty_application = '/new-project-bounty',
   new_launchpad_application = '/new-project/launchpad',
   comming_soon = '/comming-soon',
   not_found = '/404',
@@ -93,7 +93,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-project/bounty',
+    path: '/new-project-bounty',
     name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
