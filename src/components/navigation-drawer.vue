@@ -13,17 +13,17 @@
       <v-icon class="mr-2">mdi-twitter</v-icon> Log in
     </v-btn>
     <v-sheet class="fill-width neutral100" v-else>
-      <!-- <v-sheet class="d-flex align-center pa-4 neutral100">
+      <v-sheet class="d-flex align-center pa-4 neutral100">
         <v-avatar size="32">
           <img :src="authStore.user.avatar" alt="Avatar" />
         </v-avatar>
         <div class="ml-3 font-weight-600">{{ authStore.user.hunter.name }}</div>
-      </v-sheet> -->
+      </v-sheet>
       <v-divider></v-divider>
       <v-sheet class="neutral100">
-        <v-btn plain block class="menu-btn neutral10--text" height="40" depressed @click="openAttachWalletDialog">
+        <!-- <v-btn plain block class="menu-btn neutral10--text" height="40" depressed @click="openAttachWalletDialog">
           <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
-        </v-btn>
+        </v-btn> -->
         <v-btn plain block class="menu-btn neutral10--text" height="40" depressed>
           <v-img
             :src="require('@/assets/icons/crown-mini.svg')"
