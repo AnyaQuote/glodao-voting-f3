@@ -15,21 +15,31 @@ import { Observer } from 'mobx-vue'
 import { Component, Vue, Inject } from 'vue-property-decorator'
 import { get } from 'lodash-es'
 import { AppProvider } from '@/app-providers'
+import router, { RouteName } from '@/router'
 
 @Observer
 @Component
 export default class TwitterAuthenticationPage extends Vue {
   @Inject() providers!: AppProvider
 
-  async mounted() {
+  private _snackbar = this.providers.snackbar
+  private _auth = this.providers.authStore
+
+  mounted() {
+    this.loginAndRedirect()
+  }
+
+  async loginAndRedirect() {
     try {
       const access_token = get(this.$route, 'query.access_token')
       const access_secret = get(this.$route, 'query.access_secret')
-      const res = await this.providers.authStore.fetchUser(access_token, access_secret)
+      const res = await this._auth.fetchUser(access_token, access_secret)
 
-      if (res) window.close()
+      if (res) {
+        router.replace({ name: RouteName.PROJECT_LIST })
+      }
     } catch (error) {
-      this.providers.snackbar.commonError(error)
+      this._snackbar.commonError(error)
     }
   }
 }

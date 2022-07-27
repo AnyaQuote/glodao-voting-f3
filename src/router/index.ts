@@ -229,11 +229,13 @@ router.beforeEach(async (to, _, next) => {
     // =====================================================================
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
     if (requiredAuth && !authStore.jwt) {
-      const res = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
-      twitterLoginDialogController.close()
+      const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
+      // twitterLoginDialogController.close()
 
       // If user denied sign in, redirect to 401 page
-      !res && next({ name: RouteName.UNAUTHENTICATED })
+      if (!dialogStatus) {
+        next({ name: RouteName.UNAUTHENTICATED })
+      }
     }
     next()
   }
