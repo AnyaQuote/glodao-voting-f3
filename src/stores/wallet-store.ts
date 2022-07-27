@@ -179,9 +179,16 @@ export class WalletStore {
       yield this.walletConnectProvider.enable()
       const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
       const walletConnectParsed = JSON.parse(walletConnect)
+
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
       this.web3 = new Web3(this.walletConnectProvider)
+
+      this._bnbBalanceSubscription?.unsubscribe()
+      this._bnbBalanceSubscription = timer(0, 5000).subscribe(() => {
+        this.getBnbBalance()
+      })
+
       this.changeShowConnectDialog(false)
       this.walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
         window.location.reload()

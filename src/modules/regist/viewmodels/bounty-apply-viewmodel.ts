@@ -108,6 +108,7 @@ export class BountyApplyViewModel {
   }
 
   @asyncAction *loadConfirmData() {
+    console.log('loadConfirmData: ')
     try {
       this.approveChecking = true
       yield Promise.all([this.getRewardTokenInfo(), this.checkApproved(), this.checkOptionalApproved()])
@@ -125,6 +126,7 @@ export class BountyApplyViewModel {
       this.projectInfo.tokenAddress,
       walletStore.account
     )
+    console.log('tokenInfo: ', tokenInfo)
     this.rewardTokenBalance = tokenInfo.balance
   }
 
