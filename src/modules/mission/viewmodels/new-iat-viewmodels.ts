@@ -1,7 +1,16 @@
 import { MetaData, MissionType, IatInfoProp, InAppTrialInfo, Mission, Data, IatData } from '@/models/MissionModel'
 import { getApiFileUrl } from './../../../helpers/file-helper'
 import { appProvider } from '@/app-providers'
-import { ZERO_NUM, EMPTY_ARRAY, EMPTY_OBJECT, EMPTY_STRING, NULL, TOTAL_IN_APP_TRIAL_STEP, Zero } from '@/constants'
+import {
+  ZERO_NUM,
+  EMPTY_ARRAY,
+  EMPTY_OBJECT,
+  EMPTY_STRING,
+  NULL,
+  TOTAL_IN_APP_TRIAL_STEP,
+  Zero,
+  ALLOW_PASS_THROUGH,
+} from '@/constants'
 import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
@@ -168,6 +177,7 @@ export class NewInAppTrialViewModel {
         name: RouteName.PROJECT_DETAIL,
         params: {
           unicodeName: get(this.pool, 'unicodeName', EMPTY_STRING),
+          passThrough: ALLOW_PASS_THROUGH,
         },
       })
     } catch (error) {
