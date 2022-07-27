@@ -26,7 +26,7 @@ import {
   Wallet,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl, ConfirmOptions, Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable, reaction, toJS } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { Subscription, timer } from 'rxjs'
 import Web3 from 'web3'
@@ -188,7 +188,9 @@ export class WalletStore {
       const walletConnectParsed = JSON.parse(walletConnect)
 
       this.web3 = new Web3(this.walletConnectProvider)
-      localdata.web3Provider = JSON.stringify(this.web3)
+      console.log('this.web3: ', this.web3)
+      console.log('toJS(this.web3): ', toJS(this.web3))
+      localdata.web3Provider = JSON.stringify(toJS(this.web3))
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
 
