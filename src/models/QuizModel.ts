@@ -125,6 +125,6 @@ export const customTaskSetting = {
     link: '',
     page: '',
     icon: 'website',
-    isLinkRequired: true,
+    isLinkRequired: false,
   },
 }
