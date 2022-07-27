@@ -209,7 +209,7 @@ export class WalletStore {
         window.location.reload()
       })
     } catch (error) {
-      // error.message && snackController.error(error.message)
+      console.error(error)
       return false
     } finally {
       loadingController.decreaseRequest()
