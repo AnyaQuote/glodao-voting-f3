@@ -13,12 +13,13 @@
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
+                @click="openBountyForm"
               >
-                <div class="pa-6 neutral-100 rounded-lg" @click.stop="openBountyForm">
+                <div class="pa-6 neutral-100 rounded-lg">
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
-                    src="@/assets/icons/bulleyes.svg"
+                    :src="require('@/assets/icons/bulleyes.svg')"
                   />
                   <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
                     Bounty Hunter
@@ -32,8 +33,9 @@
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
+                @click="openLaunchpadForm"
               >
-                <div class="pa-6 neutral-100 rounded-lg" @click.stop="openLaunchpadForm">
+                <div class="pa-6 neutral-100 rounded-lg">
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
                     :max-width="$vuetify.breakpoint.mobile ? '26' : '48'"
@@ -59,6 +61,7 @@
 
 <script lang="ts">
 import { AppProvider } from '@/app-providers'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { RoutePaths } from '@/router'
 import { walletStore } from '@/stores/wallet-store'
 import { Component, Vue, Inject, Provide } from 'vue-property-decorator'
@@ -76,11 +79,17 @@ export default class ProjectRegist extends Vue {
   walletStore = walletStore
 
   openBountyForm() {
-    this.providers.router.push(RoutePaths.new_bounty_application)
+    try {
+      this.$router.push('/new-project-bounty')
+    } catch (error) {
+      snackController.error(error as string)
+    }
   }
 
   openLaunchpadForm() {
-    this.providers.router.push(RoutePaths.new_launchpad_application)
+    this.$router.push(RoutePaths.new_launchpad_application).catch(() => {
+      //
+    })
   }
 }
 </script>

@@ -19,7 +19,13 @@ import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD, PRIORITY_AMOUNT_RATIO, Zero } from '@/constants'
+import {
+  ALLOW_PASS_THROUGH,
+  EMPTY_STRING,
+  ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD,
+  PRIORITY_AMOUNT_RATIO,
+  Zero,
+} from '@/constants'
 
 export class NewLearnMissionViewModel {
   @observable step = 1
@@ -250,7 +256,8 @@ export class NewLearnMissionViewModel {
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
         params: {
-          unicodeName: get(this.pool, 'unicodeName', ''),
+          unicodeName: get(this.pool, 'unicodeName', EMPTY_STRING),
+          passThrough: ALLOW_PASS_THROUGH,
         },
       })
     } catch (error) {

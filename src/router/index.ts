@@ -3,7 +3,15 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
 import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
-import { ERROR_MSG_LOGIN_TO_CONTINUE, WALLET_ATTACHED_SUCCESSFUL, WALLET_CONNECTED_SUCCESSFUL } from '@/constants'
+import {
+  ALLOW_PASS_THROUGH,
+  ERROR_MSG_LOGIN_TO_CONTINUE,
+  PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
+  WALLET_ATTACHED_SUCCESSFUL,
+  WALLET_CONNECTED_SUCCESSFUL,
+} from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { confirmDialogController } from '@/components/confirm-dialog/confirm-dialog-controller'
 
@@ -16,7 +24,7 @@ export enum RoutePaths {
   project_detail = '/projects/',
   new_mission = '/new-mission',
   new_application = '/new-project',
-  new_bounty_application = '/new-project/bounty',
+  new_bounty_application = '/new-project-bounty',
   new_launchpad_application = '/new-project/launchpad',
   comming_soon = '/comming-soon',
   not_found = '/404',
@@ -94,7 +102,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-project/bounty',
+    path: '/new-project-bounty',
     name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
@@ -232,32 +240,45 @@ router.beforeEach(async (to, from, next) => {
     // Prompt user if they want to exist bounty form page
     const shouldPromptBeforeLeave = from.matched.some((m) => m.meta?.promptBeforeLeave === true)
     if (shouldPromptBeforeLeave) {
-      const confirm = await confirmDialogController.openAsync({
-        title: 'Warning',
-        content: 'All your changes will be lost. Are you sure you want to exit the page?',
-      })
-      if (confirm === false) {
-        return next(false)
+      const shouldPassThroughDialog = to.params.passThourgh || false
+      if (shouldPassThroughDialog !== ALLOW_PASS_THROUGH) {
+        const confirm = await confirmDialogController.openAsync({
+          title: PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
+          content: PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
+          doneText: PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
+        })
+        if (confirm === false) {
+          return next(false)
+        }
       }
     }
     // =====================================================================
     // Currently disable any route that leads to voting list and detail and launchpad apply page
-    if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
+    if (
+      to.name === RouteName.VOTING_LIST ||
+      to.name === RouteName.VOTING_DETAIL ||
+      to.name === RouteName.NEW_LAUNCHPAD_PROJECT
+    ) {
       return next(false)
     }
-    // =====================================================================
-    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    if (requiredAuth && !authStore.jwt) {
-      const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
-      // twitterLoginDialogController.close()
+    if (to.name === RouteName.NEW_BOUNTY_PROJECT) {
+      next()
+    } else {
+      // =====================================================================
+      const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+      if (requiredAuth && !authStore.jwt) {
+        const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
+        // twitterLoginDialogController.close()
 
-      // If user denied sign in, redirect to 401 page
-      if (!dialogStatus) {
-        return next({ name: RouteName.UNAUTHENTICATED })
+        // If user denied sign in, redirect to 401 page
+        if (!dialogStatus) {
+          return next({ name: RouteName.UNAUTHENTICATED })
+        }
       }
+      next()
+      return
+      // =====================================================================
     }
-    next()
-    // =====================================================================
   }
 })
 

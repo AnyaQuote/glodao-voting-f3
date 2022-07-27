@@ -9,6 +9,8 @@ import {
 import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { authStore } from '@/stores/auth-store'
 import { walletStore } from '@/stores/wallet-store'
+import web3 from 'web3'
+
 import { get } from 'lodash-es'
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx'
 import { snackController } from '../snack-bar/snack-bar-controller'
@@ -49,12 +51,16 @@ export class AttachWalletDialogController {
       this.prepareReaction()
       res = await this.open({ message: ERROR_MSG_NO_WALLET_CONNECTED, allowSetter: false }, true)
     }
+
+    const attachedAddress = web3.utils.toChecksumAddress(authStore.attachedAddress)
+    const connectedAddress = web3.utils.toChecksumAddress(this.connectedAddress)
     // User hasn't attached any wallet yet
+
     if (!authStore.attachedAddress) {
       return this.open({ message: ERROR_MSG_MISSING_ATTACHED_WALLET, allowSetter: true }, true)
     }
     // User connected to a wallet that is different from previous attached wallet
-    else if (authStore.attachedAddress !== this.connectedAddress) {
+    else if (attachedAddress !== connectedAddress) {
       return this.open({ message: ERROR_MSG_DIFFERENT_WALLET_DETECTED, allowSetter: false })
     }
     return res
