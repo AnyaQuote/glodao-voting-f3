@@ -5,6 +5,7 @@ import { attachWalletDialogController } from '@/components/attach-wallet/attach-
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
 import { ERROR_MSG_LOGIN_TO_CONTINUE, WALLET_ATTACHED_SUCCESSFUL, WALLET_CONNECTED_SUCCESSFUL } from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { confirmDialogController } from '@/components/confirm-dialog/confirm-dialog-controller'
 
 Vue.use(VueRouter)
 
@@ -89,6 +90,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Launchpad Application',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -99,6 +101,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Bounty Application',
+      promptBeforeLeave: true,
     },
   },
 
@@ -131,6 +134,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Social Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -141,6 +145,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Learn Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -151,6 +156,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'In-App-Trial Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -218,10 +224,24 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   if (!to.name) {
     next({ name: RouteName.NOT_FOUND })
   } else {
+    // =====================================================================
+    // Prompt user if they want to exist bounty form page
+    const shouldPromptBeforeLeave = from.matched.some((m) => m.meta?.promptBeforeLeave === true)
+    if (shouldPromptBeforeLeave) {
+      const confirm = await confirmDialogController.openAsync({
+        title: 'Warning',
+        content: 'All your changes will be lost. Are you sure you want to exit the page?',
+      })
+      if (confirm === false) {
+        next(false)
+        return
+      }
+    }
+    // =====================================================================
     // Currently disable any route that leads to voting list and detail and launchpad apply page
     if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
       next({ name: RouteName.COMMING_SOON })
@@ -238,6 +258,7 @@ router.beforeEach(async (to, _, next) => {
       }
     }
     next()
+    // =====================================================================
   }
 })
 
