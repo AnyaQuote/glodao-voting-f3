@@ -1,19 +1,17 @@
 import { appProvider } from '@/app-providers'
-import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
-import { Data, MissionType, OptionalTokenItem } from '@/models/MissionModel'
+import { getApiFileUrl } from '@/helpers/file-helper'
+import { Data, MissionType } from '@/models/MissionModel'
 import {
-  Quiz,
-  LearnToEarn,
-  PreviewQuiz,
   MissionInfo,
   joinTelegramDefault,
   followTwitterDefault,
   quoteTweetDefault,
   commentTweetDefault,
   telegramChatDefault,
+  facebookFollowSetting,
 } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber, sampleSize, ceil } from 'lodash-es'
+import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
@@ -31,6 +29,7 @@ export class NewSocialMissionViewModel {
   @observable quoteTweet = quoteTweetDefault
   @observable commentTweet = commentTweetDefault
   @observable telegramChat = telegramChatDefault
+  @observable facebookFollow = facebookFollowSetting
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
@@ -95,17 +94,22 @@ export class NewSocialMissionViewModel {
     this.telegramChat = set(this.telegramChat, property, value)
   }
 
+  @action.bound changeFacebookFollowSetting(property: string, value: string | boolean) {
+    this.facebookFollow = set(this.facebookFollow, property, value)
+  }
+
   @action changeStep(step: number) {
     this.step = step
   }
 
-  @action resetSocialSetting() {
-    this.changeJoinTelegramSetting('enabled', false)
-    this.changeCommentTweetSetting('enabled', false)
-    this.changeFollowTwitterSetting('enabled', false)
-    this.changeQuoteTweetSetting('enabled', false)
-    this.changeTelegramChatSetting('enabled', false)
-  }
+  // @action resetSocialSetting() {
+  //   this.changeJoinTelegramSetting('enabled', false)
+  //   this.changeCommentTweetSetting('enabled', false)
+  //   this.changeFollowTwitterSetting('enabled', false)
+  //   this.changeQuoteTweetSetting('enabled', false)
+  //   this.changeTelegramChatSetting('enabled', false)
+  //   this.changeFacebookFollowSetting('enabled', false)
+  // }
 
   async getImageSource(imageFile: File) {
     const media = new FormData()
@@ -144,6 +148,12 @@ export class NewSocialMissionViewModel {
       socialSetting = set(socialSetting, 'telegram', [
         ...get(socialSetting, 'telegram', []),
         { ...this.telegramChat.setting },
+      ])
+    }
+    if (this.facebookFollow.enabled) {
+      socialSetting = set(socialSetting, 'facebook', [
+        ...get(socialSetting, 'facebook', []),
+        { ...this.facebookFollow.setting },
       ])
     }
     return socialSetting
@@ -292,13 +302,14 @@ export class NewSocialMissionViewModel {
   // }
 
   @computed get isValid() {
-    return (formState) =>
-      formState &&
+    return (isFormValidated) =>
+      isFormValidated &&
       (this.joinTelegram.enabled ||
         this.followTwitter.enabled ||
         this.quoteTweet.enabled ||
         this.commentTweet.enabled ||
-        this.telegramChat.enabled)
+        this.telegramChat.enabled ||
+        this.facebookFollow.enabled)
   }
 
   @computed get projectStartDate() {

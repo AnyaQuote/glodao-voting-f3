@@ -237,14 +237,13 @@ router.beforeEach(async (to, from, next) => {
         content: 'All your changes will be lost. Are you sure you want to exit the page?',
       })
       if (confirm === false) {
-        next(false)
-        return
+        return next(false)
       }
     }
     // =====================================================================
     // Currently disable any route that leads to voting list and detail and launchpad apply page
     if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
-      next({ name: RouteName.COMMING_SOON })
+      return next(false)
     }
     // =====================================================================
     const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
@@ -254,7 +253,7 @@ router.beforeEach(async (to, from, next) => {
 
       // If user denied sign in, redirect to 401 page
       if (!dialogStatus) {
-        next({ name: RouteName.UNAUTHENTICATED })
+        return next({ name: RouteName.UNAUTHENTICATED })
       }
     }
     next()
