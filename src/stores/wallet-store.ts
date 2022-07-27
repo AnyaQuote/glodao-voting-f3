@@ -188,7 +188,7 @@ export class WalletStore {
       const walletConnectParsed = JSON.parse(walletConnect)
 
       this.web3 = new Web3(this.walletConnectProvider)
-      localdata.web3Provider = this.web3
+      localdata.web3Provider = JSON.stringify(this.web3)
       this.account = walletConnectParsed.accounts[0]
       this.chainId = walletConnectParsed.chainId
 
