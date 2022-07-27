@@ -241,8 +241,8 @@
         <app-text-field
           class="mt-2"
           :rules="[$rules.required]"
-          :value="$_get(vm.customTask, 'setting.type')"
-          @change="vm.changeCustomTaskSetting('setting.type', $event)"
+          :value="$_get(vm.customTask, 'setting.name')"
+          @change="vm.changeCustomTaskSetting('setting.name', $event)"
           placeholder="Enter your task name"
         />
 
