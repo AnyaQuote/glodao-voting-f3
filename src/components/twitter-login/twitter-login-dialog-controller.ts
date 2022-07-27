@@ -40,16 +40,16 @@ export class TwitterLoginDialogController {
       this.isProcessing = true
       const redirectUrl = `${process.env.VUE_APP_WEB_HOST}/twitter-auth`
       const URL = `https://dev-bounty.glodao.io/twitter-login?callback_url=${redirectUrl}`
-      window.open(URL, '_blank')
-      appProvider.authStore.clearLocalStorage()
-      const res = await waitForLocalStorage()
-      appProvider.authStore.changeJwt(res[0])
-      appProvider.authStore.changeUser(res[1])
-      this.resolver && this.resolver(SUCCESS_STATUS)
+      window.open(URL, '_self')
+      // appProvider.authStore.clearLocalStorage()
+      // const res = await waitForLocalStorage()
+      // appProvider.authStore.changeJwt(res[0])
+      // appProvider.authStore.changeUser(res[1])
+      // this.resolver && this.resolver(SUCCESS_STATUS)
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
-      this.isProcessing = false
+      // this.isProcessing = false
     }
   }
 }
