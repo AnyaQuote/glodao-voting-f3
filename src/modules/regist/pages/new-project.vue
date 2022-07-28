@@ -13,7 +13,6 @@
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pr-3'"
-                @click="openBountyForm"
               >
                 <router-link
                   tag="div"
@@ -37,7 +36,6 @@
               <v-col
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
-                @click="openLaunchpadForm"
               >
                 <router-link
                   tag="div"

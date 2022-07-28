@@ -102,7 +102,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-project-bounty',
+    path: '/new-project/bounty',
     name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
@@ -262,24 +262,24 @@ router.beforeEach(async (to, from, next) => {
     ) {
       return next(false)
     }
-    if (to.name === RouteName.NEW_BOUNTY_PROJECT) {
-      next()
-    } else {
-      // =====================================================================
-      const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-      if (requiredAuth && !authStore.jwt) {
-        const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
-        // twitterLoginDialogController.close()
+    // if (to.name === RouteName.NEW_BOUNTY_PROJECT) {
+    //   return next()
+    // } else {
+    // =====================================================================
+    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+    if (requiredAuth && !authStore.jwt) {
+      const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
+      // twitterLoginDialogController.close()
 
-        // If user denied sign in, redirect to 401 page
-        if (!dialogStatus) {
-          return next({ name: RouteName.UNAUTHENTICATED })
-        }
+      // If user denied sign in, redirect to 401 page
+      if (!dialogStatus) {
+        return next({ name: RouteName.UNAUTHENTICATED })
       }
-      next()
-      return
-      // =====================================================================
     }
+    next()
+    return
+    // =====================================================================
+    // }
   }
 })
 
