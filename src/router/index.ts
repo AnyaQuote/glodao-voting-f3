@@ -251,7 +251,6 @@ router.beforeEach(async (to, from, next) => {
           return next(false)
         }
       }
-      next()
     }
     // =====================================================================
     // Currently disable any route that leads to voting list and detail and launchpad apply page
