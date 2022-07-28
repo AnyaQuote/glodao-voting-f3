@@ -205,11 +205,14 @@ export class NewSocialMissionViewModel {
     const rewardAmount = this.rewardPerMission._value
 
     // Learn to earn mission needs maxParticipants
-    const maxParticipants = toNumber(missionInfo.maxParticipants)
+    const maxParticipants = missionInfo.maxParticipants ? toNumber(missionInfo.maxParticipants) : 0
 
     // Social mission needs maxPriorityParticipants and priorityRewardAmount field
     const maxPriorityParticipants = toNumber(missionInfo.maxPriorityParticipants)
-    const priorityRewardAmount = this.priorityAmount._value
+    let priorityRewardAmount = '0'
+    if (maxPriorityParticipants !== 0) {
+      priorityRewardAmount = this.priorityAmount._value
+    }
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
