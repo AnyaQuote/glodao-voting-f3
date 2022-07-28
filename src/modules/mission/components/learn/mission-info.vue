@@ -84,7 +84,7 @@
           <app-text-field
             class="mt-2"
             type="number"
-            :rules="[$rules.required, $rules.integer, $rules.min(0)]"
+            :rules="[$rules.required, $rules.integer, $rules.min(1)]"
             :value="$_get(vm.missionInfo, 'maxParticipants')"
             @input="vm.changeMissionInfo('maxParticipants', $event)"
             placeholder="Enter participants"
