@@ -92,7 +92,7 @@
             <v-icon class="mr-2">mdi-chevron-right</v-icon>
           </div>
         </v-card>
-        <v-card
+        <!-- <v-card
           @click="walletStore.connectViaWalletConnect()"
           v-if="!walletStore.requestingChain || walletStore.requestingChain !== 'sol'"
           elevation="0"
@@ -110,7 +110,7 @@
             </span>
             <v-icon class="mr-2">mdi-chevron-right</v-icon>
           </div>
-        </v-card>
+        </v-card> -->
 
         <div class="text-h6 mt-4" v-if="!walletStore.requestingChain || walletStore.requestingChain === 'sol'">
           SOLANA Chain
