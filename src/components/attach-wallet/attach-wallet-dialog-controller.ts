@@ -52,15 +52,15 @@ export class AttachWalletDialogController {
       res = await this.open({ message: ERROR_MSG_NO_WALLET_CONNECTED, allowSetter: false }, true)
     }
 
-    const attachedAddress = web3.utils.toChecksumAddress(authStore.attachedAddress)
-    const connectedAddress = web3.utils.toChecksumAddress(this.connectedAddress)
     // User hasn't attached any wallet yet
-
     if (!authStore.attachedAddress) {
       return this.open({ message: ERROR_MSG_MISSING_ATTACHED_WALLET, allowSetter: true }, true)
     }
+
+    const attachedAddress = web3.utils.toChecksumAddress(authStore.attachedAddress)
+    const connectedAddress = web3.utils.toChecksumAddress(this.connectedAddress)
     // User connected to a wallet that is different from previous attached wallet
-    else if (attachedAddress !== connectedAddress) {
+    if (attachedAddress !== connectedAddress) {
       return this.open({ message: ERROR_MSG_DIFFERENT_WALLET_DETECTED, allowSetter: false })
     }
     return res
