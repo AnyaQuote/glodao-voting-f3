@@ -96,7 +96,7 @@
           :rules="[$rules.required, $rules.url]"
           :value="$_get(vm.followTwitter, 'setting.link')"
           @change="vm.changeFollowTwitterSetting('setting.link', $event)"
-          placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
+          placeholder="https://twitter.com/GloDAO_Official"
           append-icon="mdi-link"
         />
       </switch-field>
