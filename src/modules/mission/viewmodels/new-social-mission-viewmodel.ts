@@ -205,11 +205,14 @@ export class NewSocialMissionViewModel {
     const rewardAmount = this.rewardPerMission._value
 
     // Learn to earn mission needs maxParticipants
-    const maxParticipants = toNumber(missionInfo.maxParticipants)
+    const maxParticipants = missionInfo.maxParticipants ? toNumber(missionInfo.maxParticipants) : 0
 
     // Social mission needs maxPriorityParticipants and priorityRewardAmount field
     const maxPriorityParticipants = toNumber(missionInfo.maxPriorityParticipants)
-    const priorityRewardAmount = this.priorityAmount._value
+    let priorityRewardAmount = '0'
+    if (maxPriorityParticipants !== 0) {
+      priorityRewardAmount = this.priorityAmount._value
+    }
 
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
 
@@ -291,7 +294,7 @@ export class NewSocialMissionViewModel {
         name: RouteName.PROJECT_DETAIL,
         params: {
           unicodeName: get(this.pool, 'unicodeName', EMPTY_STRING),
-          passThourgh: ALLOW_PASS_THROUGH,
+          passThrough: ALLOW_PASS_THROUGH,
         },
       })
     } catch (error) {
