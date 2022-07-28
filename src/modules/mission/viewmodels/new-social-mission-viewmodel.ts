@@ -294,7 +294,7 @@ export class NewSocialMissionViewModel {
         name: RouteName.PROJECT_DETAIL,
         params: {
           unicodeName: get(this.pool, 'unicodeName', EMPTY_STRING),
-          passThourgh: ALLOW_PASS_THROUGH,
+          passThrough: ALLOW_PASS_THROUGH,
         },
       })
     } catch (error) {

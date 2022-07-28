@@ -240,7 +240,7 @@ router.beforeEach(async (to, from, next) => {
     // Prompt user if they want to exist bounty form page
     const shouldPromptBeforeLeave = from.matched.some((m) => m.meta?.promptBeforeLeave === true)
     if (shouldPromptBeforeLeave) {
-      const shouldPassThroughDialog = to.params.passThourgh || false
+      const shouldPassThroughDialog = to.params.passThrough || false
       if (shouldPassThroughDialog !== ALLOW_PASS_THROUGH) {
         const confirm = await confirmDialogController.openAsync({
           title: PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
