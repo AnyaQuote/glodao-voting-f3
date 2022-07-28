@@ -3,8 +3,17 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
 import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
-import { ERROR_MSG_LOGIN_TO_CONTINUE, WALLET_ATTACHED_SUCCESSFUL, WALLET_CONNECTED_SUCCESSFUL } from '@/constants'
+import {
+  ALLOW_PASS_THROUGH,
+  ERROR_MSG_LOGIN_TO_CONTINUE,
+  PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
+  WALLET_ATTACHED_SUCCESSFUL,
+  WALLET_CONNECTED_SUCCESSFUL,
+} from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { confirmDialogController } from '@/components/confirm-dialog/confirm-dialog-controller'
 
 Vue.use(VueRouter)
 
@@ -15,7 +24,7 @@ export enum RoutePaths {
   project_detail = '/projects/',
   new_mission = '/new-mission',
   new_application = '/new-project',
-  new_bounty_application = '/new-project/bounty',
+  new_bounty_application = '/new-project-bounty',
   new_launchpad_application = '/new-project/launchpad',
   comming_soon = '/comming-soon',
   not_found = '/404',
@@ -30,9 +39,11 @@ export enum RouteName {
   NEW_BOUNTY_PROJECT = 'bounty-apply',
   PROJECT_LIST = 'project-list',
   PROJECT_DETAIL = 'project-detail',
-  NEW_MISSION = 'mission-apply',
+  NEW_SOCIAL_MISSION = 'social-mission-apply',
+  NEW_LEARN_MISSION = 'learn-mission-apply',
   NEW_IAT_MISSION = 'iat-mission-apply',
-  MISSION_DETAIL = 'mission-detail',
+  MISSION_LEARN_DETAIL = 'learn-mission-detail',
+  MISSION_SOCIAL_DETAIL = 'social-mission-detail',
   MISSION_IAT_DETAIL = 'iat-mission-detail',
   NOT_FOUND = 'not-found',
   UNAUTHENTICATED = 'unauthenticated',
@@ -87,6 +98,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Launchpad Application',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -97,6 +109,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Bounty Application',
+      promptBeforeLeave: true,
     },
   },
 
@@ -122,13 +135,25 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new/mission',
-    name: RouteName.NEW_MISSION,
-    component: () => import('@/modules/project/pages/new-mission.vue'),
+    path: '/projects/:unicodeName/new/social',
+    name: RouteName.NEW_SOCIAL_MISSION,
+    component: () => import('@/modules/mission/pages/new-social-page.vue'),
     meta: {
       auth: true,
       wallet: true,
-      title: 'Mission Form',
+      title: 'Social Mission Form',
+      promptBeforeLeave: true,
+    },
+  },
+  {
+    path: '/projects/:unicodeName/new/learn',
+    name: RouteName.NEW_LEARN_MISSION,
+    component: () => import('@/modules/mission/pages/new-learn-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Learn Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -139,20 +164,31 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'In-App-Trial Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
-    path: '/projects/:unicodeName/mission/:id',
-    name: RouteName.MISSION_DETAIL,
-    component: () => import('@/modules/project/pages/mission-detail.vue'),
+    path: '/projects/:unicodeName/mission/learn/:id',
+    name: RouteName.MISSION_LEARN_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/learn-detail-page.vue'),
     meta: {
       auth: true,
       wallet: true,
-      title: 'Mission detail',
+      title: 'Learn Mission detail',
     },
   },
   {
-    path: '/projects/:unicodeName/app-trial/:id',
+    path: '/projects/:unicodeName/mission/social/:id',
+    name: RouteName.MISSION_SOCIAL_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/social-detail-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Social Mission detail',
+    },
+  },
+  {
+    path: '/projects/:unicodeName/app-trial/iat/:id',
     name: RouteName.MISSION_IAT_DETAIL,
     component: () => import('@/modules/mission-detail/pages/iat-detail-page.vue'),
     meta: {
@@ -196,24 +232,53 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   if (!to.name) {
     next({ name: RouteName.NOT_FOUND })
   } else {
-    // Currently disable any route that leads to voting list and detail and launchpad apply page
-    if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
-      next({ name: RouteName.COMMING_SOON })
+    // =====================================================================
+    // Prompt user if they want to exist bounty form page
+    const shouldPromptBeforeLeave = from.matched.some((m) => m.meta?.promptBeforeLeave === true)
+    if (shouldPromptBeforeLeave) {
+      const shouldPassThroughDialog = to.params.passThourgh || false
+      if (shouldPassThroughDialog !== ALLOW_PASS_THROUGH) {
+        const confirm = await confirmDialogController.openAsync({
+          title: PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
+          content: PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
+          doneText: PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
+        })
+        if (confirm === false) {
+          return next(false)
+        }
+      }
     }
     // =====================================================================
-    const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
-    if (requiredAuth && !authStore.jwt) {
-      const res = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
-      twitterLoginDialogController.close()
-
-      // If user denied sign in, redirect to 401 page
-      !res && next({ name: RouteName.UNAUTHENTICATED })
+    // Currently disable any route that leads to voting list and detail and launchpad apply page
+    if (
+      to.name === RouteName.VOTING_LIST ||
+      to.name === RouteName.VOTING_DETAIL ||
+      to.name === RouteName.NEW_LAUNCHPAD_PROJECT
+    ) {
+      return next(false)
     }
-    next()
+    if (to.name === RouteName.NEW_BOUNTY_PROJECT) {
+      next()
+    } else {
+      // =====================================================================
+      const requiredAuth = to.matched.some((m) => m.meta?.auth === true)
+      if (requiredAuth && !authStore.jwt) {
+        const dialogStatus = await twitterLoginDialogController.open({ message: ERROR_MSG_LOGIN_TO_CONTINUE })
+        // twitterLoginDialogController.close()
+
+        // If user denied sign in, redirect to 401 page
+        if (!dialogStatus) {
+          return next({ name: RouteName.UNAUTHENTICATED })
+        }
+      }
+      next()
+      return
+      // =====================================================================
+    }
   }
 })
 
@@ -224,6 +289,7 @@ router.afterEach(async (to, _) => {
     if (status === WALLET_ATTACHED_SUCCESSFUL) {
       attachWalletDialogController.close()
       promiseHelper.delay(500)
+      // Should renew user object instead of reload
       location.reload()
     } else if (status === WALLET_CONNECTED_SUCCESSFUL) {
       attachWalletDialogController.disposeReaction()

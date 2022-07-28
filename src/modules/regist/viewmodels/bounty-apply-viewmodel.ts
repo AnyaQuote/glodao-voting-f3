@@ -1,4 +1,4 @@
-import { ProjectInfo, VotingPoolType } from '@/models/VotingModel'
+import { ProjectInfo, RewardDistributionType, VotingPoolType } from '@/models/VotingModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx'
 import { set, kebabCase, toNumber, isEmpty } from 'lodash'
@@ -8,7 +8,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { Zero } from '@/constants'
+import { ALLOW_PASS_THROUGH, Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
@@ -71,6 +71,7 @@ export class BountyApplyViewModel {
   @observable approveChecking = false
 
   @observable votingHandler?: VotingHandler
+  // @observable rewardType = RewardDistributionType.TOKEN
 
   constructor() {
     this.loadData()
@@ -87,15 +88,25 @@ export class BountyApplyViewModel {
       //
     } else {
       const address = process.env.VUE_APP_VOTING_SOLIDITY
-      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(walletStore.chainId)!)
+      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
+      console.log('this.bnbFee: ', this.bnbFee)
       this.feePerMission = this.votingHandler.poolType.feePerMission!
 
       this._disposers.push(
         when(
           () => walletStore.walletConnected,
+          async () => {
+            votingHandler.injectProvider()
+          }
+        )
+      )
+
+      this._disposers.push(
+        reaction(
+          () => walletStore.account,
           async () => {
             votingHandler.injectProvider()
           }
@@ -122,6 +133,7 @@ export class BountyApplyViewModel {
       this.projectInfo.tokenAddress,
       walletStore.account
     )
+    console.log('tokenInfo: ', tokenInfo)
     this.rewardTokenBalance = tokenInfo.balance
   }
 
@@ -259,8 +271,9 @@ export class BountyApplyViewModel {
         decimals: this.rewardTokenDecimals,
         // =======
         // TOKEN B
-        optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
-        optionalTokenAddress: this.projectInfo.optionalTokenAddress,
+        // Incase do not input optional token address, decimal and token address is set to default 0 and ''
+        optionalRewardTokenDecimals: this.projectInfo.optionalTokenAddress ? this.optionalRewardTokenDecimals : 0,
+        optionalTokenAddress: this.projectInfo.optionalTokenAddress || '',
         optionalRewardAmount: this.projectInfo.optionalRewardAmount,
         optionalTokenName: this.projectInfo.optionalTokenName,
         optionalTokenLogo: optionalTokenLogo,
@@ -279,7 +292,13 @@ export class BountyApplyViewModel {
       snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
       return
     }
-    if (bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))) {
+    // If token address is not input, don't check balance
+    // Because the system will get tokenAddress to check balance
+    if (
+      this.projectInfo.optionalTokenAddress &&
+      this.projectInfo.optionalRewardAmount &&
+      bnHelper.lt(this.optionalRewardTokenBalance, FixedNumber.from(this.projectInfo.optionalRewardAmount))
+    ) {
       snackController.error(`${this.projectInfo.optionalTokenName} - Balance Insufficient`)
       return
     }
@@ -292,6 +311,9 @@ export class BountyApplyViewModel {
       promiseHelper.delay(500)
       this._router.push({
         name: RouteName.PROJECT_LIST,
+        params: {
+          passThrough: ALLOW_PASS_THROUGH,
+        },
       })
     } catch (error) {
       this._snackbar.commonError(error)
@@ -307,6 +329,18 @@ export class BountyApplyViewModel {
     }
   }
 
+  // @action.bound switchType(value: RewardDistributionType) {
+  //   this.rewardType = value
+
+  //   if (value === RewardDistributionType.BUSD) {
+  //     // Set BUSDF optionalTokenAddress  optional token (tokenAddress, decimals)
+  //     this.changeProjectInfo('optionalTokenAddress', process.env.VUE_APP_BUSD_ADDRESS!)
+  //     this.optionalRewardTokenDecimals = 18
+  //   } else {
+  //     this.changeProjectInfo('optionalTokenAddress', null)
+  //   }
+  // }
+
   @action.bound changeProjectInfo(property: string, value: any) {
     if (property === 'optionalTokenAddress') {
       if (web3.utils.isAddress(value)) {
@@ -321,7 +355,7 @@ export class BountyApplyViewModel {
           })
         })
       } else {
-        runInAction(() => (this.projectInfo = { ...this.projectInfo, tokenName: '' }))
+        runInAction(() => (this.projectInfo = { ...this.projectInfo, optionalTokenName: '' }))
       }
     } else if (property === 'tokenAddress') {
       const token = this.tokenList.find((item) => item.tokenAddress == value)
@@ -367,5 +401,9 @@ export class BountyApplyViewModel {
 
   @computed get projectEndDate() {
     return get(this.projectInfo, 'endDate', '')
+  }
+
+  @computed get generateWithTokenAddress() {
+    return !!this.projectInfo.optionalTokenAddress
   }
 }

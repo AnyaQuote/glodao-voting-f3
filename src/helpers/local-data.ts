@@ -42,6 +42,22 @@ class LocalData {
     if (value) localStorage.setItem('lastChain', value)
     else localStorage.removeItem('lastChain')
   }
+
+  get walletConnect() {
+    return localStorage.getItem('walletconnect')
+  }
+
+  set web3Provider(value: any) {
+    localStorage.setItem('web3Provider', JSON.stringify(value))
+  }
+
+  get web3Provider() {
+    return JSON.parse(localStorage.getItem('web3Provider') || '{}')
+  }
+
+  removeWalletConnect() {
+    localStorage.removeItem('walletconnect')
+  }
 }
 
 export const localdata = new LocalData()

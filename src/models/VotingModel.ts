@@ -86,3 +86,8 @@ export class ProjectInfo {
   endDate?: string
   totalMissions?: string
 }
+
+export enum RewardDistributionType {
+  BUSD = 'busd',
+  TOKEN = 'token',
+}

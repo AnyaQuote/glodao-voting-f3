@@ -42,7 +42,7 @@
           </span>
         </div>
 
-        <div class="font-18">
+        <div v-if="vm.generateWithTokenAddress" class="font-18">
           <span class="mr-2">Project reward token Balance:</span>
           <span class="font-weight-medium">
             {{ vm.optionalRewardTokenBalance | formatNumber }} {{ vm.projectInfo.optionalTokenName }}

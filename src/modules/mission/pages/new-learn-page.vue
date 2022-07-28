@@ -17,8 +17,7 @@
       <!-- ---------------- FORM CONTENT ---------------- -->
       <v-col v-else cols="8">
         <mission-info v-if="vm.step === 1" />
-        <mission-lte-setting v-else-if="vm.step === 2 && vm.missionInfo.type === 'lte'" />
-        <mission-social-setting v-else />
+        <mission-lte-setting v-else-if="vm.step === 2" />
       </v-col>
     </v-row>
   </v-container>
@@ -27,19 +26,18 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../viewmodels/new-mission-viewmodel'
+import { NewLearnMissionViewModel } from '../viewmodels/new-learn-mission-viewmodel'
 import { get } from 'lodash-es'
 @Observer
 @Component({
   components: {
-    'mission-info': () => import('../components/new-mission/mission-info.vue'),
-    'mission-skeleton-form': () => import('../components/new-mission/mission-skeleton-form.vue'),
-    'mission-lte-setting': () => import('../components/new-mission/mission-lte-setting.vue'),
-    'mission-social-setting': () => import('../components/new-mission/mission-social-setting.vue'),
+    'mission-info': () => import('../components/learn/mission-info.vue'),
+    'mission-skeleton-form': () => import('../components/common/mission-skeleton-form.vue'),
+    'mission-lte-setting': () => import('../components/learn/mission-lte-setting.vue'),
   },
 })
 export default class MissionForm extends Vue {
-  @Provide() vm = new NewMissionViewModel(get(this.$route, 'params.unicodeName'))
+  @Provide() vm = new NewLearnMissionViewModel(get(this.$route, 'params.unicodeName'))
 
   goBack() {
     this.$router.go(-1)

@@ -1,8 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { Zero } from '@/constants'
-import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { Mission } from '@/models/MissionModel'
-import { PreviewQuiz, Quiz } from '@/models/QuizModel'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
@@ -10,10 +8,9 @@ import { isEmpty, find, has, get, toNumber } from 'lodash-es'
 import { computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
-export class MissionDetailViewModel {
+export class SocialMissionDetailViewModel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
-  @observable quiz: Quiz = {}
   @observable loading = false
 
   private _snackbar = appProvider.snackbar
@@ -28,7 +25,6 @@ export class MissionDetailViewModel {
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
     try {
       this.loading = true
-      yield waitForGlobalLoadingFinished()
       // Get pool
       const pools = yield this._api.voting.find<VotingPool>(
         { unicodeName, projectOwner: this._auth.projectOwnerId },
@@ -45,26 +41,11 @@ export class MissionDetailViewModel {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.mission = missions[0]
-
-      // If mission is learn to earn, get quiz
-      if (this.isLearnMission) {
-        const taskTypeQuiz = find(get(this.mission, 'data.quiz', []), (task) => task.type === 'quiz')
-        const id = get(taskTypeQuiz, 'quizId', '')
-        const quiz = yield this._api.getOwnerQuiz(id)
-        if (isEmpty(quiz)) {
-          this._router.replace({ name: RouteName.NOT_FOUND })
-        }
-        this.quiz = quiz
-      }
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
       this.loading = false
     }
-  }
-
-  @computed get isLearnMission() {
-    return this.mission.type === 'learn'
   }
 
   // For social mission
@@ -90,20 +71,5 @@ export class MissionDetailViewModel {
   // For social mission
   @computed get communityPoolParticipants() {
     return this.totalParticipants > 0 ? this.totalParticipants - this.priorityPoolParticipants : 0
-  }
-
-  // For learn to earn mission
-  @computed get combineQuizData(): PreviewQuiz[] {
-    if (!this.isLearnMission || isEmpty(this.quiz.answer)) return []
-    const combinedData = this.quiz.data!.map((item) => {
-      const found = find(this.quiz.answer, (answer) => answer.id === item.id)!
-      return {
-        id: item.id,
-        question: item.question,
-        choices: item.data,
-        answer: found.answer,
-      }
-    })
-    return combinedData
   }
 }

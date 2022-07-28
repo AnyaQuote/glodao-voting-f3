@@ -34,11 +34,11 @@
 
 <script lang="ts">
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
+import { NewLearnMissionViewModel } from '../../viewmodels/new-learn-mission-viewmodel'
 
 @Component
 export default class QuizPreviewDialog extends Vue {
-  @Inject() vm!: NewMissionViewModel
+  @Inject() vm!: NewLearnMissionViewModel
   @Ref('dialog') dialog
   open() {
     this.dialog.open()

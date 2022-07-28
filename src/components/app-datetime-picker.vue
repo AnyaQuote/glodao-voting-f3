@@ -41,7 +41,7 @@
         :disabled="disabled"
         :value="data.time"
         :error-messages="errorMessage"
-        placeholder="hh:mm (am - pm)"
+        placeholder="HH:mm"
         @click="show('timePickerConfig', $event)"
       />
       <v-menu
@@ -68,7 +68,7 @@
 import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { getValueByFormat, toISO, isDateInRange, toMoment } from '@/helpers/date-helper'
+import { getValueByFormat, toISO, toMoment } from '@/helpers/date-helper'
 import moment from 'moment'
 
 @Observer
@@ -112,7 +112,7 @@ export default class AppDateTimePicker extends Vue {
 
   onDateTimeChange(property: string, value: string) {
     this.data = set(this.data, property, value)
-    if (this.data.date && this.data.time && !this.errorMessage) {
+    if (!this.errorMessage) {
       this.$emit('change', toISO(this.data))
     }
   }
@@ -124,9 +124,9 @@ export default class AppDateTimePicker extends Vue {
   get errorMessage() {
     if (this.data.date && this.data.time) {
       if (this.minDate && !toMoment(this.data).isAfter(moment(this.minDate))) {
-        return `Start date must be after ${moment(this.minDate).format('DD/MM/YYYY HH:mm')}`
+        return `Selected date must be after ${moment(this.minDate).format('DD/MM/YYYY HH:mm')}`
       } else if (this.maxDate && !toMoment(this.data).isBefore(moment(this.maxDate))) {
-        return `End date must be before ${moment(this.maxDate).format('DD/MM/YYYY HH:mm')}`
+        return `Selected date must be before ${moment(this.maxDate).format('DD/MM/YYYY HH:mm')}`
       }
     }
     return ''

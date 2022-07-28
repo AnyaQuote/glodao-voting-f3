@@ -194,9 +194,9 @@
                 </v-sheet>
                 <v-divider></v-divider>
                 <v-sheet class="neutral100--bg">
-                  <v-btn plain block class="menu-btn" height="40" depressed @click="openAttachWalletDialog">
+                  <!-- <v-btn plain block class="menu-btn" height="40" depressed @click="openAttachWalletDialog">
                     <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn plain block class="menu-btn" height="40" depressed @click="goToHuntingHistoryScreen">
                     <v-img
                       :src="require('@/assets/icons/crown-mini.svg')"
@@ -248,7 +248,6 @@ export default class NavigationBar extends Vue {
   bountyUrlDomain = process.env.VUE_APP_BOUNTY_DOMAIN
 
   openLink(url) {
-    console.log('test')
     window.open(url, '_self')
   }
   changeTheme() {

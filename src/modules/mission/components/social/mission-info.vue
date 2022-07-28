@@ -5,38 +5,6 @@
     </div>
     <v-divider />
     <v-form v-model="valid" class="pa-7">
-      <!-- ------------------------------------ MISSION TYPE -------------------------------------------------- -->
-
-      <v-radio-group mandatory :value="vm.missionInfo.type" @change="vm.changeMissionInfo('type', $event)">
-        <div class="row no-gutters">
-          <div class="col-6 pr-4">
-            <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('social')">
-              <v-radio color="blue-diversity" value="social">
-                <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('social')">Social mission</span>
-                </template>
-              </v-radio>
-              <div class="text-subtitle-2 font-weight-regular">
-                Setting social tasks such as Twitter, Telegram, Discord
-              </div>
-            </v-sheet>
-          </div>
-
-          <div class="col-6">
-            <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('lte')">
-              <v-radio color="blue-diversity" value="lte" disabled>
-                <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('lte')">
-                    <span> Learn to earn mission (Comming soon)</span>
-                  </span>
-                </template>
-              </v-radio>
-              <div class="text-subtitle-2 font-weight-regular">Setting the project document and the quiz</div>
-            </v-sheet>
-          </div>
-        </div>
-      </v-radio-group>
-
       <!-- ------------------------------------ MISSION INFORMATION ------------------------------------------- -->
       <div class="d-flex flex-column">
         <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
@@ -74,7 +42,49 @@
       <v-divider class="mt-10 my-5 dashed-border" />
 
       <!-- ------------------------------------- REWARD INFORMATION -------------------------------------------- -->
-      <mission-reward-info />
+      <div class="d-flex flex-column">
+        <div class="title font-weight-bold blue-diversity--text">Reward information</div>
+        <div class="font-18 font-weight-bold mt-4">
+          <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
+        </div>
+        <div class="mt-4 row no-gutters">
+          <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
+            <span class="font-18 font-weight-bold">Priority amount (30%)</span>
+            <v-sheet class="rounded px-3 d-flex justify-space-between mt-2 py-14px" height="56" outlined>
+              <span class="font-weight-600">{{ vm.priorityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+            </v-sheet>
+          </div>
+
+          <!-- ---------------- MAX PARTICIPANTS FIELD START ----------------- -->
+          <div class="col-12 col-md-6 pa-0">
+            <span class="font-18 font-weight-bold">
+              Max participant in priority pool<span class="app-red--text">*</span>
+            </span>
+            <app-text-field
+              class="mt-2"
+              type="number"
+              :rules="[$rules.required, $rules.integer, $rules.min(1)]"
+              :value="$_get(vm.missionInfo, 'maxPriorityParticipants')"
+              @change="vm.changeMissionInfo('maxPriorityParticipants', $event)"
+              placeholder="Enter participants"
+            />
+          </div>
+          <!-- ---------------- MAX PARTICIPANTS FIELD END ------------------ -->
+
+          <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
+            <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
+              <span>Community amount:</span>
+              <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+            </v-sheet>
+          </div>
+          <div class="col-12 col-md-6 pa-0">
+            <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
+              <span>Personal priority reward:</span>
+              <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
+            </v-sheet>
+          </div>
+        </div>
+      </div>
       <v-divider class="mt-10 my-5 dashed-border" />
 
       <!-- -------------------------------------- MISSION TIME ------------------------------------------------- -->
@@ -136,20 +146,19 @@
 
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
+import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-viewmodel'
 import { Observer } from 'mobx-vue'
 import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 
 @Observer
 @Component({
   components: {
-    'mission-reward-info': () => import('./mission-reward-info.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
 })
 export default class MissionInfoForm extends Vue {
-  @Inject() vm!: NewMissionViewModel
+  @Inject() vm!: NewSocialMissionViewModel
   valid = true
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   next() {
@@ -158,19 +167,14 @@ export default class MissionInfoForm extends Vue {
   back() {
     this.$router.go(-1)
   }
-  get isActive() {
-    return (type: string) => (this.vm.missionInfo.type === type ? 'active-type' : '')
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-.active-type {
-  color: var(--v-blue-diversity-base) !important;
-  border-color: var(--v-blue-diversity-base) !important;
-  background-color: var(--v-blue-2-base) !important;
-}
 .dashed-border {
   border-style: dashed;
+}
+.py-14px {
+  padding: 14px 0;
 }
 </style>

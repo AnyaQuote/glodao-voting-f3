@@ -122,18 +122,18 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
-import { NewMissionViewModel } from '../../viewmodels/new-mission-viewmodel'
+import { NewLearnMissionViewModel } from '../../viewmodels/new-learn-mission-viewmodel'
 
 @Observer
 @Component({
   components: {
-    'switch-field': () => import('./common/switch-field.vue'),
-    'quiz-preview-dialog': () => import('../new-mission/quiz-preview-dialog.vue'),
+    'switch-field': () => import('../common/switch-field.vue'),
+    'quiz-preview-dialog': () => import('./quiz-preview-dialog.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
   },
 })
 export default class MissionLearnToEarnSetting extends Vue {
-  @Inject() vm!: NewMissionViewModel
+  @Inject() vm!: NewLearnMissionViewModel
   @Ref('quiz-preview-dialog') dialog
   valid = false
 

@@ -13,17 +13,17 @@
       <v-icon class="mr-2">mdi-twitter</v-icon> Log in
     </v-btn>
     <v-sheet class="fill-width neutral100" v-else>
-      <!-- <v-sheet class="d-flex align-center pa-4 neutral100">
+      <v-sheet class="d-flex align-center pa-4 neutral100">
         <v-avatar size="32">
           <img :src="authStore.user.avatar" alt="Avatar" />
         </v-avatar>
         <div class="ml-3 font-weight-600">{{ authStore.user.hunter.name }}</div>
-      </v-sheet> -->
+      </v-sheet>
       <v-divider></v-divider>
       <v-sheet class="neutral100">
-        <v-btn plain block class="menu-btn neutral10--text" height="40" depressed @click="openAttachWalletDialog">
+        <!-- <v-btn plain block class="menu-btn neutral10--text" height="40" depressed @click="openAttachWalletDialog">
           <v-icon class="mr-3 ml-0" left size="24">mdi-wallet-outline</v-icon> Attached wallet
-        </v-btn>
+        </v-btn> -->
         <v-btn plain block class="menu-btn neutral10--text" height="40" depressed>
           <v-img
             :src="require('@/assets/icons/crown-mini.svg')"
@@ -134,7 +134,7 @@
             DAO voting (Coming soon)
           </v-list-item-title>
         </v-list-item> -->
-        <v-list-group no-action class="">
+        <v-list-group no-action>
           <template v-slot:activator>
             <v-list-item class="ml-0 pl-0">
               <v-list-item-title class="nav-btn-text text-none neutral10--text blue-diversity--text"
@@ -159,7 +159,7 @@
           <v-list-item active-class="filter-bluePrimary">
             <v-list-item-icon> <v-icon>mdi-application-edit-outline</v-icon> </v-list-item-icon>
             <v-list-item-title>
-              <router-link tag="div" to="/projects/hydro-wind-enegry-10">
+              <router-link tag="div" to="/projects">
                 <div class="neutral10--text">Your project</div>
               </router-link>
             </v-list-item-title>

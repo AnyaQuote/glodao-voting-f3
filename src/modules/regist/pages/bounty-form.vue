@@ -20,7 +20,6 @@
               <project-info v-if="vm.step === 1.1" />
               <pool-info v-if="vm.step === 1.2" />
               <confirm-payment v-if="vm.step === 2.1" />
-              <send-token v-if="vm.step === 2.2" />
             </v-slide-y-transition>
           </div>
         </v-col>
@@ -39,7 +38,6 @@ import { BountyApplyViewModel } from '../viewmodels/bounty-apply-viewmodel'
     'project-info': () => import('../components/regist-bounty/project-info.vue'),
     'confirm-payment': () => import('../components/regist-bounty/confirm.vue'),
     'pool-info': () => import('../components/regist-bounty/pool-info.vue'),
-    'send-token': () => import('../components/regist-bounty/send-token.vue'),
     banner: () => import('../components/common/banner.vue'),
   },
 })

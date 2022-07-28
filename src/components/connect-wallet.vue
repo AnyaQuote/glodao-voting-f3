@@ -92,6 +92,25 @@
             <v-icon class="mr-2">mdi-chevron-right</v-icon>
           </div>
         </v-card>
+        <v-card
+          @click="walletStore.connectViaWalletConnect()"
+          v-if="!walletStore.requestingChain || walletStore.requestingChain !== 'sol'"
+          elevation="0"
+          outlined
+          class="wallet-card neutra100--bg"
+        >
+          <div class="d-flex align-center neutral100--bg">
+            <div class="d-flex align-center ma-4">
+              <img width="24" :src="require('@/assets/icons/metamask-fox.svg')" />
+            </div>
+            <span>WalletConnect </span>
+            <v-spacer></v-spacer>
+            <span v-if="walletStore.solidityConnected" class="success--text caption font-weight-medium caption">
+              Connected
+            </span>
+            <v-icon class="mr-2">mdi-chevron-right</v-icon>
+          </div>
+        </v-card>
 
         <div class="text-h6 mt-4" v-if="!walletStore.requestingChain || walletStore.requestingChain === 'sol'">
           SOLANA Chain
