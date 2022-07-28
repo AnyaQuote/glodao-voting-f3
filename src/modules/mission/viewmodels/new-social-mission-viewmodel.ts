@@ -270,7 +270,7 @@ export class NewSocialMissionViewModel {
       const status = await this._api.checkTelegramBotIsAdded(this.joinTelegram.setting.link)
       if (status) {
         this.botIsAdded = true
-        this._snackbar.success('Glodao mission bot is added in your group/link')
+        this._snackbar.success('Glodao mission bot is added in your telegram channel/group')
       }
     } catch (error) {
       this._snackbar.commonError(error)
