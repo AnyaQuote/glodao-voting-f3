@@ -92,7 +92,6 @@ export class BountyApplyViewModel {
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
-      console.log('this.bnbFee: ', this.bnbFee)
       this.feePerMission = this.votingHandler.poolType.feePerMission!
 
       this._disposers.push(
@@ -133,7 +132,6 @@ export class BountyApplyViewModel {
       this.projectInfo.tokenAddress,
       walletStore.account
     )
-    console.log('tokenInfo: ', tokenInfo)
     this.rewardTokenBalance = tokenInfo.balance
   }
 
