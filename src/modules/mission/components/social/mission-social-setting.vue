@@ -48,7 +48,7 @@
           append-icon="mdi-link"
         />
 
-        <div class="font-18 text-subtitle-2 red--text">
+        <div class="font-18 text-subtitle-2 font-weight-regular red--text">
           *<i
             >For telegram mission, you need to add
             <a class="blue-diversity--text text-decoration-underline" href="https://t.me/glodao_mission_bot"
@@ -57,6 +57,13 @@
             to your channel/group
           </i>
         </div>
+        <v-btn
+          class="linear-blue--bg white--text mt-2"
+          depressed
+          :loading="vm.checkingTelegram"
+          @click="vm.checkTelegramBot"
+          >Check bot is added</v-btn
+        >
       </switch-field>
       <!-- ================================================================================================ -->
 

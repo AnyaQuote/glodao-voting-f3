@@ -357,5 +357,17 @@ export class ApiService {
 
     return res
   }
+
+  /**
+   *
+   * @param link
+   * @returns
+   */
+  async checkTelegramBotIsAdded(link: string) {
+    const response = await this.axios.post(`/tasks/verifyTelegramLink`, {
+      link,
+    })
+    return response.data
+  }
 }
 export const apiService = new ApiService()

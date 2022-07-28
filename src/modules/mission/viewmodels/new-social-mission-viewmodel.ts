@@ -14,7 +14,7 @@ import {
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
-import { asyncAction } from 'mobx-utils'
+import { actionAsync, asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
@@ -27,7 +27,7 @@ import {
 } from '@/constants'
 
 export class NewSocialMissionViewModel {
-  @observable step = 1
+  @observable step = 2
 
   // Setting must match observeable variable's name below
   readonly missionSettings = [
@@ -256,7 +256,31 @@ export class NewSocialMissionViewModel {
     return mission
   }
 
-  @asyncAction *submit() {
+  @observable checkingTelegram = false
+  @observable botIsAdded = false
+
+  @action.bound async checkTelegramBot() {
+    try {
+      this.checkingTelegram = true
+      const telegramLink = get(this.joinTelegram, 'setting.link')
+      if (!telegramLink) {
+        this._snackbar.error('Enter your telegram channel/group link first')
+        return
+      }
+      const status = await this._api.checkTelegramBotIsAdded(this.joinTelegram.setting.link)
+      if (status) {
+        this.botIsAdded = true
+        this._snackbar.success('Glodao mission bot is added in your group/link')
+      }
+    } catch (error) {
+      this._snackbar.commonError(error)
+    } finally {
+      this.checkingTelegram = false
+    }
+  }
+
+  @asyncAction
+  *submit() {
     try {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
