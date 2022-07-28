@@ -27,7 +27,7 @@ import {
 } from '@/constants'
 
 export class NewSocialMissionViewModel {
-  @observable step = 2
+  @observable step = 1
 
   // Setting must match observeable variable's name below
   readonly missionSettings = [
