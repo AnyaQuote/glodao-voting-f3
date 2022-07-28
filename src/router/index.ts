@@ -102,7 +102,7 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/new-project/bounty',
+    path: '/new-project-bounty',
     name: RouteName.NEW_BOUNTY_PROJECT,
     component: () => import('@/modules/regist/pages/bounty-form.vue'),
     meta: {
@@ -251,6 +251,7 @@ router.beforeEach(async (to, from, next) => {
           return next(false)
         }
       }
+      next()
     }
     // =====================================================================
     // Currently disable any route that leads to voting list and detail and launchpad apply page
