@@ -79,7 +79,6 @@ export class WalletStore {
     )
 
     if (localdata.walletConnect) {
-      console.log('localdata.walletConnect: ', localdata.walletConnect)
       const walletConnectProvider = new WalletConnectProvider({
         rpc: {
           97: 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet',
@@ -105,7 +104,6 @@ export class WalletStore {
     }
   }
   @asyncAction *start() {
-    console.log('start: ')
     try {
       if (this.chainType === 'bsc' || this.chainType === 'eth') {
         this.app.start()
@@ -432,7 +430,6 @@ export class WalletStore {
   @asyncAction *getBnbBalance() {
     const result = yield this.web3?.eth.getBalance(this.account as any)
     this.bnbBalance = FixedNumber.from(this.web3?.utils.fromWei(result, 'ether'))
-    console.log('this.bnbBalance: ', this.bnbBalance)
   }
 
   //#region computed
