@@ -8,7 +8,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { Zero } from '@/constants'
+import { ALLOW_PASS_THROUGH, Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
@@ -92,11 +92,21 @@ export class BountyApplyViewModel {
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
+      console.log('this.bnbFee: ', this.bnbFee)
       this.feePerMission = this.votingHandler.poolType.feePerMission!
 
       this._disposers.push(
         when(
           () => walletStore.walletConnected,
+          async () => {
+            votingHandler.injectProvider()
+          }
+        )
+      )
+
+      this._disposers.push(
+        reaction(
+          () => walletStore.account,
           async () => {
             votingHandler.injectProvider()
           }
@@ -123,6 +133,7 @@ export class BountyApplyViewModel {
       this.projectInfo.tokenAddress,
       walletStore.account
     )
+    console.log('tokenInfo: ', tokenInfo)
     this.rewardTokenBalance = tokenInfo.balance
   }
 
@@ -300,6 +311,9 @@ export class BountyApplyViewModel {
       promiseHelper.delay(500)
       this._router.push({
         name: RouteName.PROJECT_LIST,
+        params: {
+          passThrough: ALLOW_PASS_THROUGH,
+        },
       })
     } catch (error) {
       this._snackbar.commonError(error)

@@ -3,9 +3,17 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import { authStore } from '@/stores/auth-store'
 import { attachWalletDialogController } from '@/components/attach-wallet/attach-wallet-dialog-controller'
 import { twitterLoginDialogController } from '@/components/twitter-login/twitter-login-dialog-controller'
-import { ERROR_MSG_LOGIN_TO_CONTINUE, WALLET_ATTACHED_SUCCESSFUL, WALLET_CONNECTED_SUCCESSFUL } from '@/constants'
+import {
+  ALLOW_PASS_THROUGH,
+  ERROR_MSG_LOGIN_TO_CONTINUE,
+  PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
+  PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
+  WALLET_ATTACHED_SUCCESSFUL,
+  WALLET_CONNECTED_SUCCESSFUL,
+} from '@/constants'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import { confirmDialogController } from '@/components/confirm-dialog/confirm-dialog-controller'
 
 Vue.use(VueRouter)
 
@@ -90,6 +98,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Launchpad Application',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -100,6 +109,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Bounty Application',
+      promptBeforeLeave: true,
     },
   },
 
@@ -132,6 +142,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Social Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -142,6 +153,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'Learn Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -152,6 +164,7 @@ const routes: Array<RouteConfig> = [
       auth: true,
       wallet: true,
       title: 'In-App-Trial Mission Form',
+      promptBeforeLeave: true,
     },
   },
   {
@@ -219,15 +232,37 @@ const router = new VueRouter({
   },
 })
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   if (!to.name) {
     next({ name: RouteName.NOT_FOUND })
   } else {
-    // Currently disable any route that leads to voting list and detail and launchpad apply page
-    if (to.name === 'voting-list' || to.name === 'voting-detail' || to.name === 'launchpad-apply') {
-      next({ name: RouteName.COMMING_SOON })
+    // =====================================================================
+    // Prompt user if they want to exist bounty form page
+    const shouldPromptBeforeLeave = from.matched.some((m) => m.meta?.promptBeforeLeave === true)
+    if (shouldPromptBeforeLeave) {
+      const shouldPassThroughDialog = to.params.passThourgh || false
+      if (shouldPassThroughDialog !== ALLOW_PASS_THROUGH) {
+        const confirm = await confirmDialogController.openAsync({
+          title: PROMPT_FORM_ON_LEAVE_DIALOG_TITLE,
+          content: PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT,
+          doneText: PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT,
+        })
+        if (confirm === false) {
+          return next(false)
+        }
+      }
+      next()
     }
-    if (to.name === 'bounty-apply') {
+    // =====================================================================
+    // Currently disable any route that leads to voting list and detail and launchpad apply page
+    if (
+      to.name === RouteName.VOTING_LIST ||
+      to.name === RouteName.VOTING_DETAIL ||
+      to.name === RouteName.NEW_LAUNCHPAD_PROJECT
+    ) {
+      return next(false)
+    }
+    if (to.name === RouteName.NEW_BOUNTY_PROJECT) {
       next()
     } else {
       // =====================================================================
@@ -238,10 +273,12 @@ router.beforeEach(async (to, _, next) => {
 
         // If user denied sign in, redirect to 401 page
         if (!dialogStatus) {
-          next({ name: RouteName.UNAUTHENTICATED })
+          return next({ name: RouteName.UNAUTHENTICATED })
         }
       }
       next()
+      return
+      // =====================================================================
     }
   }
 })

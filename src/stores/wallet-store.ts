@@ -26,11 +26,12 @@ import {
   Wallet,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl, ConfirmOptions, Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable, reaction, toJS } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { Subscription, timer } from 'rxjs'
 import Web3 from 'web3'
 import { authStore } from './auth-store'
+import WalletConnectProvider from '@walletconnect/web3-provider'
 
 export class WalletStore {
   ethereum: any = window.ethereum
@@ -60,6 +61,14 @@ export class WalletStore {
   @observable selectedAdapter: WalletAdapter | SignerWalletAdapter | MessageSignerWalletAdapter | null = null
 
   private _bnbBalanceSubscription: Subscription | undefined
+  walletConnectProvider = new WalletConnectProvider({
+    rpc: {
+      97: 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet',
+      56: 'https://bsc-dataseed.binance.org/',
+      43114: 'https://api.avax.network/ext/bc/C/rpc',
+      137: 'https://rpc-mainnet.maticvigil.com/',
+    },
+  } as any) as any
 
   constructor() {
     reaction(
@@ -68,6 +77,25 @@ export class WalletStore {
         localdata.lastChain = x as any
       }
     )
+
+    if (localdata.walletConnect) {
+      console.log('localdata.walletConnect: ', localdata.walletConnect)
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc: {
+          97: 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet',
+          56: 'https://bsc-dataseed.binance.org/',
+          43114: 'https://api.avax.network/ext/bc/C/rpc',
+          137: 'https://rpc-mainnet.maticvigil.com/',
+        },
+      } as any) as any
+
+      const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+      const walletConnectParsed = JSON.parse(walletConnect)
+
+      this.web3 = new Web3(walletConnectProvider)
+      this.account = walletConnectParsed.accounts[0]
+      this.chainId = walletConnectParsed.chainId
+    }
   }
 
   @action.bound changeShowConnectDialog(value: boolean) {
@@ -77,12 +105,17 @@ export class WalletStore {
     }
   }
   @asyncAction *start() {
+    console.log('start: ')
     try {
       if (this.chainType === 'bsc' || this.chainType === 'eth') {
         this.app.start()
         this.web3 = this.app.web3
         if (yield this.app.getAddress()) {
-          yield this.connectSolidity()
+          if (localdata.walletConnect) {
+            // yield this.connectViaWalletConnect()
+          } else {
+            yield this.connectSolidity()
+          }
         }
       }
     } catch (error) {
@@ -153,6 +186,79 @@ export class WalletStore {
   //     } else {
   //       return yield a._wallet.signMessage(data)
   //     }
+  //   }
+  // }
+
+  @asyncAction *connectViaWalletConnect() {
+    try {
+      loadingController.increaseRequest()
+      yield this.walletConnectProvider.enable()
+      const walletConnect = localdata.walletConnect ? localdata.walletConnect : ''
+      const walletConnectParsed = JSON.parse(walletConnect)
+
+      this.web3 = new Web3(this.walletConnectProvider)
+      this.account = walletConnectParsed.accounts[0]
+      this.chainId = walletConnectParsed.chainId
+
+      this._bnbBalanceSubscription?.unsubscribe()
+      this._bnbBalanceSubscription = timer(0, 5000).subscribe(() => {
+        this.getBnbBalance()
+      })
+
+      this.changeShowConnectDialog(false)
+      this.walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
+        console.log('accountsChanged: ')
+        // window.location.reload()
+      })
+      this.walletConnectProvider.on('chainChanged', (chainId: number) => {
+        console.log('chainChanged: ')
+        // window.location.reload()
+      })
+    } catch (error) {
+      console.error(error)
+      return false
+    } finally {
+      loadingController.decreaseRequest()
+    }
+  }
+
+  // @action connectViaWalletConnect() {
+  //   try {
+  //     if (!connector.connected) {
+  //       console.log("========createSession")
+  //       connector.createSession()
+  //     }
+  //     connector.on('connect', (error, payload) => {
+  //       // Subscribe to connection events
+  //       console.log(payload)
+  //       this.account = payload?.params[0].accounts[0]
+
+  //       console.log("======this.account", this.account)
+  //       // this.web3 = new Web3(connector)
+  //       this.web3 = new Web3()
+  //       this.changeShowConnectDialog(false)
+  //       if (error) {
+  //         throw error
+  //       }
+  //     })
+
+  //     connector.on('session_update', (error, payload) => {
+  //       if (error) {
+  //         throw error
+  //       }
+  //     })
+
+  //     connector.on('disconnect', (error, payload) => {
+  //       if (error) {
+  //         throw error
+  //       }
+  //       if (payload.params[0]?.message === 'Session update rejected') snackController.error('User reject request')
+  //       // else this.disconnect()
+  //     })
+  //   } catch (error) {
+  //     snackController.commonError(error)
+  //   } finally {
+  //     //
   //   }
   // }
 
@@ -326,6 +432,7 @@ export class WalletStore {
   @asyncAction *getBnbBalance() {
     const result = yield this.web3?.eth.getBalance(this.account as any)
     this.bnbBalance = FixedNumber.from(this.web3?.utils.fromWei(result, 'ether'))
+    console.log('this.bnbBalance: ', this.bnbBalance)
   }
 
   //#region computed
