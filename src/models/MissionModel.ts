@@ -122,6 +122,7 @@ export enum SocialTaskType {
   FOLLOW = 'follow',
   COMMENT = 'comment',
   QUOTE = 'quote',
+  CUSTOM = 'custom',
 }
 
 export enum SocialTaskComponent {
@@ -130,4 +131,6 @@ export enum SocialTaskComponent {
   FOLLOW_TWITTER = 'twitter-follow-task',
   QUOTE_TWITTER = 'twitter-quote-task',
   COMMENT_TWITTER = 'twitter-comment-task',
+  FOLLOW_FACEBOOK = 'facebook-follow-task',
+  CUSTOM_TASK = 'custom-task',
 }
