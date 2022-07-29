@@ -1,11 +1,5 @@
 <template>
-  <expand-container
-    class="mt-4"
-    type="twitter"
-    title="Twitter task"
-    subtitle="Like and reply a post"
-    @remove="removeSetting"
-  >
+  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Quote a tweet" @remove="removeSetting">
     <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
       Tweet from twitter page name<span class="red--text">*</span>
     </div>
@@ -27,7 +21,6 @@
     />
     <div class="font-18 font-weight-bold mt-2">Twitter hastag<span class="red--text">*</span></div>
     <app-autocomplete
-      :items="[]"
       :value="hashtag"
       placeholder="Enter your hastag"
       @onChange="updateConfig('setting.hashtag', $event)"
