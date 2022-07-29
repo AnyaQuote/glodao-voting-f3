@@ -80,6 +80,26 @@ const commentTweetSetting = {
   },
 }
 
+const followFanpageSetting = {
+  key: 1,
+  component: SocialTaskComponent.FOLLOW_FACEBOOK,
+  setting: { type: SocialTaskType.FOLLOW, page: '', required: true, link: '' },
+}
+
+const customTaskSetting = {
+  key: 1,
+  component: SocialTaskComponent.CUSTOM_TASK,
+  setting: {
+    type: SocialTaskType.CUSTOM,
+    requiredContent: '',
+    description: '',
+    link: '',
+    name: '',
+    icon: 'website',
+    isLinkRequired: false,
+  },
+}
+
 interface TaskConfig {
   key?: number
   component?: string
@@ -163,6 +183,8 @@ export class NewSocialMissionViewModel {
 
   @observable telegram: TaskConfig[] = []
   @observable twitter: TaskConfig[] = []
+  @observable facebook: TaskConfig[] = []
+  @observable custom: TaskConfig[] = []
 
   @action.bound changeMissionInfo(property: string, value: string) {
     this.missionInfo = set(this.missionInfo, property, value)
@@ -189,7 +211,7 @@ export class NewSocialMissionViewModel {
       case SocialTaskType.COMMENT:
         return { ...teleChatSetting, key: this._key++ }
       default:
-        return { ...joinTeleSetting, key: this._key++ }
+        return {}
     }
   }
 
@@ -202,7 +224,25 @@ export class NewSocialMissionViewModel {
       case SocialTaskType.QUOTE:
         return { ...quoteTweetSetting, key: this._key++ }
       default:
-        return { ...followTweetSetting, key: this._key++ }
+        return {}
+    }
+  }
+
+  getFacebookTaskTypeData(type: string) {
+    switch (type) {
+      case SocialTaskType.FOLLOW:
+        return { ...followFanpageSetting, key: this._key++ }
+      default:
+        return {}
+    }
+  }
+
+  getCustomTaskTypeData(type: string) {
+    switch (type) {
+      case SocialTaskType.CUSTOM:
+        return { ...customTaskSetting, key: this._key++ }
+      default:
+        return {}
     }
   }
 
@@ -217,6 +257,13 @@ export class NewSocialMissionViewModel {
         setting = this.getTwitterTaskTypeData(data.type)
         this.twitter = [...this.twitter, setting]
         break
+      case SocialType.FACEBOOK:
+        setting = this.getFacebookTaskTypeData(data.type)
+        this.facebook = [...this.facebook, setting]
+        break
+      case SocialTaskType.CUSTOM:
+        setting = this.getCustomTaskTypeData(data.type)
+        this.custom = [...this.custom, setting]
     }
   }
 
@@ -414,4 +461,5 @@ export class NewSocialMissionViewModel {
 export enum SocialType {
   TELEGRAM = 'telegram',
   TWITTER = 'twitter',
+  FACEBOOK = 'facebook',
 }
