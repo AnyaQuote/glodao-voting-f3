@@ -129,4 +129,5 @@ export enum SocialTaskComponent {
   CHAT_TELEGRAM = 'telegram-chat-task',
   FOLLOW_TWITTER = 'twitter-follow-task',
   QUOTE_TWITTER = 'twitter-quote-task',
+  COMMENT_TWITTER = 'twitter-comment-task',
 }
