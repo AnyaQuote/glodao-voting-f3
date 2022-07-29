@@ -282,6 +282,7 @@ import { NewSocialMissionViewModel, SocialType } from '../../viewmodels/new-soci
     [SocialTaskComponent.FOLLOW_TWITTER]: () => import('./twitter/twitter-follow-task.vue'),
     [SocialTaskComponent.CHAT_TELEGRAM]: () => import('./telegram/telegram-chat-task.vue'),
     [SocialTaskComponent.QUOTE_TWITTER]: () => import('./twitter/twitter-quote-task.vue'),
+    [SocialTaskComponent.COMMENT_TWITTER]: () => import('./twitter/twitter-comment-task.vue'),
     'social-task-select-dialog': () => import('./dialogs/social-task-select-dialog.vue'),
     'app-autocomplete': () => import('@/modules/regist/components/common/app-autocomplete.vue'),
   },
