@@ -67,6 +67,19 @@ const quoteTweetSetting = {
   },
 }
 
+const commentTweetSetting = {
+  key: 1,
+  component: SocialTaskComponent.COMMENT_TWITTER,
+  setting: {
+    type: SocialTaskType.COMMENT,
+    page: '',
+    content: '',
+    embedLink: '',
+    link: '',
+    required: true,
+  },
+}
+
 interface TaskConfig {
   key?: number
   component?: string
@@ -184,6 +197,8 @@ export class NewSocialMissionViewModel {
     switch (type) {
       case SocialTaskType.FOLLOW:
         return { ...followTweetSetting, key: this._key++ }
+      case SocialTaskType.COMMENT:
+        return { ...commentTweetSetting, key: this._key++ }
       case SocialTaskType.QUOTE:
         return { ...quoteTweetSetting, key: this._key++ }
       default:
