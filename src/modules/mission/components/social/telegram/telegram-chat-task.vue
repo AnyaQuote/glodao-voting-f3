@@ -1,0 +1,104 @@
+<template>
+  <expand-container
+    class="mt-4"
+    type="telegram"
+    title="Telegram task"
+    subtitle="Chat in group (Comming soon)"
+    @remove="removeSetting"
+  >
+    <div class="font-18 font-weight-bold">Telegram group name<span class="red--text">*</span></div>
+    <app-text-field
+      class="mt-2"
+      :value="pageName"
+      :rules="[$rules.required]"
+      placeholder="GLODAO Channel"
+      @change="updateSetting('setting.page', $event)"
+    />
+
+    <div class="font-18 font-weight-bold">Telegram group link<span class="red--text">*</span></div>
+    <app-text-field
+      :value="telegramLink"
+      append-icon="mdi-link"
+      :rules="[$rules.required, $rules.url]"
+      placeholder="https://t.me/GloDAO_Group"
+      @change="updateSetting('setting.link', $event)"
+    />
+  </expand-container>
+</template>
+
+<script lang="ts">
+import { EMPTY_STRING } from '@/constants'
+import { isNotEmpty } from '@/helpers'
+import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { isEmpty, set } from 'lodash-es'
+import { Observer } from 'mobx-vue'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+
+const teleChatSetting = {
+  key: 1,
+  component: SocialTaskComponent.CHAT_TELEGRAM,
+  setting: {
+    type: SocialTaskType,
+    page: '',
+    content: [],
+    embedLink: '',
+    link: '',
+    required: true,
+  },
+}
+
+interface TaskConfig {
+  key?: number
+  component?: SocialTaskComponent
+  setting?: {
+    type?: SocialTaskType.FOLLOW
+    page?: string
+    link?: string
+    embedLink?: string
+    content?: string[]
+    required?: boolean
+  }
+}
+
+@Observer
+@Component({
+  components: {
+    'expand-container': () => import('../../common/expand-container.vue'),
+  },
+})
+export default class TelegramChatTask extends Vue {
+  @Prop() inputConfig!: TaskConfig
+
+  taskConfig = isEmpty(this.inputConfig) ? teleChatSetting : this.inputConfig
+
+  updateConfig(property: string, value: string) {
+    if (property === 'setting.link') {
+      set(this.taskConfig, 'setting.embedLink', value)
+    }
+    this.taskConfig = set(this.taskConfig, property, value)
+  }
+
+  @Watch('taskConfig', { deep: true })
+  onSettingUpdated(newSetting: TaskConfig) {
+    console.log('watching')
+    if (isNotEmpty(this.pageName) && isNotEmpty(this.telegramLink)) {
+      console.log('emit')
+      this.$emit('change', newSetting)
+    }
+  }
+
+  removeSetting() {
+    this.$emit('remove')
+  }
+
+  get pageName() {
+    return this.taskConfig.setting?.page || EMPTY_STRING
+  }
+
+  get telegramLink() {
+    return this.taskConfig!.setting?.link || EMPTY_STRING
+  }
+}
+</script>
+
+<style scoped></style>

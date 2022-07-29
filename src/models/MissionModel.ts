@@ -117,3 +117,16 @@ export interface OptionalTokenItem {
   tokenContractAddress?: string | number
   decimal?: string | number
 }
+
+export enum SocialTaskType {
+  FOLLOW = 'follow',
+  COMMENT = 'comment',
+  QUOTE = 'quote',
+}
+
+export enum SocialTaskComponent {
+  JOIN_TELEGRAM = 'telegram-join-task',
+  CHAT_TELEGRAM = 'telegram-chat-task',
+  FOLLOW_TWITTER = 'twitter-follow-task',
+  QUOTE_TWITTER = 'twitter-quote-task',
+}

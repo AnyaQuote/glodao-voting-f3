@@ -7,68 +7,54 @@
         <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
         <span class="text-subtitle-2">Create mission</span>
       </div>
-      <!-- <div
-        class="p-absolute text-h5 font-weight-bold blue-diversity--text"
-        style="left: 50%; transform: translateX(-50%)"
-      >
-        Social mission
-      </div> -->
       <div class="my-2 my-sm-0" />
       <div class="text-h5 font-weight-bold blue-diversity--text">Social mission</div>
     </div>
     <v-divider />
 
     <v-form v-model="formState" class="pa-7">
-      <div class="title font-weight-bold blue-diversity--text">Mission setting</div>
-      <!-- ====================================== Join telegram ====================================== -->
-      <switch-field
-        class="mt-4"
-        type="telegram"
-        title="Telegram task"
-        subtitle="Join telegram group"
-        :value="vm.joinTelegram.enabled"
-        @change="vm.changeJoinTelegramSetting('enabled', $event)"
-      >
-        <div class="font-18 font-weight-bold">Telegram group name<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.joinTelegram, 'setting.page')"
-          @change="vm.changeJoinTelegramSetting('setting.page', $event)"
-          placeholder="GLODAO Channel"
-        />
+      <div class="title font-weight-bold blue-diversity--text">Mission settings</div>
 
-        <div class="font-18 font-weight-bold">Telegram group link<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.joinTelegram, 'setting.link')"
-          @change="vm.changeJoinTelegramSetting('setting.link', $event)"
-          placeholder="https://t.me/GloDAO_Group"
-          append-icon="mdi-link"
+      <!-- ================================== CONFIG TELEGRAM TASK SETTING ================================== -->
+      <v-sheet class="neutral-20 px-6 py-2 rounded-lg mt-7 d-flex justify-space-between align-center">
+        <a href="#telegram" class="text-subtitle-1 font-weight-bold">Telegram setting</a>
+        <v-btn icon @click="vm.updateSelectDialogState(true, 'telegram')">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-sheet>
+      <template v-for="setting in vm.telegram">
+        <component
+          :key="setting.key"
+          :is="setting.component"
+          :inputConfig="setting"
+          @remove="vm.removeSetting('telegram', setting.key)"
+          @change="vm.updateSetting('telegram', setting.key, $event)"
         />
+      </template>
+      <!-- ================================================================================================== -->
 
-        <div class="font-18 text-subtitle-2 font-weight-regular red--text">
-          *<i
-            >For telegram mission, you need to add
-            <a class="blue-diversity--text text-decoration-underline" href="https://t.me/glodao_mission_bot"
-              >@glodao_mission_bot</a
-            >
-            to your channel/group
-          </i>
-        </div>
-        <v-btn
-          class="linear-blue--bg white--text mt-2"
-          depressed
-          :loading="vm.checkingTelegram"
-          @click="vm.checkTelegramBot"
-          >Check bot is added</v-btn
-        >
-      </switch-field>
-      <!-- ================================================================================================ -->
+      <v-divider class="my-7 dashed-border" />
+
+      <!-- ================================== CONFIG TWITTER TASK SETTING =================================== -->
+      <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
+        <a href="#telegram" class="text-subtitle-1 font-weight-bold">Twitter setting</a>
+        <v-btn icon @click="vm.updateSelectDialogState(true, 'twitter')">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-sheet>
+      <template v-for="setting in vm.twitter">
+        <component
+          :key="setting.key"
+          :is="setting.component"
+          :inputConfig="setting"
+          @remove="vm.removeSetting('twitter', setting.key)"
+          @change="vm.updateSetting('twitter', setting.key, $event)"
+        />
+      </template>
+      <!-- ================================================================================================== -->
 
       <!-- ======================================= CHAT TELEGRAM ========================================== -->
-      <switch-field
+      <!-- <switch-field
         readonly
         class="mt-4"
         type="telegram"
@@ -84,11 +70,11 @@
           placeholder="Enter your tweet link"
           append-icon="mdi-link"
         />
-      </switch-field>
+      </switch-field> -->
       <!-- ============================================================================================== -->
 
       <!-- ======================================= Follow twitter ======================================= -->
-      <switch-field
+      <!-- <switch-field
         class="mt-4"
         type="twitter"
         title="Twitter task"
@@ -116,11 +102,11 @@
           placeholder="https://twitter.com/GloDAO_Official"
           append-icon="mdi-link"
         />
-      </switch-field>
+      </switch-field> -->
       <!-- =========================================================================================== -->
 
       <!-- ======================================= Quote tweet ======================================= -->
-      <switch-field
+      <!-- <switch-field
         class="mt-4"
         type="twitter"
         title="Twitter task"
@@ -155,24 +141,11 @@
           :value="$_get(vm.quoteTweet, 'setting.hashtag')"
           @onChange="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
         />
-        <!-- <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-6">
-          <span>Required content</span>
-          <v-spacer />
-          <i class="text-subtitle-2 font-weight-regular neutral-10--text"
-            >*System will check if user's quote contains these keywords</i
-          >
-        </div>
-        <app-autocomplete
-          :items="[]"
-          placeholder="Enter content keywords"
-          :value="$_get(vm.quoteTweet, 'setting.content')"
-          @onChange="vm.changeQuoteTweetSetting('setting.content', $event)"
-        /> -->
-      </switch-field>
+      </switch-field> -->
       <!-- =============================================================================================== -->
 
       <!-- ======================================= Like and repost tweet ================================= -->
-      <switch-field
+      <!-- <switch-field
         class="mt-4"
         type="twitter"
         title="Twitter task"
@@ -199,24 +172,11 @@
           placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
           append-icon="mdi-link"
         />
-        <!-- <div class="font-18 font-weight-bold d-flex flex-column flex-md-row mt-2">
-          <span>Required content</span>
-          <v-spacer />
-          <i class="text-subtitle-2 font-weight-regular neutral-10--text"
-            >*System will check if user's reply contains these keywords</i
-          >
-        </div>
-        <app-autocomplete
-          :items="[]"
-          placeholder="Enter content keywords"
-          :value="$_get(vm.commentTweet, 'setting.content')"
-          @onChange="vm.changeCommentTweetSetting('setting.content', $event)"
-        /> -->
-      </switch-field>
+      </switch-field> -->
       <!-- =============================================================================================== -->
 
       <!-- ======================================= Facebook follow ======================================= -->
-      <switch-field
+      <!-- <switch-field
         class="mt-4"
         type="facebook"
         title="Facebook task"
@@ -242,11 +202,11 @@
           placeholder="https://www.facebook.com/groups/1021901785231713"
           append-icon="mdi-link"
         />
-      </switch-field>
+      </switch-field> -->
       <!-- ============================================================================================= -->
 
       <!-- ======================================= CUSTOM TASK ========================================= -->
-      <switch-field
+      <!-- <switch-field
         class="mt-4"
         type="other"
         title="Custom task"
@@ -281,7 +241,7 @@
           placeholder="Enter your link"
           append-icon="mdi-link"
         />
-      </switch-field>
+      </switch-field> -->
       <!-- ============================================================================================= -->
 
       <div class="d-flex mt-7">
@@ -292,8 +252,7 @@
         <div class="flex-grow">
           <v-btn
             class="text-none"
-            :class="vm.isValid(formState) && 'linear-blue--bg white--text'"
-            :disabled="!vm.isValid(formState)"
+            :class="'linear-blue--bg white--text'"
             :loading="vm.btnLoading"
             @click="submit"
             height="40"
@@ -306,24 +265,32 @@
         <!-- ---------------------------------------------------------------------------------------------------- -->
       </div>
     </v-form>
+    <social-task-select-dialog />
   </v-sheet>
 </template>
 
 <script lang="ts">
+import { SocialTaskComponent } from '@/models/MissionModel'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-viewmodel'
+import { NewSocialMissionViewModel, SocialType } from '../../viewmodels/new-social-mission-viewmodel'
 
 @Observer
 @Component({
   components: {
-    'switch-field': () => import('../common/switch-field.vue'),
+    [SocialTaskComponent.JOIN_TELEGRAM]: () => import('./telegram/telegram-join-task.vue'),
+    [SocialTaskComponent.FOLLOW_TWITTER]: () => import('./twitter/twitter-follow-task.vue'),
+    [SocialTaskComponent.CHAT_TELEGRAM]: () => import('./telegram/telegram-chat-task.vue'),
+    [SocialTaskComponent.QUOTE_TWITTER]: () => import('./twitter/twitter-quote-task.vue'),
+    'social-task-select-dialog': () => import('./dialogs/social-task-select-dialog.vue'),
     'app-autocomplete': () => import('@/modules/regist/components/common/app-autocomplete.vue'),
   },
 })
 export default class MissionSocialSetting extends Vue {
   @Inject() vm!: NewSocialMissionViewModel
   formState = false
+
+  socialTypeEnum = SocialType
 
   beforeDestroy() {
     // this.vm.resetSocialSetting()

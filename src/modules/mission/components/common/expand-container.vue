@@ -1,6 +1,6 @@
 <template>
   <v-sheet class="d-flex flex-column transparent--bg rounded-lg" outlined>
-    <div class="d-flex pa-4 align-center">
+    <div class="d-flex pa-6 align-center">
       <div class="d-none d-sm-flex align-center mr-4">
         <slot name="icon">
           <img v-if="type === 'twitter'" width="48" height="48" contain :src="require('@/assets/icons/twitter.svg')" />
@@ -24,13 +24,13 @@
       <v-btn icon @click="toggleExpand">
         <v-icon v-html="expandIcon" />
       </v-btn>
-      <v-btn icon @click="onDelete">
-        <v-icon size="20">mdi-close</v-icon>
+      <v-btn icon @click="remove">
+        <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>
-    <div v-if="show && hasSlot">
-      <v-divider class="my-2 mx-6" />
-      <div class="px-5 py-6">
+    <div v-show="shouldShowSlot">
+      <v-divider class="mx-4" />
+      <div class="pa-6">
         <slot></slot>
       </div>
     </div>
@@ -48,7 +48,6 @@ export default class ExpandContainer extends Vue {
   @Prop({ required: true }) type!: string
   @Prop({ default: EMPTY_STRING }) title!: string
   @Prop({ default: EMPTY_STRING }) subtitle!: string
-  @Prop() deleteCallback?: () => void
 
   show = true
 
@@ -56,12 +55,12 @@ export default class ExpandContainer extends Vue {
     this.show = !this.show
   }
 
-  onDelete() {
-    this.deleteCallback?.()
+  remove() {
+    this.$emit('remove')
   }
 
-  get hasSlot() {
-    return this.$slots.default
+  get shouldShowSlot() {
+    return this.show && this.$slots.default
   }
 
   get expandIcon() {
