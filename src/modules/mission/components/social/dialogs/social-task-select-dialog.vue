@@ -4,9 +4,10 @@
       <v-card-title>
         <span>Select telegram task</span>
         <v-spacer />
-        <v-icon @click="vm.updateSelectDialogState(false)">mdi-close</v-icon>
+        <v-icon @click="cancel">mdi-close</v-icon>
       </v-card-title>
-      <v-card-text tag="div">
+
+      <v-card-text>
         <template v-if="vm.selectedSocial === 'telegram'">
           <v-radio-group v-model="selection">
             <v-sheet
@@ -19,8 +20,10 @@
               <v-radio
                 :value="{ socialType: vm.selectedSocial, type: option.type }"
                 :label="option.name"
-                off-icon="mdi-minus"
-                on-icon="mdi-check"
+                :disabled="option.disabled"
+                color="blue-diversity"
+                off-icon="mdi-circle-outline"
+                on-icon="mdi-check-circle-outline"
               >
               </v-radio>
             </v-sheet>
@@ -39,8 +42,51 @@
               <v-radio
                 :value="{ socialType: vm.selectedSocial, type: option.type }"
                 :label="option.name"
-                off-icon="mdi-minus"
-                on-icon="mdi-check"
+                color="blue-diversity"
+                off-icon="mdi-circle-outline"
+                on-icon="mdi-check-circle-outline"
+              >
+              </v-radio>
+            </v-sheet>
+          </v-radio-group>
+        </template>
+
+        <template v-if="vm.selectedSocial === 'facebook'">
+          <v-radio-group v-model="selection">
+            <v-sheet
+              class="py-4 px-4 mb-2 text-subtitle-2"
+              v-for="(option, index) in facebook"
+              :key="index"
+              outlined
+              rounded
+            >
+              <v-radio
+                :value="{ socialType: vm.selectedSocial, type: option.type }"
+                :label="option.name"
+                color="blue-diversity"
+                off-icon="mdi-circle-outline"
+                on-icon="mdi-check-circle-outline"
+              >
+              </v-radio>
+            </v-sheet>
+          </v-radio-group>
+        </template>
+
+        <template v-if="vm.selectedSocial === 'custom'">
+          <v-radio-group v-model="selection">
+            <v-sheet
+              class="py-4 px-4 mb-2 text-subtitle-2"
+              v-for="(option, index) in custom"
+              :key="index"
+              outlined
+              rounded
+            >
+              <v-radio
+                :value="{ socialType: vm.selectedSocial, type: option.type }"
+                :label="option.name"
+                color="blue-diversity"
+                off-icon="mdi-circle-outline"
+                on-icon="mdi-check-circle-outline"
               >
               </v-radio>
             </v-sheet>
@@ -48,9 +94,16 @@
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="flex-grow" outlined @click="vm.updateSelectDialogState(false)">Cancel</v-btn>
+        <v-btn class="flex-grow" outlined @click="cancel">Cancel</v-btn>
         <div class="mx-2" />
-        <v-btn class="flex-grow linear-blue--bg white--text" depressed @click="confirm">Confirm</v-btn>
+        <v-btn
+          class="flex-grow"
+          :class="{ 'linear-blue--bg white--text': !!selection }"
+          depressed
+          @click="confirm"
+          :disabled="!selection"
+          >Confirm</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -69,8 +122,8 @@ export default class TelegramTaskSelectDialog extends Vue {
   selection = ''
 
   readonly telegram = [
-    { type: 'follow', name: 'Join telegram' },
-    { type: 'comment', name: 'Chat telegram' },
+    { type: 'follow', name: 'Join telegram', disabled: false },
+    { type: 'comment', name: 'Chat telegram (Comming soon)', disabled: true },
   ]
   readonly twitter = [
     { type: 'follow', name: 'Follow project twitter' },
@@ -80,11 +133,15 @@ export default class TelegramTaskSelectDialog extends Vue {
   readonly facebook = [{ type: 'follow', name: 'Follow a facebook fanpage' }]
   readonly custom = [{ type: 'custom', name: 'Customie your task' }]
 
+  cancel() {
+    this.vm.updateSelectDialogState(false)
+    this.selection = ''
+  }
+
   confirm() {
     this.vm.appendSetting(this.selection)
     this.vm.updateSelectDialogState(false)
     this.selection = ''
-    //
   }
 }
 </script>
