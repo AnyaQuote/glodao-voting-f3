@@ -53,198 +53,49 @@
       </template>
       <!-- ================================================================================================== -->
 
-      <!-- ======================================= CHAT TELEGRAM ========================================== -->
-      <!-- <switch-field
-        readonly
-        class="mt-4"
-        type="telegram"
-        title="Telegram task"
-        subtitle="Chat in group (Comming soon)"
-        :value="vm.telegramChat.enabled"
-        @change="vm.changeTelegramChatSetting('enabled', $event)"
-      >
-        <app-text-field
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.telegramChat, 'setting.link')"
-          @change="vm.changeTelegramChatSetting('setting.link', $event)"
-          placeholder="Enter your tweet link"
-          append-icon="mdi-link"
-        />
-      </switch-field> -->
-      <!-- ============================================================================================== -->
+      <v-divider class="my-7 dashed-border" />
 
-      <!-- ======================================= Follow twitter ======================================= -->
-      <!-- <switch-field
-        class="mt-4"
-        type="twitter"
-        title="Twitter task"
-        subtitle="Follow project twitter"
-        :value="vm.followTwitter.enabled"
-        @change="vm.changeFollowTwitterSetting('enabled', $event)"
-      >
-        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
-          Project from twitter page name<span class="red--text">*</span>
-        </div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.followTwitter, 'setting.page')"
-          @change="vm.changeFollowTwitterSetting('setting.page', $event)"
-          placeholder="GLODAO Channel"
+      <!-- ================================== CONFIG FACEBOOK TASK SETTING ================================== -->
+      <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
+        <a href="#facebook" class="text-subtitle-1 font-weight-bold">Facebook setting</a>
+        <v-btn icon @click="vm.updateSelectDialogState(true, 'facebook')">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-sheet>
+      <template v-for="setting in vm.facebook">
+        <component
+          :key="setting.key"
+          :is="setting.component"
+          :inputConfig="setting"
+          @remove="vm.removeSetting('facebook', setting.key)"
+          @change="vm.updateSetting('facebook', setting.key, $event)"
         />
+      </template>
+      <!-- ================================================================================================== -->
 
-        <div class="font-18 font-weight-bold">Twitter project link<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.followTwitter, 'setting.link')"
-          @change="vm.changeFollowTwitterSetting('setting.link', $event)"
-          placeholder="https://twitter.com/GloDAO_Official"
-          append-icon="mdi-link"
-        />
-      </switch-field> -->
-      <!-- =========================================================================================== -->
+      <v-divider class="my-7 dashed-border" />
 
-      <!-- ======================================= Quote tweet ======================================= -->
-      <!-- <switch-field
-        class="mt-4"
-        type="twitter"
-        title="Twitter task"
-        subtitle="Quote a tweet"
-        :value="vm.quoteTweet.enabled"
-        @change="vm.changeQuoteTweetSetting('enabled', $event)"
-      >
-        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
-          Tweet from twitter page name<span class="red--text">*</span>
-        </div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.quoteTweet, 'setting.page')"
-          @change="vm.changeQuoteTweetSetting('setting.page', $event)"
-          placeholder="GLODAO Channel"
+      <!-- ================================== CONFIG CUSTOM TASK SETTING ==================================== -->
+      <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
+        <a href="#facebook" class="text-subtitle-1 font-weight-bold">Other setting</a>
+        <v-btn icon @click="vm.updateSelectDialogState(true, 'custom')">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-sheet>
+      <template v-for="setting in vm.custom">
+        <component
+          :key="setting.key"
+          :is="setting.component"
+          :inputConfig="setting"
+          @remove="vm.removeSetting('custom', setting.key)"
+          @change="vm.updateSetting('custom', setting.key, $event)"
         />
-        <div class="font-18 font-weight-bold mt-2">Twitter link<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.quoteTweet, 'setting.link')"
-          @change="vm.changeQuoteTweetSetting('setting.link', $event)"
-          placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
-          append-icon="mdi-link"
-        />
-        <div class="font-18 font-weight-bold mt-2">Twitter hastag<span class="red--text">*</span></div>
-        <app-autocomplete
-          :items="[]"
-          :rules="[(v) => !!(v && v.length) || 'This field is required']"
-          placeholder="Enter your hastag"
-          :value="$_get(vm.quoteTweet, 'setting.hashtag')"
-          @onChange="vm.changeQuoteTweetSetting('setting.hashtag', $event)"
-        />
-      </switch-field> -->
-      <!-- =============================================================================================== -->
+      </template>
+      <!-- ================================================================================================== -->
 
-      <!-- ======================================= Like and repost tweet ================================= -->
-      <!-- <switch-field
-        class="mt-4"
-        type="twitter"
-        title="Twitter task"
-        subtitle="Like and reply a post"
-        :value="vm.commentTweet.enabled"
-        @change="vm.changeCommentTweetSetting('enabled', $event)"
-      >
-        <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
-          Tweet from twitter page name<span class="red--text">*</span>
-        </div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.commentTweet, 'setting.page')"
-          @change="vm.changeCommentTweetSetting('setting.page', $event)"
-          placeholder="GLODAO Channel"
-        />
-        <div class="font-18 font-weight-bold mt-2">Twitter post link<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.commentTweet, 'setting.link')"
-          @change="vm.changeCommentTweetSetting('setting.link', $event)"
-          placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
-          append-icon="mdi-link"
-        />
-      </switch-field> -->
-      <!-- =============================================================================================== -->
+      <v-divider class="my-7 dashed-border" />
 
-      <!-- ======================================= Facebook follow ======================================= -->
-      <!-- <switch-field
-        class="mt-4"
-        type="facebook"
-        title="Facebook task"
-        subtitle="Follow fanpage"
-        :value="vm.facebookFollow.enabled"
-        @change="vm.changeFacebookFollowSetting('enabled', $event)"
-      >
-        <div class="font-18 font-weight-bold mt-2">Facebook page name<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.facebookFollow, 'setting.page')"
-          @change="vm.changeFacebookFollowSetting('setting.page', $event)"
-          placeholder="Enter your facebook page name"
-        />
-
-        <div class="font-18 font-weight-bold mt-2">Facebook page link<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required, $rules.url]"
-          :value="$_get(vm.facebookFollow, 'setting.link')"
-          @change="vm.changeFacebookFollowSetting('setting.link', $event)"
-          placeholder="https://www.facebook.com/groups/1021901785231713"
-          append-icon="mdi-link"
-        />
-      </switch-field> -->
-      <!-- ============================================================================================= -->
-
-      <!-- ======================================= CUSTOM TASK ========================================= -->
-      <!-- <switch-field
-        class="mt-4"
-        type="other"
-        title="Custom task"
-        subtitle="Customize your task"
-        :value="vm.customTask.enabled"
-        @change="vm.changeCustomTaskSetting('enabled', $event)"
-      >
-        <div class="font-18 font-weight-bold mt-2">Task name<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.customTask, 'setting.name')"
-          @change="vm.changeCustomTaskSetting('setting.name', $event)"
-          placeholder="Enter your task name"
-        />
-
-        <div class="font-18 font-weight-bold mt-2">Task description<span class="red--text">*</span></div>
-        <app-textarea
-          class="mt-2"
-          :rules="[$rules.required]"
-          :value="$_get(vm.customTask, 'setting.description')"
-          @change="vm.changeCustomTaskSetting('setting.description', $event)"
-          placeholder="Describe your custom task"
-        />
-
-        <div class="font-18 font-weight-bold mt-2">Task link<span class="red--text">*</span></div>
-        <app-text-field
-          class="mt-2"
-          :rules="[$rules.url, $rules.required]"
-          :value="$_get(vm.customTask, 'setting.link')"
-          @change="vm.changeCustomTaskSetting('setting.link', $event)"
-          placeholder="Enter your link"
-          append-icon="mdi-link"
-        />
-      </switch-field> -->
-      <!-- ============================================================================================= -->
-
-      <div class="d-flex mt-7">
+      <div class="d-flex">
         <div class="flex-grow">
           <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Back </v-btn>
         </div>
@@ -279,10 +130,12 @@ import { NewSocialMissionViewModel, SocialType } from '../../viewmodels/new-soci
 @Component({
   components: {
     [SocialTaskComponent.JOIN_TELEGRAM]: () => import('./telegram/telegram-join-task.vue'),
-    [SocialTaskComponent.FOLLOW_TWITTER]: () => import('./twitter/twitter-follow-task.vue'),
     [SocialTaskComponent.CHAT_TELEGRAM]: () => import('./telegram/telegram-chat-task.vue'),
+    [SocialTaskComponent.FOLLOW_TWITTER]: () => import('./twitter/twitter-follow-task.vue'),
     [SocialTaskComponent.QUOTE_TWITTER]: () => import('./twitter/twitter-quote-task.vue'),
     [SocialTaskComponent.COMMENT_TWITTER]: () => import('./twitter/twitter-comment-task.vue'),
+    [SocialTaskComponent.FOLLOW_FACEBOOK]: () => import('./facebook/follow-facebook-task.vue'),
+    [SocialTaskComponent.CUSTOM_TASK]: () => import('./custom/custom-task.vue'),
     'social-task-select-dialog': () => import('./dialogs/social-task-select-dialog.vue'),
     'app-autocomplete': () => import('@/modules/regist/components/common/app-autocomplete.vue'),
   },
