@@ -8,17 +8,17 @@
       </v-card-title>
 
       <v-card-text>
-        <template v-if="vm.selectedSocial === 'telegram'">
-          <v-radio-group v-model="selection">
+        <template v-if="vm.selectedSocialType === SocialType.TELEGRAM">
+          <v-radio-group v-model="selectedTaskType">
             <v-sheet
               class="py-2 px-4 mb-2 text-subtitle-2"
-              v-for="(option, index) in telegram"
+              v-for="(option, index) in telegramOptions"
               :key="index"
               outlined
               rounded
             >
               <v-radio
-                :value="{ socialType: vm.selectedSocial, type: option.type }"
+                :value="option.type"
                 :label="option.name"
                 :disabled="option.disabled"
                 color="blue-diversity"
@@ -30,17 +30,17 @@
           </v-radio-group>
         </template>
 
-        <template v-if="vm.selectedSocial === 'twitter'">
-          <v-radio-group v-model="selection">
+        <template v-if="vm.selectedSocialType === SocialType.TWITTER">
+          <v-radio-group v-model="selectedTaskType">
             <v-sheet
               class="py-4 px-4 mb-2 text-subtitle-2"
-              v-for="(option, index) in twitter"
+              v-for="(option, index) in twitterOptions"
               :key="index"
               outlined
               rounded
             >
               <v-radio
-                :value="{ socialType: vm.selectedSocial, type: option.type }"
+                :value="option.type"
                 :label="option.name"
                 color="blue-diversity"
                 off-icon="mdi-circle-outline"
@@ -51,17 +51,17 @@
           </v-radio-group>
         </template>
 
-        <template v-if="vm.selectedSocial === 'facebook'">
-          <v-radio-group v-model="selection">
+        <template v-if="vm.selectedSocialType === SocialType.FACEBOOK">
+          <v-radio-group v-model="selectedTaskType">
             <v-sheet
               class="py-4 px-4 mb-2 text-subtitle-2"
-              v-for="(option, index) in facebook"
+              v-for="(option, index) in facebookOptions"
               :key="index"
               outlined
               rounded
             >
               <v-radio
-                :value="{ socialType: vm.selectedSocial, type: option.type }"
+                :value="option.type"
                 :label="option.name"
                 color="blue-diversity"
                 off-icon="mdi-circle-outline"
@@ -72,17 +72,17 @@
           </v-radio-group>
         </template>
 
-        <template v-if="vm.selectedSocial === 'custom'">
-          <v-radio-group v-model="selection">
+        <template v-if="vm.selectedSocialType === SocialType.CUSTOM">
+          <v-radio-group v-model="selectedTaskType">
             <v-sheet
               class="py-4 px-4 mb-2 text-subtitle-2"
-              v-for="(option, index) in custom"
+              v-for="(option, index) in customOptions"
               :key="index"
               outlined
               rounded
             >
               <v-radio
-                :value="{ socialType: vm.selectedSocial, type: option.type }"
+                :value="option.type"
                 :label="option.name"
                 color="blue-diversity"
                 off-icon="mdi-circle-outline"
@@ -97,11 +97,11 @@
         <v-btn class="flex-grow" outlined @click="cancel">Cancel</v-btn>
         <div class="mx-2" />
         <v-btn
+          :class="{ 'linear-blue--bg white--text': !!selectedTaskType }"
+          :disabled="!selectedTaskType"
           class="flex-grow"
-          :class="{ 'linear-blue--bg white--text': !!selection }"
-          depressed
           @click="confirm"
-          :disabled="!selection"
+          depressed
           >Confirm</v-btn
         >
       </v-card-actions>
@@ -110,6 +110,8 @@
 </template>
 
 <script lang="ts">
+import { EMPTY_STRING } from '@/constants'
+import { SocialTaskType, SocialType } from '@/models/MissionModel'
 import { NewSocialMissionViewModel } from '@/modules/mission/viewmodels/new-social-mission-viewmodel'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
@@ -119,29 +121,31 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 export default class TelegramTaskSelectDialog extends Vue {
   @Inject() vm!: NewSocialMissionViewModel
 
-  selection = ''
+  readonly SocialType = SocialType
 
-  readonly telegram = [
-    { type: 'follow', name: 'Join telegram', disabled: false },
-    { type: 'comment', name: 'Chat telegram (Comming soon)', disabled: true },
+  readonly telegramOptions = [
+    { type: SocialTaskType.FOLLOW, name: 'Join telegram', disabled: false },
+    { type: SocialTaskType.COMMENT, name: 'Chat telegram (Comming soon)', disabled: true },
   ]
-  readonly twitter = [
-    { type: 'follow', name: 'Follow project twitter' },
-    { type: 'quote', name: 'Quote a tweet' },
-    { type: 'comment', name: 'Like and reply post' },
+  readonly twitterOptions = [
+    { type: SocialTaskType.FOLLOW, name: 'Follow project twitter' },
+    { type: SocialTaskType.QUOTE, name: 'Quote a tweet' },
+    { type: SocialTaskType.COMMENT, name: 'Like and reply post' },
   ]
-  readonly facebook = [{ type: 'follow', name: 'Follow a facebook fanpage' }]
-  readonly custom = [{ type: 'custom', name: 'Customie your task' }]
+  readonly facebookOptions = [{ type: SocialTaskType.FOLLOW, name: 'Follow a facebook fanpage' }]
+  readonly customOptions = [{ type: SocialTaskType.CUSTOM, name: 'Customie your task' }]
+
+  selectedTaskType = EMPTY_STRING
 
   cancel() {
     this.vm.updateSelectDialogState(false)
-    this.selection = ''
+    this.selectedTaskType = EMPTY_STRING
   }
 
   confirm() {
-    this.vm.appendSetting(this.selection)
+    this.vm.appendSetting(this.vm.selectedSocialType, this.selectedTaskType)
     this.vm.updateSelectDialogState(false)
-    this.selection = ''
+    this.selectedTaskType = EMPTY_STRING
   }
 }
 </script>
