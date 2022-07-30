@@ -18,7 +18,7 @@
       <!-- ================================== CONFIG TELEGRAM TASK SETTING ================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg mt-7 d-flex justify-space-between align-center">
         <a href="#telegram" class="text-subtitle-1 font-weight-bold">Telegram setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, 'telegram')">
+        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.TELEGRAM)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-sheet>
@@ -27,8 +27,8 @@
           :key="setting.key"
           :is="setting.component"
           :inputConfig="setting"
-          @remove="vm.removeSetting('telegram', setting.key)"
-          @change="vm.updateSetting('telegram', setting.key, $event)"
+          @remove="vm.removeSetting(SocialType.TELEGRAM, setting.key)"
+          @change="vm.updateSetting(SocialType.TELEGRAM, setting.key, $event)"
         />
       </template>
       <!-- ================================================================================================== -->
@@ -38,7 +38,7 @@
       <!-- ================================== CONFIG TWITTER TASK SETTING =================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
         <a href="#telegram" class="text-subtitle-1 font-weight-bold">Twitter setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, 'twitter')">
+        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.TWITTER)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-sheet>
@@ -47,8 +47,8 @@
           :key="setting.key"
           :is="setting.component"
           :inputConfig="setting"
-          @remove="vm.removeSetting('twitter', setting.key)"
-          @change="vm.updateSetting('twitter', setting.key, $event)"
+          @remove="vm.removeSetting(SocialType.TWITTER, setting.key)"
+          @change="vm.updateSetting(SocialType.TWITTER, setting.key, $event)"
         />
       </template>
       <!-- ================================================================================================== -->
@@ -58,7 +58,7 @@
       <!-- ================================== CONFIG FACEBOOK TASK SETTING ================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
         <a href="#facebook" class="text-subtitle-1 font-weight-bold">Facebook setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, 'facebook')">
+        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.FACEBOOK)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-sheet>
@@ -67,8 +67,8 @@
           :key="setting.key"
           :is="setting.component"
           :inputConfig="setting"
-          @remove="vm.removeSetting('facebook', setting.key)"
-          @change="vm.updateSetting('facebook', setting.key, $event)"
+          @remove="vm.removeSetting(SocialType.FACEBOOK, setting.key)"
+          @change="vm.updateSetting(SocialType.FACEBOOK, setting.key, $event)"
         />
       </template>
       <!-- ================================================================================================== -->
@@ -78,7 +78,7 @@
       <!-- ================================== CONFIG CUSTOM TASK SETTING ==================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
         <a href="#facebook" class="text-subtitle-1 font-weight-bold">Other setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, 'custom')">
+        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.CUSTOM)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-sheet>
@@ -87,8 +87,8 @@
           :key="setting.key"
           :is="setting.component"
           :inputConfig="setting"
-          @remove="vm.removeSetting('custom', setting.key)"
-          @change="vm.updateSetting('custom', setting.key, $event)"
+          @remove="vm.removeSetting(SocialType.CUSTOM, setting.key)"
+          @change="vm.updateSetting(SocialType.CUSTOM, setting.key, $event)"
         />
       </template>
       <!-- ================================================================================================== -->
@@ -121,10 +121,10 @@
 </template>
 
 <script lang="ts">
-import { SocialTaskComponent } from '@/models/MissionModel'
+import { SocialTaskComponent, SocialType } from '@/models/MissionModel'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { NewSocialMissionViewModel, SocialType } from '../../viewmodels/new-social-mission-viewmodel'
+import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-viewmodel'
 
 @Observer
 @Component({
@@ -142,13 +142,8 @@ import { NewSocialMissionViewModel, SocialType } from '../../viewmodels/new-soci
 })
 export default class MissionSocialSetting extends Vue {
   @Inject() vm!: NewSocialMissionViewModel
+  readonly SocialType = SocialType
   formState = false
-
-  socialTypeEnum = SocialType
-
-  beforeDestroy() {
-    // this.vm.resetSocialSetting()
-  }
 
   submit() {
     this.vm.submit()
