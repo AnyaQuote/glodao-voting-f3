@@ -42,34 +42,12 @@
 
 <script lang="ts">
 import { appProvider } from '@/app-providers'
-import { EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING, FOLLOW_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
 import { isNotEmpty } from '@/helpers'
-import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty, set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-
-interface TaskConfig {
-  key?: number
-  component?: SocialTaskComponent
-  setting?: {
-    type?: SocialTaskType
-    link?: string
-    page?: string
-    required?: boolean
-  }
-}
-
-const joinTeleSetting = {
-  key: 1,
-  component: SocialTaskComponent.JOIN_TELEGRAM,
-  setting: {
-    type: SocialTaskType.FOLLOW,
-    link: '',
-    page: '',
-    required: true,
-  },
-}
 
 @Observer
 @Component({
@@ -83,7 +61,7 @@ export default class TelegramJoinTask extends Vue {
   private snackbar = appProvider.snackbar
   private api = appProvider.api
 
-  taskConfig = isEmpty(this.inputConfig) ? joinTeleSetting : this.inputConfig
+  taskConfig = isEmpty(this.inputConfig) ? FOLLOW_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
   isChecking = false
 
   updateSetting(property: string, value: string) {
@@ -92,9 +70,7 @@ export default class TelegramJoinTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    console.log('watching')
     if (isNotEmpty(this.pageName) && isNotEmpty(this.telegramLink)) {
-      console.log('emit')
       this.$emit('change', newSetting)
     }
   }
@@ -118,7 +94,6 @@ export default class TelegramJoinTask extends Vue {
   }
 
   get pageName() {
-    console.log('page invoked')
     return this.taskConfig!.setting?.page || EMPTY_STRING
   }
 

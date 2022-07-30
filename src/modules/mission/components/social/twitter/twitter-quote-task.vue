@@ -30,40 +30,12 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_ARRAY, EMPTY_STRING } from '@/constants'
+import { EMPTY_ARRAY, EMPTY_STRING, QUOTE_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
 import { isNotEmpty } from '@/helpers'
-import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty, set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-
-interface TaskConfig {
-  key?: number
-  component?: SocialTaskComponent
-  setting?: {
-    type?: SocialTaskType
-    page?: string
-    link?: string
-    embedLink?: string
-    hashtag?: string[]
-    content?: string
-    required?: boolean
-  }
-}
-
-const quoteTweetSetting = {
-  key: 1,
-  component: SocialTaskComponent.QUOTE_TWITTER,
-  setting: {
-    type: SocialTaskType.QUOTE,
-    content: '',
-    page: '',
-    hashtag: [],
-    link: '',
-    embedLink: '',
-    required: true,
-  },
-}
 
 @Observer
 @Component({
@@ -75,7 +47,7 @@ const quoteTweetSetting = {
 export default class TwitterQuoteTask extends Vue {
   @Prop() inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? quoteTweetSetting : this.inputConfig
+  taskConfig = isEmpty(this.inputConfig) ? QUOTE_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
 
   updateConfig(property: string, value: string) {
     if (property === 'setting.link') {
@@ -86,9 +58,7 @@ export default class TwitterQuoteTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    console.log('watching')
     if (isNotEmpty(this.pageName) && isNotEmpty(this.tweetLink)) {
-      console.log('emit')
       this.$emit('change', newSetting)
     }
   }

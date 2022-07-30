@@ -27,38 +27,12 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING, COMMENT_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
 import { isNotEmpty } from '@/helpers'
-import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty, set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-
-const teleChatSetting = {
-  key: 1,
-  component: SocialTaskComponent.CHAT_TELEGRAM,
-  setting: {
-    type: SocialTaskType,
-    page: '',
-    content: [],
-    embedLink: '',
-    link: '',
-    required: true,
-  },
-}
-
-interface TaskConfig {
-  key?: number
-  component?: SocialTaskComponent
-  setting?: {
-    type?: SocialTaskType.FOLLOW
-    page?: string
-    link?: string
-    embedLink?: string
-    content?: string[]
-    required?: boolean
-  }
-}
 
 @Observer
 @Component({
@@ -69,7 +43,7 @@ interface TaskConfig {
 export default class TelegramChatTask extends Vue {
   @Prop() inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? teleChatSetting : this.inputConfig
+  taskConfig = isEmpty(this.inputConfig) ? COMMENT_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
 
   updateConfig(property: string, value: string) {
     if (property === 'setting.link') {
@@ -80,9 +54,7 @@ export default class TelegramChatTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    console.log('watching')
     if (isNotEmpty(this.pageName) && isNotEmpty(this.telegramLink)) {
-      console.log('emit')
       this.$emit('change', newSetting)
     }
   }

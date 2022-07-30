@@ -28,18 +28,12 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING, FOLLOW_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
 import { isNotEmpty } from '@/helpers'
-import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty, set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-
-const followFanpageSetting = {
-  key: 1,
-  component: SocialTaskComponent.FOLLOW_FACEBOOK,
-  setting: { type: SocialTaskType.FOLLOW, page: '', required: true, link: '' },
-}
 
 @Observer
 @Component({
@@ -50,7 +44,7 @@ const followFanpageSetting = {
 export default class FollowFacebookTask extends Vue {
   @Prop() inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? followFanpageSetting : this.inputConfig
+  taskConfig = isEmpty(this.inputConfig) ? FOLLOW_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
 
   updateConfig(property: string, value: string) {
     this.taskConfig = set(this.taskConfig, property, value)
@@ -58,9 +52,7 @@ export default class FollowFacebookTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    console.log('watching')
     if (isNotEmpty(this.pageName) && isNotEmpty(this.fanpageLink)) {
-      console.log('emit')
       this.$emit('change', newSetting)
     }
   }
@@ -75,17 +67,6 @@ export default class FollowFacebookTask extends Vue {
 
   get fanpageLink() {
     return this.taskConfig.setting?.link || EMPTY_STRING
-  }
-}
-
-interface TaskConfig {
-  key?: number
-  component?: SocialTaskComponent
-  setting?: {
-    type?: SocialTaskType
-    page?: string
-    link?: string
-    required?: boolean
   }
 }
 </script>

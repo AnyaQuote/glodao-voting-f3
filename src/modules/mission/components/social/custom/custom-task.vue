@@ -37,27 +37,13 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_STRING } from '@/constants'
+import { CUSTOM_TASK_TYPE_DEFAULT_CONFIG, EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
-import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty } from 'lodash-es'
 import { set } from 'mobx'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-
-const customTaskSetting = {
-  key: 1,
-  component: SocialTaskComponent.CUSTOM_TASK,
-  setting: {
-    type: SocialTaskType.CUSTOM,
-    requiredContent: '',
-    description: '',
-    link: '',
-    name: '',
-    icon: 'website',
-    isLinkRequired: false,
-  },
-}
 
 @Observer
 @Component({
@@ -68,7 +54,7 @@ const customTaskSetting = {
 export default class CutstomTask extends Vue {
   @Prop() inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? customTaskSetting : this.inputConfig
+  taskConfig = isEmpty(this.inputConfig) ? CUSTOM_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
 
   updateConfig(property: string, value: string) {
     this.taskConfig = set(this.taskConfig, property, value)
@@ -76,9 +62,7 @@ export default class CutstomTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    console.log('watching')
     if (isNotEmpty(this.taskName) && isNotEmpty(this.hiddenLink) && isNotEmpty(this.description)) {
-      console.log('emit')
       this.$emit('change', newSetting)
     }
   }
@@ -97,21 +81,6 @@ export default class CutstomTask extends Vue {
 
   get hiddenLink() {
     return this.taskConfig.setting?.link || EMPTY_STRING
-  }
-}
-
-interface TaskConfig {
-  key?: number
-  component?: SocialTaskComponent
-  setting?: {
-    type?: SocialTaskType
-    requiredContent?: string
-    description?: string
-    page?: string
-    link?: string
-    name?: string
-    required?: boolean
-    isLinkRequired?: boolean
   }
 }
 </script>

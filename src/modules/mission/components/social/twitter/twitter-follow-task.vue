@@ -28,34 +28,12 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING, FOLLOW_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
 import { isNotEmpty } from '@/helpers'
-import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty, set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-
-interface TaskConfig {
-  key?: number
-  component?: SocialTaskComponent
-  setting?: {
-    type?: SocialTaskType
-    page?: string
-    link?: string
-    required?: boolean
-  }
-}
-
-const followTweetSetting = {
-  key: 1,
-  component: SocialTaskComponent.FOLLOW_TWITTER,
-  setting: {
-    type: SocialTaskType.FOLLOW,
-    link: '',
-    page: '',
-    required: true,
-  },
-}
 
 @Observer
 @Component({
@@ -66,7 +44,7 @@ const followTweetSetting = {
 export default class TwitterFollowTask extends Vue {
   @Prop() inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? followTweetSetting : this.inputConfig
+  taskConfig = isEmpty(this.inputConfig) ? FOLLOW_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
 
   updateConfig(property: string, value: string) {
     this.taskConfig = set(this.taskConfig, property, value)
@@ -74,9 +52,7 @@ export default class TwitterFollowTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    console.log('watching')
     if (isNotEmpty(this.pageName) && isNotEmpty(this.twitterLink)) {
-      console.log('emit')
       this.$emit('change', newSetting)
     }
   }
