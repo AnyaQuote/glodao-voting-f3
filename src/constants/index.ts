@@ -1,3 +1,4 @@
+import { SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 export const Zero = FixedNumber.from('0')
 export const HUNDRED = FixedNumber.from('100')
@@ -41,7 +42,8 @@ export const MSG_RELOAD_AFTER_UPDATE_SUCCESS = 'Update successfully. Browser wil
 export const ERROR_MSG_FILE_EXCEED_MAX_SIZE = 'File is exceeded 1MB'
 export const ERROR_MSG_FILE_IS_NOT_IMAGE = 'File is not image'
 export const ERROR_MSG_FIELD_REQUIRED = 'This field is required'
-
+export const ERROR_MSG_SOCIAL_SETTING_DATA_NOT_FOUND = 'Social setting not found'
+export const ERROR_MSG_SOCIAL_SETTING_TYPE_NOT_FOUND = 'Social setting type is undefined'
 export const SOCIAL_ICONS = {
   whitepaper: 'fas fa-file-alt',
   others: 'fas fa-link',
@@ -53,4 +55,52 @@ export const SOCIAL_ICONS = {
   github: 'fab fa-github',
   twitter: 'fab fa-twitter',
   facebook: 'fab fa-facebook',
+}
+
+export const FOLLOW_TASK_TYPE_DEFAULT_CONFIG = {
+  component: SocialTaskComponent.FOLLOW_TWITTER,
+  setting: {
+    type: SocialTaskType.FOLLOW,
+    link: EMPTY_STRING,
+    page: EMPTY_STRING,
+    required: true,
+  },
+}
+
+export const COMMENT_TASK_TYPE_DEFAULT_CONFIG = {
+  component: SocialTaskComponent.COMMENT_TWITTER,
+  setting: {
+    type: SocialTaskType.COMMENT,
+    page: EMPTY_STRING,
+    content: EMPTY_STRING,
+    embedLink: EMPTY_STRING,
+    link: EMPTY_STRING,
+    required: true,
+  },
+}
+
+export const QUOTE_TASK_TYPE_DEFAULT_CONFIG = {
+  component: SocialTaskComponent.QUOTE_TWITTER,
+  setting: {
+    type: SocialTaskType.QUOTE,
+    content: EMPTY_STRING,
+    page: EMPTY_STRING,
+    hashtag: EMPTY_ARRAY,
+    link: EMPTY_STRING,
+    embedLink: EMPTY_STRING,
+    required: true,
+  },
+}
+
+export const CUSTOM_TASK_TYPE_DEFAULT_CONFIG = {
+  component: SocialTaskComponent.CUSTOM_TASK,
+  setting: {
+    type: SocialTaskType.CUSTOM,
+    requiredContent: EMPTY_STRING,
+    description: EMPTY_STRING,
+    link: EMPTY_STRING,
+    name: EMPTY_STRING,
+    icon: 'website',
+    isLinkRequired: false,
+  },
 }
