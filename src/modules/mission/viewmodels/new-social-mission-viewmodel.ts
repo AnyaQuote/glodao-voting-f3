@@ -1,6 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl } from '@/helpers/file-helper'
-import { Data, MissionType, SocialTaskComponent, SocialTaskType } from '@/models/MissionModel'
+import { Data, MissionType, SocialType, TaskConfig } from '@/models/MissionModel'
 import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
@@ -11,129 +11,18 @@ import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import {
   ALLOW_PASS_THROUGH,
-  EMPTY_OBJECT,
   EMPTY_STRING,
   ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD,
   PRIORITY_AMOUNT_RATIO,
   Zero,
 } from '@/constants'
-
-const joinTeleSetting = {
-  key: 0,
-  component: SocialTaskComponent.JOIN_TELEGRAM,
-  setting: {
-    type: SocialTaskType.FOLLOW,
-    link: '',
-    page: '',
-    required: true,
-  },
-}
-
-const teleChatSetting = {
-  key: 1,
-  component: SocialTaskComponent.CHAT_TELEGRAM,
-  setting: {
-    type: SocialTaskType,
-    page: '',
-    content: [],
-    embedLink: '',
-    link: '',
-    required: true,
-  },
-}
-
-const followTweetSetting = {
-  key: 1,
-  component: SocialTaskComponent.FOLLOW_TWITTER,
-  setting: {
-    type: SocialTaskType.FOLLOW,
-    link: '',
-    page: '',
-    required: true,
-  },
-}
-
-const quoteTweetSetting = {
-  key: 1,
-  component: SocialTaskComponent.QUOTE_TWITTER,
-  setting: {
-    type: SocialTaskType.QUOTE,
-    content: '',
-    page: '',
-    hashtag: [],
-    link: '',
-    embedLink: '',
-    required: true,
-  },
-}
-
-const commentTweetSetting = {
-  key: 1,
-  component: SocialTaskComponent.COMMENT_TWITTER,
-  setting: {
-    type: SocialTaskType.COMMENT,
-    page: '',
-    content: '',
-    embedLink: '',
-    link: '',
-    required: true,
-  },
-}
-
-const followFanpageSetting = {
-  key: 1,
-  component: SocialTaskComponent.FOLLOW_FACEBOOK,
-  setting: { type: SocialTaskType.FOLLOW, page: '', required: true, link: '' },
-}
-
-const customTaskSetting = {
-  key: 1,
-  component: SocialTaskComponent.CUSTOM_TASK,
-  setting: {
-    type: SocialTaskType.CUSTOM,
-    requiredContent: '',
-    description: '',
-    link: '',
-    name: '',
-    icon: 'website',
-    isLinkRequired: false,
-  },
-}
-
-interface TaskConfig {
-  key?: number
-  component?: string
-  setting?: {
-    type?: string
-    link?: string
-    page?: string
-    required?: boolean
-  }
-}
+import { getDefaultSettingConfig } from '@/helpers'
 
 export class NewSocialMissionViewModel {
   @observable step = 2
 
-  // Setting must match observeable variable's name below
-  // readonly missionSettings = [
-  //   'joinTelegram',
-  //   'followTwitter',
-  //   'quoteTweet',
-  //   'commentTweet',
-  //   'telegramChat',
-  //   'facebookFollow',
-  //   'customTask',
-  // ]
-
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
-  // @observable joinTelegram = joinTelegramDefault
-  // @observable followTwitter = followTwitterDefault
-  // @observable quoteTweet = quoteTweetDefault
-  // @observable commentTweet = commentTweetDefault
-  // @observable telegramChat = telegramChatDefault
-  // @observable facebookFollow = facebookFollowSetting
-  // @observable customTask = customTaskSetting
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
@@ -174,10 +63,10 @@ export class NewSocialMissionViewModel {
   }
 
   @observable showSelectDialog = false
-  @observable selectedSocial = ''
+  @observable selectedSocialType = ''
   readonly socialTypeEnum = SocialType
   @action.bound updateSelectDialogState(shown: boolean, type?: SocialType) {
-    this.selectedSocial = type || ''
+    this.selectedSocialType = type || EMPTY_STRING
     this.showSelectDialog = shown
   }
 
@@ -191,79 +80,23 @@ export class NewSocialMissionViewModel {
   }
 
   @action.bound updateSetting(socialType: SocialType, key: number, value: any) {
-    console.log('updating')
     this[socialType] = this[socialType].map((setting) => {
       return setting.key === key ? value : setting
     })
   }
 
   @action.bound removeSetting(socialType: SocialType, key: number) {
-    console.log('removing')
     this[socialType] = this[socialType].filter((setting) => setting.key !== key)
   }
 
   private _key = 0
 
-  getTelegramTaskTypeData(type: string) {
-    switch (type) {
-      case SocialTaskType.FOLLOW:
-        return { ...joinTeleSetting, key: this._key++ }
-      case SocialTaskType.COMMENT:
-        return { ...teleChatSetting, key: this._key++ }
-      default:
-        return {}
-    }
-  }
-
-  getTwitterTaskTypeData(type: string) {
-    switch (type) {
-      case SocialTaskType.FOLLOW:
-        return { ...followTweetSetting, key: this._key++ }
-      case SocialTaskType.COMMENT:
-        return { ...commentTweetSetting, key: this._key++ }
-      case SocialTaskType.QUOTE:
-        return { ...quoteTweetSetting, key: this._key++ }
-      default:
-        return {}
-    }
-  }
-
-  getFacebookTaskTypeData(type: string) {
-    switch (type) {
-      case SocialTaskType.FOLLOW:
-        return { ...followFanpageSetting, key: this._key++ }
-      default:
-        return {}
-    }
-  }
-
-  getCustomTaskTypeData(type: string) {
-    switch (type) {
-      case SocialTaskType.CUSTOM:
-        return { ...customTaskSetting, key: this._key++ }
-      default:
-        return {}
-    }
-  }
-
-  @action appendSetting(data: any) {
-    let setting = {}
-    switch (data.socialType) {
-      case SocialType.TELEGRAM:
-        setting = this.getTelegramTaskTypeData(data.type)
-        this.telegram = [...this.telegram, setting]
-        break
-      case SocialType.TWITTER:
-        setting = this.getTwitterTaskTypeData(data.type)
-        this.twitter = [...this.twitter, setting]
-        break
-      case SocialType.FACEBOOK:
-        setting = this.getFacebookTaskTypeData(data.type)
-        this.facebook = [...this.facebook, setting]
-        break
-      case SocialTaskType.CUSTOM:
-        setting = this.getCustomTaskTypeData(data.type)
-        this.custom = [...this.custom, setting]
+  @action appendSetting(socialType: string, taskType: string) {
+    try {
+      const setting = getDefaultSettingConfig(socialType, taskType, this._key++)
+      this[socialType] = [...this[socialType], setting]
+    } catch (error) {
+      this._snackbar.commonError(error)
     }
   }
 
@@ -456,10 +289,4 @@ export class NewSocialMissionViewModel {
   @computed get missionEndDate() {
     return get(this.missionInfo, 'endDate', '')
   }
-}
-
-export enum SocialType {
-  TELEGRAM = 'telegram',
-  TWITTER = 'twitter',
-  FACEBOOK = 'facebook',
 }
