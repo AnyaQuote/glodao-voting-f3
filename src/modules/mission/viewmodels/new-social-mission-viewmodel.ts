@@ -3,7 +3,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { Data, MissionType, SocialType, TaskConfig } from '@/models/MissionModel'
 import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
+import { assign, isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
@@ -11,26 +11,38 @@ import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import {
   ALLOW_PASS_THROUGH,
+  EMPTY_ARRAY,
+  EMPTY_OBJECT,
   EMPTY_STRING,
   ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD,
   PRIORITY_AMOUNT_RATIO,
   Zero,
 } from '@/constants'
-import { getDefaultSettingConfig } from '@/helpers'
+import { getDefaultSettingConfig, extractTaskSettings } from '@/helpers'
 
 export class NewSocialMissionViewModel {
   @observable step = 2
 
-  @observable pool: VotingPool = {}
-  @observable missionInfo: MissionInfo = {}
+  @observable pool: VotingPool = EMPTY_OBJECT
+  @observable missionInfo: MissionInfo = EMPTY_OBJECT
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
+
+  @observable telegram: TaskConfig[] = EMPTY_ARRAY
+  @observable twitter: TaskConfig[] = EMPTY_ARRAY
+  @observable facebook: TaskConfig[] = EMPTY_ARRAY
+  @observable custom: TaskConfig[] = EMPTY_ARRAY
+
+  @observable showSelectDialog = false
+  @observable selectedSocialType = EMPTY_STRING
 
   private _snackbar = appProvider.snackbar
   private _router = appProvider.router
   private _auth = appProvider.authStore
   private _api = appProvider.api
+
+  private _key = 0
 
   constructor(unicodeName: string) {
     this.fetchProjectByUnicode(unicodeName)
@@ -62,18 +74,10 @@ export class NewSocialMissionViewModel {
     }
   }
 
-  @observable showSelectDialog = false
-  @observable selectedSocialType = ''
-  readonly socialTypeEnum = SocialType
   @action.bound updateSelectDialogState(shown: boolean, type?: SocialType) {
     this.selectedSocialType = type || EMPTY_STRING
     this.showSelectDialog = shown
   }
-
-  @observable telegram: TaskConfig[] = []
-  @observable twitter: TaskConfig[] = []
-  @observable facebook: TaskConfig[] = []
-  @observable custom: TaskConfig[] = []
 
   @action.bound changeMissionInfo(property: string, value: string) {
     this.missionInfo = set(this.missionInfo, property, value)
@@ -88,8 +92,6 @@ export class NewSocialMissionViewModel {
   @action.bound removeSetting(socialType: SocialType, key: number) {
     this[socialType] = this[socialType].filter((setting) => setting.key !== key)
   }
-
-  private _key = 0
 
   @action appendSetting(socialType: string, taskType: string) {
     try {
@@ -111,8 +113,21 @@ export class NewSocialMissionViewModel {
     return getApiFileUrl(imageResult[0])
   }
 
-  getMissionSetting() {
-    //
+  getSocialMissionSettings() {
+    const settings = {}
+    if (this.telegram.length > 0) {
+      assign(settings, { [SocialType.TELEGRAM]: extractTaskSettings(this.telegram) })
+    }
+    if (this.twitter.length > 0) {
+      assign(settings, { [SocialType.TWITTER]: extractTaskSettings(this.twitter) })
+    }
+    if (this.facebook.length > 0) {
+      assign(settings, { [SocialType.FACEBOOK]: extractTaskSettings(this.facebook) })
+    }
+    if (this.custom.length > 0) {
+      assign(settings, { [SocialType.CUSTOM]: extractTaskSettings(this.custom) })
+    }
+    return settings
   }
 
   /**
@@ -133,63 +148,43 @@ export class NewSocialMissionViewModel {
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const status = 'upcomming'
-
-    // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
-    const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-
-    // Reward amount of a mission/task
+    const { website, ...socialLinks } = pool.data?.socialLinks
     const rewardAmount = this.rewardPerMission._value
-
-    // Learn to earn mission needs maxParticipants
-    const maxParticipants = missionInfo.maxParticipants ? toNumber(missionInfo.maxParticipants) : 0
-
-    // Social mission needs maxPriorityParticipants and priorityRewardAmount field
-    const maxPriorityParticipants = toNumber(missionInfo.maxPriorityParticipants)
-    let priorityRewardAmount = '0'
-    if (maxPriorityParticipants !== 0) {
-      priorityRewardAmount = this.priorityAmount._value
-    }
-
+    const maxParticipants = missionInfo.maxParticipants ? +missionInfo.maxParticipants : 0
+    const maxPriorityParticipants = +missionInfo.maxPriorityParticipants!
+    const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
-
-    // const optRewardAmount = pool.data?.optionalRewardAmount
-    const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
-    // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
-    const optTokenAddress = pool.data?.optionalTokenAddress
-    const optTokenLogo = pool.data?.optionalTokenLogo
-    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
-    const optTokenName = pool.data?.optionalTokenName
-
+    const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
+    const optTokenAddress = pool.data!.optionalTokenAddress
+    const optTokenLogo = pool.data!.optionalTokenLogo
+    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress!)
     const mission: Mission = {
-      // OPTIONAL TO MAIN TOKEN FOR MISSION
+      type: MissionType.SOCIAL,
       rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
       tokenBasePrice: optTokenBasePrice,
-      // ==================================
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
       chainId: pool.chain,
-      type: MissionType.SOCIAL,
       poolId: pool.id,
       data: setting,
       status,
-      optionalTokens: [],
+      optionalTokens: EMPTY_ARRAY,
+      ownerAddress: this._auth.attachedAddress,
       metadata: {
         shortDescription: missionInfo.shortDescription,
-        projectLogo: pool.data?.projectLogo,
-        coverImage,
+        projectLogo: pool.data!.projectLogo,
         caption: missionInfo.shortDescription,
-        // OPTIONAL TO MAIN
-        decimals: toNumber(optTokenDecimal),
+        decimals: +optTokenDecimal!,
         rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
         tokenContractAddress: optTokenAddress,
-        // ===============
-        socialLinks: socialLinks || [],
-        website: website || '#',
+        socialLinks: socialLinks,
+        website: website,
+        coverImage,
       },
     }
     return mission
@@ -197,12 +192,10 @@ export class NewSocialMissionViewModel {
 
   @asyncAction *submit() {
     try {
-      console.log([...this.telegram])
-      return
       this.btnLoading = true
-      const missionSetting = yield this.getMissionSetting()
-      const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
-      yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
+      const missionSettings = yield this.getSocialMissionSettings()
+      const model = yield this.getMissionModel(missionSettings, this.missionInfo, this.pool)
+      yield this._api.createTask(model)
       this._snackbar.addSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
