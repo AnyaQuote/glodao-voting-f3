@@ -58,49 +58,37 @@ export const SOCIAL_ICONS = {
 }
 
 export const FOLLOW_TASK_TYPE_DEFAULT_CONFIG = {
-  component: SocialTaskComponent.FOLLOW_TWITTER,
-  setting: {
-    type: SocialTaskType.FOLLOW,
-    link: EMPTY_STRING,
-    page: EMPTY_STRING,
-    required: true,
-  },
+  type: SocialTaskType.FOLLOW,
+  link: EMPTY_STRING,
+  page: EMPTY_STRING,
+  required: true,
 }
 
 export const COMMENT_TASK_TYPE_DEFAULT_CONFIG = {
-  component: SocialTaskComponent.COMMENT_TWITTER,
-  setting: {
-    type: SocialTaskType.COMMENT,
-    page: EMPTY_STRING,
-    content: EMPTY_STRING,
-    embedLink: EMPTY_STRING,
-    link: EMPTY_STRING,
-    required: true,
-  },
+  type: SocialTaskType.COMMENT,
+  page: EMPTY_STRING,
+  content: EMPTY_STRING,
+  embedLink: EMPTY_STRING,
+  link: EMPTY_STRING,
+  required: true,
 }
 
 export const QUOTE_TASK_TYPE_DEFAULT_CONFIG = {
-  component: SocialTaskComponent.QUOTE_TWITTER,
-  setting: {
-    type: SocialTaskType.QUOTE,
-    content: EMPTY_STRING,
-    page: EMPTY_STRING,
-    hashtag: EMPTY_ARRAY,
-    link: EMPTY_STRING,
-    embedLink: EMPTY_STRING,
-    required: true,
-  },
+  type: SocialTaskType.QUOTE,
+  content: EMPTY_STRING,
+  page: EMPTY_STRING,
+  hashtag: EMPTY_ARRAY,
+  link: EMPTY_STRING,
+  embedLink: EMPTY_STRING,
+  required: true,
 }
 
 export const CUSTOM_TASK_TYPE_DEFAULT_CONFIG = {
-  component: SocialTaskComponent.CUSTOM_TASK,
-  setting: {
-    type: SocialTaskType.CUSTOM,
-    requiredContent: EMPTY_STRING,
-    description: EMPTY_STRING,
-    link: EMPTY_STRING,
-    name: EMPTY_STRING,
-    icon: 'website',
-    isLinkRequired: false,
-  },
+  type: SocialTaskType.CUSTOM,
+  requiredContent: EMPTY_STRING,
+  description: EMPTY_STRING,
+  link: EMPTY_STRING,
+  name: EMPTY_STRING,
+  icon: 'website',
+  isLinkRequired: false,
 }
