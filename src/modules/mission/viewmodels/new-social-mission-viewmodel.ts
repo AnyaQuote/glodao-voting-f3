@@ -125,7 +125,7 @@ export class NewSocialMissionViewModel {
       assign(settings, { [SocialType.FACEBOOK]: extractTaskSettings(this.facebook) })
     }
     if (this.custom.length > 0) {
-      assign(settings, { [SocialType.CUSTOM]: extractTaskSettings(this.custom) })
+      assign(settings, { optional: extractTaskSettings(this.custom) })
     }
     return settings
   }
