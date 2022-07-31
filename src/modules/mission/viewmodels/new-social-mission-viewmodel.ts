@@ -21,7 +21,7 @@ import {
 import { getDefaultSettingConfig, extractTaskSettings } from '@/helpers'
 
 export class NewSocialMissionViewModel {
-  @observable step = 2
+  @observable step = 1
 
   @observable pool: VotingPool = EMPTY_OBJECT
   @observable missionInfo: MissionInfo = EMPTY_OBJECT
