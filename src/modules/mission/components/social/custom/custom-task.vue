@@ -37,11 +37,10 @@
 </template>
 
 <script lang="ts">
-import { CUSTOM_TASK_TYPE_DEFAULT_CONFIG, EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
-import { isEmpty } from 'lodash-es'
-import { set } from 'mobx'
+import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
@@ -52,9 +51,9 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
   },
 })
 export default class CutstomTask extends Vue {
-  @Prop() inputConfig!: TaskConfig
+  @Prop({ required: true }) inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? CUSTOM_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
+  taskConfig = this.inputConfig
 
   updateConfig(property: string, value: string) {
     this.taskConfig = set(this.taskConfig, property, value)
