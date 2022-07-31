@@ -28,10 +28,10 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_STRING, FOLLOW_TWITTER_TASK_DEFAULT_CONFIG } from '@/constants'
+import { EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
-import { isEmpty, set } from 'lodash-es'
+import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
