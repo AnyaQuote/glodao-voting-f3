@@ -1,15 +1,5 @@
 import { VotingPool } from './VotingModel'
 
-export interface Task {
-  type?: string
-  content?: string
-  page?: string
-  required?: boolean
-  link?: string
-  hashtag?: string
-  embedLink?: string
-}
-
 export interface IatData {
   code?: string
   context?: string
@@ -116,4 +106,47 @@ export interface OptionalTokenItem {
   priorityRewardAmount?: number | string
   tokenContractAddress?: string | number
   decimal?: string | number
+}
+export enum SocialType {
+  TELEGRAM = 'telegram',
+  TWITTER = 'twitter',
+  FACEBOOK = 'facebook',
+  CUSTOM = 'custom',
+}
+
+export enum SocialTaskType {
+  FOLLOW = 'follow',
+  COMMENT = 'comment',
+  QUOTE = 'quote',
+  CUSTOM = 'custom',
+}
+
+export enum SocialTaskComponent {
+  JOIN_TELEGRAM = 'telegram-join-task',
+  CHAT_TELEGRAM = 'telegram-chat-task',
+  FOLLOW_TWITTER = 'twitter-follow-task',
+  QUOTE_TWITTER = 'twitter-quote-task',
+  COMMENT_TWITTER = 'twitter-comment-task',
+  FOLLOW_FACEBOOK = 'facebook-follow-task',
+  CUSTOM_TASK = 'custom-task',
+}
+
+export interface TaskConfig {
+  key?: number
+  component?: SocialTaskComponent
+  setting?: Task
+}
+
+export interface Task {
+  type?: SocialTaskType
+  name?: string
+  content?: string
+  description?: string
+  page?: string
+  required?: boolean
+  requiredContent?: string
+  link?: string
+  isLinkRequired?: boolean
+  hashtag?: string
+  embedLink?: string
 }

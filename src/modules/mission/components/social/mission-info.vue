@@ -44,20 +44,20 @@
       <!-- ------------------------------------- REWARD INFORMATION -------------------------------------------- -->
       <div class="d-flex flex-column">
         <div class="title font-weight-bold blue-diversity--text">Reward information</div>
-        <div class="font-18 font-weight-bold mt-4">
+        <div class="font-18 font-weight-bold mt-6">
           <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
         </div>
-        <div class="mt-4 row no-gutters">
-          <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
+        <div class="d-flex flex-column flex-sm-row mt-4">
+          <div class="flex-grow">
             <span class="font-18 font-weight-bold">Priority amount (30%)</span>
             <v-sheet class="rounded px-3 d-flex justify-space-between mt-2 py-14px" height="56" outlined>
               <span class="font-weight-600">{{ vm.priorityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
             </v-sheet>
           </div>
-
-          <!-- ---------------- MAX PARTICIPANTS FIELD START ----------------- -->
-          <div class="col-12 col-md-6 pa-0">
-            <span class="font-18 font-weight-bold">
+          <div class="mx-sm-3 my-3 my-sm-0" />
+          <!-- ---------------- MAX PRIORITY PARTICIPANTS FIELD START ----------------- -->
+          <div class="flex-grow">
+            <span class="font-18 font-weight-bold text-truncate">
               Max participant in priority pool<span class="app-red--text">*</span>
             </span>
             <app-text-field
@@ -69,20 +69,20 @@
               placeholder="Enter participants"
             />
           </div>
-          <!-- ---------------- MAX PARTICIPANTS FIELD END ------------------ -->
+        </div>
 
-          <div class="col-12 col-md-6 pa-0 pr-md-4 pr-0">
-            <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
-              <span>Community amount:</span>
-              <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
-            </v-sheet>
-          </div>
-          <div class="col-12 col-md-6 pa-0">
-            <v-sheet class="rounded px-3 d-flex justify-space-between py-14px" height="56" outlined>
-              <span>Personal priority reward:</span>
-              <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
-            </v-sheet>
-          </div>
+        <!-- ---------------- MAX PRIORITY PARTICIPANTS FIELD END ------------------ -->
+
+        <div class="d-flex flex-column flex-sm-row">
+          <v-sheet min-height="56" class="flex-grow rounded px-3 d-flex justify-space-between align-center" outlined>
+            <span>Community amount:</span>
+            <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+          </v-sheet>
+          <div class="mx-sm-3 my-3 my-sm-0" />
+          <v-sheet class="flex-grow rounded px-3 d-flex justify-space-between align-center" min-height="56" outlined>
+            <span>Personal priority reward:</span>
+            <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
+          </v-sheet>
         </div>
       </div>
       <v-divider class="mt-10 my-5 dashed-border" />
@@ -126,7 +126,7 @@
         <div class="flex-grow">
           <v-btn
             class="text-none"
-            :class="valid && 'linear-blue--bg white--text'"
+            :class="{ 'linear-blue--bg white--text': valid }"
             :loading="vm.btnLoading"
             :disabled="!valid"
             @click="next"
@@ -162,7 +162,7 @@ export default class MissionInfoForm extends Vue {
   valid = true
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   next() {
-    this.valid && this.vm.changeStep(2)
+    this.vm.changeStep(2)
   }
   back() {
     this.$router.go(-1)

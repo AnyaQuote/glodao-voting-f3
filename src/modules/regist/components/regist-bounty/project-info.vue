@@ -57,6 +57,7 @@
       <div class="font-18 font-weight-bold mt-6">Field of project</div>
       <app-autocomplete
         limit="5"
+        :items="['NFT', 'Finance', 'Gaming']"
         :value="$_get(vm.projectInfo, 'fields')"
         @onChange="vm.changeProjectInfo('fields', $event)"
       />
