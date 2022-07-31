@@ -256,12 +256,9 @@ export class NewSocialMissionViewModel {
   //   }
   // }
 
-  // @computed get isValid() {
-  //   return (state) => true
-  //   return (isFormValidated) => {
-  //     return this.missionSettings.some((task) => this[task].enabled) && isFormValidated
-  //   }
-  // }
+  @computed get hasSettings() {
+    return this.telegram.length || this.twitter.length || this.facebook.length || this.custom.length
+  }
 
   @computed get projectStartDate() {
     return get(this.pool, 'startDate', '')

@@ -12,7 +12,7 @@
     </div>
     <v-divider />
 
-    <v-form v-model="formState" class="pa-7">
+    <v-form v-model="valid" class="pa-7">
       <div class="title font-weight-bold blue-diversity--text">Mission settings</div>
 
       <!-- ================================== CONFIG TELEGRAM TASK SETTING ================================== -->
@@ -103,7 +103,8 @@
         <div class="flex-grow">
           <v-btn
             class="text-none"
-            :class="'linear-blue--bg white--text'"
+            :class="{ 'linear-blue--bg white--text': valid && vm.hasSettings }"
+            :disabled="!(valid && vm.hasSettings)"
             :loading="vm.btnLoading"
             @click="submit"
             height="40"
@@ -143,7 +144,7 @@ import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-v
 export default class MissionSocialSetting extends Vue {
   @Inject() vm!: NewSocialMissionViewModel
   readonly SocialType = SocialType
-  formState = false
+  valid = false
 
   submit() {
     this.vm.submit()
