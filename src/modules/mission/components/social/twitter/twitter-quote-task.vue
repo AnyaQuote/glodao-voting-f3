@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { EMPTY_ARRAY, EMPTY_STRING, QUOTE_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
+import { EMPTY_ARRAY, EMPTY_STRING, QUOTE_TWEET_TASK_DEFAULT_CONFIG } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
 import { isEmpty, set } from 'lodash-es'
@@ -45,9 +45,9 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
   },
 })
 export default class TwitterQuoteTask extends Vue {
-  @Prop() inputConfig!: TaskConfig
+  @Prop({ required: true }) inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? QUOTE_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
+  taskConfig = this.inputConfig
 
   updateConfig(property: string, value: string) {
     if (property === 'setting.link') {

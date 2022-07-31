@@ -42,10 +42,10 @@
 
 <script lang="ts">
 import { appProvider } from '@/app-providers'
-import { EMPTY_STRING, FOLLOW_TASK_TYPE_DEFAULT_CONFIG } from '@/constants'
+import { EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
-import { isEmpty, set } from 'lodash-es'
+import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
@@ -56,12 +56,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
   },
 })
 export default class TelegramJoinTask extends Vue {
-  @Prop() inputConfig!: TaskConfig
+  @Prop({ required: true }) inputConfig!: TaskConfig
 
   private snackbar = appProvider.snackbar
   private api = appProvider.api
 
-  taskConfig = isEmpty(this.inputConfig) ? FOLLOW_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
+  taskConfig = this.inputConfig
   isChecking = false
 
   updateSetting(property: string, value: string) {

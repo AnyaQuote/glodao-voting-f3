@@ -27,10 +27,10 @@
 </template>
 
 <script lang="ts">
-import { COMMENT_TASK_TYPE_DEFAULT_CONFIG, EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
-import { isEmpty, set } from 'lodash-es'
+import { set } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
@@ -41,9 +41,9 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
   },
 })
 export default class TwitterCommentTask extends Vue {
-  @Prop() inputConfig!: TaskConfig
+  @Prop({ required: true }) inputConfig!: TaskConfig
 
-  taskConfig = isEmpty(this.inputConfig) ? COMMENT_TASK_TYPE_DEFAULT_CONFIG : this.inputConfig
+  taskConfig = this.inputConfig
 
   updateConfig(property: string, value: string) {
     if (property === 'setting.link') {
