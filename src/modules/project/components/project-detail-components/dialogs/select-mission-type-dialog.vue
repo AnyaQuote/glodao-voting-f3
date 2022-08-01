@@ -20,7 +20,7 @@
             </v-sheet>
             <!-- ==================================================================================================================== -->
             <v-sheet class="rounded pa-5 mt-4" outlined :class="isActive('learn')">
-              <v-radio color="blue-diversity" value="learn" disabled>
+              <v-radio color="blue-diversity" value="learn">
                 <template #label>
                   <span class="font-18 font-weight-bold" :class="isActive('learn')">Learn mission</span>
                 </template>

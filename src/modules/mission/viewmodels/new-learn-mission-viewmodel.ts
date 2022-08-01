@@ -1,15 +1,15 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
-import { Data, MissionType, OptionalTokenItem } from '@/models/MissionModel'
+import { Data, MissionType } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz, MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber, sampleSize, ceil } from 'lodash-es'
+import { set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import { ALLOW_PASS_THROUGH, EMPTY_STRING, Zero } from '@/constants'
+import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants'
 
 export class NewLearnMissionViewModel {
   @observable step = 1
@@ -132,40 +132,25 @@ export class NewLearnMissionViewModel {
   }
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
-    // const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'upcomming'
-
-    // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-
-    // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value
-
-    // Learn to earn mission needs maxParticipants
     const maxParticipants = toNumber(missionInfo.maxParticipants)
-
-    // Social mission needs maxPriorityParticipants and priorityRewardAmount field
     const maxPriorityParticipants = 0
     const priorityRewardAmount = '0'
-
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
-
-    // const optRewardAmount = pool.data?.optionalRewardAmount
     const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
-    // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
     const optTokenAddress = pool.data?.optionalTokenAddress
     const optTokenLogo = pool.data?.optionalTokenLogo
     const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
-    const optTokenName = pool.data?.optionalTokenName
 
     const mission: Mission = {
-      // OPTIONAL TO MAIN TOKEN FOR MISSION
+      ownerAddress: this._auth.attachedAddress,
       rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
       tokenBasePrice: optTokenBasePrice,
-      // ==================================
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
@@ -174,19 +159,17 @@ export class NewLearnMissionViewModel {
       poolId: pool.id,
       data: setting,
       status,
-      optionalTokens: [],
+      optionalTokens: EMPTY_ARRAY,
       metadata: {
         shortDescription: missionInfo.shortDescription,
         projectLogo: pool.data?.projectLogo,
         coverImage,
         caption: missionInfo.shortDescription,
-        // OPTIONAL TO MAIN
         decimals: toNumber(optTokenDecimal),
         rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
         tokenContractAddress: optTokenAddress,
-        // ===============
-        socialLinks: socialLinks || [],
+        socialLinks: socialLinks || EMPTY_ARRAY,
         website: website || '#',
       },
     }
@@ -198,7 +181,7 @@ export class NewLearnMissionViewModel {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
       const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
-      yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
+      yield this._api.createTask(model)
       this._snackbar.addSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
