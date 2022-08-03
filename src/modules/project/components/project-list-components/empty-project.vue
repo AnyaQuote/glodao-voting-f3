@@ -21,16 +21,6 @@
           New application
         </v-btn>
       </connect-metamask>
-
-      <v-btn
-        :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
-        elevation="0"
-        class="linear-blue--bg white--text font-weight-bold text-none"
-        :class="$vuetify.breakpoint.mdAndUp && 'font-18'"
-        @click="goToNewProject()"
-      >
-        New application
-      </v-btn>
     </v-col>
     <v-col cols="12" sm="4" class="d-flex justify-center align-center">
       <v-img
