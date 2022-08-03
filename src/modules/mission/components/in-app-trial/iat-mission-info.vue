@@ -10,7 +10,7 @@
       <div class="mx-0 mx-sm-4 my-2 my-sm-0"></div>
       <div class="flex-grow font-weight-bold">
         <div class="neutral-10--text mb-1">Remaining mission</div>
-        <div>{{ vm.remainingMission }}</div>
+        <div>{{ vm.remainingMission }} / {{ vm.poolTotalMissions }}</div>
       </div>
     </v-sheet>
 

@@ -218,8 +218,7 @@ export class NewInAppTrialViewModel {
 
   @computed get remainingMission() {
     const totalMission = toNumber(this.poolTotalMissions)
-    const remainingMission = totalMission - this.appliedMission
-    return `${remainingMission} / ${totalMission}`
+    return totalMission - this.appliedMission
   }
 
   @computed get personalReward() {
@@ -234,11 +233,9 @@ export class NewInAppTrialViewModel {
 
   @computed get remainingProjectReward() {
     try {
-      const fxProjectReward = FixedNumber.from(this.projectReward)
-      const fxAppliedMissionReward = FixedNumber.from(this.missionReward).mulUnsafe(
-        FixedNumber.from(this.appliedMission)
-      )
-      return fxProjectReward.subUnsafe(fxAppliedMissionReward)._value
+      const fxRemainingMission = FixedNumber.from(this.remainingMission)
+      const fxMissionReward = FixedNumber.from(this.missionReward)
+      return fxMissionReward.mulUnsafe(fxRemainingMission)._value
     } catch (_) {
       return Zero
     }
