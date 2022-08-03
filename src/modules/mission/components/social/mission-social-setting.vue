@@ -16,11 +16,13 @@
       <div class="title font-weight-bold blue-diversity--text">Mission settings</div>
 
       <!-- ================================== CONFIG TELEGRAM TASK SETTING ================================== -->
-      <v-sheet class="neutral-20 px-6 py-2 rounded-lg mt-7 d-flex justify-space-between align-center">
-        <a href="" class="text-subtitle-1 font-weight-bold">Telegram setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.TELEGRAM)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+      <v-sheet
+        class="neutral-20 px-6 py-3 rounded-lg mt-7 d-flex justify-space-between align-center cursor-pointer"
+        @click="vm.updateSelectDialogState(true, SocialType.TELEGRAM)"
+        v-ripple
+      >
+        <span class="text-subtitle-1 font-weight-bold">Telegram setting</span>
+        <v-icon>mdi-plus</v-icon>
       </v-sheet>
       <template v-for="setting in vm.telegram">
         <component
@@ -36,11 +38,13 @@
       <v-divider class="my-7 dashed-border" />
 
       <!-- ================================== CONFIG TWITTER TASK SETTING =================================== -->
-      <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
-        <a href="" class="text-subtitle-1 font-weight-bold">Twitter setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.TWITTER)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+      <v-sheet
+        class="neutral-20 px-6 py-3 rounded-lg d-flex justify-space-between align-center cursor-pointer"
+        @click="vm.updateSelectDialogState(true, SocialType.TWITTER)"
+        v-ripple
+      >
+        <span class="text-subtitle-1 font-weight-bold">Twitter setting</span>
+        <v-icon>mdi-plus</v-icon>
       </v-sheet>
       <template v-for="setting in vm.twitter">
         <component
@@ -56,11 +60,13 @@
       <v-divider class="my-7 dashed-border" />
 
       <!-- ================================== CONFIG FACEBOOK TASK SETTING ================================== -->
-      <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
-        <a href="" class="text-subtitle-1 font-weight-bold">Facebook setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.FACEBOOK)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+      <v-sheet
+        class="neutral-20 px-6 py-3 rounded-lg d-flex justify-space-between align-center cursor-pointer"
+        @click="vm.updateSelectDialogState(true, SocialType.FACEBOOK)"
+        v-ripple
+      >
+        <span class="text-subtitle-1 font-weight-bold">Facebook setting</span>
+        <v-icon>mdi-plus</v-icon>
       </v-sheet>
       <template v-for="setting in vm.facebook">
         <component
@@ -76,11 +82,13 @@
       <v-divider class="my-7 dashed-border" />
 
       <!-- ================================== CONFIG CUSTOM TASK SETTING ==================================== -->
-      <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
-        <a href="" class="text-subtitle-1 font-weight-bold">Other setting</a>
-        <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.CUSTOM)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+      <v-sheet
+        class="neutral-20 px-6 py-3 rounded-lg d-flex justify-space-between align-center cursor-pointer"
+        @click="vm.updateSelectDialogState(true, SocialType.CUSTOM)"
+        v-ripple
+      >
+        <span class="text-subtitle-1 font-weight-bold">Other setting</span>
+        <v-icon>mdi-plus</v-icon>
       </v-sheet>
       <template v-for="setting in vm.custom">
         <component
