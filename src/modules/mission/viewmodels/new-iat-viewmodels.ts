@@ -131,10 +131,9 @@ export class NewInAppTrialViewModel {
     const status = 'upcomming'
     const [coverImage, ...screenshots] = imageSources
     const { website, ...socialLinks } = pool.data?.socialLinks
-    const optTokenLogo = pool.data!.optionalTokenLogo!
+    const optTokenLogo = pool.data!.optionalTokenLogo
     const optTokenAddress = pool.data!.optionalTokenAddress!
     const optTokenDecimal = +pool.data!.optionalRewardTokenDecimals!
-    const optTokenName = pool.data!.optionalTokenName!
     const tokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress)
     // Populate app trial task metadata
     const metadata: MetaData = {
@@ -144,7 +143,7 @@ export class NewInAppTrialViewModel {
       appStoreUrl: info.appStoreLink,
       googlePlayUrl: info.chPlayLink,
       tokenContractAddress: optTokenAddress,
-      rewardToken: optTokenName,
+      rewardToken: this.tokenName,
       decimals: optTokenDecimal,
       tokenLogo: optTokenLogo,
       screenshots,
@@ -188,7 +187,7 @@ export class NewInAppTrialViewModel {
       const uploadFiles = [this.iatInfo.appLogo!, ...this.iatInfo.screenShots!]
       // [0] app Logo, [...rest] screenshots
       const sources = await this.getImageSources(uploadFiles)
-      const missionModel = this.getModel(this.iatInfo, this.pool, sources)
+      const missionModel = await this.getModel(this.iatInfo, this.pool, sources)
       await this._api.createTask(missionModel)
       this._snackbar.addSuccess()
       this._router.push({
