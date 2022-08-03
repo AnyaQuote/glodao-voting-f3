@@ -109,29 +109,47 @@ export class NewInAppTrialViewModel {
     return sources
   }
 
-  getModel(info: InAppTrialInfo, pool: VotingPool, imageSources: string[]) {
+  /**
+   * Get token base price
+   * If address from testnet, api wont wỏk
+   * @param address token address
+   * @returns price value of token
+   */
+  async getTokenBasePriceValue(address: string) {
+    try {
+      const res = await this._api.getTokenPrice(address)
+      return res.price._value
+    } catch (_) {
+      // Incase testnet failed, return 1
+      return '1'
+    }
+  }
+
+  async getModel(info: InAppTrialInfo, pool: VotingPool, imageSources: string[]) {
     const type = MissionType.APP_TRIAL
     const maxParticipants = toNumber(info.maxParticipants)
-    const tokenBasePrice = '1'
     const status = 'upcomming'
-    const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const [coverImage, ...screenshots] = imageSources
     const { website, ...socialLinks } = pool.data?.socialLinks
-    const optTokenAddress = pool.data?.optionalTokenAddress
+    const optTokenLogo = pool.data!.optionalTokenLogo!
+    const optTokenAddress = pool.data!.optionalTokenAddress!
+    const optTokenDecimal = +pool.data!.optionalRewardTokenDecimals!
+    const optTokenName = pool.data!.optionalTokenName!
+    const tokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress)
     // Populate app trial task metadata
     const metadata: MetaData = {
       shortDescription: info.appDescription,
       projectLogo: pool.data!.projectLogo,
       caption: info.appDescription,
-      decimals: pool.data!.decimals,
-      rewardToken: pool.tokenName,
       appStoreUrl: info.appStoreLink,
       googlePlayUrl: info.chPlayLink,
       tokenContractAddress: optTokenAddress,
+      rewardToken: optTokenName,
+      decimals: optTokenDecimal,
+      tokenLogo: optTokenLogo,
       screenshots,
       socialLinks,
       coverImage,
-      tokenLogo,
       website,
     }
     // Populate app trial task data
@@ -188,11 +206,11 @@ export class NewInAppTrialViewModel {
   }
 
   @computed get tokenName() {
-    return get(this.pool, 'tokenName', EMPTY_STRING)
+    return get(this.pool, 'data.optionalTokenName', EMPTY_STRING)
   }
 
   @computed get projectReward() {
-    return get(this.pool, 'rewardAmount', ZERO_NUM)
+    return get(this.pool, 'data.optionalRewardAmount', ZERO_NUM)
   }
 
   @computed get poolTotalMissions() {
