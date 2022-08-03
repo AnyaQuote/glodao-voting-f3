@@ -2,7 +2,7 @@
   <v-dialog :value="vm.showSelectDialog" max-width="500" @click:outside="vm.updateSelectDialogState(false)">
     <v-card>
       <v-card-title>
-        <span>Select telegram task</span>
+        <span>Select {{ vm.selectedSocialType }} task</span>
         <v-spacer />
         <v-icon @click="cancel">mdi-close</v-icon>
       </v-card-title>
