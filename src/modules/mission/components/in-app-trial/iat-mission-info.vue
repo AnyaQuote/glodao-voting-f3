@@ -38,7 +38,7 @@
     <v-sheet class="py-2 px-4 d-flex flex-column flex-sm-row text-subtitle-1 blue-2" rounded="lg">
       <div class="font-weight-bold flex-grow">
         <div class="neutral-10--text mb-2">Personal reward</div>
-        <div>{{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }}</div>
+        <div>{{ vm.personalReward | formatNumber(4) }} {{ vm.tokenName }}</div>
       </div>
       <div class="mx-0 mx-sm-4 my-2 my-sm-0"></div>
       <div class="font-weight-bold flex-grow">

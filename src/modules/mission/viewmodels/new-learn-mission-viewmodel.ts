@@ -1,31 +1,15 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
-import { Data, MissionType, OptionalTokenItem } from '@/models/MissionModel'
-import {
-  Quiz,
-  LearnToEarn,
-  PreviewQuiz,
-  MissionInfo,
-  joinTelegramDefault,
-  followTwitterDefault,
-  quoteTweetDefault,
-  commentTweetDefault,
-  telegramChatDefault,
-} from '@/models/QuizModel'
+import { Data, MissionType } from '@/models/MissionModel'
+import { Quiz, LearnToEarn, PreviewQuiz, MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber, sampleSize, ceil } from 'lodash-es'
+import { set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
-import {
-  ALLOW_PASS_THROUGH,
-  EMPTY_STRING,
-  ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD,
-  PRIORITY_AMOUNT_RATIO,
-  Zero,
-} from '@/constants'
+import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants'
 
 export class NewLearnMissionViewModel {
   @observable step = 1
@@ -33,11 +17,6 @@ export class NewLearnMissionViewModel {
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
   @observable learnToEarn: LearnToEarn = {}
-  @observable joinTelegram = joinTelegramDefault
-  @observable followTwitter = followTwitterDefault
-  @observable quoteTweet = quoteTweetDefault
-  @observable commentTweet = commentTweetDefault
-  @observable telegramChat = telegramChatDefault
   @observable pageLoading = false
   @observable btnLoading = false
 
@@ -58,10 +37,7 @@ export class NewLearnMissionViewModel {
     try {
       this.pageLoading = true
 
-      const [pools] = yield Promise.all([
-        this._api.voting.find({ unicodeName, projectOwner: this._auth.projectOwnerId }, { _limit: 1 }),
-        // this._api.getAverageCommunityReward(10),
-      ])
+      const pools = yield this._api.voting.find({ unicodeName, projectOwner: this._auth.projectOwnerId }, { _limit: 1 })
 
       if (isEmpty(pools)) {
         this._router.replace(RoutePaths.not_found)
@@ -77,27 +53,6 @@ export class NewLearnMissionViewModel {
   @action.bound changeMissionInfo(property: string, value: string) {
     this.missionInfo = set(this.missionInfo, property, value)
   }
-  @action.bound changeJoinTelegramSetting(property: string, value: string | boolean) {
-    this.joinTelegram = set(this.joinTelegram, property, value)
-  }
-
-  @action.bound changeFollowTwitterSetting(property: string, value: string | boolean) {
-    this.followTwitter = set(this.followTwitter, property, value)
-  }
-
-  @action.bound changeQuoteTweetSetting(property: string, value: string | boolean) {
-    isEqual(property, 'setting.link') && (this.quoteTweet = set(this.quoteTweet, 'setting.embedLink', value))
-    this.quoteTweet = set(this.quoteTweet, property, value)
-  }
-
-  @action.bound changeCommentTweetSetting(property: string, value: string | boolean) {
-    isEqual(property, 'setting.link') && (this.commentTweet = set(this.commentTweet, 'setting.embedLink', value))
-    this.commentTweet = set(this.commentTweet, property, value)
-  }
-
-  @action.bound changeTelegramChatSetting(property: string, value: string | boolean) {
-    this.telegramChat = set(this.telegramChat, property, value)
-  }
 
   @action.bound changeLearnToEarnInfo(property: string, value: string | boolean) {
     this.learnToEarn = set(this.learnToEarn, property, value)
@@ -105,14 +60,6 @@ export class NewLearnMissionViewModel {
 
   @action changeStep(step: number) {
     this.step = step
-  }
-
-  @action resetSocialSetting() {
-    this.changeJoinTelegramSetting('enabled', false)
-    this.changeCommentTweetSetting('enabled', false)
-    this.changeFollowTwitterSetting('enabled', false)
-    this.changeQuoteTweetSetting('enabled', false)
-    this.changeTelegramChatSetting('enabled', false)
   }
 
   async getImageSource(imageFile: File) {
@@ -185,40 +132,25 @@ export class NewLearnMissionViewModel {
   }
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
-    // const tokenLogo = 'https://api.glodao.io/uploads/BUSD_Logo_2cc6a78969.svg'
     const status = 'upcomming'
-
-    // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-
-    // Reward amount of a mission/task
     const rewardAmount = this.rewardPerMission._value
-
-    // Learn to earn mission needs maxParticipants
     const maxParticipants = toNumber(missionInfo.maxParticipants)
-
-    // Social mission needs maxPriorityParticipants and priorityRewardAmount field
     const maxPriorityParticipants = 0
     const priorityRewardAmount = '0'
-
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
-
-    // const optRewardAmount = pool.data?.optionalRewardAmount
     const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
-    // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
     const optTokenAddress = pool.data?.optionalTokenAddress
     const optTokenLogo = pool.data?.optionalTokenLogo
     const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
-    const optTokenName = pool.data?.optionalTokenName
 
     const mission: Mission = {
-      // OPTIONAL TO MAIN TOKEN FOR MISSION
+      ownerAddress: this._auth.attachedAddress,
       rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
       tokenBasePrice: optTokenBasePrice,
-      // ==================================
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
@@ -227,19 +159,17 @@ export class NewLearnMissionViewModel {
       poolId: pool.id,
       data: setting,
       status,
-      optionalTokens: [],
+      optionalTokens: EMPTY_ARRAY,
       metadata: {
         shortDescription: missionInfo.shortDescription,
         projectLogo: pool.data?.projectLogo,
         coverImage,
         caption: missionInfo.shortDescription,
-        // OPTIONAL TO MAIN
         decimals: toNumber(optTokenDecimal),
         rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
         tokenContractAddress: optTokenAddress,
-        // ===============
-        socialLinks: socialLinks || [],
+        socialLinks: socialLinks || EMPTY_ARRAY,
         website: website || '#',
       },
     }
@@ -251,7 +181,7 @@ export class NewLearnMissionViewModel {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
       const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
-      yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
+      yield this._api.createTask(model)
       this._snackbar.addSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
@@ -288,29 +218,6 @@ export class NewLearnMissionViewModel {
 
   @computed get tokenName() {
     return get(this.pool, 'data.optionalTokenName', '')
-  }
-
-  // @computed get maxPriorityParticipantsLimit() {
-  //   try {
-  //     const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
-  //     const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
-  //     const limit = ceil(toNumber(fxparticipantLimit._value))
-  //     if (limit === 0) {
-  //       throw null
-  //     } else return limit
-  //   } catch (_) {
-  //     return 200
-  //   }
-  // }
-
-  @computed get isValid() {
-    return (formState) =>
-      formState &&
-      (this.joinTelegram.enabled ||
-        this.followTwitter.enabled ||
-        this.quoteTweet.enabled ||
-        this.commentTweet.enabled ||
-        this.telegramChat.enabled)
   }
 
   @computed get projectStartDate() {

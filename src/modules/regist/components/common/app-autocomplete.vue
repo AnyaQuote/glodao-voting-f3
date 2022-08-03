@@ -44,12 +44,11 @@
 import { EMPTY_ARRAY, NULL } from '@/constants'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-const defaultItems = () => ['NFT', 'Finance', 'Gaming']
 const defaultValue = () => []
 
 @Component
 export default class AppAutoComplete extends Vue {
-  @Prop({ default: defaultItems }) items!: string[]
+  @Prop({ default: defaultValue }) items!: string[]
   @Prop({ default: defaultValue }) rules!: any[]
   @Prop({ default: defaultValue }) value!: string[]
   @Prop({ default: 'Enter keywords' }) placeholder!: string

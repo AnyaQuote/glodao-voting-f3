@@ -1,62 +1,48 @@
 import { appProvider } from '@/app-providers'
 import { getApiFileUrl } from '@/helpers/file-helper'
-import { Data, MissionType } from '@/models/MissionModel'
-import {
-  MissionInfo,
-  joinTelegramDefault,
-  followTwitterDefault,
-  quoteTweetDefault,
-  commentTweetDefault,
-  telegramChatDefault,
-  facebookFollowSetting,
-  customTaskSetting,
-} from '@/models/QuizModel'
+import { Data, MissionType, SocialType, TaskConfig } from '@/models/MissionModel'
+import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
+import { assign, isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
-import { actionAsync, asyncAction } from 'mobx-utils'
+import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import {
   ALLOW_PASS_THROUGH,
+  EMPTY_ARRAY,
+  EMPTY_OBJECT,
   EMPTY_STRING,
   ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD,
   PRIORITY_AMOUNT_RATIO,
   Zero,
 } from '@/constants'
+import { getDefaultSettingConfig, extractTaskSettings } from '@/helpers'
 
 export class NewSocialMissionViewModel {
   @observable step = 1
 
-  // Setting must match observeable variable's name below
-  readonly missionSettings = [
-    'joinTelegram',
-    'followTwitter',
-    'quoteTweet',
-    'commentTweet',
-    'telegramChat',
-    'facebookFollow',
-    'customTask',
-  ]
-
-  @observable pool: VotingPool = {}
-  @observable missionInfo: MissionInfo = {}
-  @observable joinTelegram = joinTelegramDefault
-  @observable followTwitter = followTwitterDefault
-  @observable quoteTweet = quoteTweetDefault
-  @observable commentTweet = commentTweetDefault
-  @observable telegramChat = telegramChatDefault
-  @observable facebookFollow = facebookFollowSetting
-  @observable customTask = customTaskSetting
+  @observable pool: VotingPool = EMPTY_OBJECT
+  @observable missionInfo: MissionInfo = EMPTY_OBJECT
   @observable fxAvgCommunityReward = Zero
   @observable pageLoading = false
   @observable btnLoading = false
+
+  @observable telegram: TaskConfig[] = EMPTY_ARRAY
+  @observable twitter: TaskConfig[] = EMPTY_ARRAY
+  @observable facebook: TaskConfig[] = EMPTY_ARRAY
+  @observable custom: TaskConfig[] = EMPTY_ARRAY
+
+  @observable showSelectDialog = false
+  @observable selectedSocialType = EMPTY_STRING
 
   private _snackbar = appProvider.snackbar
   private _router = appProvider.router
   private _auth = appProvider.authStore
   private _api = appProvider.api
+
+  private _key = 0
 
   constructor(unicodeName: string) {
     this.fetchProjectByUnicode(unicodeName)
@@ -88,37 +74,32 @@ export class NewSocialMissionViewModel {
     }
   }
 
+  @action.bound updateSelectDialogState(shown: boolean, type?: SocialType) {
+    this.selectedSocialType = type || EMPTY_STRING
+    this.showSelectDialog = shown
+  }
+
   @action.bound changeMissionInfo(property: string, value: string) {
     this.missionInfo = set(this.missionInfo, property, value)
   }
-  @action.bound changeJoinTelegramSetting(property: string, value: string | boolean) {
-    this.joinTelegram = set(this.joinTelegram, property, value)
+
+  @action.bound updateSetting(socialType: SocialType, key: number, value: any) {
+    this[socialType] = this[socialType].map((setting) => {
+      return setting.key === key ? value : setting
+    })
   }
 
-  @action.bound changeFollowTwitterSetting(property: string, value: string | boolean) {
-    this.followTwitter = set(this.followTwitter, property, value)
+  @action.bound removeSetting(socialType: SocialType, key: number) {
+    this[socialType] = this[socialType].filter((setting) => setting.key !== key)
   }
 
-  @action.bound changeQuoteTweetSetting(property: string, value: string | boolean) {
-    isEqual(property, 'setting.link') && (this.quoteTweet = set(this.quoteTweet, 'setting.embedLink', value))
-    this.quoteTweet = set(this.quoteTweet, property, value)
-  }
-
-  @action.bound changeCommentTweetSetting(property: string, value: string | boolean) {
-    isEqual(property, 'setting.link') && (this.commentTweet = set(this.commentTweet, 'setting.embedLink', value))
-    this.commentTweet = set(this.commentTweet, property, value)
-  }
-
-  @action.bound changeTelegramChatSetting(property: string, value: string | boolean) {
-    this.telegramChat = set(this.telegramChat, property, value)
-  }
-
-  @action.bound changeFacebookFollowSetting(property: string, value: string | boolean) {
-    this.facebookFollow = set(this.facebookFollow, property, value)
-  }
-
-  @action.bound changeCustomTaskSetting(property: string, value: string | boolean) {
-    this.customTask = set(this.customTask, property, value)
+  @action appendSetting(socialType: string, taskType: string) {
+    try {
+      const setting = getDefaultSettingConfig(socialType, taskType, this._key++)
+      this[socialType] = [...this[socialType], setting]
+    } catch (error) {
+      this._snackbar.commonError(error)
+    }
   }
 
   @action changeStep(step: number) {
@@ -132,51 +113,21 @@ export class NewSocialMissionViewModel {
     return getApiFileUrl(imageResult[0])
   }
 
-  getMissionSetting() {
-    let socialSetting = {}
-    if (this.joinTelegram.enabled) {
-      socialSetting = set(socialSetting, 'telegram', [
-        ...get(socialSetting, 'telegram', []),
-        { ...this.joinTelegram.setting },
-      ])
+  getSocialMissionSettings() {
+    const settings = {}
+    if (this.telegram.length > 0) {
+      assign(settings, { [SocialType.TELEGRAM]: extractTaskSettings(this.telegram) })
     }
-    if (this.followTwitter.enabled) {
-      socialSetting = set(socialSetting, 'twitter', [
-        ...get(socialSetting, 'twitter', []),
-        { ...this.followTwitter.setting },
-      ])
+    if (this.twitter.length > 0) {
+      assign(settings, { [SocialType.TWITTER]: extractTaskSettings(this.twitter) })
     }
-    if (this.quoteTweet.enabled) {
-      socialSetting = set(socialSetting, 'twitter', [
-        ...get(socialSetting, 'twitter', []),
-        { ...this.quoteTweet.setting },
-      ])
+    if (this.facebook.length > 0) {
+      assign(settings, { [SocialType.FACEBOOK]: extractTaskSettings(this.facebook) })
     }
-    if (this.commentTweet.enabled) {
-      socialSetting = set(socialSetting, 'twitter', [
-        ...get(socialSetting, 'twitter', []),
-        { ...this.commentTweet.setting },
-      ])
+    if (this.custom.length > 0) {
+      assign(settings, { optional: extractTaskSettings(this.custom) })
     }
-    if (this.telegramChat.enabled) {
-      socialSetting = set(socialSetting, 'telegram', [
-        ...get(socialSetting, 'telegram', []),
-        { ...this.telegramChat.setting },
-      ])
-    }
-    if (this.facebookFollow.enabled) {
-      socialSetting = set(socialSetting, 'facebook', [
-        ...get(socialSetting, 'facebook', []),
-        { ...this.facebookFollow.setting },
-      ])
-    }
-    if (this.customTask.enabled) {
-      socialSetting = set(socialSetting, 'optional', [
-        ...get(socialSetting, 'optional', []),
-        { ...this.customTask.setting },
-      ])
-    }
-    return socialSetting
+    return settings
   }
 
   /**
@@ -197,98 +148,54 @@ export class NewSocialMissionViewModel {
 
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const status = 'upcomming'
-
-    // const tokenBasePrice = await this.getTokenBasePriceValue(pool.ownerAddress!)
-    const { website, ...socialLinks } = get(pool, 'data.socialLinks')
-
-    // Reward amount of a mission/task
+    const { website, ...socialLinks } = pool.data?.socialLinks
     const rewardAmount = this.rewardPerMission._value
-
-    // Learn to earn mission needs maxParticipants
-    const maxParticipants = missionInfo.maxParticipants ? toNumber(missionInfo.maxParticipants) : 0
-
-    // Social mission needs maxPriorityParticipants and priorityRewardAmount field
-    const maxPriorityParticipants = toNumber(missionInfo.maxPriorityParticipants)
-    let priorityRewardAmount = '0'
-    if (maxPriorityParticipants !== 0) {
-      priorityRewardAmount = this.priorityAmount._value
-    }
-
+    const maxParticipants = missionInfo.maxParticipants ? +missionInfo.maxParticipants : 0
+    const maxPriorityParticipants = +missionInfo.maxPriorityParticipants!
+    const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
-
-    // const optRewardAmount = pool.data?.optionalRewardAmount
-    const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
-    // const optTokenPriorityRewardAmount = FixedNumber.from(optRewardAmount).divUnsafe(PRIORITY_AMOUNT_RATIO)._value
-    const optTokenAddress = pool.data?.optionalTokenAddress
-    const optTokenLogo = pool.data?.optionalTokenLogo
-    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
-    const optTokenName = pool.data?.optionalTokenName
-
+    const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
+    const optTokenAddress = pool.data!.optionalTokenAddress
+    const optTokenLogo = pool.data!.optionalTokenLogo
+    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress!)
     const mission: Mission = {
-      // OPTIONAL TO MAIN TOKEN FOR MISSION
+      type: MissionType.SOCIAL,
       rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
       tokenBasePrice: optTokenBasePrice,
-      // ==================================
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
       chainId: pool.chain,
-      type: MissionType.SOCIAL,
       poolId: pool.id,
       data: setting,
       status,
-      optionalTokens: [],
+      optionalTokens: EMPTY_ARRAY,
+      ownerAddress: this._auth.attachedAddress,
       metadata: {
         shortDescription: missionInfo.shortDescription,
-        projectLogo: pool.data?.projectLogo,
-        coverImage,
+        projectLogo: pool.data!.projectLogo,
         caption: missionInfo.shortDescription,
-        // OPTIONAL TO MAIN
-        decimals: toNumber(optTokenDecimal),
+        decimals: +optTokenDecimal!,
         rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
         tokenContractAddress: optTokenAddress,
-        // ===============
-        socialLinks: socialLinks || [],
-        website: website || '#',
+        socialLinks: socialLinks,
+        website: website,
+        coverImage,
       },
     }
     return mission
   }
 
-  @observable checkingTelegram = false
-  @observable botIsAdded = false
-
-  @action.bound async checkTelegramBot() {
-    try {
-      this.checkingTelegram = true
-      const telegramLink = get(this.joinTelegram, 'setting.link')
-      if (!telegramLink) {
-        this._snackbar.error('Enter your telegram channel/group link first')
-        return
-      }
-      const status = await this._api.checkTelegramBotIsAdded(this.joinTelegram.setting.link)
-      if (status) {
-        this.botIsAdded = true
-        this._snackbar.success('Glodao mission bot is added in your telegram channel/group')
-      }
-    } catch (error) {
-      this._snackbar.commonError(error)
-    } finally {
-      this.checkingTelegram = false
-    }
-  }
-
-  @asyncAction
-  *submit() {
+  @asyncAction *submit() {
     try {
       this.btnLoading = true
-      const missionSetting = yield this.getMissionSetting()
-      const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
-      yield this._api.createTask({ ...model, ownerAddress: this._auth.attachedAddress })
+      const missionSettings = yield this.getSocialMissionSettings()
+      const model = yield this.getMissionModel(missionSettings, this.missionInfo, this.pool)
+      yield this._api.createTask(model)
       this._snackbar.addSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
@@ -349,10 +256,8 @@ export class NewSocialMissionViewModel {
   //   }
   // }
 
-  @computed get isValid() {
-    return (isFormValidated) => {
-      return this.missionSettings.some((task) => this[task].enabled) && isFormValidated
-    }
+  @computed get hasSettings() {
+    return this.telegram.length || this.twitter.length || this.facebook.length || this.custom.length
   }
 
   @computed get projectStartDate() {
