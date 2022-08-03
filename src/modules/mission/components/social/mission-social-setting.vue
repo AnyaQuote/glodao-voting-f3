@@ -17,7 +17,7 @@
 
       <!-- ================================== CONFIG TELEGRAM TASK SETTING ================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg mt-7 d-flex justify-space-between align-center">
-        <a href="#telegram" class="text-subtitle-1 font-weight-bold">Telegram setting</a>
+        <a href="" class="text-subtitle-1 font-weight-bold">Telegram setting</a>
         <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.TELEGRAM)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -37,7 +37,7 @@
 
       <!-- ================================== CONFIG TWITTER TASK SETTING =================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
-        <a href="#telegram" class="text-subtitle-1 font-weight-bold">Twitter setting</a>
+        <a href="" class="text-subtitle-1 font-weight-bold">Twitter setting</a>
         <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.TWITTER)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -57,7 +57,7 @@
 
       <!-- ================================== CONFIG FACEBOOK TASK SETTING ================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
-        <a href="#facebook" class="text-subtitle-1 font-weight-bold">Facebook setting</a>
+        <a href="" class="text-subtitle-1 font-weight-bold">Facebook setting</a>
         <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.FACEBOOK)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -77,7 +77,7 @@
 
       <!-- ================================== CONFIG CUSTOM TASK SETTING ==================================== -->
       <v-sheet class="neutral-20 px-6 py-2 rounded-lg d-flex justify-space-between align-center">
-        <a href="#facebook" class="text-subtitle-1 font-weight-bold">Other setting</a>
+        <a href="" class="text-subtitle-1 font-weight-bold">Other setting</a>
         <v-btn icon @click="vm.updateSelectDialogState(true, SocialType.CUSTOM)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
