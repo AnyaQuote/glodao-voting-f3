@@ -235,8 +235,10 @@ export class NewInAppTrialViewModel {
   @computed get remainingProjectReward() {
     try {
       const fxProjectReward = FixedNumber.from(this.projectReward)
-      const fxMissionReward = FixedNumber.from(this.missionReward)
-      return fxProjectReward.subUnsafe(fxMissionReward)._value
+      const fxAppliedMissionReward = FixedNumber.from(this.missionReward).mulUnsafe(
+        FixedNumber.from(this.appliedMission)
+      )
+      return fxProjectReward.subUnsafe(fxAppliedMissionReward)._value
     } catch (_) {
       return Zero
     }
