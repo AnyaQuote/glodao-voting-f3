@@ -29,7 +29,7 @@
             </v-sheet>
             <!-- ==================================================================================================================== -->
             <v-sheet class="rounded pa-5 fill-heigh mt-4" outlined :class="isActive('iat')">
-              <v-radio color="blue-diversity" value="iat" disabled>
+              <v-radio color="blue-diversity" value="iat">
                 <template #label>
                   <span class="font-18 font-weight-bold" :class="isActive('iat')">
                     <span>Trial mission app (Comming soon)</span>
