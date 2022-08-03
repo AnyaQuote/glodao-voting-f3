@@ -32,7 +32,7 @@
               <v-radio color="blue-diversity" value="iat">
                 <template #label>
                   <span class="font-18 font-weight-bold" :class="isActive('iat')">
-                    <span>Trial mission app (Comming soon)</span>
+                    <span>Trial mission app (Beta)</span>
                   </span>
                 </template>
               </v-radio>
