@@ -20,12 +20,19 @@ import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { generateRandomString } from '@/helpers'
 
+enum AppPlatform {
+  MOBILE = 'mobile',
+  WEB = 'web',
+}
+
 export class NewInAppTrialViewModel {
   @observable loading = false
   @observable step = 1
   @observable unlocked = 1
 
   @observable iatInfo: InAppTrialInfo = EMPTY_OBJECT
+  @observable platformType = AppPlatform.WEB
+
   @observable pool: VotingPool = EMPTY_OBJECT
   @observable appliedMission = 0
   @observable btnLoading = false
@@ -42,7 +49,6 @@ export class NewInAppTrialViewModel {
   @asyncAction *loadPageData(unicodeName: string) {
     try {
       this.loading = true
-      waitForGlobalLoadingFinished()
       const pools = yield this._api.voting.find(
         {
           unicodeName,
@@ -95,6 +101,26 @@ export class NewInAppTrialViewModel {
   }
 
   /**
+   * Change UI form when inputting web, appstore link and screenshot files
+   * @param value Web | Mobile
+   */
+  @action.bound changePlatformType(value: AppPlatform) {
+    this.platformType = value
+    if (value === AppPlatform.MOBILE) {
+      if (this.chPlayLink) {
+        this.updateIatInfo('chPlayLink', EMPTY_STRING)
+      }
+      if (this.appStoreLink) {
+        this.updateIatInfo('appStoreLink', EMPTY_STRING)
+      }
+    } else {
+      if (this.webAppLink) {
+        this.updateIatInfo('webAppLink', EMPTY_STRING)
+      }
+    }
+  }
+
+  /**
    * Upload images and return image sources from server
    * @param files array of files/blobs
    * @returns array of image sources
@@ -140,8 +166,9 @@ export class NewInAppTrialViewModel {
       shortDescription: info.appDescription,
       projectLogo: pool.data!.projectLogo,
       caption: info.appDescription,
-      appStoreUrl: info.appStoreLink,
-      googlePlayUrl: info.chPlayLink,
+      appStoreUrl: this.appStoreLink,
+      googlePlayUrl: this.chPlayLink,
+      webUrl: this.webAppLink,
       tokenContractAddress: optTokenAddress,
       rewardToken: this.tokenName,
       decimals: optTokenDecimal,
@@ -285,6 +312,10 @@ export class NewInAppTrialViewModel {
     return get(this.iatInfo, 'appLogo', NULL)
   }
 
+  @computed get webAppLink() {
+    return get(this.iatInfo, 'webAppLink', EMPTY_STRING)
+  }
+
   @computed get appStoreLink() {
     return get(this.iatInfo, 'appStoreLink', EMPTY_STRING)
   }
@@ -305,5 +336,9 @@ export class NewInAppTrialViewModel {
 
   @computed get taskSetting() {
     return get(this.iatInfo, 'tasks', EMPTY_ARRAY)
+  }
+
+  @computed get isMobilePlatform() {
+    return this.platformType === AppPlatform.MOBILE
   }
 }

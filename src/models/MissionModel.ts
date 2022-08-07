@@ -27,6 +27,7 @@ export interface MetaData {
   screenshots?: string[]
   appStoreUrl?: string
   googlePlayUrl?: string
+  webUrl?: string
 }
 
 export interface Mission {
@@ -85,6 +86,7 @@ export type IatInfoProp =
   | 'appLogo'
   | 'appStoreLink'
   | 'chPlayLink'
+  | 'webAppLink'
   | 'appDescription'
 
 export enum MissionType {

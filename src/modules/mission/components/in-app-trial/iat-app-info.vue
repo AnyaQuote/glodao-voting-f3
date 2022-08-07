@@ -10,7 +10,7 @@
       placeholder="Enter name"
     />
 
-    <div class="d-flex mb-2 align-end">
+    <div class="d-flex flex-column flex-sm-row mb-2 alignsm-end">
       <span class="font-18 font-weight-bold">App logo<span class="app-red--text">*</span></span>
       <v-spacer />
       <i class="text-subtitle-2 neutral-10--text font-weight-regular">
@@ -24,37 +24,15 @@
       :rules="[$rules.required, $rules.isImage, $rules.maxSize(MAX_IMAGE_FILE_SIZE)]"
     />
 
-    <div class="d-flex flex-column flex-sm-row mt-4">
-      <div class="flex-grow">
-        <div class="mb-2 font-weight-bold">App Store</div>
-        <app-text-field
-          :value="vm.chPlayLink"
-          @change="vm.updateIatInfo('appStoreLink', $event)"
-          placeholder="Enter link"
-        />
-      </div>
-      <div class="d-none d-sm-block px-4" />
-      <div class="flex-grow">
-        <div class="mb-2 font-weight-bold">CH play</div>
-        <app-text-field
-          :value="vm.chPlayLink"
-          @change="vm.updateIatInfo('chPlayLink', $event)"
-          placeholder="Enter link"
-        />
-      </div>
-    </div>
-
-    <div class="font-weight-bold mb-2">App Description<span class="app-red--text">*</span></div>
+    <div class="font-weight-bold mt-6 mb-2">App Description<span class="app-red--text">*</span></div>
     <app-textarea
       :rules="[$rules.required]"
       :value="vm.appDescription"
       @change="vm.updateIatInfo('appDescription', $event)"
       placeholder="Enter short description to describe project"
     />
-    <!-- ---------------------------------------------------------------------------------------------------- -->
-    <div class="font-weight-bold mb-2">App Screenshot<span class="app-red--text">*</span></div>
-    <screenshot-file-upload :value="vm.appScreenShots" @onChange="vm.updateIatInfo('screenShots', $event)" />
-    <!-- ---------------------------------------------------------------------------------------------------- -->
+
+    <app-platform-specific-info />
 
     <v-divider class="dashed-border mt-7" />
     <div class="d-flex mt-7">
@@ -83,8 +61,8 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 @Observer
 @Component({
   components: {
+    'app-platform-specific-info': () => import('./app-platform-specific-info.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
-    'screenshot-file-upload': () => import('../common/screenshot-file-upload.vue'),
   },
 })
 export default class InAppTrialAppInfo extends Vue {

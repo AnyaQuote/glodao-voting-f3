@@ -6,8 +6,8 @@
         class="py-1 dashed-border ma-1"
         :key="index"
         rounded="lg"
-        height="120"
-        width="84"
+        :height="height"
+        :width="width"
         outlined
       >
         <v-img width="100%" height="100%" contain :src="sourceFrom(file)">
@@ -24,8 +24,8 @@
         class="py-1 dashed-border ma-1"
         @click.stop="openFileExplorer"
         rounded="lg"
-        height="120"
-        width="84"
+        :height="height"
+        :width="width"
         v-ripple
         outlined
       >
@@ -59,6 +59,7 @@ import {
   MAX_IMAGE_FILE_SIZE,
   MAX_SCREENSHOT_ACCEPTED,
 } from '@/constants'
+import { isEmpty } from 'lodash-es'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Ref, Vue, Watch } from 'vue-property-decorator'
 
@@ -70,8 +71,10 @@ export default class ScreenShotFileUpload extends Vue {
   @Ref('file-input') fileInput
   @Prop({ default: defaultProp }) value!: File[]
   @Prop({ default: defaultProp }) rules!: any[]
+  @Prop(Boolean) mobileScreenSize!: boolean
 
   readonly acceptType = 'image/png, image/jpeg, image/jpg'
+  readonly height = 184
   isDirty = false
   files: File[] = []
   message = ''
@@ -95,13 +98,10 @@ export default class ScreenShotFileUpload extends Vue {
     const isNotImageFile = files.some((file) => /^(image)\/.*$/.test(file.type) === false)
     if (!this.files || !this.files.length) {
       this.message = ERROR_MSG_FIELD_REQUIRED
-      this.$emit('onChange', null)
     } else if (isNotImageFile) {
       this.message = ERROR_MSG_FILE_IS_NOT_IMAGE
-      this.$emit('onChange', null)
     } else if (isExceedMaxSize) {
       this.message = ERROR_MSG_FILE_EXCEED_MAX_SIZE
-      this.$emit('onChange', null)
     } else {
       this.$emit('onChange', files)
     }
@@ -138,6 +138,10 @@ export default class ScreenShotFileUpload extends Vue {
 
   get error() {
     return !!this.message
+  }
+
+  get width() {
+    return this.mobileScreenSize ? 120 : 270
   }
 }
 </script>

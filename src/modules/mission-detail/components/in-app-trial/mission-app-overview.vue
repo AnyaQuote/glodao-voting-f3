@@ -10,7 +10,7 @@
     <v-tab-item class="pa-6">
       <v-slide-group center-active class="hide-prev" :show-arrows="!$vuetify.breakpoint.mobile">
         <v-slide-item v-for="(source, index) in vm.missionAppScreenshots" :key="index" class="ma-2">
-          <v-sheet rounded="lg" width="186" height="330">
+          <v-sheet rounded="lg" :width="vm.isWebApp ? 495 : 220" height="330">
             <v-img width="100%" height="100%" contain :src="source" />
           </v-sheet>
         </v-slide-item>

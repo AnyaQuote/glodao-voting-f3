@@ -17,7 +17,7 @@
         <v-avatar size="32">
           <img :src="authStore.user.avatar" alt="Avatar" />
         </v-avatar>
-        <div class="ml-3 font-weight-600">{{ authStore.user.hunter.name }}</div>
+        <div class="ml-3 font-weight-600">{{ authStore.user.projectOwner.name }}</div>
       </v-sheet>
       <v-divider></v-divider>
       <v-sheet class="neutral100">
