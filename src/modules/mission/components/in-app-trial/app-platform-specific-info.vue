@@ -25,7 +25,7 @@
         <div class="mb-2 font-weight-bold">Link to the apple app store</div>
         <app-text-field
           :rules="[$rules.url]"
-          :value="vm.chPlayLink"
+          :value="vm.appStoreLink"
           @change="vm.updateIatInfo('appStoreLink', $event)"
           placeholder="Enter link"
         />
