@@ -111,7 +111,7 @@ export class NewInAppTrialViewModel {
         this.updateIatInfo('chPlayLink', EMPTY_STRING)
       }
       if (this.appStoreLink) {
-        this.updateIatInfo('chPlayLink', EMPTY_STRING)
+        this.updateIatInfo('appStoreLink', EMPTY_STRING)
       }
     } else {
       if (this.webAppLink) {
