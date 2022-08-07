@@ -105,6 +105,14 @@ export class InAppTrialDetailViewModel {
     return get(this.mission, 'metadata.appStoreUrl', EMPTY_STRING)
   }
 
+  @computed get webAppLink() {
+    return get(this.mission, 'metadata.webUrl', EMPTY_STRING)
+  }
+
+  @computed get isWebApp() {
+    return !!this.webAppLink
+  }
+
   // ==================== IAT APP SETTING START =======================
   @computed get missionTaskSetting() {
     const tasks = get(this.mission, 'data.iat', EMPTY_ARRAY)

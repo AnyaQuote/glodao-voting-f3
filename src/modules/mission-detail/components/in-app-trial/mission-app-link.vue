@@ -2,20 +2,40 @@
   <div class="mt-7 d-flex flex-column flex-sm-row">
     <v-sheet class="flex-grow pa-6" rounded="lg" outlined>
       <div class="font-18 font-weight-bold mb-2">App link</div>
-      <div class="d-flex flex-wrap ma-n1">
-        <v-img
-          max-width="120"
-          class="ma-1 cursor-pointer"
-          src="@/assets/images/mission/appstore-flag.png"
-          @click="openLink(vm.appStoreLink)"
-        />
-        <v-img
-          max-width="120"
-          class="ma-1 cursor-pointer"
-          src="@/assets/images/mission/googleplay-flag.png"
-          @click="openLink(vm.googlePlayLink)"
-        />
+      <div v-if="!vm.isWebApp" class="d-flex flex-wrap ma-n1">
+        <v-tooltip v-if="!!vm.appStoreLink" top>
+          <template v-slot:activator="{ attrs, on }">
+            <v-img
+              v-bind="attrs"
+              v-on="on"
+              max-width="120"
+              class="ma-1 cursor-pointer"
+              @click="openLink(vm.appStoreLink)"
+              src="@/assets/images/mission/appstore-flag.png"
+            />
+          </template>
+          <span>{{ vm.appStoreLink }}</span>
+        </v-tooltip>
+        <v-tooltip v-if="!!vm.googlePlayLink" top>
+          <template v-slot:activator="{ attrs, on }">
+            <v-img
+              v-bind="attrs"
+              v-on="on"
+              max-width="120"
+              class="ma-1 cursor-pointer"
+              src="@/assets/images/mission/googleplay-flag.png"
+              @click="openLink(vm.googlePlayLink)"
+            />
+          </template>
+          <span>{{ vm.googlePlayLink }}</span>
+        </v-tooltip>
       </div>
+      <a v-else :href="vm.webAppLink">
+        <span>Link to your web: </span>
+        <span class="mx-1" />
+        <span class="blue-diversity--text text-decoration-underline">{{ vm.webAppLink }}</span>
+        <v-icon color="blue-diversity">mdi-open-in-new</v-icon>
+      </a>
     </v-sheet>
     <div class="my-2 my-sm-0 mx-0 mx-sm-4" />
     <div class="flex-grow font-weight-bold font-18">
