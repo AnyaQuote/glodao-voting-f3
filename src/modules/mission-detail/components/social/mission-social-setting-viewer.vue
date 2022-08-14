@@ -1,7 +1,8 @@
+<!-- eslint-disable vue/valid-v-for -->
 <template>
   <div class="d-flex flex-column">
     <!-- ----------------------------- DISPLAY TWITTER SETTING ----------------------------------------------- -->
-    <v-sheet v-for="(task, index) in twitterSetting" :key="index" class="pa-5 mt-2" rounded="lg" outlined>
+    <v-sheet v-for="task in twitterSetting" :key="task.id" class="pa-5 mt-2" rounded="lg" outlined>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
         <v-img src="@/assets/icons/twitter.svg" class="d-none d-sm-block" max-width="24" max-height="24" />
         <div class="ml-0 ml-sm-2" />
@@ -29,13 +30,7 @@
     <!-- ------------------------------------------------------------------------------------------------------ -->
 
     <!-- ----------------------------- DISPLAY TELEGRAM SETTING ----------------------------------------------- -->
-    <v-sheet
-      v-for="(task, index) in telegramSetting"
-      :key="index + twitterSetting.length"
-      class="pa-5 mt-2"
-      rounded="lg"
-      outlined
-    >
+    <v-sheet v-for="task in telegramSetting" :key="task.id" class="pa-5 mt-2" rounded="lg" outlined>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
         <v-img src="@/assets/icons/telegram.svg" max-width="24" max-height="24" class="d-none d-sm-block" />
         <div class="ml-0 ml-sm-2" />
@@ -53,13 +48,7 @@
     <!-- ------------------------------------------------------------------------------------------------------ -->
 
     <!-- ----------------------------- DISPLAY DISCORD SETTING ------------------------------------------------ -->
-    <v-sheet
-      v-for="(task, index) in discordSetting"
-      :key="index + discordSetting.length"
-      class="pa-5 mt-2"
-      rounded="lg"
-      outlined
-    >
+    <v-sheet v-for="task in discordSetting" :key="task.id" class="pa-5 mt-2" rounded="lg" outlined>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
         <v-icon
           v-html="'fab fa-discord'"
@@ -86,13 +75,7 @@
     <!-- ------------------------------------------------------------------------------------------------------ -->
 
     <!-- ----------------------------- DISPLAY FACEBOOK SETTING ----------------------------------------------- -->
-    <v-sheet
-      v-for="(task, index) in facebookSetting"
-      :key="index + twitterSetting.length + facebookSetting.length"
-      class="pa-5 mt-2"
-      rounded="lg"
-      outlined
-    >
+    <v-sheet v-for="task in facebookSetting" :key="task.id" class="pa-5 mt-2" rounded="lg" outlined>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
         <v-icon v-html="'fab fa-facebook'" max-width="24" max-height="24" color="app-blue" class="d-none d-sm-block" />
         <div class="ml-0 ml-sm-2" />
@@ -155,7 +138,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class MissionSocialSettingViewer extends Vue {
   @Prop({ required: true }) data!: Data
 
-  index = 0
+  key = 0
 
   twitterSetting: Task[] = []
   telegramSetting: Task[] = []
@@ -164,15 +147,11 @@ export default class MissionSocialSettingViewer extends Vue {
   discordSetting: Task[] = []
 
   created() {
-    this.twitterSetting = get(this.data, 'twitter', [])
-    this.telegramSetting = get(this.data, 'telegram', [])
-    this.facebookSetting = get(this.data, 'facebook', [])
-    this.customTaskSetting = get(this.data, 'optional', [])
-    this.discordSetting = get(this.data, 'discord', [])
-  }
-
-  get key() {
-    return this.index++
+    this.twitterSetting = get(this.data, 'twitter', []).map((e) => ({ ...e, id: this.key++ }))
+    this.telegramSetting = get(this.data, 'telegram', []).map((e) => ({ ...e, id: this.key++ }))
+    this.facebookSetting = get(this.data, 'facebook', []).map((e) => ({ ...e, id: this.key++ }))
+    this.customTaskSetting = get(this.data, 'optional', []).map((e) => ({ ...e, id: this.key++ }))
+    this.discordSetting = get(this.data, 'discord', []).map((e) => ({ ...e, id: this.key++ }))
   }
 
   get twitterTaskName() {
