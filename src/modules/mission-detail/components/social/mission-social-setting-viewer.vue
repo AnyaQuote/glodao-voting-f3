@@ -122,6 +122,7 @@
 </template>
 
 <script lang="ts">
+import { EMPTY_ARRAY } from '@/constants'
 import { Data, SocialTaskType, SocialType, Task } from '@/models/MissionModel'
 import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
@@ -135,18 +136,22 @@ export default class MissionSocialSettingViewer extends Vue {
   key = 0
   readonly SocialTaskType = SocialTaskType
 
-  twitterSetting: any[] = []
-  telegramSetting: any[] = []
-  facebookSetting: any[] = []
-  customTaskSetting: any[] = []
-  discordSetting: any[] = []
+  twitterSetting: Task[] = EMPTY_ARRAY
+  telegramSetting: Task[] = EMPTY_ARRAY
+  facebookSetting: Task[] = EMPTY_ARRAY
+  customTaskSetting: Task[] = EMPTY_ARRAY
+  discordSetting: Task[] = EMPTY_ARRAY
 
   created() {
-    this.twitterSetting = get(this.data, SocialType.TWITTER, []).map((e) => ({ ...e, id: this.key++ }))
-    this.telegramSetting = get(this.data, SocialType.TELEGRAM, []).map((e) => ({ ...e, id: this.key++ }))
-    this.facebookSetting = get(this.data, SocialType.FACEBOOK, []).map((e) => ({ ...e, id: this.key++ }))
-    this.discordSetting = get(this.data, SocialType.DISCORD, []).map((e) => ({ ...e, id: this.key++ }))
-    this.customTaskSetting = get(this.data, 'optional', []).map((e) => ({ ...e, id: this.key++ }))
+    this.twitterSetting =
+      get(this.data, SocialType.TWITTER, null)?.map((e) => ({ ...e, id: this.key++ })) || EMPTY_ARRAY
+    this.telegramSetting =
+      get(this.data, SocialType.TELEGRAM, null)?.map((e) => ({ ...e, id: this.key++ })) || EMPTY_ARRAY
+    this.facebookSetting =
+      get(this.data, SocialType.FACEBOOK, null)?.map((e) => ({ ...e, id: this.key++ })) || EMPTY_ARRAY
+    this.discordSetting =
+      get(this.data, SocialType.DISCORD, null)?.map((e) => ({ ...e, id: this.key++ })) || EMPTY_ARRAY
+    this.customTaskSetting = get(this.data, 'optional', null)?.map((e) => ({ ...e, id: this.key++ })) || EMPTY_ARRAY
   }
 
   get twitterTaskName() {
