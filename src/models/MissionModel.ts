@@ -112,6 +112,7 @@ export interface OptionalTokenItem {
 export enum SocialType {
   TELEGRAM = 'telegram',
   TWITTER = 'twitter',
+  DISCORD = 'discord',
   FACEBOOK = 'facebook',
   CUSTOM = 'custom',
 }
@@ -129,6 +130,7 @@ export enum SocialTaskComponent {
   FOLLOW_TWITTER = 'twitter-follow-task',
   QUOTE_TWITTER = 'twitter-quote-task',
   COMMENT_TWITTER = 'twitter-comment-task',
+  JOIN_DISCORD = 'discord-join-task',
   FOLLOW_FACEBOOK = 'facebook-follow-task',
   CUSTOM_TASK = 'custom-task',
 }
@@ -151,4 +153,5 @@ export interface Task {
   isLinkRequired?: boolean
   hashtag?: string
   embedLink?: string
+  guildId?: string
 }
