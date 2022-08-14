@@ -2,8 +2,17 @@
   <v-form v-model="valid">
     <!-- ------------------------------------ MISSION TYPE -------------------------------------------------- -->
     <div class="title font-weight-bold bluePrimary--text">Mission setting</div>
+    <!-- ---------------------------------------------------------------------------------------------------- -->
+
+    <div class="font-weight-bold text-subtitle-1 my-2">Task description</div>
+    <app-textarea
+      :value="taskDesciption"
+      @change="vm.updateIatInfo('taskDescription', $event)"
+      placeholder="Enter task description, guideline or developer notes..."
+    />
 
     <!-- ---------------------------------------------------------------------------------------------------- -->
+    <div class="font-weight-bold text-subtitle-1 my-2">Task step setting</div>
     <iat-task-collector
       :rules="[$rules.required]"
       :value="vm.taskSetting"
@@ -52,5 +61,4 @@ export default class InAppTrialTaskSetting extends Vue {
   }
 }
 </script>
-
 <style scoped></style>
