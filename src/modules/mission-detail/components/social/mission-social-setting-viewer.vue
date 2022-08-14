@@ -135,11 +135,11 @@ export default class MissionSocialSettingViewer extends Vue {
   key = 0
   readonly SocialTaskType = SocialTaskType
 
-  twitterSetting: Task[] = []
-  telegramSetting: Task[] = []
-  facebookSetting: Task[] = []
-  customTaskSetting: Task[] = []
-  discordSetting: Task[] = []
+  twitterSetting: any[] = []
+  telegramSetting: any[] = []
+  facebookSetting: any[] = []
+  customTaskSetting: any[] = []
+  discordSetting: any[] = []
 
   created() {
     this.twitterSetting = get(this.data, SocialType.TWITTER, []).map((e) => ({ ...e, id: this.key++ }))
