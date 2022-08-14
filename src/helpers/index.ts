@@ -1,6 +1,7 @@
 import {
   COMMENT_TASK_TYPE_DEFAULT_CONFIG,
   CUSTOM_TASK_TYPE_DEFAULT_CONFIG,
+  DISCORD_JOIN_TASK_TYPE_DEFAULT_CONFIG,
   ERROR_MSG_SOCIAL_SETTING_DATA_NOT_FOUND,
   ERROR_MSG_SOCIAL_SETTING_TYPE_NOT_FOUND,
   FOLLOW_TASK_TYPE_DEFAULT_CONFIG,
@@ -66,6 +67,17 @@ export const getDefaultSettingConfig = (social: string, type: string, key: numbe
         return {
           setting: QUOTE_TASK_TYPE_DEFAULT_CONFIG,
           component: SocialTaskComponent.QUOTE_TWITTER,
+          key,
+        }
+      default:
+        throw Error(ERROR_MSG_SOCIAL_SETTING_DATA_NOT_FOUND)
+    }
+  } else if (social === SocialType.DISCORD) {
+    switch (type) {
+      case SocialTaskType.JOIN_SERVER:
+        return {
+          setting: DISCORD_JOIN_TASK_TYPE_DEFAULT_CONFIG,
+          component: SocialTaskComponent.JOIN_DISCORD,
           key,
         }
       default:
