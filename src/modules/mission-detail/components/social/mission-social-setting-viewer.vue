@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/valid-v-for -->
 <template>
   <div class="d-flex flex-column">
     <!-- ----------------------------- DISPLAY TWITTER SETTING ----------------------------------------------- -->
