@@ -39,7 +39,7 @@
       1. Go to discord <v-icon size="18">mdi-cog</v-icon> <strong>User Settings</strong> > <strong>Advanced</strong> and
       enable <strong>Developer Mode</strong><br />
       2. Find your discord server logo on the discord side bar, right click and select <strong>Copy ID</strong> option
-      to get your guild Id
+      to get your server Id
     </div>
   </expand-container>
 </template>
