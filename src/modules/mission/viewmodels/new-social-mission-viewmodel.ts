@@ -33,6 +33,7 @@ export class NewSocialMissionViewModel {
   @observable twitter: TaskConfig[] = EMPTY_ARRAY
   @observable facebook: TaskConfig[] = EMPTY_ARRAY
   @observable custom: TaskConfig[] = EMPTY_ARRAY
+  @observable discord: TaskConfig[] = EMPTY_ARRAY
 
   @observable showSelectDialog = false
   @observable selectedSocialType = EMPTY_STRING
@@ -123,6 +124,9 @@ export class NewSocialMissionViewModel {
     }
     if (this.facebook.length > 0) {
       assign(settings, { [SocialType.FACEBOOK]: extractTaskSettings(this.facebook) })
+    }
+    if (this.discord.length > 0) {
+      assign(settings, { [SocialType.DISCORD]: extractTaskSettings(this.discord) })
     }
     if (this.custom.length > 0) {
       assign(settings, { optional: extractTaskSettings(this.custom) })
@@ -257,7 +261,9 @@ export class NewSocialMissionViewModel {
   // }
 
   @computed get hasSettings() {
-    return this.telegram.length || this.twitter.length || this.facebook.length || this.custom.length
+    return (
+      this.telegram.length || this.twitter.length || this.discord.length || this.facebook.length || this.custom.length
+    )
   }
 
   @computed get projectStartDate() {
