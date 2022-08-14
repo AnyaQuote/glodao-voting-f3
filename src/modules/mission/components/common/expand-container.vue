@@ -11,7 +11,10 @@
             contain
             :src="require('@/assets/icons/telegram.svg')"
           />
-          <v-icon v-else-if="type === 'facebook'" v-html="'fab fa-facebook'" size="48" color="app-blue" />
+          <v-icon v-else-if="type === 'discord'" size="32" class="py-3 px-2 purple rounded-circle" color="white">
+            fab fa-discord
+          </v-icon>
+          <v-icon v-else-if="type === 'facebook'" size="48" color="app-blue">fab fa-facebook</v-icon>
           <v-icon v-else-if="type === 'custom'" size="48" color="blue-diversity">mdi-checkbox-marked-circle</v-icon>
           <img v-else width="48" height="48" contain :src="require('@/assets/icons/learn-to-earn.svg')" />
         </slot>

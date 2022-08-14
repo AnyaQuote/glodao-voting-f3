@@ -52,6 +52,39 @@
     </v-sheet>
     <!-- ------------------------------------------------------------------------------------------------------ -->
 
+    <!-- ----------------------------- DISPLAY DISCORD SETTING ------------------------------------------------ -->
+    <v-sheet
+      v-for="(task, index) in discordSetting"
+      :key="index + discordSetting.length"
+      class="pa-5 mt-2"
+      rounded="lg"
+      outlined
+    >
+      <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
+        <v-icon
+          v-html="'fab fa-discord'"
+          color="white"
+          size="20"
+          class="d-none d-sm-block purple rounded-circle discord-icon-padding"
+        />
+        <div class="ml-0 ml-sm-2" />
+        <span class="font-weight-600"> Discord task</span>
+        <v-sheet width="4" height="4" rounded="circle" class="d-none d-sm-block neutral-10 mx-sm-3 mx-1" />
+        <span class="neutral-10--text text-subtitle-2 text-capitalize">
+          {{ discordTaskName(task.type, task.page) }}
+        </span>
+      </div>
+      <div class="mt-2 text-truncate text-subtitle-2 font-weight-600" :style="`max-width: ${linkWidth}`">
+        <span>Group invite link:&nbsp;</span>
+        <a class="blue-diversity--text" :href="task.link">{{ task.link }}</a>
+      </div>
+      <div v-if="task.type === 'follow'" class="mt-2 text-truncate text-subtitle-2 font-weight-600">
+        <span>Server ID:&nbsp;</span>
+        <a class="blue-diversity--text">{{ task.guildId }}</a>
+      </div>
+    </v-sheet>
+    <!-- ------------------------------------------------------------------------------------------------------ -->
+
     <!-- ----------------------------- DISPLAY FACEBOOK SETTING ----------------------------------------------- -->
     <v-sheet
       v-for="(task, index) in facebookSetting"
@@ -122,18 +155,24 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class MissionSocialSettingViewer extends Vue {
   @Prop({ required: true }) data!: Data
 
+  index = 0
+
   twitterSetting: Task[] = []
   telegramSetting: Task[] = []
   facebookSetting: Task[] = []
   customTaskSetting: Task[] = []
-  // discordSetting: Task[] = []
+  discordSetting: Task[] = []
 
   created() {
     this.twitterSetting = get(this.data, 'twitter', [])
     this.telegramSetting = get(this.data, 'telegram', [])
     this.facebookSetting = get(this.data, 'facebook', [])
     this.customTaskSetting = get(this.data, 'optional', [])
-    // this.discordSetting = get(this.data, 'discord', [])
+    this.discordSetting = get(this.data, 'discord', [])
+  }
+
+  get key() {
+    return this.index++
   }
 
   get twitterTaskName() {
@@ -162,6 +201,17 @@ export default class MissionSocialSettingViewer extends Vue {
     }
   }
 
+  get discordTaskName() {
+    return (taskType, taskPage) => {
+      switch (taskType) {
+        case 'follow':
+          return `Join discord ${taskPage} group`
+        default:
+          return `${taskType} discord group`
+      }
+    }
+  }
+
   get facebookTaskName() {
     return (taskType, taskPage) => {
       switch (taskType) {
@@ -179,4 +229,8 @@ export default class MissionSocialSettingViewer extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.discord-icon-padding {
+  padding: 6px 4px 6px 4px;
+}
+</style>
