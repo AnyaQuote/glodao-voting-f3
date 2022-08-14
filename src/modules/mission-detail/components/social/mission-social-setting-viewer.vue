@@ -17,7 +17,7 @@
         <a class="blue-diversity--text" :href="task.link">{{ task.link }}</a>
       </div>
       <!-- </div> -->
-      <div v-if="'quote' === task.type" class="mt-2 text-subtitle-2 font-weight-600">
+      <div v-if="SocialTaskType.QUOTE === task.type" class="mt-2 text-subtitle-2 font-weight-600">
         <span>Hastag:&nbsp;</span>
         <span v-for="(item, index) in task.hashtag" :key="index" class="blue-diversity--text">#{{ item }}&nbsp;</span>
       </div>
@@ -67,7 +67,7 @@
         <span>Group invite link:&nbsp;</span>
         <a class="blue-diversity--text" :href="task.link">{{ task.link }}</a>
       </div>
-      <div v-if="task.type === 'follow'" class="mt-2 text-truncate text-subtitle-2 font-weight-600">
+      <div v-if="task.type === SocialTaskType.JOIN_SERVER" class="mt-2 text-truncate text-subtitle-2 font-weight-600">
         <span>Server ID:&nbsp;</span>
         <a class="blue-diversity--text">{{ task.guildId }}</a>
       </div>
@@ -93,13 +93,7 @@
     <!-- ------------------------------------------------------------------------------------------------------ -->
 
     <!-- ----------------------------- DISPLAY CUSTOM SETTING ----------------------------------------------- -->
-    <v-sheet
-      v-for="(task, index) in customTaskSetting"
-      :key="index + twitterSetting.length + facebookSetting.length + customTaskSetting.length"
-      class="pa-5 mt-2"
-      rounded="lg"
-      outlined
-    >
+    <v-sheet v-for="task in customTaskSetting" :key="task.id" class="pa-5 mt-2" rounded="lg" outlined>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
         <v-icon
           v-html="'mdi-checkbox-marked-circle'"
@@ -128,7 +122,7 @@
 </template>
 
 <script lang="ts">
-import { Data, Task } from '@/models/MissionModel'
+import { Data, SocialTaskType, SocialType, Task } from '@/models/MissionModel'
 import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -139,6 +133,7 @@ export default class MissionSocialSettingViewer extends Vue {
   @Prop({ required: true }) data!: Data
 
   key = 0
+  readonly SocialTaskType = SocialTaskType
 
   twitterSetting: Task[] = []
   telegramSetting: Task[] = []
@@ -147,21 +142,21 @@ export default class MissionSocialSettingViewer extends Vue {
   discordSetting: Task[] = []
 
   created() {
-    this.twitterSetting = get(this.data, 'twitter', []).map((e) => ({ ...e, id: this.key++ }))
-    this.telegramSetting = get(this.data, 'telegram', []).map((e) => ({ ...e, id: this.key++ }))
-    this.facebookSetting = get(this.data, 'facebook', []).map((e) => ({ ...e, id: this.key++ }))
+    this.twitterSetting = get(this.data, SocialType.TWITTER, []).map((e) => ({ ...e, id: this.key++ }))
+    this.telegramSetting = get(this.data, SocialType.TELEGRAM, []).map((e) => ({ ...e, id: this.key++ }))
+    this.facebookSetting = get(this.data, SocialType.FACEBOOK, []).map((e) => ({ ...e, id: this.key++ }))
+    this.discordSetting = get(this.data, SocialType.DISCORD, []).map((e) => ({ ...e, id: this.key++ }))
     this.customTaskSetting = get(this.data, 'optional', []).map((e) => ({ ...e, id: this.key++ }))
-    this.discordSetting = get(this.data, 'discord', []).map((e) => ({ ...e, id: this.key++ }))
   }
 
   get twitterTaskName() {
     return (taskType, taskPage) => {
       switch (taskType) {
-        case 'comment':
+        case SocialTaskType.COMMENT:
           return `Like and reply a post from ${taskPage}`
-        case 'quote':
+        case SocialTaskType.QUOTE:
           return `Quote a tweet from ${taskPage}`
-        case 'follow':
+        case SocialTaskType.FOLLOW:
           return `Follow project twitter from ${taskPage}`
         default:
           return `${taskType} twitter`
@@ -172,7 +167,7 @@ export default class MissionSocialSettingViewer extends Vue {
   get telegramTaskName() {
     return (taskType) => {
       switch (taskType) {
-        case 'follow':
+        case SocialTaskType.FOLLOW:
           return 'Join telegram group'
         default:
           return `${taskType} telegram group`
@@ -183,7 +178,7 @@ export default class MissionSocialSettingViewer extends Vue {
   get discordTaskName() {
     return (taskType, taskPage) => {
       switch (taskType) {
-        case 'follow':
+        case SocialTaskType.JOIN_SERVER:
           return `Join discord ${taskPage} group`
         default:
           return `${taskType} discord group`
@@ -194,7 +189,7 @@ export default class MissionSocialSettingViewer extends Vue {
   get facebookTaskName() {
     return (taskType, taskPage) => {
       switch (taskType) {
-        case 'follow':
+        case SocialTaskType.FOLLOW:
           return `Follow ${taskPage} on facebook`
         default:
           return `Facebook task ${taskType}`
