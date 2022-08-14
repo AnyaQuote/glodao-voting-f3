@@ -143,7 +143,7 @@ export interface TaskConfig {
 }
 
 export interface Task {
-  id?: string
+  id?: number
   type?: SocialTaskType
   name?: string
   content?: string
