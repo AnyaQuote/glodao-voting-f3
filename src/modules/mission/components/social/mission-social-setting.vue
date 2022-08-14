@@ -59,6 +59,28 @@
 
       <v-divider class="my-7 dashed-border" />
 
+      <!-- ================================== CONFIG DISCORD TASK SETTING =================================== -->
+      <v-sheet
+        class="neutral-20 px-6 py-3 rounded-lg d-flex justify-space-between align-center cursor-pointer"
+        @click="vm.updateSelectDialogState(true, SocialType.DISCORD)"
+        v-ripple
+      >
+        <span class="text-subtitle-1 font-weight-bold">Discord setting</span>
+        <v-icon>mdi-plus</v-icon>
+      </v-sheet>
+      <template v-for="setting in vm.discord">
+        <component
+          :key="setting.key"
+          :is="setting.component"
+          :inputConfig="setting"
+          @remove="vm.removeSetting(SocialType.DISCORD, setting.key)"
+          @change="vm.updateSetting(SocialType.DISCORD, setting.key, $event)"
+        />
+      </template>
+      <!-- ================================================================================================== -->
+
+      <v-divider class="my-7 dashed-border" />
+
       <!-- ================================== CONFIG FACEBOOK TASK SETTING ================================== -->
       <v-sheet
         class="neutral-20 px-6 py-3 rounded-lg d-flex justify-space-between align-center cursor-pointer"
@@ -143,6 +165,7 @@ import { NewSocialMissionViewModel } from '../../viewmodels/new-social-mission-v
     [SocialTaskComponent.FOLLOW_TWITTER]: () => import('./twitter/twitter-follow-task.vue'),
     [SocialTaskComponent.QUOTE_TWITTER]: () => import('./twitter/twitter-quote-task.vue'),
     [SocialTaskComponent.COMMENT_TWITTER]: () => import('./twitter/twitter-comment-task.vue'),
+    [SocialTaskComponent.JOIN_DISCORD]: () => import('./discord/discord-join-task.vue'),
     [SocialTaskComponent.FOLLOW_FACEBOOK]: () => import('./facebook/follow-facebook-task.vue'),
     [SocialTaskComponent.CUSTOM_TASK]: () => import('./custom/custom-task.vue'),
     'social-task-select-dialog': () => import('./dialogs/social-task-select-dialog.vue'),
