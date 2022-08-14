@@ -63,8 +63,8 @@ export const FOLLOW_TASK_TYPE_DEFAULT_CONFIG = {
   page: EMPTY_STRING,
   required: true,
 }
-export const DISCORD_JOINS_TASK_TYPE_DEFAULT_CONFIG = {
-  type: SocialTaskType.FOLLOW,
+export const DISCORD_JOIN_TASK_TYPE_DEFAULT_CONFIG = {
+  type: SocialTaskType.JOIN_SERVER,
   guildId: EMPTY_STRING,
   link: EMPTY_STRING,
   page: EMPTY_STRING,

@@ -119,6 +119,7 @@ export enum SocialType {
 
 export enum SocialTaskType {
   FOLLOW = 'follow',
+  JOIN_SERVER = 'join-server',
   COMMENT = 'comment',
   QUOTE = 'quote',
   CUSTOM = 'custom',
@@ -142,6 +143,7 @@ export interface TaskConfig {
 }
 
 export interface Task {
+  id?: string
   type?: SocialTaskType
   name?: string
   content?: string
