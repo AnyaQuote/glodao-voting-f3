@@ -51,6 +51,27 @@
           </v-radio-group>
         </template>
 
+        <template v-if="vm.selectedSocialType === SocialType.DISCORD">
+          <v-radio-group v-model="selectedTaskType">
+            <v-sheet
+              class="py-4 px-4 mb-2 text-subtitle-2"
+              v-for="(option, index) in discordOptions"
+              :key="index"
+              outlined
+              rounded
+            >
+              <v-radio
+                :value="option.type"
+                :label="option.name"
+                color="blue-diversity"
+                off-icon="mdi-circle-outline"
+                on-icon="mdi-check-circle-outline"
+              >
+              </v-radio>
+            </v-sheet>
+          </v-radio-group>
+        </template>
+
         <template v-if="vm.selectedSocialType === SocialType.FACEBOOK">
           <v-radio-group v-model="selectedTaskType">
             <v-sheet
@@ -93,6 +114,7 @@
           </v-radio-group>
         </template>
       </v-card-text>
+
       <v-card-actions>
         <v-btn class="flex-grow" outlined @click="cancel">Cancel</v-btn>
         <div class="mx-2" />
@@ -132,6 +154,7 @@ export default class TelegramTaskSelectDialog extends Vue {
     { type: SocialTaskType.QUOTE, name: 'Quote a tweet' },
     { type: SocialTaskType.COMMENT, name: 'Like and reply post' },
   ]
+  readonly discordOptions = [{ type: SocialTaskType.FOLLOW, name: 'Join discord group' }]
   readonly facebookOptions = [{ type: SocialTaskType.FOLLOW, name: 'Follow a facebook fanpage' }]
   readonly customOptions = [{ type: SocialTaskType.CUSTOM, name: 'Customie your task' }]
 
