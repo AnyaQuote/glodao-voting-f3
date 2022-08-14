@@ -2,12 +2,12 @@
   <v-tabs class="rounded-lg mt-7 outlined" color="blue-diversity" background-color="neutral-100">
     <v-tab>App Description</v-tab>
     <v-tab>App Screenshot</v-tab>
-    <v-tab-item class="pa-6">
+    <v-tab-item class="pa-6 neutral-100">
       <p class="wspace-preline">
         {{ vm.missionAppDescription }}
       </p>
     </v-tab-item>
-    <v-tab-item class="pa-6">
+    <v-tab-item class="pa-6 neutral-100">
       <v-slide-group center-active class="hide-prev" :show-arrows="!$vuetify.breakpoint.mobile">
         <v-slide-item v-for="(source, index) in vm.missionAppScreenshots" :key="index" class="ma-2">
           <v-sheet rounded="lg" :width="vm.isWebApp ? 495 : 220" height="330">
