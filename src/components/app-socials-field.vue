@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- --------------------------------------------- SOCIAL LINK INPUTS --------------------------------------------- -->
-    <v-sheet v-for="(prop, index) in data" :key="index" class="row ma-0 pa-0 d-flex rounded">
+    <v-sheet v-for="(prop, index) in data" :key="index" class="d-flex rounded">
       <!-- ==== Type select ==== -->
       <app-select
-        class="col-3 rounded-r-0"
+        class="rounded-r-0"
         :items="platforms"
         :value="prop.type"
         :rules="[$rules.required]"
@@ -24,7 +24,7 @@
       </app-select>
       <!-- ==== Link input ==== -->
       <app-text-field
-        class="col-9 rounded-l-0"
+        class="rounded-l-0 w-90"
         :value="prop.link"
         @change="onChange(index, 'link', $event)"
         :rules="[$rules.required, $rules.url]"
@@ -135,4 +135,8 @@ export default class SocialLinkFields extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.w-90 {
+  width: 110%;
+}
+</style>
