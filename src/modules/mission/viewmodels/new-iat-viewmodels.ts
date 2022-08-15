@@ -169,6 +169,7 @@ export class NewInAppTrialViewModel {
       appStoreUrl: this.appStoreLink,
       googlePlayUrl: this.chPlayLink,
       webUrl: this.webAppLink,
+      taskDescription: this.taskDescription,
       tokenContractAddress: optTokenAddress,
       rewardToken: this.tokenName,
       decimals: optTokenDecimal,
@@ -332,13 +333,17 @@ export class NewInAppTrialViewModel {
     return get(this.iatInfo, 'screenShots', NULL)
   }
 
+  @computed get isMobilePlatform() {
+    return this.platformType === AppPlatform.MOBILE
+  }
+
   // ======== IN APP TRIAL APP INFO END ============
 
   @computed get taskSetting() {
     return get(this.iatInfo, 'tasks', EMPTY_ARRAY)
   }
 
-  @computed get isMobilePlatform() {
-    return this.platformType === AppPlatform.MOBILE
+  @computed get taskDescription() {
+    return get(this.iatInfo, 'taskDescription', EMPTY_STRING)
   }
 }

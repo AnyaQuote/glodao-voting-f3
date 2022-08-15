@@ -9,7 +9,7 @@
     <!-- --------------------------------------- PROJECT TOKEN FORM START --------------------------------------- -->
 
     <!-- <div v-if="vm.rewardType === tokenType"> -->
-    <div class="font-18 font-weight-bold mb-2">Token reward address</div>
+    <div class="font-18 font-weight-bold mb-2">Token contract address</div>
     <app-text-field
       :rules="[$rules.isAddress]"
       :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
