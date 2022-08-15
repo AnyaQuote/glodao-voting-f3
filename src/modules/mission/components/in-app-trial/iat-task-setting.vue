@@ -4,12 +4,18 @@
     <div class="title font-weight-bold bluePrimary--text">Mission setting</div>
     <!-- ---------------------------------------------------------------------------------------------------- -->
 
-    <div class="font-weight-bold text-subtitle-1 my-2">Task description</div>
+    <div class="font-weight-bold text-subtitle-1 my-2">Task description<span class="red--text">*</span></div>
     <app-textarea
       :value="taskDesciption"
+      :rules="[$rules.required]"
       @change="vm.updateIatInfo('taskDescription', $event)"
       placeholder="Enter task description, guideline or developer notes..."
     />
+    <i class="text-caption font-weight-regular"
+      ><u>Notes:</u> Must include guideline on how to use can get their <strong>unique ID</strong>. We will ask users to
+      send us their <strong>unique ID</strong> from your app, which plays as an identify key, to us so that we can
+      recognize who has used your app and finished all the mission task's steps below.
+    </i>
 
     <!-- ---------------------------------------------------------------------------------------------------- -->
     <div class="font-weight-bold text-subtitle-1 my-2">Task step setting</div>
