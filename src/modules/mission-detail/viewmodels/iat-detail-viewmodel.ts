@@ -141,6 +141,10 @@ export class InAppTrialDetailViewModel {
   @computed get secret_key() {
     return get(this.apiKey, 'secret', EMPTY_STRING)
   }
+
+  @computed get taskDescription() {
+    return get(this.mission, 'metadata.taskDescription', EMPTY_STRING)
+  }
   // ==================== IAT APP SETTING END =========================
 
   @computed get missionAppDescription() {

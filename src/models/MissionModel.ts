@@ -28,6 +28,7 @@ export interface MetaData {
   appStoreUrl?: string
   googlePlayUrl?: string
   webUrl?: string
+  taskDescription?: string
 }
 
 export interface Mission {
@@ -69,6 +70,7 @@ export interface InAppTrialInfo {
   appStoreLink?: string
   chPlayLink?: string
   appDescription?: string
+  taskDescription?: string
 }
 
 export interface InAppTrialTask {
@@ -88,6 +90,7 @@ export type IatInfoProp =
   | 'chPlayLink'
   | 'webAppLink'
   | 'appDescription'
+  | 'taskDescription'
 
 export enum MissionType {
   LEARN = 'learn',

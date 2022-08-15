@@ -2,7 +2,7 @@
   <div>
     <!-- --------------------------- DYNAMIC TASK ------------------------------- -->
     <div v-for="(task, index) in tasks" :key="index">
-      <div class="d-flex mt-6">
+      <div class="d-flex" :class="{ 'mt-6': index > 0 }">
         <v-sheet width="79" height="79" class="rounded-lg blue-2 d-flex">
           <span class="ma-auto font-weight-bold text-h4">{{ index + 1 }}</span>
         </v-sheet>
