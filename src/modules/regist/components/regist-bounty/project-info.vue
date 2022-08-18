@@ -9,7 +9,7 @@
       Project information
     </v-chip>
 
-    <v-form ref="project-info-form" v-model="valid" class="form pa-6">
+    <v-form ref="project-info-form" @input="vm.changeFormState" class="form pa-6">
       <div class="font-18 font-weight-bold">Project name<span class="app-red--text">*</span></div>
       <app-text-field
         :rules="[$rules.required]"
@@ -78,6 +78,7 @@
           class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
           depressed
           outlined
+          :disabled="!vm.formState"
           width="100%"
           height="40"
           @click.prevent="goback"
@@ -87,8 +88,8 @@
         <div class="mx-3" />
         <v-btn
           class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
-          :class="{ 'linear-blue--bg white--text': valid }"
-          :disabled="!valid"
+          :class="{ 'linear-blue--bg white--text': vm.formState }"
+          :disabled="!vm.formState"
           depressed
           width="100%"
           height="40"
@@ -117,7 +118,6 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 export default class ProjectInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('project-info-form') form
-  valid = false
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   submit() {
     this.form.validate() && this.vm.nextStep(1.2)

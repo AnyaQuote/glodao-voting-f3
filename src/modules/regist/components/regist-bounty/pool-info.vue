@@ -9,7 +9,7 @@
       Bounty Pool Information
     </v-chip>
 
-    <v-form ref="fund-info-form" v-model="valid" class="pa-6">
+    <v-form ref="fund-info-form" @input="vm.changeFormState" class="pa-6">
       <!-- ----------------------------------- REWARD INFORMATION ----------------------------------------- -->
       <div class="blue-diversity--text font-18 font-weight-bold">Mission Information</div>
       <div class="flex-grow-1 mb-2 d-flex flex-column flex-sm-row justify-space-between">
@@ -111,8 +111,9 @@
           class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
           depressed
           outlined
-          width="100%"
           height="40"
+          width="100%"
+          :disabled="!vm.formState || vm.tokenInfoLoading"
           @click.prevent="goBackPreviousStep"
         >
           Back
@@ -120,8 +121,8 @@
         <div class="mx-3" />
         <v-btn
           class="mt-7 font-weight-600 text-none text-subtitle-1 flex-grow"
-          :class="{ 'linear-blue--bg white--text': valid && !vm.tokenInfoLoading }"
-          :disabled="!valid || vm.tokenInfoLoading"
+          :class="{ 'linear-blue--bg white--text': vm.formState && !vm.tokenInfoLoading }"
+          :disabled="!vm.formState || vm.tokenInfoLoading"
           width="100%"
           height="40"
           depressed
@@ -152,7 +153,6 @@ export default class RaisingInfo extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('confirm-dialog') dialog
   @Ref('fund-info-form') form
-  valid = false
   submit() {
     this.form.validate() && this.dialog.open()
   }
