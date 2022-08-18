@@ -142,7 +142,7 @@ export class NewLearnMissionViewModel {
     const optTokenDecimal = pool.data?.optionalRewardTokenDecimals
     const optTokenAddress = pool.data?.optionalTokenAddress
     const optTokenLogo = pool.data?.optionalTokenLogo
-    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress as string)
+    const optTokenBasePrice = this.tokenBasePrice
 
     const mission: Mission = {
       ownerAddress: this._auth.attachedAddress,
@@ -245,7 +245,7 @@ export class NewLearnMissionViewModel {
   }
 
   @computed get tokenBAddress() {
-    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
+    return this.pool.data?.optionalTokenAddress || '123123123'
   }
 
   @computed get tokenBName() {
