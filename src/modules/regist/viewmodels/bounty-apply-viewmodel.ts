@@ -73,6 +73,8 @@ export class BountyApplyViewModel {
   @observable votingHandler?: VotingHandler
   // @observable rewardType = RewardDistributionType.TOKEN
 
+  @observable formState = false
+
   constructor() {
     this.loadData()
   }
@@ -320,7 +322,12 @@ export class BountyApplyViewModel {
     }
   }
 
+  @action.bound changeFormState(value: boolean) {
+    this.formState = value
+  }
+
   @action.bound changeStep(value: number) {
+    if (!this.formState) return
     if (this.creating) return
     if (value <= this.unlockedStep) {
       this.step = value
