@@ -5,7 +5,7 @@
     </div>
     <v-divider />
     <v-form v-model="valid" class="pa-7">
-      <!-- ------------------------------------ MISSION INFORMATION ------------------------------------------- -->
+      <!-- ------------------------------------ MISSION INFORMATION START ------------------------------------------- -->
       <div class="d-flex flex-column">
         <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
         <div class="font-18 font-weight-bold mt-3 mb-1">Mission name<span class="app-red--text">*</span></div>
@@ -38,10 +38,11 @@
           class="mt-2"
         />
       </div>
+      <!-- ------------------------------------ MISSION INFORMATION END ---------------------------------------------- -->
 
       <v-divider class="mt-10 my-5 dashed-border" />
 
-      <!-- ------------------------------------- REWARD INFORMATION -------------------------------------------- -->
+      <!-- ------------------------------------- REWARD INFORMATION START -------------------------------------------- -->
       <div class="d-flex flex-column">
         <div class="title font-weight-bold blue-diversity--text">Reward information</div>
         <div class="font-18 font-weight-bold mt-6">
@@ -85,9 +86,19 @@
           </v-sheet>
         </div>
       </div>
+      <!-- ------------------------------------- REWARD INFORMATION END ---------------------------------------------- -->
       <v-divider class="mt-10 my-5 dashed-border" />
+      <!-- ------------------------------------- TOKEN BASE PRICE INFO START ------------------------------------------ -->
+      <app-token-converter
+        :value="vm.tokenBasePrice"
+        :tokenName="vm.tokenBName"
+        :tokenAddress="vm.tokenBAddress"
+        @change="vm.changeMissionInfo('tokenBasePrice', $event)"
+      />
+      <!-- ------------------------------------- TOKEN BASE PRICE INFO END -------------------------------------------- -->
+      <v-divider class="my-5 dashed-border" />
 
-      <!-- -------------------------------------- MISSION TIME ------------------------------------------------- -->
+      <!-- -------------------------------------- MISSION TIME START ------------------------------------------------- -->
       <div class="mt-7">
         <div>
           <span class="title font-weight-bold blue-diversity--text">Mision time</span>
@@ -114,10 +125,11 @@
           @change="vm.changeMissionInfo('endDate', $event)"
         />
       </div>
+      <!-- -------------------------------------- MISSION TIME END --------------------------------------------------- -->
 
       <v-divider class="dashed-border" />
 
-      <!-- -------------------------------------- BUTTONS --------------------------------------------------------- -->
+      <!-- ----------------------------------------- BUTTONS START ---------------------------------------------------- -->
       <div class="d-flex mt-7">
         <div class="flex-grow">
           <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Cancel </v-btn>
@@ -138,9 +150,8 @@
           </v-btn>
         </div>
       </div>
+      <!-- ------------------------------------------------------------------------------------------------------------ -->
     </v-form>
-
-    <!-- ------------------------------------------------------------------------------------------------------- -->
   </v-sheet>
 </template>
 
@@ -153,6 +164,7 @@ import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 @Observer
 @Component({
   components: {
+    'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },

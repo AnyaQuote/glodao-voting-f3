@@ -346,4 +346,16 @@ export class NewInAppTrialViewModel {
   @computed get taskDescription() {
     return get(this.iatInfo, 'taskDescription', EMPTY_STRING)
   }
+
+  @computed get tokenBasePrice() {
+    return get(this.iatInfo, 'tokenBasePrice', EMPTY_STRING)
+  }
+
+  @computed get tokenBAdress() {
+    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
+  }
+
+  @computed get tokenBName() {
+    return this.pool.data?.optionalTokenName || EMPTY_STRING
+  }
 }

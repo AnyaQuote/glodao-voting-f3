@@ -47,9 +47,18 @@
       </div>
     </v-sheet>
     <!-- ---------------------------------------------------------------------------------------------------- -->
-    <v-divider class="dashed-border mt-7" />
-    <!-- ---------------------------------------------------------------------------------------------------- -->
+    <v-divider class="dashed-border my-7" />
 
+    <app-token-converter
+      :value="vm.tokenBasePrice"
+      :tokenAddress="vm.tokenBAddress"
+      :tokenName="vm.tokenBName"
+      @change="vm.updateIatInfo('tokenBasePrice', $event)"
+    />
+
+    <v-divider class="dashed-border mt-7" />
+
+    <!-- ---------------------------------------------------------------------------------------------------- -->
     <div class="title font-weight-bold bluePrimary--text mt-7">Mission time</div>
     <app-datetime-picker
       class="mt-4"
@@ -98,6 +107,7 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 @Observer
 @Component({
   components: {
+    'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },
 })

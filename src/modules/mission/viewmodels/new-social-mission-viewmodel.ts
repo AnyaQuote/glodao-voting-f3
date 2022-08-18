@@ -134,22 +134,6 @@ export class NewSocialMissionViewModel {
     return settings
   }
 
-  /**
-   * Get token base price
-   * If address from testnet, api wont wỏk
-   * @param address token address
-   * @returns price value of token
-   */
-  async getTokenBasePriceValue(address: string) {
-    try {
-      const res = await this._api.getTokenPrice(address)
-      return res.price._value
-    } catch (_) {
-      // Incase testnet failed, return 1
-      return '1'
-    }
-  }
-
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const status = 'upcomming'
     const { website, ...socialLinks } = pool.data?.socialLinks
@@ -161,7 +145,7 @@ export class NewSocialMissionViewModel {
     const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
     const optTokenAddress = pool.data!.optionalTokenAddress
     const optTokenLogo = pool.data!.optionalTokenLogo
-    const optTokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress!)
+    const optTokenBasePrice = this.tokenBasePrice
     const mission: Mission = {
       type: MissionType.SOCIAL,
       rewardAmount,
@@ -284,5 +268,17 @@ export class NewSocialMissionViewModel {
 
   @computed get missionEndDate() {
     return get(this.missionInfo, 'endDate', '')
+  }
+
+  @computed get tokenBasePrice() {
+    return get(this.missionInfo, 'tokenBasePrice', EMPTY_STRING)
+  }
+
+  @computed get tokenBAddress() {
+    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
+  }
+
+  @computed get tokenBName() {
+    return this.pool.data?.optionalTokenName || EMPTY_STRING
   }
 }

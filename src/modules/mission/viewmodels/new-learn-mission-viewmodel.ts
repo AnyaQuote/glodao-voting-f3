@@ -239,4 +239,16 @@ export class NewLearnMissionViewModel {
   @computed get missionEndDate() {
     return get(this.missionInfo, 'endDate', '')
   }
+
+  @computed get tokenBasePrice() {
+    return get(this.missionInfo, 'tokenBasePrice', EMPTY_STRING)
+  }
+
+  @computed get tokenBAddress() {
+    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
+  }
+
+  @computed get tokenBName() {
+    return this.pool.data?.optionalTokenName || EMPTY_STRING
+  }
 }
