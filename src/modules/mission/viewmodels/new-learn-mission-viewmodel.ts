@@ -229,7 +229,7 @@ export class NewLearnMissionViewModel {
   }
 
   @computed get tokenBAddress() {
-    return this.pool.data?.optionalTokenAddress || '123123123'
+    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
   }
 
   @computed get tokenBName() {
