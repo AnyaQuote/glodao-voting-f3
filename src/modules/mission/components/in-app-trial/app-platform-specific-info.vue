@@ -6,7 +6,7 @@
       <v-sheet rounded outlined class="flex-grow py-4 px-5" :class="{ 'active-type': !vm.isMobilePlatform }">
         <v-radio label="Web app" color="blue-diversity" :value="platformEnum.WEB">
           <template #label>
-            <span :class="{ 'active-type': !vm.isMobilePlatform }">Web app</span>
+            <span :class="{ 'active-type': !vm.isMobilePlatform }">Others app</span>
           </template>
         </v-radio>
       </v-sheet>
