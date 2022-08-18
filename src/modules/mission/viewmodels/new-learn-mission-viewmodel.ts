@@ -115,22 +115,6 @@ export class NewLearnMissionViewModel {
     }
   }
 
-  /**
-   * Get token base price
-   * If address from testnet, api wont wỏk
-   * @param address token address
-   * @returns price value of token
-   */
-  async getTokenBasePriceValue(address: string) {
-    try {
-      const res = await this._api.getTokenPrice(address)
-      return res.price._value
-    } catch (_) {
-      // Incase testnet failed, return 1
-      return '1'
-    }
-  }
-
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const status = 'upcomming'
     const { website, ...socialLinks } = get(pool, 'data.socialLinks')
