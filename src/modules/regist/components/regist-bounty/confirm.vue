@@ -72,40 +72,50 @@
           <li class="mb-2 font-weight-600"></li>
           <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
         </ul> -->
-
-        <v-btn
-          v-if="!vm.approved"
-          class="linear-blue--bg white--text font-weight-bold text-none mt-6"
-          block
-          height="40"
-          depressed
-          :loading="vm.approving || vm.approveChecking"
-          @click="vm.approve()"
-        >
-          <span class="btn-font">{{ vm.projectInfo.tokenName }} approve contract</span>
-        </v-btn>
-        <v-btn
-          v-else-if="$_get(vm.projectInfo, 'optionalTokenAddress') && !vm.optionalApproved"
-          class="linear-blue--bg white--text font-weight-bold text-none mt-6"
-          block
-          height="40"
-          depressed
-          :loading="vm.optionalApproving || vm.approveChecking"
-          @click="vm.optionalApprove()"
-        >
-          <span class="btn-font">{{ vm.projectInfo.optionalTokenName }} approve contract</span>
-        </v-btn>
-        <v-btn
-          v-else
-          class="linear-blue--bg white--text font-weight-bold text-none mt-6 text-subtitle-1"
-          width="100%"
-          height="40"
-          depressed
-          @click="submit"
-          :loading="vm.creating"
-        >
-          Confirm and pay fee
-        </v-btn>
+        <div class="d-flex">
+          <v-btn
+            class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
+            depressed
+            outlined
+            width="100%"
+            height="40"
+            @click.prevent="goBackPreviousStep"
+            :loading="vm.approving || vm.approveChecking || vm.optionalApproving || vm.approveChecking || vm.creating"
+          >
+            Back
+          </v-btn>
+          <div class="mx-3" />
+          <v-btn
+            v-if="!vm.approved"
+            class="linear-blue--bg white--text font-weight-bold text-none mt-6 flex-grow"
+            height="40"
+            depressed
+            :loading="vm.approving || vm.approveChecking"
+            @click="vm.approve()"
+          >
+            <span class="btn-font">{{ vm.projectInfo.tokenName }} approve contract</span>
+          </v-btn>
+          <v-btn
+            v-else-if="$_get(vm.projectInfo, 'optionalTokenAddress') && !vm.optionalApproved"
+            class="linear-blue--bg white--text font-weight-bold text-none mt-6 flex-grow"
+            height="40"
+            depressed
+            :loading="vm.optionalApproving || vm.approveChecking"
+            @click="vm.optionalApprove()"
+          >
+            <span class="btn-font">{{ vm.projectInfo.optionalTokenName }} approve contract</span>
+          </v-btn>
+          <v-btn
+            v-else
+            class="linear-blue--bg white--text font-weight-bold text-none mt-6 text-subtitle-1 flex-grow"
+            height="40"
+            depressed
+            @click="submit"
+            :loading="vm.creating"
+          >
+            Confirm and pay fee
+          </v-btn>
+        </div>
       </div>
     </v-form>
   </v-sheet>
@@ -128,6 +138,10 @@ export default class ConfirmPayment extends Vue {
 
   submit() {
     this.form.validate() && this.vm.submit()
+  }
+
+  goBackPreviousStep() {
+    this.vm.changeStep(1.2)
   }
 }
 </script>

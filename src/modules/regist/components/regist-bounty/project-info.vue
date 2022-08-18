@@ -73,17 +73,30 @@
         class="mt-3"
       />
 
-      <v-btn
-        class="white--text font-weight-bold text-none text-subtitle-1 mt-6"
-        :class="valid && 'linear-blue--bg'"
-        :disabled="!valid"
-        depressed
-        width="100%"
-        height="40"
-        @click.prevent="submit"
-      >
-        Continue
-      </v-btn>
+      <div class="d-flex">
+        <v-btn
+          class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
+          depressed
+          outlined
+          width="100%"
+          height="40"
+          @click.prevent="goback"
+        >
+          Cancel
+        </v-btn>
+        <div class="mx-3" />
+        <v-btn
+          class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
+          :class="{ 'linear-blue--bg white--text': valid }"
+          :disabled="!valid"
+          depressed
+          width="100%"
+          height="40"
+          @click.prevent="submit"
+        >
+          Continue
+        </v-btn>
+      </div>
     </v-form>
   </v-sheet>
 </template>
@@ -108,6 +121,9 @@ export default class ProjectInfo extends Vue {
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   submit() {
     this.form.validate() && this.vm.nextStep(1.2)
+  }
+  goback() {
+    this.$router.go(-1)
   }
 }
 </script>

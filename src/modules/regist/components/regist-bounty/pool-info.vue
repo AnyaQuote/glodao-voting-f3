@@ -106,17 +106,30 @@
       />
       <!-- ------------------------------------------------------------------------------------------------- -->
 
-      <v-btn
-        class="mt-7 white--text font-weight-600 text-none text-subtitle-1"
-        :class="valid && !vm.tokenInfoLoading && 'linear-blue--bg'"
-        :disabled="!valid || vm.tokenInfoLoading"
-        width="100%"
-        height="40"
-        depressed
-        @click="submit"
-      >
-        Continue
-      </v-btn>
+      <div class="d-flex">
+        <v-btn
+          class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
+          depressed
+          outlined
+          width="100%"
+          height="40"
+          @click.prevent="goBackPreviousStep"
+        >
+          Back
+        </v-btn>
+        <div class="mx-3" />
+        <v-btn
+          class="mt-7 font-weight-600 text-none text-subtitle-1 flex-grow"
+          :class="{ 'linear-blue--bg white--text': valid && !vm.tokenInfoLoading }"
+          :disabled="!valid || vm.tokenInfoLoading"
+          width="100%"
+          height="40"
+          depressed
+          @click="submit"
+        >
+          Continue
+        </v-btn>
+      </div>
     </v-form>
     <confirm-campaign-dialog ref="confirm-dialog" />
   </v-sheet>
@@ -142,6 +155,9 @@ export default class RaisingInfo extends Vue {
   valid = false
   submit() {
     this.form.validate() && this.dialog.open()
+  }
+  goBackPreviousStep() {
+    this.vm.changeStep(1.1)
   }
 }
 </script>
