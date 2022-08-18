@@ -71,6 +71,7 @@ export interface InAppTrialInfo {
   chPlayLink?: string
   appDescription?: string
   taskDescription?: string
+  tokenBasePrice?: string
 }
 
 export interface InAppTrialTask {
@@ -91,6 +92,7 @@ export type IatInfoProp =
   | 'webAppLink'
   | 'appDescription'
   | 'taskDescription'
+  | 'tokenBasePrice'
 
 export enum MissionType {
   LEARN = 'learn',
