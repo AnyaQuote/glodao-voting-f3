@@ -27,6 +27,11 @@ export const PROMPT_FORM_ON_LEAVE_DIALOG_CONTENT =
 export const PROMPT_FORM_ON_LEAVE_DIALOG_TITLE = 'Warning'
 export const PROMPT_FORM_ON_LEAVE_DIALOG_DONE_TEXT = 'Confirm'
 export const ALLOW_PASS_THROUGH = 'true'
+export const MSG_TOKEN_CONTRACT_ADDRS_NOT_AVAILABLE =
+  'Your token does not have contract address. Please enter your token base price manually here:'
+export const MSG_FETCHING_TOKEN_BASE_PRICE = 'Wait a moment as we are getting your token base price'
+export const MSG_TOKEN_CONTRACT_ADDRS_CAN_NOT_BE_CONVERTED =
+  'Can not find your token base price. Please enter your token base price manually here:'
 
 export const ERROR_MSG_TIMEOUT = 'Process took too long. Please try again.'
 export const ERROR_MSG_LOGIN_TIMEOUT = 'Login took too long to response. Please try again.'

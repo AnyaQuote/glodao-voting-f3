@@ -5,38 +5,6 @@
     </div>
     <v-divider />
     <v-form v-model="valid" class="pa-7">
-      <!-- ------------------------------------ MISSION TYPE -------------------------------------------------- -->
-
-      <!-- <v-radio-group mandatory :value="vm.missionInfo.type" @change="vm.changeMissionInfo('type', $event)">
-        <div class="row no-gutters">
-          <div class="col-6 pr-4">
-            <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('social')">
-              <v-radio color="blue-diversity" value="social">
-                <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('social')">Social mission</span>
-                </template>
-              </v-radio>
-              <div class="text-subtitle-2 font-weight-regular">
-                Setting social tasks such as Twitter, Telegram, Discord
-              </div>
-            </v-sheet>
-          </div>
-
-          <div class="col-6">
-            <v-sheet class="rounded pa-5 fill-height" outlined :class="isActive('lte')">
-              <v-radio color="blue-diversity" value="lte" disabled>
-                <template #label>
-                  <span class="font-18 font-weight-bold" :class="isActive('lte')">
-                    <span> Learn to earn mission (Comming soon)</span>
-                  </span>
-                </template>
-              </v-radio>
-              <div class="text-subtitle-2 font-weight-regular">Setting the project document and the quiz</div>
-            </v-sheet>
-          </div>
-        </div>
-      </v-radio-group> -->
-
       <!-- ------------------------------------ MISSION INFORMATION ------------------------------------------- -->
       <div class="d-flex flex-column">
         <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
@@ -91,7 +59,17 @@
           />
         </div>
       </div>
-      <v-divider class="mt-10 my-5 dashed-border" />
+      <v-divider class="my-5 dashed-border" />
+
+      <!-- ------------------------------------- TOKEN BASE PRICE INFO START ------------------------------------------ -->
+      <app-token-converter
+        :value="vm.tokenBasePrice"
+        :tokenName="vm.tokenBName"
+        :tokenAddress="vm.tokenBAddress"
+        @change="vm.changeMissionInfo('tokenBasePrice', $event)"
+      />
+      <!-- ------------------------------------- TOKEN BASE PRICE INFO END -------------------------------------------- -->
+      <v-divider class="my-5 dashed-border" />
 
       <!-- -------------------------------------- MISSION TIME ------------------------------------------------- -->
       <div class="mt-7">
@@ -159,6 +137,7 @@ import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 @Observer
 @Component({
   components: {
+    'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
     'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
   },

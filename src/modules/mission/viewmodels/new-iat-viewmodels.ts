@@ -135,22 +135,6 @@ export class NewInAppTrialViewModel {
     return sources
   }
 
-  /**
-   * Get token base price
-   * If address from testnet, api wont wỏk
-   * @param address token address
-   * @returns price value of token
-   */
-  async getTokenBasePriceValue(address: string) {
-    try {
-      const res = await this._api.getTokenPrice(address)
-      return res.price._value
-    } catch (_) {
-      // Incase testnet failed, return 1
-      return '1'
-    }
-  }
-
   async getModel(info: InAppTrialInfo, pool: VotingPool, imageSources: string[]) {
     const type = MissionType.APP_TRIAL
     const maxParticipants = toNumber(info.maxParticipants)
@@ -160,7 +144,7 @@ export class NewInAppTrialViewModel {
     const optTokenLogo = pool.data!.optionalTokenLogo
     const optTokenAddress = pool.data!.optionalTokenAddress!
     const optTokenDecimal = +pool.data!.optionalRewardTokenDecimals!
-    const tokenBasePrice = await this.getTokenBasePriceValue(optTokenAddress)
+    const tokenBasePrice = this.tokenBasePrice
     // Populate app trial task metadata
     const metadata: MetaData = {
       shortDescription: info.appDescription,
@@ -345,5 +329,17 @@ export class NewInAppTrialViewModel {
 
   @computed get taskDescription() {
     return get(this.iatInfo, 'taskDescription', EMPTY_STRING)
+  }
+
+  @computed get tokenBasePrice() {
+    return get(this.iatInfo, 'tokenBasePrice', EMPTY_STRING)
+  }
+
+  @computed get tokenBAdress() {
+    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
+  }
+
+  @computed get tokenBName() {
+    return this.pool.data?.optionalTokenName || EMPTY_STRING
   }
 }
