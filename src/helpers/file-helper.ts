@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-escape */
 import { Answer, QuizData, PreviewQuiz } from '@/models/QuizModel'
 import { get } from 'lodash'
+import Papa from 'papaparse'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
 const extractRegex = /(?:([^\s|\|].+?)(?=\s*\|\s*))|(?<=\n?)(\d)(?!\s*\|\s*)/g
@@ -143,4 +144,14 @@ export const checkQuizFile = async (file?: File | null) => {
     }
   }
   return ''
+}
+
+export const exportToCsvAndDownload = (data: any[], fileName: string) => {
+  const csv = Papa.unparse(data)
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.setAttribute('href', url)
+  link.setAttribute('download', fileName)
+  link.click()
 }
