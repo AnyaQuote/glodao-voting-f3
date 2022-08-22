@@ -1,5 +1,5 @@
 import { EMPTY_STRING, EMPTY_ARRAY } from '@/constants/index'
-import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
+import { promiseHelper } from '@/helpers/promise-helper'
 import { appProvider } from '@/app-providers'
 import { DisplayIatData, Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
@@ -7,6 +7,7 @@ import { action, computed, observable } from 'mobx'
 import { get, isEmpty, find } from 'lodash-es'
 import { RouteName } from '@/router'
 import { APIKey, ReferenceTask } from '@/models/ApiKeyModel'
+import { asyncAction } from 'mobx-utils'
 
 export class InAppTrialDetailViewModel {
   @observable loading = false
@@ -14,6 +15,7 @@ export class InAppTrialDetailViewModel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable apiKey: APIKey = {}
+  @observable loading_button = false
 
   private _auth = appProvider.authStore
   private _snackbar = appProvider.snackbar
@@ -24,10 +26,16 @@ export class InAppTrialDetailViewModel {
     this.loadPageData(unicodeName, missionId)
   }
 
+  @action async export() {
+    this.loading_button = true
+    await promiseHelper.delay(2000)
+    this.loading_button = false
+  }
+  
   @action async loadPageData(unicodeName: string, missionId: string) {
     try {
       this.loading = true
-      await waitForGlobalLoadingFinished()
+
       // Get pool
       const pools = await this._api.voting.find<VotingPool>(
         { unicodeName, projectOwner: this._auth.projectOwnerId },

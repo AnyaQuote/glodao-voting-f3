@@ -38,6 +38,24 @@
               </div>
             </div>
           </v-sheet>
+          <div class="mt-4 d-flex justify-space-between">
+            <v-btn
+              :loading="vm.loading_button"
+              @click="vm.export()"
+              depressed
+              class="rounded linear-blue--bg white--text"
+            >
+              Export users
+            </v-btn>
+            <v-btn
+              :loading="vm.loading_button"
+              @click="vm.export()"
+              depressed
+              class="rounded linear-blue--bg white--text"
+            >
+              Export rewards
+            </v-btn>
+          </div>
         </v-col>
       </template>
       <!-- ------------------------------ MISSION DETAIL END --------------------------------------- -->
