@@ -4,7 +4,7 @@ import { PreviewQuiz, Quiz } from '@/models/QuizModel'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { isEmpty, find, has, get, toNumber } from 'lodash-es'
-import { computed, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
 export class LearnMissionDetailViewModel {
@@ -12,6 +12,7 @@ export class LearnMissionDetailViewModel {
   @observable pool: VotingPool = {}
   @observable quiz: Quiz = {}
   @observable loading = false
+  @observable loading_button = false
 
   private _snackbar = appProvider.snackbar
   private _api = appProvider.api
@@ -21,6 +22,13 @@ export class LearnMissionDetailViewModel {
   constructor(unicodeName: string, missionId: string) {
     this.fetchMissionDetail(unicodeName, missionId)
   }
+
+  @asyncAction *export() {
+    this.loading_button = true
+    yield this.delay(2000)
+    this.loading_button = false
+  }
+  delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
     try {

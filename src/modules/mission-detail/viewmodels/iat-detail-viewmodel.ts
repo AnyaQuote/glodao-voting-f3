@@ -7,6 +7,7 @@ import { action, computed, observable } from 'mobx'
 import { get, isEmpty, find } from 'lodash-es'
 import { RouteName } from '@/router'
 import { APIKey, ReferenceTask } from '@/models/ApiKeyModel'
+import { asyncAction } from 'mobx-utils'
 
 export class InAppTrialDetailViewModel {
   @observable loading = false
@@ -14,6 +15,7 @@ export class InAppTrialDetailViewModel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable apiKey: APIKey = {}
+  @observable loading_button = false
 
   private _auth = appProvider.authStore
   private _snackbar = appProvider.snackbar
@@ -24,6 +26,11 @@ export class InAppTrialDetailViewModel {
     this.loadPageData(unicodeName, missionId)
   }
 
+  @asyncAction *export() {
+    this.loading_button = true
+    yield this.delay(2000)
+    this.loading_button = false
+  }
   @action async loadPageData(unicodeName: string, missionId: string) {
     try {
       this.loading = true
@@ -58,6 +65,7 @@ export class InAppTrialDetailViewModel {
     }
   }
 
+  delay = (ms) => new Promise((res) => setTimeout(res, ms))
   @action.bound async copyToClipboard(url: string) {
     try {
       await navigator.clipboard.writeText(url)
