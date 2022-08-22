@@ -12,6 +12,7 @@ export class SocialMissionDetailViewModel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable loading = false
+  @observable loading_button = false
 
   private _snackbar = appProvider.snackbar
   private _api = appProvider.api
@@ -21,6 +22,13 @@ export class SocialMissionDetailViewModel {
   constructor(unicodeName: string, missionId: string) {
     this.fetchMissionDetail(unicodeName, missionId)
   }
+
+  @asyncAction *export() {
+    this.loading_button = true
+    yield this.delay(2000)
+    this.loading_button = false
+  }
+  delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
     try {
