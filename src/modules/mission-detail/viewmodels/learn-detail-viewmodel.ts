@@ -6,6 +6,7 @@ import { RouteName } from '@/router'
 import { isEmpty, find, has, get, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
+import { promiseHelper } from '@/helpers/promise-helper'
 
 export class LearnMissionDetailViewModel {
   @observable mission: Mission = {}
@@ -23,12 +24,11 @@ export class LearnMissionDetailViewModel {
     this.fetchMissionDetail(unicodeName, missionId)
   }
 
-  @asyncAction *export() {
+  @action async export() {
     this.loading_button = true
-    yield this.delay(2000)
+    await promiseHelper.delay(2000)
     this.loading_button = false
   }
-  delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
     try {

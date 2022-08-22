@@ -1,5 +1,5 @@
 import { EMPTY_STRING, EMPTY_ARRAY } from '@/constants/index'
-import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
+import { promiseHelper } from '@/helpers/promise-helper'
 import { appProvider } from '@/app-providers'
 import { DisplayIatData, Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
@@ -26,15 +26,16 @@ export class InAppTrialDetailViewModel {
     this.loadPageData(unicodeName, missionId)
   }
 
-  @asyncAction *export() {
+  @action async export() {
     this.loading_button = true
-    yield this.delay(2000)
+    await promiseHelper.delay(2000)
     this.loading_button = false
   }
+  
   @action async loadPageData(unicodeName: string, missionId: string) {
     try {
       this.loading = true
-      await waitForGlobalLoadingFinished()
+
       // Get pool
       const pools = await this._api.voting.find<VotingPool>(
         { unicodeName, projectOwner: this._auth.projectOwnerId },
@@ -65,7 +66,6 @@ export class InAppTrialDetailViewModel {
     }
   }
 
-  delay = (ms) => new Promise((res) => setTimeout(res, ms))
   @action.bound async copyToClipboard(url: string) {
     try {
       await navigator.clipboard.writeText(url)

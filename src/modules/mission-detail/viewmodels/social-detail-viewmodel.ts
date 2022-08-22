@@ -1,11 +1,12 @@
 import { appProvider } from '@/app-providers'
 import { Zero } from '@/constants'
+import { promiseHelper } from '@/helpers/promise-helper'
 import { Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { isEmpty, find, has, get, toNumber } from 'lodash-es'
-import { computed, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 
 export class SocialMissionDetailViewModel {
@@ -23,12 +24,11 @@ export class SocialMissionDetailViewModel {
     this.fetchMissionDetail(unicodeName, missionId)
   }
 
-  @asyncAction *export() {
+  @action async export() {
     this.loading_button = true
-    yield this.delay(2000)
+    await promiseHelper.delay(2000)
     this.loading_button = false
   }
-  delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
     try {
