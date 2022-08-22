@@ -369,5 +369,24 @@ export class ApiService {
     })
     return response.data
   }
+
+  /**
+   * Get task report from api for csv download
+   * @param id task id
+   * @param type type of report which need to get
+   * @returns array of csv lines
+   */
+  async getTaskUserReport(id: string, type?: string) {
+    const response = await this.axios.get(`/tasks/exportUsers/`, {
+      params: {
+        id,
+        type,
+      },
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return response.data
+  }
 }
 export const apiService = new ApiService()
