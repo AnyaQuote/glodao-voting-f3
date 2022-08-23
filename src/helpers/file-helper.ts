@@ -146,6 +146,11 @@ export const checkQuizFile = async (file?: File | null) => {
   return ''
 }
 
+/**
+ * Convert data to CSV file and download it
+ * @param data data to convert to csv
+ * @param fileName csv file name
+ */
 export const exportToCsvAndDownload = (data: any[], fileName: string) => {
   const csv = Papa.unparse(data)
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
