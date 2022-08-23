@@ -160,3 +160,16 @@ export const exportToCsvAndDownload = (data: any[], fileName: string) => {
   link.setAttribute('download', fileName)
   link.click()
 }
+
+/**
+ * Generate file object from url
+ * @param url url to download file
+ * @returns File object
+ */
+export const generateFileFromUrl = async (url: string) => {
+  const response = await fetch(url)
+  const extension = url.split('.').pop()
+  const blob = await response.blob()
+  const file = new File([blob], `file.${extension}`, { type: `image/${extension}` })
+  return file
+}
