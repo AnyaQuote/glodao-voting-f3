@@ -19,10 +19,10 @@
       @change="updateConfig('setting.link', $event)"
       placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
     />
-    <div class="font-18 font-weight-bold mt-2">Twitter hastag<span class="red--text">*</span></div>
+    <div class="font-18 font-weight-bold mt-2">Twitter hashtag<span class="red--text">*</span></div>
     <app-autocomplete
       :value="hashtag"
-      placeholder="Enter your hastag"
+      placeholder="Enter your hashtag"
       @onChange="updateConfig('setting.hashtag', $event)"
       :rules="[(v) => !!(v && v.length) || 'This field is required']"
     />
