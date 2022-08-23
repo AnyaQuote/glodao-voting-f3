@@ -1,5 +1,5 @@
 import { appProvider } from '@/app-providers'
-import { getApiFileUrl } from '@/helpers/file-helper'
+import { generateFileFromUrl, getApiFileUrl } from '@/helpers/file-helper'
 import { Data, MissionType, SocialType, TaskConfig } from '@/models/MissionModel'
 import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
@@ -23,6 +23,7 @@ import { getDefaultSettingConfig, extractTaskSettings } from '@/helpers'
 export class EditSocialMissionViewModel {
   @observable step = 1
 
+  @observable mission: Mission = {}
   @observable pool: VotingPool = EMPTY_OBJECT
   @observable missionInfo: MissionInfo = EMPTY_OBJECT
   @observable fxAvgCommunityReward = Zero
@@ -45,8 +46,50 @@ export class EditSocialMissionViewModel {
 
   private _key = 0
 
-  constructor(unicodeName: string) {
-    this.fetchProjectByUnicode(unicodeName)
+  constructor(unicodeName: string, missionId: string) {
+    this.fetchMissionDetail(unicodeName, missionId)
+  }
+
+  @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
+    try {
+      this.pageLoading = true
+      // Get pool
+      const pools = yield this._api.voting.find<VotingPool>(
+        { unicodeName, projectOwner: this._auth.projectOwnerId },
+        { _limit: 1 }
+      )
+      if (isEmpty(pools)) {
+        this._router.replace({ name: RouteName.NOT_FOUND })
+      }
+      this.pool = pools[0]
+
+      // Get mission
+      const missions = yield this._api.tasks.find<Mission>({ votingPool: this.pool.id, id: missionId }, { _limit: 1 })
+      if (isEmpty(missions)) {
+        this._router.replace({ name: RouteName.NOT_FOUND })
+      }
+      this.mission = missions[0]
+      console.log(this.mission)
+      this.missionInfo = {
+        name: this.mission.name,
+        shortDescription: this.mission.metadata?.shortDescription,
+        // missionCover:this.mission.metadata?.projectLogo,
+        priorityAmount: this.mission.priorityRewardAmount,
+        maxParticipants: this.mission.maxParticipants?.toString(),
+        maxPriorityParticipants: this.mission.maxPriorityParticipants?.toString(),
+        startDate: this.mission.startTime,
+        endDate: this.mission.endTime,
+        type: this.mission.type,
+        tokenBasePrice: this.mission.tokenBasePrice,
+      }
+      console.log(this.mission.metadata?.projectLogo)
+      if (this.mission.metadata?.projectLogo)
+        this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata?.projectLogo)
+    } catch (error) {
+      this._snackbar.commonError(error)
+    } finally {
+      this.pageLoading = false
+    }
   }
 
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
@@ -275,10 +318,10 @@ export class EditSocialMissionViewModel {
   }
 
   @computed get tokenBAddress() {
-    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
+    return this.mission.metadata?.tokenContractAddress || EMPTY_STRING
   }
 
   @computed get tokenBName() {
-    return this.pool.data?.optionalTokenName || EMPTY_STRING
+    return this.mission.metadata?.rewardToken || EMPTY_STRING
   }
 }
