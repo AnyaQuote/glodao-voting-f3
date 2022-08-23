@@ -9,13 +9,25 @@
         v-ripple
       >
         <v-img max-height="239" aspect-ratio="1" :src="$_get(mission, 'metadata.coverImage')" class="rounded-t-lg">
-          <div
-            class="d-inline-block rounded pa-2 mt-2 ml-2 text-subtitle-2 text-uppercase black--text"
-            :class="$_get(mission, 'status') === 'ended' ? 'neutral-100' : 'app-green lighten-1'"
-          >
-            {{ $_get(mission, 'status') }}
+          <div class="d-flex justify-space-between">
+            <div
+              class="rounded pr-2 pl-2 mt-2 ml-2 text-subtitle-2 text-uppercase white--text d-flex justify-space-between align-center"
+              :class="$_get(mission, 'status') === 'ended' ? 'neutral-100' : 'app-green lighten-1'"
+            >
+              {{ $_get(mission, 'status') }}
+            </div>
+            <v-btn
+              @click.stop="showMissionType(mission.type)"
+              class="d-inline-block rounded mr-2 mt-2"
+              color="white"
+              fab
+              x-small
+            >
+              <v-icon size="25" color="black"> mdi-pencil </v-icon>
+            </v-btn>
           </div>
         </v-img>
+
         <div class="pa-6">
           <div class="font-weight-600 text-h5 mb-2 text-truncate">
             {{ mission.name }} #<span>{{ index + 1 }}</span>
@@ -79,6 +91,10 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 @Component
 export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
+
+  showMissionType(missionType?: string) {
+    console.log(missionType)
+  }
 
   goToMissionDetail(missionType?: string, missionId?: string) {
     const type = missionType || EMPTY_STRING
