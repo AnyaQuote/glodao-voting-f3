@@ -12,7 +12,7 @@
       :value="pageName"
       :rules="[$rules.required]"
       placeholder="GLODAO Channel"
-      @change="updateSetting('setting.page', $event)"
+      @input="updateSetting('setting.page', $event)"
     />
 
     <div class="font-18 font-weight-bold">Telegram group link<span class="red--text">*</span></div>
@@ -21,7 +21,7 @@
       :value="telegramLink"
       append-icon="mdi-link"
       :rules="[$rules.required, $rules.url]"
-      @change="updateSetting('setting.link', $event)"
+      @input="updateSetting('setting.link', $event)"
       placeholder="https://t.me/GloDAO_Group"
     />
 
@@ -70,7 +70,7 @@ export default class TelegramJoinTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    if (isNotEmpty(this.pageName) && isNotEmpty(this.telegramLink)) {
+    if (isNotEmpty(this.settings?.page) && isNotEmpty(this.settings?.link)) {
       this.$emit('change', newSetting)
     }
   }
@@ -82,7 +82,12 @@ export default class TelegramJoinTask extends Vue {
   async handleValidation() {
     try {
       this.isChecking = true
-      const isValid = await this.api.checkTelegramBotIsAdded(this.telegramLink)
+      const telegramLink = this.settings?.link
+      if (!telegramLink) {
+        this.snackbar.error('Please entaaer telegram group link')
+        return
+      }
+      const isValid = await this.api.checkTelegramBotIsAdded(telegramLink)
       if (isValid) {
         this.snackbar.success('Glodao mission bot is added in your channel/group')
       }
@@ -93,12 +98,16 @@ export default class TelegramJoinTask extends Vue {
     }
   }
 
+  get settings() {
+    return this.taskConfig!.setting
+  }
+
   get pageName() {
-    return this.taskConfig!.setting?.page || EMPTY_STRING
+    return this.settings?.page || EMPTY_STRING
   }
 
   get telegramLink() {
-    return this.taskConfig!.setting?.link || EMPTY_STRING
+    return this.settings?.link || EMPTY_STRING
   }
 }
 </script>
