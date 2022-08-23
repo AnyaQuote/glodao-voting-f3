@@ -36,7 +36,7 @@ import { get } from 'lodash-es'
     'mission-social-setting': () => import('../components/social/mission-social-setting.vue'),
   },
 })
-export default class MissionForm extends Vue {
+export default class EditSocialMissionForm extends Vue {
   @Provide() vm = new EditSocialMissionViewModel(get(this.$route, 'params.unicodeName'))
 
   goBack() {
