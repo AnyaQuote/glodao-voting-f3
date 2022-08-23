@@ -17,7 +17,7 @@
               {{ $_get(mission, 'status') }}
             </div>
             <v-btn
-              @click.stop="showMissionType(mission.type, mission.id)"
+              @click.stop="showMissionType(mission.type, mission.id, mission.startTime, mission.endTime)"
               class="d-inline-block rounded mr-2 mt-2"
               color="white"
               fab
@@ -86,13 +86,27 @@ import { RouteName } from '@/router'
 import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
+import moment from 'moment'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 
 @Observer
 @Component
 export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
-  showMissionType(missionType?: string, missionId?: string) {
+  showMissionType(missionType?: string, missionId?: string, startTime?: any, endTime?: any) {
+    const now = moment()
+
+    if (now.isAfter(endTime)) {
+      snackController.error('This mission has ended')
+      return
+    } else if (now.isAfter(startTime)) {
+      snackController.error('This mission has already started')
+      return
+    } else if (Math.abs(now.diff(startTime, 'hours')) < 24) {
+      snackController.error('You can only edit mission 24 hours before it starts')
+      return
+    }
     const type = missionType || EMPTY_STRING
     const id = missionId || EMPTY_STRING
     const unicodeName = get(this.vm.poolStore, 'unicodeName', EMPTY_STRING)
