@@ -41,7 +41,7 @@
           <div class="mt-4 d-flex justify-space-between">
             <v-btn
               :loading="vm.loading_button"
-              @click="vm.export()"
+              @click="vm.export('user')"
               depressed
               class="rounded linear-blue--bg white--text"
             >
@@ -49,7 +49,7 @@
             </v-btn>
             <v-btn
               :loading="vm.loading_button"
-              @click="vm.export()"
+              @click="vm.export('reward')"
               depressed
               class="rounded linear-blue--bg white--text"
             >

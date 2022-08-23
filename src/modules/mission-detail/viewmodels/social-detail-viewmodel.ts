@@ -1,5 +1,7 @@
 import { appProvider } from '@/app-providers'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { Zero } from '@/constants'
+import { exportToCsvAndDownload } from '@/helpers/file-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
 import { Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
@@ -8,6 +10,7 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import { isEmpty, find, has, get, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
+import moment from 'moment'
 
 export class SocialMissionDetailViewModel {
   @observable mission: Mission = {}
@@ -24,10 +27,28 @@ export class SocialMissionDetailViewModel {
     this.fetchMissionDetail(unicodeName, missionId)
   }
 
-  @action async export() {
-    this.loading_button = true
-    await promiseHelper.delay(2000)
-    this.loading_button = false
+  @action async export(type: string) {
+    const start = moment()
+    const missionEnd = moment(this.mission.endTime)
+    if (start.isBefore(missionEnd) && type === 'reward') {
+      snackController.commonError('Can not export file csv because the mission has not been over yet')
+      return
+    }
+    try {
+      this.loading_button = true
+      let data
+      if (type === 'user') {
+        data = await this._api.getTaskUserReport(this.mission.id!, 'user')
+        exportToCsvAndDownload(data, this.mission.name!)
+      } else {
+        data = await this._api.getTaskUserReport(this.mission.id!, 'rewards')
+        exportToCsvAndDownload(data, this.mission.name!)
+      }
+    } catch (error) {
+      snackController.commonError(error)
+    } finally {
+      this.loading_button = false
+    }
   }
 
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
