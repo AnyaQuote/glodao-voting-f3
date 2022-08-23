@@ -310,8 +310,8 @@ export class EditSocialMissionViewModel {
       this.btnLoading = true
       const missionSettings = yield this.getSocialMissionSettings()
       const model = yield this.getMissionModel(missionSettings, this.missionInfo, this.pool)
-      yield this._api.createTask(model)
-      this._snackbar.addSuccess()
+      yield this._api.updateTask({ id: this.mission.id!, ...model })
+      this._snackbar.updateSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
         params: {
