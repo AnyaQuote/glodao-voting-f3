@@ -28,21 +28,21 @@ export class SocialMissionDetailViewModel {
   }
 
   @action async export(type: string) {
-    this.loading_button = true
+    const start = moment()
+    const missionEnd = moment(this.mission.endTime)
+    if (start.isBefore(missionEnd) && type == 'reward') {
+      snackController.commonError('Can not export file csv because the mission has not been over yet')
+      return
+    }
     try {
-      const start = moment()
-      const missionEnd = moment(this.mission.endTime)
+      this.loading_button = true
       let data
       if (type == 'user') {
         data = await this._api.getTaskUserReport(this.mission.id!, 'user')
         exportToCsvAndDownload(data, this.mission.name!)
       } else {
-        if (start.isBefore(missionEnd)) {
-          snackController.commonError('Can not export file csv because the mission has not been over yet')
-        } else {
-          data = await this._api.getTaskUserReport(this.mission.id!, 'rewards')
-          exportToCsvAndDownload(data, this.mission.name!)
-        }
+        data = await this._api.getTaskUserReport(this.mission.id!, 'rewards')
+        exportToCsvAndDownload(data, this.mission.name!)
       }
     } catch (error) {
       snackController.commonError(error)

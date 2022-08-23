@@ -140,7 +140,7 @@
               </v-btn>
               <v-btn
                 :loading="vm.loading_button"
-                @click="vm.export('rewards')"
+                @click="vm.export('reward')"
                 depressed
                 class="rounded linear-blue--bg white--text"
               >
