@@ -17,7 +17,7 @@
               {{ $_get(mission, 'status') }}
             </div>
             <v-btn
-              @click.stop="showMissionType(mission.type)"
+              @click.stop="showMissionType(mission.type, mission.id)"
               class="d-inline-block rounded mr-2 mt-2"
               color="white"
               fab
@@ -92,8 +92,15 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
-  showMissionType(missionType?: string) {
-    console.log(missionType)
+  showMissionType(missionType?: string, missionId?: string) {
+    const type = missionType || EMPTY_STRING
+    const id = missionId || EMPTY_STRING
+    const unicodeName = get(this.vm.poolStore, 'unicodeName', EMPTY_STRING)
+    if (missionType === MissionType.SOCIAL)
+      this.$router.push({
+        name: RouteName.MISSION_EDIT_SOCIAL,
+        params: { unicodeName, id },
+      })
   }
 
   goToMissionDetail(missionType?: string, missionId?: string) {
