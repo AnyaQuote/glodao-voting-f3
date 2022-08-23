@@ -16,7 +16,13 @@
             >
               {{ $_get(mission, 'status') }}
             </div>
-            <v-btn @click.stop="type(mission.type)" class="d-inline-block rounded mr-2 mt-2" color="white" fab x-small>
+            <v-btn
+              @click.stop="showMissionType(mission.type)"
+              class="d-inline-block rounded mr-2 mt-2"
+              color="white"
+              fab
+              x-small
+            >
               <v-icon size="25" color="black"> mdi-pencil </v-icon>
             </v-btn>
           </div>
@@ -86,7 +92,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
 
-  type(missionType?: string) {
+  showMissionType(missionType?: string) {
     console.log(missionType)
   }
 
