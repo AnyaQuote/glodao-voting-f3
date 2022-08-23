@@ -1,6 +1,6 @@
 import { appProvider } from '@/app-providers'
 import { generateFileFromUrl, getApiFileUrl } from '@/helpers/file-helper'
-import { Data, MissionType, SocialType, TaskConfig } from '@/models/MissionModel'
+import { Data, MissionType, SocialTaskComponent, SocialType, TaskConfig } from '@/models/MissionModel'
 import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
 import { assign, isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
@@ -82,15 +82,98 @@ export class EditSocialMissionViewModel {
         type: this.mission.type,
         tokenBasePrice: this.mission.tokenBasePrice,
       }
-      console.log(this.mission.metadata?.projectLogo)
       if (this.mission.metadata?.projectLogo)
         this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata?.projectLogo)
+
+      this.generateTaskConfig(this.mission.data)
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
       this.pageLoading = false
     }
   }
+
+  generateTaskConfig = (data: any) => {
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        const element = data[key] as Array<any>
+        switch (key) {
+          case 'optional':
+            element.forEach((task, index) => {
+              this.custom.push({
+                key: index,
+                component: SocialTaskComponent.CUSTOM_TASK,
+                setting: { ...task },
+              })
+            })
+            break
+          case 'twitter':
+            element.forEach((task, index) => {
+              //
+              let component = SocialTaskComponent.FOLLOW_TWITTER
+              if (task.type === 'follow') {
+                component = SocialTaskComponent.FOLLOW_TWITTER
+              } else if (task.type === 'like') {
+                //TODO: add like type
+                // component = SocialTaskComponent.LIKE_TWITTER
+                component = SocialTaskComponent.COMMENT_TWITTER
+              } else if (task.type === 'quote') {
+                component = SocialTaskComponent.QUOTE_TWITTER
+              } else if (task.type === 'comment') {
+                component = SocialTaskComponent.COMMENT_TWITTER
+              }
+              this.twitter.push({
+                key: index,
+                component,
+                setting: { ...task },
+              })
+            })
+            break
+          case 'telegram':
+            element.forEach((task, index) => {
+              let component = SocialTaskComponent.JOIN_TELEGRAM
+              if (task.type === 'follow') {
+                component = SocialTaskComponent.JOIN_TELEGRAM
+              } else if (task.type === 'chat') {
+                component = SocialTaskComponent.CHAT_TELEGRAM
+              }
+              this.telegram.push({
+                key: index,
+                component,
+                setting: { ...task },
+              })
+            })
+            break
+          case 'discord':
+            element.forEach((task, index) => {
+              let component = SocialTaskComponent.JOIN_DISCORD
+              if (task.type === 'join-server') {
+                component = SocialTaskComponent.JOIN_DISCORD
+              }
+              this.discord.push({
+                key: index,
+                component,
+                setting: { ...task },
+              })
+            })
+            break
+          case 'facebook':
+            element.forEach((task, index) => {
+              let component = SocialTaskComponent.FOLLOW_FACEBOOK
+              if (task.type === 'follow') {
+                component = SocialTaskComponent.FOLLOW_FACEBOOK
+              }
+              this.facebook.push({
+                key: index,
+                component,
+                setting: { ...task },
+              })
+            })
+            break
+        }
+      }
+    }
+  };
 
   @asyncAction *fetchProjectByUnicode(unicodeName: string) {
     try {
@@ -128,6 +211,7 @@ export class EditSocialMissionViewModel {
   }
 
   @action.bound updateSetting(socialType: SocialType, key: number, value: any) {
+    console.log(socialType, key, value)
     this[socialType] = this[socialType].map((setting) => {
       return setting.key === key ? value : setting
     })
