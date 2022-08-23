@@ -7,6 +7,9 @@ import { isEmpty, find, has, get, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { exportToCsvAndDownload } from '@/helpers/file-helper'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import moment from 'moment'
 
 export class LearnMissionDetailViewModel {
   @observable mission: Mission = {}
@@ -24,10 +27,28 @@ export class LearnMissionDetailViewModel {
     this.fetchMissionDetail(unicodeName, missionId)
   }
 
-  @action async export() {
+  @action async export(type: string) {
     this.loading_button = true
-    await promiseHelper.delay(2000)
-    this.loading_button = false
+    try {
+      const start = moment()
+      const missionEnd = moment(this.mission.endTime)
+      let data
+      if (type == 'user') {
+        data = await this._api.getTaskUserReport(this.mission.id!, 'user')
+        exportToCsvAndDownload(data, this.mission.name!)
+      } else {
+        if (start.isBefore(missionEnd)) {
+          snackController.commonError('Can not export file csv because the mission has not been over yet')
+        } else {
+          data = await this._api.getTaskUserReport(this.mission.id!, 'rewards')
+          exportToCsvAndDownload(data, this.mission.name!)
+        }
+      }
+    } catch (error) {
+      snackController.commonError(error)
+    } finally {
+      this.loading_button = false
+    }
   }
 
   @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
