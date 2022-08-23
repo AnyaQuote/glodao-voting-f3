@@ -30,14 +30,14 @@ export class LearnMissionDetailViewModel {
   @action async export(type: string) {
     const start = moment()
     const missionEnd = moment(this.mission.endTime)
-    if (start.isBefore(missionEnd) && type == 'reward') {
+    if (start.isBefore(missionEnd) && type === 'reward') {
       snackController.commonError('Can not export file csv because the mission has not been over yet')
       return
     }
     try {
       this.loading_button = true
       let data
-      if (type == 'user') {
+      if (type === 'user') {
         data = await this._api.getTaskUserReport(this.mission.id!, 'user')
         exportToCsvAndDownload(data, this.mission.name!)
       } else {
