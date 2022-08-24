@@ -157,11 +157,13 @@ export default class MissionSocialSettingViewer extends Vue {
     return (taskType, taskPage) => {
       switch (taskType) {
         case SocialTaskType.COMMENT:
-          return `Like and reply a post from ${taskPage}`
+          return `Reply a post from ${taskPage}`
         case SocialTaskType.QUOTE:
           return `Quote a tweet from ${taskPage}`
         case SocialTaskType.FOLLOW:
           return `Follow project twitter from ${taskPage}`
+        case SocialTaskType.LIKE:
+          return `Like project twitter from ${taskPage}`
         default:
           return `${taskType} twitter`
       }

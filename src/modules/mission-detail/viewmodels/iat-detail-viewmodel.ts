@@ -73,8 +73,6 @@ export class InAppTrialDetailViewModel {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.mission = missions[0]
-
-      // Get api key
       const apiKey = await this._api.apiKey.find<APIKey>({ projectOwner: this._auth.projectOwnerId }, { _limit: 1 })
       if (isEmpty(apiKey)) {
         this._router.replace({ name: RouteName.NOT_FOUND })

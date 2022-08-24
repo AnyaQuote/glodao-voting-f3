@@ -1,11 +1,5 @@
 <template>
-  <expand-container
-    class="mt-4"
-    type="twitter"
-    title="Twitter task"
-    subtitle="Like and reply a post"
-    @remove="removeSetting"
-  >
+  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Reply a post" @remove="removeSetting">
     <div class="font-18 font-weight-bold">Tweet from twitter page name<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
