@@ -1,9 +1,16 @@
 import { appProvider } from '@/app-providers'
-import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData } from '@/helpers/file-helper'
+import {
+  generateFileFromUrl,
+  generateTextFileFromData,
+  getApiFileUrl,
+  getDataFromQuizFile,
+  getPreviewFromQuizFile,
+  getTextData,
+} from '@/helpers/file-helper'
 import { Data, MissionType } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz, MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
+import { set, get, isEmpty, toNumber, sampleSize, find, merge, join } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
@@ -14,9 +21,11 @@ import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants
 export class EditLearnMissionViewModel {
   @observable step = 1
 
+  @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
   @observable learnToEarn: LearnToEarn = {}
+  @observable quiz: Quiz = {}
   @observable pageLoading = false
   @observable btnLoading = false
 
@@ -29,24 +38,82 @@ export class EditLearnMissionViewModel {
   private _auth = appProvider.authStore
   private _api = appProvider.api
 
-  constructor(unicodeName: string) {
-    this.fetchProjectByUnicode(unicodeName)
+  constructor(unicodeName: string, missionId: string) {
+    this.fetchMissionDetail(unicodeName, missionId)
   }
 
-  @asyncAction *fetchProjectByUnicode(unicodeName: string) {
+  @asyncAction *fetchMissionDetail(unicodeName: string, missionId: string) {
     try {
       this.pageLoading = true
-
-      const pools = yield this._api.voting.find({ unicodeName, projectOwner: this._auth.projectOwnerId }, { _limit: 1 })
-
+      // Get pool
+      const pools = yield this._api.voting.find<VotingPool>(
+        { unicodeName, projectOwner: this._auth.projectOwnerId },
+        { _limit: 1 }
+      )
       if (isEmpty(pools)) {
-        this._router.replace(RoutePaths.not_found)
+        this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.pool = pools[0]
+
+      // Get mission
+      const missions = yield this._api.tasks.find<Mission>({ votingPool: this.pool.id, id: missionId }, { _limit: 1 })
+      if (isEmpty(missions)) {
+        this._router.replace({ name: RouteName.NOT_FOUND })
+      }
+      this.mission = missions[0]
+
+      // If mission is learn to earn, get quiz
+
+      const taskTypeQuiz = find(get(this.mission, 'data.quiz', []), (task) => task.type === 'quiz')
+      const id = get(taskTypeQuiz, 'quizId', '')
+      const quiz = yield this._api.getOwnerQuiz(id)
+      if (isEmpty(quiz)) {
+        this._router.replace({ name: RouteName.NOT_FOUND })
+      }
+      this.quiz = quiz
+
+      this.missionInfo = {
+        name: this.mission.name,
+        shortDescription: this.mission.metadata?.shortDescription,
+        // missionCover:this.mission.metadata?.projectLogo,
+        priorityAmount: this.mission.priorityRewardAmount,
+        maxParticipants: this.mission.maxParticipants?.toString(),
+        maxPriorityParticipants: this.mission.maxPriorityParticipants?.toString(),
+        startDate: this.mission.startTime,
+        endDate: this.mission.endTime,
+        type: this.mission.type,
+        tokenBasePrice: this.mission.tokenBasePrice,
+      }
+      if (this.mission.metadata?.projectLogo)
+        this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata?.projectLogo)
+
+      this.learnToEarn = {
+        enabled: true,
+        setting: {
+          name: this.quiz.name,
+          description: this.quiz.description,
+        },
+      }
+      if (this.quiz.metadata?.coverImage)
+        this.learnToEarn.setting!.imageCover = yield generateFileFromUrl(this.quiz.metadata?.coverImage)
+
+      if (this.quiz.learningInformation)
+        this.learnToEarn.setting!.learningFile = generateTextFileFromData(this.quiz.learningInformation, 'learning.txt')
+
+      this.generateQuizFile()
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
       this.pageLoading = false
+    }
+  }
+
+  generateQuizFile() {
+    if (this.quiz.data && this.quiz.answer) {
+      const res = merge(get(this.quiz, 'data'), get(this.quiz, 'answer'))?.map((r: any) =>
+        join([r.question, ...r.data?.map((a) => a.text), r.answer], '|')
+      )
+      this.learnToEarn.setting!.quizFile = generateTextFileFromData(join(res, '\n'), 'quiz.txt')
     }
   }
 
@@ -165,8 +232,8 @@ export class EditLearnMissionViewModel {
       this.btnLoading = true
       const missionSetting = yield this.getMissionSetting()
       const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
-      yield this._api.createTask(model)
-      this._snackbar.addSuccess()
+      yield this._api.updateTask({ id: this.mission.id, ...model })
+      this._snackbar.updateSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
         params: {

@@ -200,16 +200,16 @@ const routes: Array<RouteConfig> = [
       title: 'In App Trial Mission detail',
     },
   },
-  // {
-  //   path: '/projects/:unicodeName/mission-edit/learn/:id',
-  //   name: RouteName.MISSION_LEARN_DETAIL,
-  //   component: () => import('@/modules/mission-edit/pages/learn-detail-page.vue'),
-  //   meta: {
-  //     auth: true,
-  //     wallet: true,
-  //     title: 'Edit Learn Mission',
-  //   },
-  // },
+  {
+    path: '/projects/:unicodeName/mission-edit/learn/:id',
+    name: RouteName.MISSION_EDIT_LEARN,
+    component: () => import('@/modules/mission-edit/pages/edit-learn-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Edit Learn Mission',
+    },
+  },
   {
     path: '/projects/:unicodeName/mission-edit/social/:id',
     name: RouteName.MISSION_EDIT_SOCIAL,
