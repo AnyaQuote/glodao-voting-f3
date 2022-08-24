@@ -99,13 +99,13 @@ export default class ProjectEndedContent extends Vue {
 
     if (now.isAfter(endTime)) {
       snackController.error('This mission has ended')
-      return
+      // return
     } else if (now.isAfter(startTime)) {
       snackController.error('This mission has already started')
-      return
+      // return
     } else if (Math.abs(now.diff(startTime, 'hours')) < 24) {
       snackController.error('You can only edit mission 24 hours before it starts')
-      return
+      // return
     }
     const type = missionType || EMPTY_STRING
     const id = missionId || EMPTY_STRING

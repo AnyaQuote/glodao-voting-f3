@@ -1,5 +1,5 @@
 <template>
-  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Reply a post" @remove="removeSetting">
+  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Like a post" @remove="removeSetting">
     <div class="font-18 font-weight-bold">Tweet from twitter page name<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
@@ -34,7 +34,7 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
     'expand-container': () => import('../../common/expand-container.vue'),
   },
 })
-export default class TwitterCommentTask extends Vue {
+export default class TwitterLikeTask extends Vue {
   @Prop({ required: true }) inputConfig!: TaskConfig
 
   taskConfig = this.inputConfig

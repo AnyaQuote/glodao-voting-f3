@@ -115,13 +115,14 @@ export class EditSocialMissionViewModel {
                 component = SocialTaskComponent.FOLLOW_TWITTER
               } else if (task.type === 'like') {
                 //TODO: add like type
-                // component = SocialTaskComponent.LIKE_TWITTER
-                component = SocialTaskComponent.COMMENT_TWITTER
+                component = SocialTaskComponent.LIKE_TWITTER
+                // component = SocialTaskComponent.COMMENT_TWITTER
               } else if (task.type === 'quote') {
                 component = SocialTaskComponent.QUOTE_TWITTER
               } else if (task.type === 'comment') {
                 component = SocialTaskComponent.COMMENT_TWITTER
               }
+              console.log(component)
               this.twitter.push({
                 key: index,
                 component,
