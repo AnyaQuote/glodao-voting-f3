@@ -5,7 +5,7 @@
     >
       <div class="d-flex align-self-start align-self-sm-center cursor-pointer" @click="back">
         <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
-        <span class="text-subtitle-2">Create mission</span>
+        <span class="text-subtitle-2">Update mission</span>
       </div>
       <div class="my-2 my-sm-0" />
       <div class="text-h5 font-weight-bold blue-diversity--text">Social mission</div>
