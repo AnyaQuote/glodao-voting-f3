@@ -34,7 +34,7 @@
             <div class="pa-6">
               <div class="d-flex justify-space-between font-18 font-weight-600">
                 <span>Total participants</span>
-                <span>0 users</span>
+                <span>{{ $_get(vm.mission, 'totalParticipants', 0) }} users</span>
               </div>
             </div>
           </v-sheet>
