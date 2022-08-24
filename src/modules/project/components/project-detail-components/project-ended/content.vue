@@ -120,6 +120,13 @@ export default class ProjectEndedContent extends Vue {
         name: RouteName.MISSION_EDIT_LEARN,
         params: { unicodeName, id },
       })
+    } else if (type === MissionType.APP_TRIAL) {
+      this.$router.push({
+        name: RouteName.MISSION_EDIT_IAT,
+        params: { unicodeName, id },
+      })
+    } else {
+      snackController.error('Not implemented yet')
     }
   }
 

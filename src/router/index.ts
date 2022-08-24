@@ -220,16 +220,16 @@ const routes: Array<RouteConfig> = [
       title: 'Edit Social Mission',
     },
   },
-  // {
-  //   path: '/projects/:unicodeName/app-trial-edit/iat/:id',
-  //   name: RouteName.MISSION_IAT_DETAIL,
-  //   component: () => import('@/modules/mission-edit/pages/iat-detail-page.vue'),
-  //   meta: {
-  //     auth: true,
-  //     wallet: true,
-  //     title: 'Edit In App Trial Mission',
-  //   },
-  // },
+  {
+    path: '/projects/:unicodeName/app-trial-edit/iat/:id',
+    name: RouteName.MISSION_EDIT_IAT,
+    component: () => import('@/modules/mission-edit/pages/edit-iat-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Edit In App Trial Mission',
+    },
+  },
   {
     path: '/comming-soon',
     name: RouteName.COMMING_SOON,
