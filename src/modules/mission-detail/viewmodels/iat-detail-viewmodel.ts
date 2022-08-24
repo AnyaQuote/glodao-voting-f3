@@ -31,7 +31,7 @@ export class InAppTrialDetailViewModel {
     await promiseHelper.delay(2000)
     this.loading_button = false
   }
-  
+
   @action async loadPageData(unicodeName: string, missionId: string) {
     try {
       this.loading = true
