@@ -36,7 +36,7 @@ import { get } from 'lodash-es'
     'mission-lte-setting': () => import('../components/learn/mission-lte-setting.vue'),
   },
 })
-export default class MissionForm extends Vue {
+export default class EditLearnMissionForm extends Vue {
   @Provide() vm = new EditLearnMissionViewModel(get(this.$route, 'params.unicodeName'), get(this.$route, 'params.id'))
 
   goBack() {
