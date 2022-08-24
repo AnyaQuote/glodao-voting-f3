@@ -109,14 +109,11 @@ export class EditSocialMissionViewModel {
             break
           case 'twitter':
             element.forEach((task, index) => {
-              //
               let component = SocialTaskComponent.FOLLOW_TWITTER
               if (task.type === 'follow') {
                 component = SocialTaskComponent.FOLLOW_TWITTER
               } else if (task.type === 'like') {
-                //TODO: add like type
                 component = SocialTaskComponent.LIKE_TWITTER
-                // component = SocialTaskComponent.COMMENT_TWITTER
               } else if (task.type === 'quote') {
                 component = SocialTaskComponent.QUOTE_TWITTER
               } else if (task.type === 'comment') {
