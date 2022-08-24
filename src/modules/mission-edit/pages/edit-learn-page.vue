@@ -37,7 +37,7 @@ import { get } from 'lodash-es'
   },
 })
 export default class MissionForm extends Vue {
-  @Provide() vm = new EditLearnMissionViewModel(get(this.$route, 'params.unicodeName'))
+  @Provide() vm = new EditLearnMissionViewModel(get(this.$route, 'params.unicodeName'), get(this.$route, 'params.id'))
 
   goBack() {
     this.$router.go(-1)

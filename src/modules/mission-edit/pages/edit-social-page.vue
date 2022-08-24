@@ -37,10 +37,7 @@ import { get } from 'lodash-es'
   },
 })
 export default class EditSocialMissionForm extends Vue {
-  @Provide() vm = new EditSocialMissionViewModel(
-    get(this.$route, 'params.unicodeName'),
-    get(this.$route, 'params.missionId')
-  )
+  @Provide() vm = new EditSocialMissionViewModel(get(this.$route, 'params.unicodeName'), get(this.$route, 'params.id'))
 
   goBack() {
     this.$router.go(-1)
