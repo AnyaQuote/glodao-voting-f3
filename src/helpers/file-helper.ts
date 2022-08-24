@@ -173,3 +173,14 @@ export const generateFileFromUrl = async (url: string) => {
   const file = new File([blob], `file.${extension}`, { type: `image/${extension}` })
   return file
 }
+
+/**
+ * Create plain file object from data
+ * @param data text file data
+ * @param fileName file name
+ * @returns File object
+ */
+export const generateTextFileFromData = (data: string, fileName: string) => {
+  const blob = new Blob([data], { type: 'text/plain;charset=utf-8;' })
+  return new File([blob], fileName, { type: 'text/plain;charset=utf-8;' })
+}

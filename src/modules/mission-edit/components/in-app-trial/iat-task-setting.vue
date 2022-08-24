@@ -36,7 +36,7 @@
         depressed
         :loading="vm.btnLoading"
         @click="createMission"
-        >Create</v-btn
+        >Update</v-btn
       >
     </div>
     <!-- ---------------------------------------------------------------------------------------------------- -->
@@ -46,7 +46,7 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
+import { EditInAppTrialViewModel } from '../../viewmodels/edit-iat-viewmodels'
 
 @Observer
 @Component({
@@ -55,7 +55,7 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
   },
 })
 export default class InAppTrialTaskSetting extends Vue {
-  @Inject() vm!: NewInAppTrialViewModel
+  @Inject() vm!: EditInAppTrialViewModel
 
   valid = false
 

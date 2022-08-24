@@ -1,7 +1,7 @@
 <template>
   <v-sheet class="rounded-lg" outlined>
     <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-      <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
+      <span class="text-h5 font-weight-bold text-uppercase">Update mission</span>
     </div>
     <v-divider />
     <v-form v-model="valid" class="pa-7">

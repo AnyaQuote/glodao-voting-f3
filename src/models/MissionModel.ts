@@ -69,6 +69,7 @@ export interface InAppTrialInfo {
   appLogo?: File | null
   appStoreLink?: string
   chPlayLink?: string
+  webAppLink?: string
   appDescription?: string
   taskDescription?: string
   tokenBasePrice?: string
@@ -76,6 +77,7 @@ export interface InAppTrialInfo {
 
 export interface InAppTrialTask {
   context?: string
+  code?: string
 }
 
 export type IatInfoProp =

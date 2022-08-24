@@ -200,16 +200,16 @@ const routes: Array<RouteConfig> = [
       title: 'In App Trial Mission detail',
     },
   },
-  // {
-  //   path: '/projects/:unicodeName/mission-edit/learn/:id',
-  //   name: RouteName.MISSION_LEARN_DETAIL,
-  //   component: () => import('@/modules/mission-edit/pages/learn-detail-page.vue'),
-  //   meta: {
-  //     auth: true,
-  //     wallet: true,
-  //     title: 'Edit Learn Mission',
-  //   },
-  // },
+  {
+    path: '/projects/:unicodeName/mission-edit/learn/:id',
+    name: RouteName.MISSION_EDIT_LEARN,
+    component: () => import('@/modules/mission-edit/pages/edit-learn-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Edit Learn Mission',
+    },
+  },
   {
     path: '/projects/:unicodeName/mission-edit/social/:id',
     name: RouteName.MISSION_EDIT_SOCIAL,
@@ -220,16 +220,16 @@ const routes: Array<RouteConfig> = [
       title: 'Edit Social Mission',
     },
   },
-  // {
-  //   path: '/projects/:unicodeName/app-trial-edit/iat/:id',
-  //   name: RouteName.MISSION_IAT_DETAIL,
-  //   component: () => import('@/modules/mission-edit/pages/iat-detail-page.vue'),
-  //   meta: {
-  //     auth: true,
-  //     wallet: true,
-  //     title: 'Edit In App Trial Mission',
-  //   },
-  // },
+  {
+    path: '/projects/:unicodeName/app-trial-edit/iat/:id',
+    name: RouteName.MISSION_EDIT_IAT,
+    component: () => import('@/modules/mission-edit/pages/edit-iat-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Edit In App Trial Mission',
+    },
+  },
   {
     path: '/comming-soon',
     name: RouteName.COMMING_SOON,

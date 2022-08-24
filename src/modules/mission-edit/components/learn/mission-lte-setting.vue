@@ -3,7 +3,7 @@
     <div class="pa-6 text-center rounded-lg rounded-b-0 blue-2 d-flex align-center">
       <div class="d-flex align-center cursor-pointer" @click="back">
         <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
-        <span class="text-subtitle-2">Create mission</span>
+        <span class="text-subtitle-2">Update mission</span>
       </div>
       <div
         class="p-absolute text-h5 font-weight-bold blue-diversity--text"
@@ -109,7 +109,7 @@
             depressed
             block
           >
-            Create
+            Update
           </v-btn>
         </div>
       </div>
