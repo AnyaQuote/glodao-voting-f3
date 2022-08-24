@@ -122,7 +122,6 @@ export class EditSocialMissionViewModel {
               } else if (task.type === 'comment') {
                 component = SocialTaskComponent.COMMENT_TWITTER
               }
-              console.log(component)
               this.twitter.push({
                 key: index,
                 component,
