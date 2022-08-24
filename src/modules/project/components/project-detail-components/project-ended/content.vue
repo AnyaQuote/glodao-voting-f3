@@ -110,11 +110,17 @@ export default class ProjectEndedContent extends Vue {
     const type = missionType || EMPTY_STRING
     const id = missionId || EMPTY_STRING
     const unicodeName = get(this.vm.poolStore, 'unicodeName', EMPTY_STRING)
-    if (missionType === MissionType.SOCIAL)
+    if (type === MissionType.SOCIAL) {
       this.$router.push({
         name: RouteName.MISSION_EDIT_SOCIAL,
         params: { unicodeName, id },
       })
+    } else if (type === MissionType.LEARN) {
+      this.$router.push({
+        name: RouteName.MISSION_EDIT_LEARN,
+        params: { unicodeName, id },
+      })
+    }
   }
 
   goToMissionDetail(missionType?: string, missionId?: string) {
