@@ -6,7 +6,7 @@
 
     <div class="font-weight-bold text-subtitle-1 my-2">Task description<span class="red--text">*</span></div>
     <app-textarea
-      :value="taskDesciption"
+      :value="vm.taskDesciption"
       :rules="[$rules.required]"
       @change="vm.updateIatInfo('taskDescription', $event)"
       placeholder="Enter task description, guideline or developer notes..."
