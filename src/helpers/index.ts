@@ -5,6 +5,7 @@ import {
   ERROR_MSG_SOCIAL_SETTING_DATA_NOT_FOUND,
   ERROR_MSG_SOCIAL_SETTING_TYPE_NOT_FOUND,
   FOLLOW_TASK_TYPE_DEFAULT_CONFIG,
+  LIKE_TASK_TYPE_DEFAULT_CONFIG,
   QUOTE_TASK_TYPE_DEFAULT_CONFIG,
 } from '@/constants'
 import { SocialTaskComponent, SocialTaskType, SocialType, TaskConfig } from '@/models/MissionModel'
@@ -55,6 +56,12 @@ export const getDefaultSettingConfig = (social: string, type: string, key: numbe
         return {
           setting: FOLLOW_TASK_TYPE_DEFAULT_CONFIG,
           component: SocialTaskComponent.FOLLOW_TWITTER,
+          key,
+        }
+      case SocialTaskType.LIKE:
+        return {
+          setting: LIKE_TASK_TYPE_DEFAULT_CONFIG,
+          component: SocialTaskComponent.LIKE_TWITTER,
           key,
         }
       case SocialTaskType.COMMENT:
