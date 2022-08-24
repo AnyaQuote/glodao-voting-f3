@@ -1,8 +1,12 @@
 <template>
-  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Quote a tweet" @remove="removeSetting">
-    <div class="font-18 font-weight-bold d-flex flex-column flex-md-row">
-      Tweet from twitter page name<span class="red--text">*</span>
-    </div>
+  <expand-container
+    class="mt-4"
+    type="twitter"
+    title="Twitter task"
+    subtitle="Like and reply a post"
+    @remove="removeSetting"
+  >
+    <div class="font-18 font-weight-bold">Tweet from twitter page name<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
       :value="pageName"
@@ -10,27 +14,20 @@
       placeholder="GLODAO Channel"
       @change="updateConfig('setting.page', $event)"
     />
-    <div class="font-18 font-weight-bold mt-2">Twitter link<span class="red--text">*</span></div>
+    <div class="font-18 font-weight-bold mt-2">Twitter post link<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
-      :value="tweetLink"
       append-icon="mdi-link"
       :rules="[$rules.required, $rules.url]"
+      :value="tweetLink"
       @change="updateConfig('setting.link', $event)"
       placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
-    />
-    <div class="font-18 font-weight-bold mt-2">Twitter hashtag<span class="red--text">*</span></div>
-    <app-autocomplete
-      :value="hashtag"
-      placeholder="Enter your hashtag"
-      @onChange="updateConfig('setting.hashtag', $event)"
-      :rules="[(v) => !!(v && v.length) || 'This field is required']"
     />
   </expand-container>
 </template>
 
 <script lang="ts">
-import { EMPTY_ARRAY, EMPTY_STRING } from '@/constants'
+import { EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
 import { set } from 'lodash-es'
@@ -41,10 +38,9 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 @Component({
   components: {
     'expand-container': () => import('../../common/expand-container.vue'),
-    'app-autocomplete': () => import('@/modules/regist/components/common/app-autocomplete.vue'),
   },
 })
-export default class TwitterQuoteTask extends Vue {
+export default class TwitterCommentTask extends Vue {
   @Prop({ required: true }) inputConfig!: TaskConfig
 
   taskConfig = this.inputConfig
@@ -73,10 +69,6 @@ export default class TwitterQuoteTask extends Vue {
 
   get tweetLink() {
     return this.taskConfig.setting?.link || EMPTY_STRING
-  }
-
-  get hashtag() {
-    return this.taskConfig.setting?.hashtag || EMPTY_ARRAY
   }
 }
 </script>

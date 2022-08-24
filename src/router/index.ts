@@ -45,6 +45,9 @@ export enum RouteName {
   MISSION_LEARN_DETAIL = 'learn-mission-detail',
   MISSION_SOCIAL_DETAIL = 'social-mission-detail',
   MISSION_IAT_DETAIL = 'iat-mission-detail',
+  MISSION_EDIT_LEARN = 'learn-mission-edit',
+  MISSION_EDIT_SOCIAL = 'social-mission-edit',
+  MISSION_EDIT_IAT = 'iat-mission-edit',
   NOT_FOUND = 'not-found',
   UNAUTHENTICATED = 'unauthenticated',
   COMMING_SOON = 'comming-soon',
@@ -197,6 +200,36 @@ const routes: Array<RouteConfig> = [
       title: 'In App Trial Mission detail',
     },
   },
+  // {
+  //   path: '/projects/:unicodeName/mission-edit/learn/:id',
+  //   name: RouteName.MISSION_LEARN_DETAIL,
+  //   component: () => import('@/modules/mission-edit/pages/learn-detail-page.vue'),
+  //   meta: {
+  //     auth: true,
+  //     wallet: true,
+  //     title: 'Edit Learn Mission',
+  //   },
+  // },
+  {
+    path: '/projects/:unicodeName/mission-edit/social/:id',
+    name: RouteName.MISSION_EDIT_SOCIAL,
+    component: () => import('@/modules/mission-edit/pages/edit-social-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'Edit Social Mission',
+    },
+  },
+  // {
+  //   path: '/projects/:unicodeName/app-trial-edit/iat/:id',
+  //   name: RouteName.MISSION_IAT_DETAIL,
+  //   component: () => import('@/modules/mission-edit/pages/iat-detail-page.vue'),
+  //   meta: {
+  //     auth: true,
+  //     wallet: true,
+  //     title: 'Edit In App Trial Mission',
+  //   },
+  // },
   {
     path: '/comming-soon',
     name: RouteName.COMMING_SOON,

@@ -68,6 +68,7 @@ export default class AppTokenBasePriceConverter extends Vue {
       this.disable = true
     } catch (error) {
       this.message = MSG_TOKEN_CONTRACT_ADDRS_CAN_NOT_BE_CONVERTED
+      if (this.value) this.tokenBasePrice = this.value
     } finally {
       this.loading = false
     }

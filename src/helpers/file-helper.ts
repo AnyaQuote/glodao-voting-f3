@@ -146,6 +146,11 @@ export const checkQuizFile = async (file?: File | null) => {
   return ''
 }
 
+/**
+ * Convert data to CSV file and download it
+ * @param data data to convert to csv
+ * @param fileName csv file name
+ */
 export const exportToCsvAndDownload = (data: any[], fileName: string) => {
   const csv = Papa.unparse(data)
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
@@ -154,4 +159,17 @@ export const exportToCsvAndDownload = (data: any[], fileName: string) => {
   link.setAttribute('href', url)
   link.setAttribute('download', fileName)
   link.click()
+}
+
+/**
+ * Generate file object from url
+ * @param url url to download file
+ * @returns File object
+ */
+export const generateFileFromUrl = async (url: string) => {
+  const response = await fetch(url)
+  const extension = url.split('.').pop()
+  const blob = await response.blob()
+  const file = new File([blob], `file.${extension}`, { type: `image/${extension}` })
+  return file
 }
