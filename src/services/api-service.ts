@@ -310,6 +310,15 @@ export class ApiService {
     return res.data
   }
 
+  async updateTask(model) {
+    const res = await this.axios.post('tasks/updateTask', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
   /**
    * Get average applied community reward
    * @param limit number of tasks to calculate average from
