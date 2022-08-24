@@ -1,5 +1,5 @@
 import { MetaData, MissionType, IatInfoProp, InAppTrialInfo, Mission, Data, IatData } from '@/models/MissionModel'
-import { getApiFileUrl } from './../../../helpers/file-helper'
+import { generateFileFromUrl, getApiFileUrl } from './../../../helpers/file-helper'
 import { appProvider } from '@/app-providers'
 import {
   ZERO_NUM,
@@ -19,6 +19,7 @@ import { get, isEmpty, set, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { generateRandomString } from '@/helpers'
+import { APIKey } from '@/models/ApiKeyModel'
 
 enum AppPlatform {
   MOBILE = 'mobile',
@@ -30,6 +31,8 @@ export class EditInAppTrialViewModel {
   @observable step = 1
   @observable unlocked = 1
 
+  @observable mission: Mission = {}
+  @observable apiKey: APIKey = {}
   @observable iatInfo: InAppTrialInfo = EMPTY_OBJECT
   @observable platformType = AppPlatform.WEB
 
@@ -43,31 +46,89 @@ export class EditInAppTrialViewModel {
   private _router = appProvider.router
 
   constructor(unicodeName: string, missionId: string) {
-    this.loadPageData(unicodeName)
+    this.loadPageData(unicodeName, missionId)
   }
 
-  @asyncAction *loadPageData(unicodeName: string) {
+  @action async loadPageData(unicodeName: string, missionId: string) {
     try {
       this.loading = true
-      const pools = yield this._api.voting.find(
-        {
-          unicodeName,
-          projectOwner: this._auth.projectOwnerId,
-        },
+
+      // Get pool
+      const pools = await this._api.voting.find<VotingPool>(
+        { unicodeName, projectOwner: this._auth.projectOwnerId },
         { _limit: 1 }
       )
       if (isEmpty(pools)) {
-        this._router.replace(RouteName.NOT_FOUND)
+        this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.pool = pools[0]
-      const appliedMission = yield this._api.tasks.count({
-        votingPool: this.pool.id,
-      })
-      this.appliedMission = toNumber(appliedMission)
+
+      // Get mission
+      const missions = await this._api.tasks.find<Mission>({ votingPool: this.pool.id, id: missionId }, { _limit: 1 })
+      if (isEmpty(missions)) {
+        this._router.replace({ name: RouteName.NOT_FOUND })
+      }
+      this.mission = missions[0]
+
+      // Get api key
+      const apiKey = await this._api.apiKey.find<APIKey>({ projectOwner: this._auth.projectOwnerId }, { _limit: 1 })
+      if (isEmpty(apiKey)) {
+        this._router.replace({ name: RouteName.NOT_FOUND })
+      }
+      this.apiKey = apiKey[0]
+
+      this.iatInfo = {
+        startDate: this.mission.startTime,
+        endDate: this.mission.endTime,
+        appTitle: this.mission.name,
+        maxParticipants: this.mission.maxParticipants?.toString(),
+        missionReward: this.mission.rewardAmount,
+        tokenBasePrice: this.mission.tokenBasePrice,
+        taskDescription: this.mission.metadata?.taskDescription,
+        appDescription: this.mission.metadata?.shortDescription,
+      }
+      this.initializeMissionType()
+      this.initializeMissionTask()
+      await this.initializeMissionScreenshots()
+      if (this.mission.metadata?.coverImage)
+        this.iatInfo.appLogo = await generateFileFromUrl(this.mission.metadata?.coverImage)
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
       this.loading = false
+    }
+  }
+
+  initializeMissionTask = () => {
+    this.iatInfo.tasks = get(this.mission, 'data.iat', []).map((task) => ({
+      context: task.context,
+      code: task.code,
+    }))
+  }
+
+  initializeMissionScreenshots = async () => {
+    const screenshots = get(this.mission, 'metadata.screenshots', EMPTY_ARRAY)
+    const result: File[] = []
+    for (let index = 0; index < screenshots.length; index++) {
+      const element = screenshots[index]
+      const f = await generateFileFromUrl(element)
+      result.push(f)
+    }
+    this.iatInfo.screenShots = result
+  }
+
+  initializeMissionType = () => {
+    const webUrl = get(this.mission, 'metadata.webUrl', EMPTY_STRING)
+    const appStoreUrl = get(this.mission, 'metadata.appStoreUrl', EMPTY_STRING)
+    const googlePlayUrl = get(this.mission, 'metadata.googlePlayUrl', EMPTY_STRING)
+
+    if (isEmpty(webUrl)) {
+      this.platformType = AppPlatform.MOBILE
+      this.iatInfo.chPlayLink = googlePlayUrl
+      this.iatInfo.appStoreLink = appStoreUrl
+    } else {
+      this.platformType = AppPlatform.WEB
+      this.iatInfo.webAppLink = webUrl
     }
   }
 
@@ -166,7 +227,7 @@ export class EditInAppTrialViewModel {
     // Populate app trial task data
     const iatData: IatData[] = info.tasks!.map((task) => {
       return {
-        code: generateRandomString(),
+        code: task.code ? task.code : generateRandomString(),
         context: task.context!,
         required: true,
       }
@@ -200,8 +261,8 @@ export class EditInAppTrialViewModel {
       // [0] app Logo, [...rest] screenshots
       const sources = await this.getImageSources(uploadFiles)
       const missionModel = await this.getModel(this.iatInfo, this.pool, sources)
-      await this._api.createTask(missionModel)
-      this._snackbar.addSuccess()
+      await this._api.updateTask({ ...missionModel, id: this.mission.id })
+      this._snackbar.updateSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
         params: {
