@@ -36,7 +36,7 @@
         depressed
         :loading="vm.btnLoading"
         @click="createMission"
-        >Create</v-btn
+        >Update</v-btn
       >
     </div>
     <!-- ---------------------------------------------------------------------------------------------------- -->

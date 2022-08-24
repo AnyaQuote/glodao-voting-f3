@@ -23,7 +23,7 @@
         <v-col cols="12" sm="9">
           <v-sheet class="rounded-lg mb-16" outlined elevation="3">
             <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-              <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
+              <span class="text-h5 font-weight-bold text-uppercase">Update mission</span>
             </div>
             <v-divider />
             <v-form class="pa-7">
