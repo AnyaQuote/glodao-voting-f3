@@ -118,6 +118,8 @@ export class EditSocialMissionViewModel {
                 component = SocialTaskComponent.QUOTE_TWITTER
               } else if (task.type === 'comment') {
                 component = SocialTaskComponent.COMMENT_TWITTER
+              } else if (task.type === 'retweet') {
+                component = SocialTaskComponent.RETWEET_TWITTER
               }
               this.twitter.push({
                 key: index,
