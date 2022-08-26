@@ -7,6 +7,7 @@ import {
   FOLLOW_TASK_TYPE_DEFAULT_CONFIG,
   LIKE_TASK_TYPE_DEFAULT_CONFIG,
   QUOTE_TASK_TYPE_DEFAULT_CONFIG,
+  RETWEET_TASK_TYPE_DEFAULT_CONFIG,
 } from '@/constants'
 import { SocialTaskComponent, SocialTaskType, SocialType, TaskConfig } from '@/models/MissionModel'
 import { isEmpty } from 'lodash'
@@ -56,6 +57,12 @@ export const getDefaultSettingConfig = (social: string, type: string, key: numbe
         return {
           setting: FOLLOW_TASK_TYPE_DEFAULT_CONFIG,
           component: SocialTaskComponent.FOLLOW_TWITTER,
+          key,
+        }
+      case SocialTaskType.RETWEET:
+        return {
+          setting: RETWEET_TASK_TYPE_DEFAULT_CONFIG,
+          component: SocialTaskComponent.RETWEET_TWITTER,
           key,
         }
       case SocialTaskType.LIKE:

@@ -93,6 +93,14 @@ export const LIKE_TASK_TYPE_DEFAULT_CONFIG = {
   required: true,
 }
 
+export const RETWEET_TASK_TYPE_DEFAULT_CONFIG = {
+  type: SocialTaskType.RETWEET,
+  link: EMPTY_STRING,
+  page: EMPTY_STRING,
+  embedLink: EMPTY_STRING,
+  required: true,
+}
+
 export const QUOTE_TASK_TYPE_DEFAULT_CONFIG = {
   type: SocialTaskType.QUOTE,
   content: EMPTY_STRING,

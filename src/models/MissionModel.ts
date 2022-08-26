@@ -131,6 +131,7 @@ export enum SocialTaskType {
   QUOTE = 'quote',
   CUSTOM = 'custom',
   LIKE = 'like',
+  RETWEET = 'retweet',
 }
 
 export enum SocialTaskComponent {
@@ -143,6 +144,7 @@ export enum SocialTaskComponent {
   JOIN_DISCORD = 'discord-join-task',
   FOLLOW_FACEBOOK = 'facebook-follow-task',
   CUSTOM_TASK = 'custom-task',
+  RETWEET_TWITTER = 'twitter-retweet-task',
 }
 
 export interface TaskConfig {
