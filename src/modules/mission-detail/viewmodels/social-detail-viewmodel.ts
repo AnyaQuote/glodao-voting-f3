@@ -89,7 +89,12 @@ export class SocialMissionDetailViewModel {
   }
 
   @computed get totalParticipants() {
-    return toNumber(get(this.mission, 'totalParticipants', 0))
+    const maxPriorityParticipants = toNumber(get(this.mission, 'maxPriorityParticipants', 0))
+    if (maxPriorityParticipants > this.totalParticipants) {
+      return this.totalParticipants
+    } else {
+      return maxPriorityParticipants
+    }
   }
 
   // For social mission
