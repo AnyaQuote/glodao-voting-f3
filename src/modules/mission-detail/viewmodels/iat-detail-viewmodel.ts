@@ -1,5 +1,5 @@
 import { EMPTY_STRING, EMPTY_ARRAY } from '@/constants/index'
-import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
+import { promiseHelper } from '@/helpers/promise-helper'
 import { appProvider } from '@/app-providers'
 import { DisplayIatData, Mission } from '@/models/MissionModel'
 import { VotingPool } from '@/models/VotingModel'
@@ -7,6 +7,10 @@ import { action, computed, observable } from 'mobx'
 import { get, isEmpty, find } from 'lodash-es'
 import { RouteName } from '@/router'
 import { APIKey, ReferenceTask } from '@/models/ApiKeyModel'
+import { asyncAction } from 'mobx-utils'
+import { exportToCsvAndDownload } from '@/helpers/file-helper'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
+import moment from 'moment'
 
 export class InAppTrialDetailViewModel {
   @observable loading = false
@@ -14,6 +18,7 @@ export class InAppTrialDetailViewModel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable apiKey: APIKey = {}
+  @observable loading_button = false
 
   private _auth = appProvider.authStore
   private _snackbar = appProvider.snackbar
@@ -24,10 +29,34 @@ export class InAppTrialDetailViewModel {
     this.loadPageData(unicodeName, missionId)
   }
 
+  @action async export(type: string) {
+    const start = moment()
+    const missionEnd = moment(this.mission.endTime)
+    if (start.isBefore(missionEnd) && type === 'reward') {
+      snackController.commonError('Can not export file csv because the mission has not been over yet')
+      return
+    }
+    try {
+      this.loading_button = true
+      let data
+      if (type === 'user') {
+        data = await this._api.getTaskUserReport(this.mission.id!, 'user')
+        exportToCsvAndDownload(data, this.mission.name!)
+      } else {
+        data = await this._api.getTaskUserReport(this.mission.id!, 'rewards')
+        exportToCsvAndDownload(data, this.mission.name!)
+      }
+    } catch (error) {
+      snackController.commonError(error)
+    } finally {
+      this.loading_button = false
+    }
+  }
+
   @action async loadPageData(unicodeName: string, missionId: string) {
     try {
       this.loading = true
-      await waitForGlobalLoadingFinished()
+
       // Get pool
       const pools = await this._api.voting.find<VotingPool>(
         { unicodeName, projectOwner: this._auth.projectOwnerId },
@@ -44,8 +73,6 @@ export class InAppTrialDetailViewModel {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.mission = missions[0]
-
-      // Get api key
       const apiKey = await this._api.apiKey.find<APIKey>({ projectOwner: this._auth.projectOwnerId }, { _limit: 1 })
       if (isEmpty(apiKey)) {
         this._router.replace({ name: RouteName.NOT_FOUND })

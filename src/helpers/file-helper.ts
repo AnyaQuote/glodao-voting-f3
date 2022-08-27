@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-escape */
 import { Answer, QuizData, PreviewQuiz } from '@/models/QuizModel'
 import { get } from 'lodash'
+import Papa from 'papaparse'
 const API_ENDPOINT = process.env.VUE_APP_API_STRAPI_ENDPOINT
 
 const extractRegex = /(?:([^\s|\|].+?)(?=\s*\|\s*))|(?<=\n?)(\d)(?!\s*\|\s*)/g
@@ -143,4 +144,43 @@ export const checkQuizFile = async (file?: File | null) => {
     }
   }
   return ''
+}
+
+/**
+ * Convert data to CSV file and download it
+ * @param data data to convert to csv
+ * @param fileName csv file name
+ */
+export const exportToCsvAndDownload = (data: any[], fileName: string) => {
+  const csv = Papa.unparse(data)
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.setAttribute('href', url)
+  link.setAttribute('download', fileName)
+  link.click()
+}
+
+/**
+ * Generate file object from url
+ * @param url url to download file
+ * @returns File object
+ */
+export const generateFileFromUrl = async (url: string) => {
+  const response = await fetch(url)
+  const extension = url.split('.').pop()
+  const blob = await response.blob()
+  const file = new File([blob], `file.${extension}`, { type: `image/${extension}` })
+  return file
+}
+
+/**
+ * Create plain file object from data
+ * @param data text file data
+ * @param fileName file name
+ * @returns File object
+ */
+export const generateTextFileFromData = (data: string, fileName: string) => {
+  const blob = new Blob([data], { type: 'text/plain;charset=utf-8;' })
+  return new File([blob], fileName, { type: 'text/plain;charset=utf-8;' })
 }

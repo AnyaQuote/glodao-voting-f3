@@ -310,6 +310,15 @@ export class ApiService {
     return res.data
   }
 
+  async updateTask(model) {
+    const res = await this.axios.post('tasks/updateTask', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
+
   /**
    * Get average applied community reward
    * @param limit number of tasks to calculate average from
@@ -366,6 +375,25 @@ export class ApiService {
   async checkTelegramBotIsAdded(link: string) {
     const response = await this.axios.post(`/tasks/verifyTelegramLink`, {
       link,
+    })
+    return response.data
+  }
+
+  /**
+   * Get task report from api for csv download
+   * @param id task id
+   * @param type type of report which need to get
+   * @returns array of csv lines
+   */
+  async getTaskUserReport(id: string, type?: string) {
+    const response = await this.axios.get(`/tasks/exportUsers/`, {
+      params: {
+        id,
+        type,
+      },
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
     })
     return response.data
   }

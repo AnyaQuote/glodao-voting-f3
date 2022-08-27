@@ -69,6 +69,7 @@ export interface InAppTrialInfo {
   appLogo?: File | null
   appStoreLink?: string
   chPlayLink?: string
+  webAppLink?: string
   appDescription?: string
   taskDescription?: string
   tokenBasePrice?: string
@@ -76,6 +77,7 @@ export interface InAppTrialInfo {
 
 export interface InAppTrialTask {
   context?: string
+  code?: string
 }
 
 export type IatInfoProp =
@@ -128,6 +130,8 @@ export enum SocialTaskType {
   COMMENT = 'comment',
   QUOTE = 'quote',
   CUSTOM = 'custom',
+  LIKE = 'like',
+  RETWEET = 'retweet',
 }
 
 export enum SocialTaskComponent {
@@ -136,9 +140,11 @@ export enum SocialTaskComponent {
   FOLLOW_TWITTER = 'twitter-follow-task',
   QUOTE_TWITTER = 'twitter-quote-task',
   COMMENT_TWITTER = 'twitter-comment-task',
+  LIKE_TWITTER = 'twitter-like-task',
   JOIN_DISCORD = 'discord-join-task',
   FOLLOW_FACEBOOK = 'facebook-follow-task',
   CUSTOM_TASK = 'custom-task',
+  RETWEET_TWITTER = 'twitter-retweet-task',
 }
 
 export interface TaskConfig {

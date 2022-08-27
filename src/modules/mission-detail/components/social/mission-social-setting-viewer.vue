@@ -17,7 +17,7 @@
       </div>
       <!-- </div> -->
       <div v-if="SocialTaskType.QUOTE === task.type" class="mt-2 text-subtitle-2 font-weight-600">
-        <span>Hastag:&nbsp;</span>
+        <span>Hashtag:&nbsp;</span>
         <span v-for="(item, index) in task.hashtag" :key="index" class="blue-diversity--text">#{{ item }}&nbsp;</span>
       </div>
 
@@ -157,11 +157,15 @@ export default class MissionSocialSettingViewer extends Vue {
     return (taskType, taskPage) => {
       switch (taskType) {
         case SocialTaskType.COMMENT:
-          return `Like and reply a post from ${taskPage}`
+          return `Reply a post from ${taskPage}`
         case SocialTaskType.QUOTE:
           return `Quote a tweet from ${taskPage}`
         case SocialTaskType.FOLLOW:
           return `Follow project twitter from ${taskPage}`
+        case SocialTaskType.LIKE:
+          return `Like project twitter from ${taskPage}`
+        case SocialTaskType.RETWEET:
+          return `Retweet a tweet from ${taskPage}`
         default:
           return `${taskType} twitter`
       }

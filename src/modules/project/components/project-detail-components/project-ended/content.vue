@@ -9,13 +9,25 @@
         v-ripple
       >
         <v-img max-height="239" aspect-ratio="1" :src="$_get(mission, 'metadata.coverImage')" class="rounded-t-lg">
-          <div
-            class="d-inline-block rounded pa-2 mt-2 ml-2 text-subtitle-2 text-uppercase black--text"
-            :class="$_get(mission, 'status') === 'ended' ? 'neutral-100' : 'app-green lighten-1'"
-          >
-            {{ $_get(mission, 'status') }}
+          <div class="d-flex justify-space-between">
+            <div
+              class="rounded pr-2 pl-2 mt-2 ml-2 text-subtitle-2 text-uppercase white--text d-flex justify-space-between align-center"
+              :class="$_get(mission, 'status') === 'ended' ? 'neutral-100' : 'app-green lighten-1'"
+            >
+              {{ $_get(mission, 'status') }}
+            </div>
+            <v-btn
+              @click.stop="showMissionType(mission.type, mission.id, mission.startTime, mission.endTime)"
+              class="d-inline-block rounded mr-2 mt-2"
+              color="white"
+              fab
+              x-small
+            >
+              <v-icon size="25" color="black"> mdi-pencil </v-icon>
+            </v-btn>
           </div>
         </v-img>
+
         <div class="pa-6">
           <div class="font-weight-600 text-h5 mb-2 text-truncate">
             {{ mission.name }} #<span>{{ index + 1 }}</span>
@@ -74,11 +86,49 @@ import { RouteName } from '@/router'
 import { get } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
+import moment from 'moment'
+import { snackController } from '@/components/snack-bar/snack-bar-controller'
 
 @Observer
 @Component
 export default class ProjectEndedContent extends Vue {
   @Inject() vm!: ProjectDetailViewModel
+
+  showMissionType(missionType?: string, missionId?: string, startTime?: any, endTime?: any) {
+    const now = moment()
+
+    if (now.isAfter(endTime)) {
+      snackController.error('This mission has ended')
+      return
+    } else if (now.isAfter(startTime)) {
+      snackController.error('This mission has already started')
+      return
+    } else if (Math.abs(now.diff(startTime, 'hours')) < 24) {
+      snackController.error('You can only edit mission 24 hours before it starts')
+      return
+    }
+    const type = missionType || EMPTY_STRING
+    const id = missionId || EMPTY_STRING
+    const unicodeName = get(this.vm.poolStore, 'unicodeName', EMPTY_STRING)
+    if (type === MissionType.SOCIAL) {
+      this.$router.push({
+        name: RouteName.MISSION_EDIT_SOCIAL,
+        params: { unicodeName, id },
+      })
+    } else if (type === MissionType.LEARN) {
+      this.$router.push({
+        name: RouteName.MISSION_EDIT_LEARN,
+        params: { unicodeName, id },
+      })
+    } else if (type === MissionType.APP_TRIAL) {
+      this.$router.push({
+        name: RouteName.MISSION_EDIT_IAT,
+        params: { unicodeName, id },
+      })
+    } else {
+      snackController.error('Not implemented yet')
+    }
+  }
 
   goToMissionDetail(missionType?: string, missionId?: string) {
     const type = missionType || EMPTY_STRING
