@@ -103,10 +103,13 @@ export default class ProjectEndedContent extends Vue {
     } else if (now.isAfter(startTime)) {
       snackController.error('This mission has already started')
       return
-    } else if (Math.abs(now.diff(startTime, 'hours')) < 24) {
-      snackController.error('You can only edit mission 24 hours before it starts')
-      return
     }
+    //TODO: the code down here is correct but customer dont want it, so I will leave this here for future
+    // bullshit
+    // else if (Math.abs(now.diff(startTime, 'hours')) < 24) {
+    //   snackController.error('You can only edit mission 24 hours before it starts')
+    //   return
+    // }
     const type = missionType || EMPTY_STRING
     const id = missionId || EMPTY_STRING
     const unicodeName = get(this.vm.poolStore, 'unicodeName', EMPTY_STRING)
