@@ -1,11 +1,5 @@
 <template>
-  <expand-container
-    class="mt-4"
-    type="twitter"
-    title="Twitter task"
-    subtitle="Like project twitter"
-    @remove="removeSetting"
-  >
+  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Like tweet" @remove="removeSetting">
     <div class="font-18 font-weight-bold">Project from twitter page name<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
@@ -15,7 +9,7 @@
       @change="updateConfig('setting.page', $event)"
     />
 
-    <div class="font-18 font-weight-bold">Twitter project link<span class="red--text">*</span></div>
+    <div class="font-18 font-weight-bold">Tweet link<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
       :rules="[$rules.required, $rules.url]"
