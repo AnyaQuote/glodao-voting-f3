@@ -4,7 +4,7 @@
     <v-sheet v-for="(prop, index) in data" :key="index" class="d-flex rounded">
       <!-- ==== Type select ==== -->
       <app-select
-        class="rounded-r-0"
+        class="rounded-r-0 min-width-200"
         :items="platforms"
         :value="prop.type"
         :rules="[$rules.required]"
@@ -138,5 +138,8 @@ export default class SocialLinkFields extends Vue {
 <style lang="scss" scoped>
 .w-90 {
   width: 110%;
+}
+.min-width-200 {
+  min-width: 200px;
 }
 </style>
