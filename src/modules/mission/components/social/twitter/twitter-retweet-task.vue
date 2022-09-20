@@ -1,6 +1,12 @@
 <template>
-  <expand-container class="mt-4" type="twitter" title="Twitter task" subtitle="Reply a post" @remove="removeSetting">
-    <div class="font-18 font-weight-bold">Tweet from twitter page name<span class="red--text">*</span></div>
+  <expand-container
+    class="mt-4"
+    type="twitter"
+    title="Twitter task"
+    subtitle="Retweet project twitter"
+    @remove="removeSetting"
+  >
+    <div class="font-18 font-weight-bold">Project from twitter page name<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
       :value="pageName"
@@ -8,14 +14,15 @@
       placeholder="GLODAO Channel"
       @change="updateConfig('setting.page', $event)"
     />
-    <div class="font-18 font-weight-bold mt-2">Twitter post link<span class="red--text">*</span></div>
+
+    <div class="font-18 font-weight-bold">Twitter project link<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
-      append-icon="mdi-link"
       :rules="[$rules.required, $rules.url]"
-      :value="tweetLink"
+      :value="twitterLink"
       @change="updateConfig('setting.link', $event)"
-      placeholder="https://twitter.com/CyberKDev/status/1546685980857745408"
+      placeholder="https://twitter.com/GloDAO_Official"
+      append-icon="mdi-link"
     />
   </expand-container>
 </template>
@@ -34,7 +41,7 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
     'expand-container': () => import('../../common/expand-container.vue'),
   },
 })
-export default class TwitterCommentTask extends Vue {
+export default class TwitterRetweetTask extends Vue {
   @Prop({ required: true }) inputConfig!: TaskConfig
 
   taskConfig = this.inputConfig
@@ -48,7 +55,7 @@ export default class TwitterCommentTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    if (isNotEmpty(this.pageName) && isNotEmpty(this.tweetLink)) {
+    if (isNotEmpty(this.pageName) && isNotEmpty(this.twitterLink)) {
       this.$emit('change', newSetting)
     }
   }
@@ -61,7 +68,7 @@ export default class TwitterCommentTask extends Vue {
     return this.taskConfig.setting?.page || EMPTY_STRING
   }
 
-  get tweetLink() {
+  get twitterLink() {
     return this.taskConfig.setting?.link || EMPTY_STRING
   }
 }

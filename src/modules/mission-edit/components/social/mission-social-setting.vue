@@ -165,6 +165,8 @@ import { EditSocialMissionViewModel } from '../../viewmodels/edit-social-mission
     [SocialTaskComponent.FOLLOW_TWITTER]: () => import('./twitter/twitter-follow-task.vue'),
     [SocialTaskComponent.QUOTE_TWITTER]: () => import('./twitter/twitter-quote-task.vue'),
     [SocialTaskComponent.COMMENT_TWITTER]: () => import('./twitter/twitter-comment-task.vue'),
+    [SocialTaskComponent.LIKE_TWITTER]: () => import('./twitter/twitter-like-task.vue'),
+    [SocialTaskComponent.RETWEET_TWITTER]: () => import('./twitter/twitter-retweet-task.vue'),
     [SocialTaskComponent.JOIN_DISCORD]: () => import('./discord/discord-join-task.vue'),
     [SocialTaskComponent.FOLLOW_FACEBOOK]: () => import('./facebook/follow-facebook-task.vue'),
     [SocialTaskComponent.CUSTOM_TASK]: () => import('./custom/custom-task.vue'),

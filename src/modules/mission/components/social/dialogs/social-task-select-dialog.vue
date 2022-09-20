@@ -152,7 +152,9 @@ export default class TelegramTaskSelectDialog extends Vue {
   readonly twitterOptions = [
     { type: SocialTaskType.FOLLOW, name: 'Follow project twitter' },
     { type: SocialTaskType.QUOTE, name: 'Quote a tweet' },
-    { type: SocialTaskType.COMMENT, name: 'Like and reply post' },
+    { type: SocialTaskType.COMMENT, name: 'Reply post' },
+    { type: SocialTaskType.LIKE, name: 'Like post' },
+    { type: SocialTaskType.RETWEET, name: 'Retweet post' },
   ]
   readonly discordOptions = [{ type: SocialTaskType.JOIN_SERVER, name: 'Join discord group' }]
   readonly facebookOptions = [{ type: SocialTaskType.FOLLOW, name: 'Follow a facebook fanpage' }]
