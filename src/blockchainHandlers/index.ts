@@ -47,7 +47,7 @@ const getChainConfig = (chainId: any) => {
       break
     case 97:
       name = 'BSC TestNET'
-      rpc = 'https://speedy-nodes-nyc.moralis.io/1d4b28cac6eaaaa2f3c695d6/bsc/testnet'
+      rpc = 'https://data-seed-prebsc-1-s1.binance.org:8545/'
       explorer = 'https://testnet.bscscan.com/'
       break
     case 103:
