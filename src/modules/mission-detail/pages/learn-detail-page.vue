@@ -135,6 +135,14 @@
           </div> -->
               </div>
             </v-sheet>
+            <div class="mt-5">
+              <a
+                :href="`https://app.glodao.io/bounty/${missionId}`"
+                class="text-decoration-underline blue--text font-italic"
+                target="_blank"
+                >Mission link</a
+              >
+            </div>
             <div class="mt-4 d-flex justify-space-between">
               <v-btn
                 :loading="vm.loading_button"
@@ -180,7 +188,7 @@ export default class MissionDetailPage extends Vue {
     get(this.$route, 'params.unicodeName', ''),
     get(this.$route, 'params.id', '')
   )
-
+  missionId = get(this.$route, 'params.id', '')
   readonly tabs = [
     { name: 'Overview', value: 1 },
     { name: 'Document', value: 2 },
