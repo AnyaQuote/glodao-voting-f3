@@ -18,7 +18,7 @@ export class AppProvider {
   wallet = walletStore
 
   @observable lightmode = localData.lightmode
-  // @observable currentTime = moment()
+  @observable currentTime = moment()
 
   constructor(router: VueRouter) {
     this.router = router
@@ -28,11 +28,11 @@ export class AppProvider {
       (mode) => (localData.lightmode = mode),
       { fireImmediately: true }
     )
-    // timer(0, 1000).subscribe(() => {
-    //   runInAction(() => {
-    //     this.currentTime = moment().milliseconds(0)
-    //   })
-    // })
+    timer(0, 1000).subscribe(() => {
+      runInAction(() => {
+        this.currentTime = moment().milliseconds(0)
+      })
+    })
   }
 
   @action toggleLightMode($vuetify) {
