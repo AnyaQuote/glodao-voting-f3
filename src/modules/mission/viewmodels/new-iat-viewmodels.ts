@@ -97,6 +97,10 @@ export class NewInAppTrialViewModel {
    * @param value value to assign
    */
   @action.bound updateIatInfo(property: IatInfoProp, value: any) {
+    if (property === 'missionDates') {
+      this.iatInfo = { ...this.iatInfo, startDate: value[0], endDate: value[1] }
+      return
+    }
     this.iatInfo = set(this.iatInfo, property, value)
   }
 
@@ -125,21 +129,21 @@ export class NewInAppTrialViewModel {
    * @param files array of files/blobs
    * @returns array of image sources
    */
-  async getImageSources(files: File[]) {
+  async getImageSources(...files: (File | undefined | null)[]) {
     const media = new FormData()
-    files.forEach((file) => {
-      media.append('files', file)
-    })
-    const images = (await this._api.uploadFile(media)) as Array<any>
-    const sources = images.map((image) => getApiFileUrl(image))
-    return sources
+    files.forEach((f) => f && media.append('files', f))
+    const images = await this._api.uploadFile(media)
+    return images.map((image: any) => getApiFileUrl(image))
   }
 
-  async getModel(info: InAppTrialInfo, pool: VotingPool, imageSources: string[]) {
+  async getModel(info: InAppTrialInfo, pool: VotingPool) {
     const type = MissionType.APP_TRIAL
     const maxParticipants = toNumber(info.maxParticipants)
     const status = 'upcomming'
-    const [coverImage, ...screenshots] = imageSources
+    const [coverImage, ...screenshots] = await this.getImageSources(
+      this.iatInfo.appLogo,
+      ...(this.iatInfo.screenShots || [])
+    )
     const { website, ...socialLinks } = pool.data?.socialLinks
     const optTokenLogo = pool.data!.optionalTokenLogo
     const optTokenAddress = pool.data!.optionalTokenAddress!
@@ -193,14 +197,11 @@ export class NewInAppTrialViewModel {
     return model
   }
 
-  @action async createInAppTrialMission() {
+  @asyncAction *createInAppTrialMission() {
     try {
       this.btnLoading = true
-      const uploadFiles = [this.iatInfo.appLogo!, ...this.iatInfo.screenShots!]
-      // [0] app Logo, [...rest] screenshots
-      const sources = await this.getImageSources(uploadFiles)
-      const missionModel = await this.getModel(this.iatInfo, this.pool, sources)
-      await this._api.createTask(missionModel)
+      const missionModel = yield this.getModel(this.iatInfo, this.pool)
+      yield this._api.createTask(missionModel)
       this._snackbar.addSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
@@ -268,23 +269,6 @@ export class NewInAppTrialViewModel {
   @computed get maxParticipants() {
     return get(this.iatInfo, 'maxParticipants', EMPTY_STRING)
   }
-
-  @computed get missionStartDate() {
-    return get(this.iatInfo, 'startDate', EMPTY_STRING)
-  }
-
-  @computed get missionEndDate() {
-    return get(this.iatInfo, 'endDate', EMPTY_STRING)
-  }
-
-  @computed get projectEndDate() {
-    return get(this.pool, 'endDate', EMPTY_STRING)
-  }
-
-  @computed get projectStartDate() {
-    return get(this.pool, 'startDate', EMPTY_STRING)
-  }
-
   // ======== IN APP TRIAL MISSION INFO END ========
 
   // ======== IN APP TRIAL APP INFO START ==========

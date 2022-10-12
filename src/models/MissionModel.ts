@@ -95,6 +95,7 @@ export type IatInfoProp =
   | 'appDescription'
   | 'taskDescription'
   | 'tokenBasePrice'
+  | 'missionDates'
 
 export enum MissionType {
   LEARN = 'learn',

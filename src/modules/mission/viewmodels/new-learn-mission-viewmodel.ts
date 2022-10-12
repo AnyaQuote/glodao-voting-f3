@@ -50,7 +50,11 @@ export class NewLearnMissionViewModel {
     }
   }
 
-  @action.bound changeMissionInfo(property: string, value: string) {
+  @action.bound changeMissionInfo(property: string, value: any) {
+    if (property === 'missionDates') {
+      this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
+      return
+    }
     this.missionInfo = set(this.missionInfo, property, value)
   }
 

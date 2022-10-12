@@ -80,7 +80,11 @@ export class NewSocialMissionViewModel {
     this.showSelectDialog = shown
   }
 
-  @action.bound changeMissionInfo(property: string, value: string) {
+  @action.bound changeMissionInfo(property: string, value: any) {
+    if (property === 'missionDates') {
+      this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
+      return
+    }
     this.missionInfo = set(this.missionInfo, property, value)
   }
 
@@ -248,26 +252,6 @@ export class NewSocialMissionViewModel {
     return (
       this.telegram.length || this.twitter.length || this.discord.length || this.facebook.length || this.custom.length
     )
-  }
-
-  @computed get projectStartDate() {
-    return get(this.pool, 'startDate', '')
-  }
-
-  @computed get projectEndDate() {
-    return get(this.pool, 'endDate', '')
-  }
-
-  @computed get missionStartDate() {
-    return get(this.missionInfo, 'startDate', '')
-  }
-
-  @computed get missionStartMaxDate() {
-    return this.missionEndDate || this.projectEndDate
-  }
-
-  @computed get missionEndDate() {
-    return get(this.missionInfo, 'endDate', '')
   }
 
   @computed get tokenBasePrice() {

@@ -60,25 +60,13 @@
 
     <!-- ---------------------------------------------------------------------------------------------------- -->
     <div class="title font-weight-bold bluePrimary--text mt-7">Mission time</div>
-    <app-datetime-picker
-      class="mt-4"
-      dateLabel="Start date"
-      timeLabel="Start time"
+    <app-datetime-picker2
+      class="font-18 mt-4"
       :rules="[$rules.required]"
-      :minDate="vm.projectStartDate"
-      :maxDate="vm.missionEndDate || vm.projectEndDate"
-      :value="vm.missionStartDate"
-      @change="vm.updateIatInfo('startDate', $event)"
-    />
-    <app-datetime-picker
-      dateLabel="End date"
-      timeLabel="End time"
-      :rules="[$rules.required]"
-      :disabled="!vm.missionStartDate"
-      :minDate="vm.missionStartDate"
-      :maxDate="vm.projectEndDate"
-      :value="vm.missionEndDate"
-      @change="vm.updateIatInfo('endDate', $event)"
+      :min="vm.pool.startDate"
+      :max="vm.pool.endDate"
+      :value="[vm.iatInfo.startDate, vm.iatInfo.endDate]"
+      @change="vm.updateIatInfo('missionDates', $event)"
     />
     <v-divider class="dashed-border" />
     <div class="d-flex mt-7">
@@ -108,7 +96,7 @@ import { NewInAppTrialViewModel } from '../../viewmodels/new-iat-viewmodels'
 @Component({
   components: {
     'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
-    'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
+    'app-datetime-picker2': () => import('@/components/app-datetime-picker2.vue'),
   },
 })
 export default class InAppTrialMissionInfo extends Vue {
