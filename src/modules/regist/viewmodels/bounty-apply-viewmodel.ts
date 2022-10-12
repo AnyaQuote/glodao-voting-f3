@@ -49,10 +49,7 @@ export class BountyApplyViewModel {
 
   @observable step = 1.1
   @observable unlockedStep = 1.1
-  @observable projectInfo: ProjectInfo = {
-    votingStart: moment().toISOString(),
-    votingEnd: moment().add(3, 'd').toISOString(),
-  }
+  @observable projectInfo: ProjectInfo = {}
   @observable creating = false
 
   @observable approved = false
@@ -181,21 +178,11 @@ export class BountyApplyViewModel {
    * @param tokenLogo selected cover image file
    * @returns array of image sources in order pass in
    */
-  async getImageSources(projectLogo: File, projectCover: File, tokenLogo?: File) {
+  async getImageSources(...files: (File | undefined | null)[]) {
     const media = new FormData()
-    media.append('files', projectLogo)
-    media.append('files', projectCover)
-    if (tokenLogo) {
-      media.append('files', tokenLogo)
-    }
-    const sources: string[] = []
+    files.forEach((f) => f && media.append('files', f))
     const uploadedMedia = await this._api.uploadFile(media)
-    sources.push(getApiFileUrl(uploadedMedia[0]))
-    sources.push(getApiFileUrl(uploadedMedia[1]))
-    if (tokenLogo) {
-      sources.push(getApiFileUrl(uploadedMedia[2]))
-    } else sources.push('')
-    return sources
+    return uploadedMedia.map((m: any) => getApiFileUrl(m))
   }
 
   /**
@@ -236,8 +223,8 @@ export class BountyApplyViewModel {
     )
     const status = VotingPoolStatus.APPROVED
     const unicodeName = yield this.getUnicodeName(this.projectInfo.projectName!)
-    const votingStart = moment().toISOString()
-    const votingEnd = moment().add(3, 'd').toISOString()
+    const votingStart = this.currentTime.toISOString()
+    const votingEnd = this.currentTime.clone().add(3, 'd').toISOString()
 
     // update voting pool
     const data: VotingPool = {
@@ -369,6 +356,9 @@ export class BountyApplyViewModel {
     } else if (property === 'totalMissions') {
       const computedValue = FixedNumber.from(value).mulUnsafe(this.feePerMission)
       this.projectInfo = set(this.projectInfo, 'rewardAmount', computedValue._value)
+    } else if (property === 'projectDates') {
+      this.projectInfo = { ...this.projectInfo, startDate: value[0], endDate: value[1] }
+      return
     }
     this.projectInfo = set(this.projectInfo, property, value)
   }
@@ -400,15 +390,11 @@ export class BountyApplyViewModel {
     return get(this.projectInfo, 'votingStart', '')
   }
 
-  @computed get projectStartDate() {
-    return get(this.projectInfo, 'startDate', '')
-  }
-
-  @computed get projectEndDate() {
-    return get(this.projectInfo, 'endDate', '')
-  }
-
   @computed get generateWithTokenAddress() {
     return !!this.projectInfo.optionalTokenAddress
+  }
+
+  @computed get currentTime() {
+    return appProvider.currentTime
   }
 }
