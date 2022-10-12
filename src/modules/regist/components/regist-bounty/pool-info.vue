@@ -84,26 +84,15 @@
         <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
         <i class="neutral-10--text ml-2">(Locale time)</i>
       </div>
-      <app-datetime-picker
+
+      <app-datetime-picker2
         class="font-18"
-        dateLabel="Start date"
-        timeLabel="Start time"
+        :min="vm.currentTime.toISOString()"
         :rules="[$rules.required]"
-        :minDate="vm.votingStart"
-        :maxDate="vm.projectEndDate"
-        :value="vm.projectStartDate"
-        @change="vm.changeProjectInfo('startDate', $event)"
+        @change="vm.changeProjectInfo('projectDates', $event)"
+        :value="[vm.projectInfo.startDate, vm.projectInfo.endDate]"
       />
-      <app-datetime-picker
-        class="font-18"
-        dateLabel="End date"
-        timeLabel="End time"
-        :rules="[$rules.required]"
-        :disabled="!vm.projectStartDate"
-        :minDate="vm.projectStartDate"
-        :value="vm.projectEndDate"
-        @change="vm.changeProjectInfo('endDate', $event)"
-      />
+
       <!-- ------------------------------------------------------------------------------------------------- -->
 
       <div class="d-flex">
@@ -145,7 +134,7 @@ import { BountyApplyViewModel } from '../../viewmodels/bounty-apply-viewmodel'
 @Component({
   components: {
     'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
-    'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
+    'app-datetime-picker2': () => import('@/components/app-datetime-picker2.vue'),
     'reward-distribution-info': () => import('./reward-distribution-info.vue'),
   },
 })
