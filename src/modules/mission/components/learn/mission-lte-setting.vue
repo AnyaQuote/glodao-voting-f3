@@ -17,80 +17,110 @@
     <v-form v-model="valid" class="pa-7">
       <div class="title font-weight-bold blue-diversity--text">Mission setting</div>
       <!-- ---------------------------------------------------------------------------------------------------- -->
-      <switch-field
-        readonly
-        class="mt-4"
-        type="learn-to-earn"
-        title="Learn to earn"
-        subtitle="Learn document and answer question"
-        :value="$_get(vm.learnToEarn, 'enabled')"
-      >
-        <div class="font-18 font-weight-bold">Task name<span class="app-red--text">*</span></div>
-        <app-text-field
-          :rules="[$rules.required]"
-          :value="$_get(vm.learnToEarn, 'setting.name')"
-          @change="vm.changeLearnToEarnInfo('setting.name', $event)"
-          class="mt-2"
-          placeholder="Enter task name"
-        />
+      <div class="font-18 font-weight-bold">Task name<span class="app-red--text">*</span></div>
+      <app-text-field
+        :rules="[$rules.required]"
+        :value="$_get(vm.learnToEarn, 'setting.name')"
+        @change="vm.changeLearnToEarnInfo('setting.name', $event)"
+        class="mt-2"
+        placeholder="Enter task name"
+      />
 
-        <div class="font-18 font-weight-bold mt-6">Description<span class="app-red--text">*</span></div>
-        <app-textarea
-          :rules="[$rules.required]"
-          :value="$_get(vm.learnToEarn, 'setting.description')"
-          @change="vm.changeLearnToEarnInfo('setting.description', $event)"
-          class="mt-2"
-          placeholder="Enter short description that describes the mission"
-        />
+      <div class="font-18 font-weight-bold mt-6">Description<span class="app-red--text">*</span></div>
+      <app-textarea
+        :rules="[$rules.required]"
+        :value="$_get(vm.learnToEarn, 'setting.description')"
+        @change="vm.changeLearnToEarnInfo('setting.description', $event)"
+        class="mt-2"
+        placeholder="Enter short description that describes the mission"
+      />
 
-        <div class="mt-7 d-flex align-end">
-          <span class="font-18 font-weight-bold">Mission cover</span>
-          <v-spacer />
-          <i class="text-subtitle-2 neutral-10--text font-weight-regular">
-            *Recommend resolution 3:2 (2160×1440, 2560×1700)
-          </i>
-        </div>
-        <app-file-upload
-          isImageFile
-          :rules="[$rules.maxSize(1000000), $rules.isImage]"
-          :value="$_get(vm.learnToEarn, 'setting.imageCover', null)"
-          @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
-          class="mt-2"
-        />
+      <div class="mt-7 d-flex align-end">
+        <span class="font-18 font-weight-bold">Mission cover</span>
+        <v-spacer />
+        <i class="text-subtitle-2 neutral-10--text font-weight-regular">
+          *Recommend resolution 3:2 (2160×1440, 2560×1700)
+        </i>
+      </div>
+      <app-file-upload
+        isImageFile
+        :rules="[$rules.maxSize(1000000), $rules.isImage]"
+        :value="$_get(vm.learnToEarn, 'setting.imageCover', null)"
+        @change="vm.changeLearnToEarnInfo('setting.imageCover', $event)"
+        class="mt-2"
+      />
 
-        <div class="font-18 mt-7 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
-          <span class="font-weight-bold">Quiz file<span class="app-red--text">*</span></span>
-          <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .csv, .txt file)</span> -->
-          <v-spacer />
-          <span class="app-blue--text cursor-pointer text-subtitle-2" @click="download"
-            >Download the quiz template</span
-          >
-        </div>
-        <app-file-upload
-          isQuizFile
-          :rules="[$rules.required, $rules.maxSize(1000000)]"
-          :value="$_get(vm.learnToEarn, 'setting.quizFile', null)"
-          @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
-        />
-        <v-btn
-          v-if="!!$_get(vm.learnToEarn, 'setting.quizFile')"
-          class="mt-2 blue-diversity white--text"
-          @click="openQuizPreviewDialog"
-          depressed
+      <div class="font-18 mt-7 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
+        <span class="font-weight-bold">Quiz file<span class="app-red--text">*</span></span>
+        <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .csv, .txt file)</span> -->
+        <v-spacer />
+        <span class="app-blue--text cursor-pointer text-subtitle-2" @click="downloadTemplateQuiz"
+          >Download the quiz template</span
         >
-          Preview your quiz
-        </v-btn>
+      </div>
+      <app-file-upload
+        isQuizFile
+        :rules="[$rules.required, $rules.maxSize(1000000)]"
+        :value="$_get(vm.learnToEarn, 'setting.quizFile', null)"
+        @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
+      />
+      <v-btn
+        v-if="!!$_get(vm.learnToEarn, 'setting.quizFile')"
+        class="mt-2 blue-diversity white--text"
+        @click="openQuizPreviewDialog"
+        depressed
+      >
+        Preview your quiz
+      </v-btn>
 
-        <div class="d-flex mt-7 mb-2">
-          <span class="font-18 font-weight-bold">Document<span class="app-red--text">*</span></span>
-          <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .md, .me, .readme file)</span> -->
-        </div>
-        <app-file-upload
-          :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
-          :value="$_get(vm.learnToEarn, 'setting.learningFile', null)"
-          @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
-        />
-      </switch-field>
+      <div class="font-18 mt-7 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
+        <span class="font-18 font-weight-bold">Document<span class="app-red--text">*</span></span>
+        <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .md, .me, .readme file)</span> -->
+        <v-spacer />
+        <span class="app-blue--text cursor-pointer text-subtitle-2" @click="downloadTemplateMarkdown"
+          >Download the markdown template</span
+        >
+      </div>
+      <app-file-upload
+        :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
+        :value="$_get(vm.learnToEarn, 'setting.learningFile', null)"
+        @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
+      />
+
+      <div class="font-18 mt-6 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
+        <span class="font-18 font-weight-bold">Question per quiz<span class="app-red--text">*</span></span>
+        <v-spacer />
+        <span class="font-italic grey--text text-subtitle-2 font-weight-regular"
+          >*Number of questions must be done to complete the quiz</span
+        >
+      </div>
+      <app-text-field
+        type="number"
+        :rules="[$rules.required, $rules.min(1), $rules.integer]"
+        :value="vm.learnToEarn.setting.questionsPerQuiz"
+        @change="vm.changeLearnToEarnInfo('setting.questionsPerQuiz', $event)"
+      />
+
+      <div class="font-18 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
+        <span class="font-18 font-weight-bold">Correct answers per quiz<span class="app-red--text">*</span></span>
+        <v-spacer />
+        <span class="font-italic grey--text text-subtitle-2 font-weight-regular"
+          >*Number of corrected answers to pass the quiz</span
+        >
+      </div>
+      <app-text-field
+        type="number"
+        :value="vm.learnToEarn.setting.correctAnswersPerQuiz"
+        :rules="[$rules.required, $rules.max(vm.learnToEarn.setting.questionsPerQuiz), $rules.integer, $rules.min(1)]"
+        @change="vm.changeLearnToEarnInfo('setting.correctAnswersPerQuiz', $event)"
+      />
+
+      <v-checkbox
+        color="app-blue"
+        label="Allow to repeat the quiz"
+        :input-value="vm.learnToEarn.setting.canRepeat"
+        @input="vm.changeLearnToEarn('setting.canRepeat', $event)"
+      />
 
       <!-- ---------------------------------------------------------------------------------------------------- -->
       <div class="d-flex mt-7">
@@ -120,6 +150,7 @@
 </template>
 
 <script lang="ts">
+import { downloadFile } from '@/helpers/file-helper'
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { NewLearnMissionViewModel } from '../../viewmodels/new-learn-mission-viewmodel'
@@ -127,7 +158,6 @@ import { NewLearnMissionViewModel } from '../../viewmodels/new-learn-mission-vie
 @Observer
 @Component({
   components: {
-    'switch-field': () => import('../common/switch-field.vue'),
     'quiz-preview-dialog': () => import('./quiz-preview-dialog.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
   },
@@ -137,14 +167,6 @@ export default class MissionLearnToEarnSetting extends Vue {
   @Ref('quiz-preview-dialog') dialog
   valid = false
 
-  created() {
-    this.vm.changeLearnToEarnInfo('enabled', true)
-  }
-
-  beforeDestroy() {
-    this.vm.changeLearnToEarnInfo('enabled', false)
-  }
-
   submit() {
     this.valid && this.vm.submit()
   }
@@ -153,8 +175,14 @@ export default class MissionLearnToEarnSetting extends Vue {
     this.vm.changeStep(1)
   }
 
-  download() {
-    window.location.href = `${process.env.VUE_APP_API_STRAPI_ENDPOINT}quiz.csv`
+  downloadTemplateQuiz() {
+    const url = `${process.env.VUE_APP_WEB_HOST}/question-template.txt`
+    downloadFile(url, 'question-template.txt')
+  }
+
+  downloadTemplateMarkdown() {
+    const url = `${process.env.VUE_APP_WEB_HOST}/markdown-template.txt`
+    downloadFile(url, 'markdown-template.txt')
   }
 
   async openQuizPreviewDialog() {

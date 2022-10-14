@@ -386,10 +386,6 @@ export class BountyApplyViewModel {
     return get(this.projectInfo, 'rewardAmount', '')
   }
 
-  @computed get votingStart() {
-    return get(this.projectInfo, 'votingStart', '')
-  }
-
   @computed get generateWithTokenAddress() {
     return !!this.projectInfo.optionalTokenAddress
   }

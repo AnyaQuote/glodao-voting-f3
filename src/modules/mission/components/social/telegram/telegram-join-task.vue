@@ -9,7 +9,7 @@
     <div class="font-18 font-weight-bold">Telegram group name<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
-      :value="pageName"
+      :value="$_get(taskConfig, 'setting.page')"
       :rules="[$rules.required]"
       placeholder="GLODAO Channel"
       @change="updateSetting('setting.page', $event)"
@@ -18,8 +18,8 @@
     <div class="font-18 font-weight-bold">Telegram group link<span class="red--text">*</span></div>
     <app-text-field
       class="mt-2"
-      :value="telegramLink"
       append-icon="mdi-link"
+      :value="$_get(taskConfig, 'setting.link')"
       :rules="[$rules.required, $rules.url]"
       @change="updateSetting('setting.link', $event)"
       placeholder="https://t.me/GloDAO_Group"
@@ -42,7 +42,6 @@
 
 <script lang="ts">
 import { appProvider } from '@/app-providers'
-import { EMPTY_STRING } from '@/constants'
 import { isNotEmpty } from '@/helpers'
 import { TaskConfig } from '@/models/MissionModel'
 import { set } from 'lodash-es'
@@ -70,7 +69,9 @@ export default class TelegramJoinTask extends Vue {
 
   @Watch('taskConfig', { deep: true })
   onSettingUpdated(newSetting: TaskConfig) {
-    if (isNotEmpty(this.pageName) && isNotEmpty(this.telegramLink)) {
+    const link = this.taskConfig.setting?.link
+    const pageName = this.taskConfig.setting?.page
+    if (isNotEmpty(pageName) && isNotEmpty(link)) {
       this.$emit('change', newSetting)
     }
   }
@@ -82,7 +83,12 @@ export default class TelegramJoinTask extends Vue {
   async handleValidation() {
     try {
       this.isChecking = true
-      const isValid = await this.api.checkTelegramBotIsAdded(this.telegramLink)
+      const link = this.taskConfig.setting?.link
+      if (!link) {
+        this.snackbar.error('Link is empty')
+        return
+      }
+      const isValid = await this.api.checkTelegramBotIsAdded(link)
       if (isValid) {
         this.snackbar.success('Glodao mission bot is added in your channel/group')
       }
@@ -91,14 +97,6 @@ export default class TelegramJoinTask extends Vue {
     } finally {
       this.isChecking = false
     }
-  }
-
-  get pageName() {
-    return this.taskConfig!.setting?.page || EMPTY_STRING
-  }
-
-  get telegramLink() {
-    return this.taskConfig!.setting?.link || EMPTY_STRING
   }
 }
 </script>

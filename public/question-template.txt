@@ -1,0 +1,12 @@
+
+/* 
+Lưu ý không thêm đoạn được gói trong /* ... */ vào file câu hỏi
+
+Giải thích vị trí các câu trong hàng được ngăn cách bởi ký tự " | " :
+Nôi dụng câu hỏi | Nội dung đáp án 1 | Nội dung đáp án 2 | Nội dung đáp án 3 | Nội dung đáp án 4 | Vị trí đáp án đúng trong hàng
+
+Dưới đây là câu hỏi mẫu:
+*/
+
+Thủ đô của Việt Nam là ?  | Hạ Long | Hà Nội | Đà Nẵng |  | 3
+Đèo nào được UNESCO ghi nhận là một trong đèo nguy hiểm bậc nhất ở Việt Nam ?  | Mã Pí Lèng | Pá Pí Lang | Đèo Hải Vân | 1

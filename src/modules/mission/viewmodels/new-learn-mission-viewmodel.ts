@@ -3,7 +3,7 @@ import { getApiFileUrl, getDataFromQuizFile, getPreviewFromQuizFile, getTextData
 import { Data, MissionType } from '@/models/MissionModel'
 import { Quiz, LearnToEarn, PreviewQuiz, MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { set, get, isEmpty, toNumber, sampleSize } from 'lodash-es'
+import { set, get, isEmpty, toNumber, sampleSize, round } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
@@ -16,7 +16,14 @@ export class NewLearnMissionViewModel {
 
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
-  @observable learnToEarn: LearnToEarn = {}
+  @observable learnToEarn: LearnToEarn = {
+    enabled: true,
+    setting: {
+      questionsPerQuiz: '10',
+      correctAnswersPerQuiz: '10',
+      canRepeat: true,
+    },
+  }
   @observable pageLoading = false
   @observable btnLoading = false
 
@@ -108,12 +115,20 @@ export class NewLearnMissionViewModel {
   }
 
   async getMissionSetting() {
+    const { canRepeat, questionsPerQuiz, correctAnswersPerQuiz } = this.learnToEarn.setting!
+    let passingCriteria = 1.0
+    if (questionsPerQuiz && correctAnswersPerQuiz) {
+      passingCriteria = round(+correctAnswersPerQuiz / +questionsPerQuiz, 2)
+    }
     const quizId = await this.getQuizId()
     return {
       quiz: [
         {
           type: 'quiz',
-          quizId,
+          quizId: quizId,
+          passingCriteria: passingCriteria,
+          questionsPerQuiz: questionsPerQuiz,
+          canRepeat: canRepeat,
         },
       ],
     }
@@ -206,26 +221,6 @@ export class NewLearnMissionViewModel {
 
   @computed get tokenName() {
     return get(this.pool, 'data.optionalTokenName', '')
-  }
-
-  @computed get projectStartDate() {
-    return get(this.pool, 'startDate', '')
-  }
-
-  @computed get projectEndDate() {
-    return get(this.pool, 'endDate', '')
-  }
-
-  @computed get missionStartDate() {
-    return get(this.missionInfo, 'startDate', '')
-  }
-
-  @computed get missionStartMaxDate() {
-    return this.missionEndDate || this.projectEndDate
-  }
-
-  @computed get missionEndDate() {
-    return get(this.missionInfo, 'endDate', '')
   }
 
   @computed get tokenBasePrice() {

@@ -37,6 +37,9 @@ export interface LearnToEarn {
     imageCover?: File | null
     quizFile?: File | null
     learningFile?: File | null
+    canRepeat?: boolean
+    correctAnswersPerQuiz?: string
+    questionsPerQuiz?: string
   }
 }
 
