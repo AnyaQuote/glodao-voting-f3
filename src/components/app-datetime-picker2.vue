@@ -105,15 +105,15 @@
 </template>
 
 <script lang="ts">
+import EventBus from '@/plugins/event-bus'
 import moment from 'moment'
-import 'reflect-metadata'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class AppDateTimePicker2 extends Vue {
-  @Prop() value?: string[]
-  @Prop() max?: string
-  @Prop() min?: string
+  @Prop({ default: null }) value?: string[]
+  @Prop(String) max?: string
+  @Prop(String) min?: string
   @Prop({ default: () => [] }) rules!: any[]
 
   data = {
@@ -121,6 +121,19 @@ export default class AppDateTimePicker2 extends Vue {
     startTime: '',
     endDate: '',
     endTime: '',
+  }
+  mtCurrent: moment.Moment = moment()
+
+  mounted() {
+    EventBus.$on('subscribe-time', this.updateCurrentTime)
+  }
+
+  beforeDestroy() {
+    EventBus.$off('subscribe-time', this.updateCurrentTime)
+  }
+
+  updateCurrentTime(e: moment.Moment) {
+    this.mtCurrent = e
   }
 
   @Watch('value', { deep: true })
@@ -149,26 +162,61 @@ export default class AppDateTimePicker2 extends Vue {
 
   get mtStart(): moment.Moment | null {
     if (!this.data.startDate || !this.data.startTime) return null
-    return moment(`${this.data.startDate} ${this.data.startTime}`)
+    return moment(`${this.data.startDate} ${this.data.startTime}`, 'yyyy-MM-DD HH:mm')
   }
 
   get mtEnd(): moment.Moment | null {
     if (!this.data.endDate || !this.data.endTime) return null
-    return moment(`${this.data.endDate} ${this.data.endTime}`)
+    return moment(`${this.data.endDate} ${this.data.endTime}`, 'yyyy-MM-DD HH:mm')
+  }
+
+  get mtMin(): moment.Moment | null {
+    return this.min ? moment(this.min) : null
+  }
+
+  get mtMax(): moment.Moment | null {
+    return this.max ? moment(this.max) : null
   }
 
   get startDateError() {
     if (!this.mtStart) return ''
 
-    if (this.mtEnd && this.mtStart.isAfter(this.mtEnd)) return `Must be before ${this.mtEnd.format('DD/MM/yyyy HH:mm')}`
+    if (this.mtMin?.isAfter(this.mtStart)) {
+      return `Must be after ${this.mtMin.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtMax?.isBefore(this.mtStart)) {
+      return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtCurrent.isAfter(this.mtStart)) {
+      return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtEnd?.isBefore(this.mtStart)) {
+      return `Must be before ${this.mtEnd.format('DD/MM/yyyy HH:mm')}`
+    }
     return ''
   }
 
   get endDateError() {
     if (!this.mtEnd) return ''
 
-    if (this.mtStart && this.mtEnd.isBefore(this.mtStart))
+    if (this.mtMin?.isAfter(this.mtEnd)) {
+      return `Must be after ${this.mtMin.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtMax?.isBefore(this.mtStart)) {
+      return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtCurrent.isAfter(this.mtEnd)) {
+      return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtStart?.isAfter(this.mtEnd)) {
       return `Must be after ${this.mtStart.format('DD/MM/yyyy HH:mm')}`
+    }
     return ''
   }
 }
