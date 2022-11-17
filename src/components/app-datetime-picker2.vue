@@ -105,6 +105,7 @@
 </template>
 
 <script lang="ts">
+import EventBus from '@/plugins/event-bus'
 import moment from 'moment'
 import 'reflect-metadata'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -121,6 +122,19 @@ export default class AppDateTimePicker2 extends Vue {
     startTime: '',
     endDate: '',
     endTime: '',
+  }
+  mtCurrent: moment.Moment = moment()
+
+  mounted() {
+    EventBus.$on('subscribe-time', this.updateCurrentTime)
+  }
+
+  beforeDestroy() {
+    EventBus.$off('subscribe-time', this.updateCurrentTime)
+  }
+
+  updateCurrentTime(e: moment.Moment) {
+    this.mtCurrent = e
   }
 
   @Watch('value', { deep: true })
@@ -176,6 +190,10 @@ export default class AppDateTimePicker2 extends Vue {
       return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
     }
 
+    if (this.mtCurrent.isAfter(this.mtStart)) {
+      return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
+    }
+
     if (this.mtEnd?.isBefore(this.mtStart)) {
       return `Must be before ${this.mtEnd.format('DD/MM/yyyy HH:mm')}`
     }
@@ -191,6 +209,10 @@ export default class AppDateTimePicker2 extends Vue {
 
     if (this.mtMax?.isBefore(this.mtStart)) {
       return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
+    }
+
+    if (this.mtCurrent.isAfter(this.mtEnd)) {
+      return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
     }
 
     if (this.mtStart?.isAfter(this.mtEnd)) {
