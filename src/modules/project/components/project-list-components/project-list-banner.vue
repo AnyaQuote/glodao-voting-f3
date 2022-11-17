@@ -6,7 +6,7 @@
   >
     <div class="text-h5 neutral-0--text font-weight-black">Your project</div>
     <div v-if="vm.votingPools.length">
-      <connect-wallet v-if="!walletStore.account" :height="37" btnClass="font-weight-bold" />
+      <!-- <connect-wallet v-if="!walletStore.account" :height="37" btnClass="font-weight-bold" /> -->
       <connect-metamask
         :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
         :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
@@ -27,7 +27,7 @@
     <v-container class="fill-height pb-12 d-flex justify-space-between align-end">
       <div class="font-weight-600 white--text text-h3">Your project</div>
       <div v-if="vm.votingPools.length">
-        <connect-wallet v-if="!walletStore.account" btnClass="font-18 font-weight-bold" />
+        <!-- <connect-wallet v-if="!walletStore.account" btnClass="font-18 font-weight-bold" /> -->
         <connect-metamask
           :height="!$vuetify.breakpoint.mdAndUp ? '37' : '55'"
           :btnClass="`font-18 font-weight-bold ${$vuetify.breakpoint.mdAndUp ? 'font-18' : 'text-subtitle-1'}`"
