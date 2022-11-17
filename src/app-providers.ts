@@ -29,11 +29,13 @@ export class AppProvider {
       (mode) => (localData.lightmode = mode),
       { fireImmediately: true }
     )
-    timer(0, 5000).subscribe(() => {
+    timer(0, 1000).subscribe(() => {
       runInAction(() => {
         this.currentTime = moment().milliseconds(0)
-        EventBus.$emit('subscribe-time', this.currentTime)
       })
+    })
+    timer(0, 5000).subscribe(() => {
+      EventBus.$emit('subscribe-time', this.currentTime)
     })
   }
 
