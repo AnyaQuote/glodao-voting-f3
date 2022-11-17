@@ -155,14 +155,15 @@ export default class AppDateTimePicker2 extends Vue {
   @Watch('start', { deep: true })
   onStartDateTimeChanged(start: DateTime) {
     if (start.time && start.date) {
-      this.mt.start = moment(`${start.date} ${this.start.time}`)
+      this.mt.start = moment(`${start.date} ${start.time}`)
     }
   }
 
   @Watch('end', { deep: true })
   onEndDateTimeChanged(end: DateTime) {
-    if (!end.time || !end.date) this.mt.end = null
-    else this.mt.end = moment(`${end.date} ${end.time}`)
+    if (end.time && end.date) {
+      this.mt.end = moment(`${end.date} ${end.time}`)
+    }
   }
 
   @Watch('mt', { deep: true })
