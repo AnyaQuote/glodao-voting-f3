@@ -107,14 +107,13 @@
 <script lang="ts">
 import EventBus from '@/plugins/event-bus'
 import moment from 'moment'
-import 'reflect-metadata'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class AppDateTimePicker2 extends Vue {
-  @Prop() value?: string[]
-  @Prop() max?: string
-  @Prop() min?: string
+  @Prop({ default: null }) value?: string[]
+  @Prop(String) max?: string
+  @Prop(String) min?: string
   @Prop({ default: () => [] }) rules!: any[]
 
   data = {
