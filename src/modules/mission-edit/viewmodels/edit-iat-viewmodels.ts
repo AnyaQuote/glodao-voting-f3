@@ -11,7 +11,6 @@ import {
   Zero,
   ALLOW_PASS_THROUGH,
 } from '@/constants'
-import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
@@ -158,6 +157,10 @@ export class EditInAppTrialViewModel {
    * @param value value to assign
    */
   @action.bound updateIatInfo(property: IatInfoProp, value: any) {
+    if (property === 'missionDates') {
+      this.iatInfo = { ...this.iatInfo, startDate: value[0], endDate: value[1] }
+      return
+    }
     this.iatInfo = set(this.iatInfo, property, value)
   }
 
@@ -328,22 +331,6 @@ export class EditInAppTrialViewModel {
 
   @computed get maxParticipants() {
     return get(this.iatInfo, 'maxParticipants', EMPTY_STRING)
-  }
-
-  @computed get missionStartDate() {
-    return get(this.iatInfo, 'startDate', EMPTY_STRING)
-  }
-
-  @computed get missionEndDate() {
-    return get(this.iatInfo, 'endDate', EMPTY_STRING)
-  }
-
-  @computed get projectEndDate() {
-    return get(this.pool, 'endDate', EMPTY_STRING)
-  }
-
-  @computed get projectStartDate() {
-    return get(this.pool, 'startDate', EMPTY_STRING)
   }
 
   // ======== IN APP TRIAL MISSION INFO END ========
