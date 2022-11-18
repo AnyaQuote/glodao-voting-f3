@@ -118,6 +118,10 @@ export class EditLearnMissionViewModel {
   }
 
   @action.bound changeMissionInfo(property: string, value: string) {
+    if (property === 'missionDates') {
+      this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
+      return
+    }
     this.missionInfo = set(this.missionInfo, property, value)
   }
 
@@ -269,26 +273,6 @@ export class EditLearnMissionViewModel {
 
   @computed get tokenName() {
     return get(this.pool, 'data.optionalTokenName', '')
-  }
-
-  @computed get projectStartDate() {
-    return get(this.pool, 'startDate', '')
-  }
-
-  @computed get projectEndDate() {
-    return get(this.pool, 'endDate', '')
-  }
-
-  @computed get missionStartDate() {
-    return get(this.missionInfo, 'startDate', '')
-  }
-
-  @computed get missionStartMaxDate() {
-    return this.missionEndDate || this.projectEndDate
-  }
-
-  @computed get missionEndDate() {
-    return get(this.missionInfo, 'endDate', '')
   }
 
   @computed get tokenBasePrice() {

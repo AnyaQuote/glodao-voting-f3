@@ -3,7 +3,7 @@ import { generateFileFromUrl, getApiFileUrl } from '@/helpers/file-helper'
 import { Data, MissionType, SocialTaskComponent, SocialType, TaskConfig } from '@/models/MissionModel'
 import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { assign, isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
+import { assign, set, get, isEmpty } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
@@ -207,7 +207,6 @@ export class EditSocialMissionViewModel {
 
   @action.bound changeMissionInfo(property: string, value: any) {
     if (property === 'missionDates') {
-      console.log([...value])
       this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
       return
     }
