@@ -9,7 +9,7 @@
               readonly
               outlined
               :rules="rules"
-              :value="data.startDate | date('DD/MM/YYYY')"
+              :value="start.date"
               :error-messages="startDateError"
               placeholder="DD/MM/YYYY"
               v-bind="attrs"
@@ -17,10 +17,9 @@
             />
           </template>
           <v-date-picker
-            reactive
             :min="min"
             :max="max"
-            v-model="data.startDate"
+            v-model="start.date"
             :color="$vuetify.theme.dark ? 'blue-2 white--text' : 'blue-diversity white--text'"
           />
         </v-menu>
@@ -34,7 +33,7 @@
               readonly
               outlined
               :rules="rules"
-              :value="data.startTime"
+              :value="start.time"
               :error-messages="startDateError"
               placeholder="HH:mm"
               v-bind="attrs"
@@ -43,7 +42,7 @@
           </template>
           <v-time-picker
             format="24hr"
-            v-model="data.startTime"
+            v-model="start.time"
             :color="$vuetify.theme.dark ? 'blue-2 white--text' : 'blue-diversity white--text'"
           />
         </v-menu>
@@ -61,7 +60,7 @@
               readonly
               outlined
               :rules="rules"
-              :value="data.endDate | date('DD/MM/YYYY')"
+              :value="end.date"
               :error-messages="endDateError"
               placeholder="DD/MM/YYYY"
               v-bind="attrs"
@@ -69,10 +68,9 @@
             />
           </template>
           <v-date-picker
-            reactive
             :min="min"
             :max="max"
-            v-model="data.endDate"
+            v-model="end.date"
             :color="$vuetify.theme.dark ? 'blue-2 white--text' : 'blue-diversity white--text'"
           />
         </v-menu>
@@ -86,7 +84,7 @@
               readonly
               outlined
               :rules="rules"
-              :value="data.endTime"
+              :value="end.time"
               :error-messages="endDateError"
               placeholder="HH:mm"
               v-bind="attrs"
@@ -95,7 +93,7 @@
           </template>
           <v-time-picker
             format="24hr"
-            v-model="data.endTime"
+            v-model="end.time"
             :color="$vuetify.theme.dark ? 'blue-2 white--text' : 'blue-diversity white--text'"
           />
         </v-menu>
@@ -106,8 +104,18 @@
 
 <script lang="ts">
 import EventBus from '@/plugins/event-bus'
-import moment from 'moment'
+import moment, { Moment } from 'moment'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+
+interface DateTime {
+  date?: string | null
+  time?: string | null
+}
+
+interface MomentDateTime {
+  start?: Moment | null
+  end?: Moment | null
+}
 
 @Component
 export default class AppDateTimePicker2 extends Vue {
@@ -116,106 +124,102 @@ export default class AppDateTimePicker2 extends Vue {
   @Prop(String) min?: string
   @Prop({ default: () => [] }) rules!: any[]
 
-  data = {
-    startDate: '',
-    startTime: '',
-    endDate: '',
-    endTime: '',
-  }
-  mtCurrent: moment.Moment = moment()
+  start: DateTime = { date: null, time: null }
+  end: DateTime = { date: null, time: null }
+  mt: MomentDateTime = { start: null, end: null }
+  mtCurrent: Moment = moment()
 
   mounted() {
     EventBus.$on('subscribe-time', this.updateCurrentTime)
+    this.value?.forEach((iso, index) => {
+      const miso = iso ? moment(iso) : null
+      if (index === 0 && miso !== null) {
+        this.start.date = miso.format('yyyy-MM-DD')
+        this.start.time = miso.format('HH:mm')
+      }
+      if (index === 1 && miso !== null) {
+        this.end.date = miso.format('yyyy-MM-DD')
+        this.end.time = miso.format('HH:mm')
+      }
+    })
   }
 
   beforeDestroy() {
     EventBus.$off('subscribe-time', this.updateCurrentTime)
   }
 
-  updateCurrentTime(e: moment.Moment) {
+  updateCurrentTime(e: Moment) {
     this.mtCurrent = e
   }
 
-  @Watch('value', { deep: true })
-  onValueChange() {
-    this.value?.forEach((e, i) => {
-      if (!e) return
-      const date = moment(e)
-      if (i == 0) {
-        this.data.startDate = date.format('YYYY-MM-DD')
-        this.data.startTime = date.format('HH:mm')
-      } else {
-        this.data.endDate = date.format('YYYY-MM-DD')
-        this.data.endTime = date.format('HH:mm')
-      }
-    })
-  }
-
-  @Watch('data', { deep: true })
-  onStartDateChange() {
-    if (this.startDateError || this.endDateError) return
-
-    if (this.mtStart && this.mtEnd) {
-      this.$emit('change', [this.mtStart.toISOString(), this.mtEnd.toISOString()])
+  @Watch('start', { deep: true })
+  onStartDateTimeChanged(start: DateTime) {
+    if (start.time && start.date) {
+      this.mt.start = moment(`${start.date} ${start.time}`)
     }
   }
 
-  get mtStart(): moment.Moment | null {
-    if (!this.data.startDate || !this.data.startTime) return null
-    return moment(`${this.data.startDate} ${this.data.startTime}`, 'yyyy-MM-DD HH:mm')
+  @Watch('end', { deep: true })
+  onEndDateTimeChanged(end: DateTime) {
+    if (end.time && end.date) {
+      this.mt.end = moment(`${end.date} ${end.time}`)
+    }
   }
 
-  get mtEnd(): moment.Moment | null {
-    if (!this.data.endDate || !this.data.endTime) return null
-    return moment(`${this.data.endDate} ${this.data.endTime}`, 'yyyy-MM-DD HH:mm')
+  @Watch('mt', { deep: true })
+  onEndMomentChange(mt: MomentDateTime) {
+    if (this.startDateError || this.endDateError) return
+    const start = mt.start?.toISOString() || null
+    const end = mt.end?.toISOString() || null
+    this.$emit('change', [start, end])
   }
 
-  get mtMin(): moment.Moment | null {
+  get mtMin(): Moment | null {
     return this.min ? moment(this.min) : null
   }
 
-  get mtMax(): moment.Moment | null {
+  get mtMax(): Moment | null {
     return this.max ? moment(this.max) : null
   }
 
   get startDateError() {
-    if (!this.mtStart) return ''
+    if (!this.mt.start) return ''
 
-    if (this.mtMin?.isAfter(this.mtStart)) {
+    if (this.mtMin?.isAfter(this.mt.start)) {
       return `Must be after ${this.mtMin.format('DD/MM/yyyy HH:mm')}`
     }
 
-    if (this.mtMax?.isBefore(this.mtStart)) {
+    if (this.mtMax?.isBefore(this.mt.start)) {
       return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
     }
 
-    if (this.mtCurrent.isAfter(this.mtStart)) {
+    if (this.mtCurrent.isAfter(this.mt.start)) {
       return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
     }
 
-    if (this.mtEnd?.isBefore(this.mtStart)) {
-      return `Must be before ${this.mtEnd.format('DD/MM/yyyy HH:mm')}`
+    if (this.mt.end?.isBefore(this.mt.start)) {
+      return `Must be before ${this.mt.end.format('DD/MM/yyyy HH:mm')}`
     }
     return ''
   }
 
   get endDateError() {
-    if (!this.mtEnd) return ''
+    if (!this.mt.end) return ''
 
-    if (this.mtMin?.isAfter(this.mtEnd)) {
+    if (this.mtMin?.isAfter(this.mt.end)) {
       return `Must be after ${this.mtMin.format('DD/MM/yyyy HH:mm')}`
     }
 
-    if (this.mtMax?.isBefore(this.mtStart)) {
+    if (this.mtMax?.isBefore(this.mt.start)) {
       return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
     }
 
-    if (this.mtCurrent.isAfter(this.mtEnd)) {
+    if (this.mtCurrent.isAfter(this.mt.end)) {
       return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
     }
 
-    if (this.mtStart?.isAfter(this.mtEnd)) {
-      return `Must be after ${this.mtStart.format('DD/MM/yyyy HH:mm')}`
+    if (this.mt.start?.isAfter(this.mt.end)) {
+      return `Must be after ${this.mt.start.format('DD/MM/yyyy HH:mm')}`
     }
     return ''
   }

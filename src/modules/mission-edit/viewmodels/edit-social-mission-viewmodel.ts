@@ -3,7 +3,7 @@ import { generateFileFromUrl, getApiFileUrl } from '@/helpers/file-helper'
 import { Data, MissionType, SocialTaskComponent, SocialType, TaskConfig } from '@/models/MissionModel'
 import { MissionInfo } from '@/models/QuizModel'
 import { Mission } from '@/models/MissionModel'
-import { assign, isEqual, set, get, isEmpty, toNumber } from 'lodash-es'
+import { assign, set, get, isEmpty } from 'lodash-es'
 import { action, observable, computed } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { RouteName, RoutePaths } from '@/router'
@@ -205,7 +205,11 @@ export class EditSocialMissionViewModel {
     this.showSelectDialog = shown
   }
 
-  @action.bound changeMissionInfo(property: string, value: string) {
+  @action.bound changeMissionInfo(property: string, value: any) {
+    if (property === 'missionDates') {
+      this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
+      return
+    }
     this.missionInfo = set(this.missionInfo, property, value)
   }
 
@@ -374,26 +378,6 @@ export class EditSocialMissionViewModel {
     return (
       this.telegram.length || this.twitter.length || this.discord.length || this.facebook.length || this.custom.length
     )
-  }
-
-  @computed get projectStartDate() {
-    return get(this.pool, 'startDate', '')
-  }
-
-  @computed get projectEndDate() {
-    return get(this.pool, 'endDate', '')
-  }
-
-  @computed get missionStartDate() {
-    return get(this.missionInfo, 'startDate', '')
-  }
-
-  @computed get missionStartMaxDate() {
-    return this.missionEndDate || this.projectEndDate
-  }
-
-  @computed get missionEndDate() {
-    return get(this.missionInfo, 'endDate', '')
   }
 
   @computed get tokenBasePrice() {
