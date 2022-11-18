@@ -104,25 +104,13 @@
           <span class="title font-weight-bold blue-diversity--text">Mision time</span>
           <i class="neutral-10--text ml-2">(Locale time)</i>
         </div>
-        <app-datetime-picker
-          class="mt-4"
-          dateLabel="Start date"
-          timeLabel="Start time"
-          :minDate="vm.projectStartDate"
-          :maxDate="vm.missionStartMaxDate"
+        <app-datetime-picker2
+          class="font-18 mt-4"
           :rules="[$rules.required]"
-          :value="vm.missionStartDate"
-          @change="vm.changeMissionInfo('startDate', $event)"
-        />
-        <app-datetime-picker
-          dateLabel="End date"
-          timeLabel="End time"
-          :rules="[$rules.required]"
-          :minDate="vm.missionStartDate"
-          :maxDate="vm.projectEndDate"
-          :disabled="!vm.missionStartDate"
-          :value="vm.missionEndDate"
-          @change="vm.changeMissionInfo('endDate', $event)"
+          :min="vm.pool.startDate"
+          :max="vm.pool.endDate"
+          :value="[vm.missionInfo.startDate, vm.missionInfo.endDate]"
+          @change="vm.changeMissionInfo('missionDates', $event)"
         />
       </div>
       <!-- -------------------------------------- MISSION TIME END --------------------------------------------------- -->
@@ -166,7 +154,7 @@ import { MAX_IMAGE_FILE_SIZE } from '@/constants'
   components: {
     'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
-    'app-datetime-picker': () => import('@/components/app-datetime-picker.vue'),
+    'app-datetime-picker2': () => import('@/components/app-datetime-picker2.vue'),
   },
 })
 export default class MissionInfoForm extends Vue {
