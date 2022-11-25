@@ -48,9 +48,23 @@
         <div class="font-18 font-weight-bold mt-6">
           <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
         </div>
+        <div class="mt-6 d-flex">
+          <div class="flex-grow">
+            <div class="font-18 font-weight-bold">Priority ratio (%)<span class="red--text">*</span></div>
+            <div class="text-caption">*Adjust priority amount with ratio</div>
+          </div>
+          <div class="px-3" />
+          <app-text-field
+            class="flex-grow"
+            placeholder="(ex: 30)"
+            :rules="[$rules.required, $rules.integer, $rules.max(100), $rules.min(1)]"
+            :value="vm.missionInfo.priorityRatio"
+            @input="vm.changeMissionInfo('priorityRatio', $event)"
+          />
+        </div>
         <div class="d-flex flex-column flex-sm-row mt-4">
           <div class="flex-grow">
-            <span class="font-18 font-weight-bold">Priority amount (30%)</span>
+            <span class="font-18 font-weight-bold">Priority amount</span>
             <v-sheet class="rounded px-3 d-flex justify-space-between mt-2 py-14px" height="56" outlined>
               <span class="font-weight-600">{{ vm.priorityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
             </v-sheet>

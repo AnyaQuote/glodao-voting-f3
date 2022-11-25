@@ -33,7 +33,7 @@ export const rules = {
   floatNumberOnly: (v: string) => !v || /^(?!0\d)\d*(\.\d+)?$/gi.test(v) || 'Number is not valid',
   yyyymmdd: (v: string) =>
     (/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/.test(v.trim()) && moment(v, 'DD/MM/YYYY').isValid()) || 'Invalid date',
-  integer: (v: string) => /^[0-9]+$/.test(v.trim()) || 'Must be integer',
+  integer: (v: string) => /^[0-9]+$/.test(v?.trim()) || 'Must be integer',
   hhmm: (v: string) =>
     (/^[0-9]{2}:[0-9]{2}$/.test(v.trim()) && (moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid())) ||
     'Invalid time ',
