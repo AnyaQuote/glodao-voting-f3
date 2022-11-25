@@ -54,6 +54,7 @@ export interface MissionInfo {
   endDate?: string
   type?: string
   tokenBasePrice?: string
+  priorityRatio?: string
 }
 
 export interface PreviewQuiz {

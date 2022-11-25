@@ -15,6 +15,7 @@ import {
   EMPTY_OBJECT,
   EMPTY_STRING,
   ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD,
+  HUNDRED,
   PRIORITY_AMOUNT_RATIO,
   Zero,
 } from '@/constants'
@@ -340,7 +341,15 @@ export class EditSocialMissionViewModel {
   }
 
   @computed get priorityAmount() {
-    return this.rewardPerMission.mulUnsafe(PRIORITY_AMOUNT_RATIO)
+    if (!this.missionInfo.priorityRatio) {
+      return Zero
+    }
+    try {
+      const fxPriorityRatio = FixedNumber.from(this.missionInfo.priorityRatio).divUnsafe(HUNDRED)
+      return this.rewardPerMission.mulUnsafe(fxPriorityRatio)
+    } catch (_) {
+      return Zero
+    }
   }
 
   @computed get communityAmount() {
