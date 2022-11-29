@@ -146,6 +146,7 @@ export class NewSocialMissionViewModel {
     const maxParticipants = missionInfo.maxParticipants ? +missionInfo.maxParticipants : 0
     const maxPriorityParticipants = +missionInfo.maxPriorityParticipants!
     const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
+    const priorityRatio = +(missionInfo.priorityRatio ?? 0)
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
     const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
     const optTokenAddress = pool.data!.optionalTokenAddress
@@ -165,6 +166,7 @@ export class NewSocialMissionViewModel {
       poolId: pool.id,
       data: setting,
       status,
+      priorityRatio: priorityRatio,
       optionalTokens: EMPTY_ARRAY,
       ownerAddress: this._auth.attachedAddress,
       metadata: {
