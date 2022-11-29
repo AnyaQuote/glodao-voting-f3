@@ -56,6 +56,7 @@ export interface Mission {
   projectOwner?: string
   //
   optionalTokens?: OptionalTokenItem[]
+  priorityRatio?: number
 }
 
 export interface InAppTrialInfo {
