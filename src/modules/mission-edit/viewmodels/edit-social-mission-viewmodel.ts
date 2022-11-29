@@ -76,6 +76,7 @@ export class EditSocialMissionViewModel {
         shortDescription: this.mission.metadata?.shortDescription,
         // missionCover:this.mission.metadata?.projectLogo,
         priorityAmount: this.mission.priorityRewardAmount,
+        priorityRatio: `${this.mission.priorityRatio ?? 0}`,
         maxParticipants: this.mission.maxParticipants?.toString(),
         maxPriorityParticipants: this.mission.maxPriorityParticipants?.toString(),
         startDate: this.mission.startTime,
@@ -272,6 +273,7 @@ export class EditSocialMissionViewModel {
     const maxParticipants = missionInfo.maxParticipants ? +missionInfo.maxParticipants : 0
     const maxPriorityParticipants = +missionInfo.maxPriorityParticipants!
     const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
+    const priorityRatio = +(missionInfo.priorityRatio ?? 0)
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
     const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
     const optTokenAddress = pool.data!.optionalTokenAddress
@@ -283,6 +285,7 @@ export class EditSocialMissionViewModel {
       maxParticipants,
       maxPriorityParticipants,
       priorityRewardAmount,
+      priorityRatio: priorityRatio,
       tokenBasePrice: optTokenBasePrice,
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
@@ -313,8 +316,10 @@ export class EditSocialMissionViewModel {
     try {
       this.btnLoading = true
       const missionSettings = yield this.getSocialMissionSettings()
+      console.log('this.missionInfo', this.missionInfo)
       const model = yield this.getMissionModel(missionSettings, this.missionInfo, this.pool)
-      yield this._api.updateTask({ id: this.mission.id!, ...model })
+      const res = yield this._api.updateTask({ id: this.mission.id!, ...model })
+      console.log(res)
       this._snackbar.updateSuccess()
       this._router.push({
         name: RouteName.PROJECT_DETAIL,
