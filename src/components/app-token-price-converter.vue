@@ -16,6 +16,7 @@
         @change="onChange"
         placeholder="(ex: 1.0)"
         :rules="[$rules.required, $rules.floatNumberOnly]"
+        append-icon="mdi-currency-usd"
       />
     </div>
     <div class="text-caption">
