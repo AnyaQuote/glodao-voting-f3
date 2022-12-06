@@ -74,7 +74,7 @@ export class EditSocialMissionViewModel {
       this.missionInfo = {
         name: this.mission.name,
         shortDescription: this.mission.metadata?.shortDescription,
-        // missionCover:this.mission.metadata?.projectLogo,
+        // missionCover: this.mission.metadata?.coverImage,
         priorityAmount: this.mission.priorityRewardAmount,
         priorityRatio: `${this.mission.priorityRatio ?? 0}`,
         maxParticipants: this.mission.maxParticipants?.toString(),
@@ -84,8 +84,8 @@ export class EditSocialMissionViewModel {
         type: this.mission.type,
         tokenBasePrice: this.mission.tokenBasePrice,
       }
-      if (this.mission.metadata?.projectLogo)
-        this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata?.projectLogo)
+      if (this.mission.metadata?.coverImage)
+        this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata?.coverImage)
 
       this.generateTaskConfig(this.mission.data)
     } catch (error) {
