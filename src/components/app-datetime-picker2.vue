@@ -186,19 +186,19 @@ export default class AppDateTimePicker2 extends Vue {
     if (!this.mt.start) return ''
 
     if (this.mtMin?.isAfter(this.mt.start)) {
-      return `Must be after ${this.mtMin.format('yyyy/MM/dd HH:mm')}`
+      return `Must be after ${this.mtMin.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mtMax?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mtMax.format('yyyy/MM/dd HH:mm')}`
+      return `Must be before ${this.mtMax.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mtCurrent.isAfter(this.mt.start)) {
-      return `Must be after ${this.mtCurrent.format('yyyy/MM/dd HH:mm')}`
+      return `Must be after ${this.mtCurrent.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mt.end?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mt.end.format('yyyy/MM/dd HH:mm')}`
+      return `Must be before ${this.mt.end.format('yyyy-MM-dd HH:mm')}`
     }
     return ''
   }
@@ -207,19 +207,19 @@ export default class AppDateTimePicker2 extends Vue {
     if (!this.mt.end) return ''
 
     if (this.mtMin?.isAfter(this.mt.end)) {
-      return `Must be after ${this.mtMin.format('yyyy/MM/dd HH:mm')}`
+      return `Must be after ${this.mtMin.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mtMax?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mtMax.format('yyyy/MM/dd HH:mm')}`
+      return `Must be before ${this.mtMax.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mtCurrent.isAfter(this.mt.end)) {
-      return `Must be after ${this.mtCurrent.format('yyyy/MM/dd HH:mm')}`
+      return `Must be after ${this.mtCurrent.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mt.start?.isAfter(this.mt.end)) {
-      return `Must be after ${this.mt.start.format('yyyy/MM/dd HH:mm')}`
+      return `Must be after ${this.mt.start.format('yyyy-MM-dd HH:mm')}`
     }
     return ''
   }
