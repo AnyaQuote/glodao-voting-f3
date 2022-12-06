@@ -11,7 +11,7 @@
               :rules="rules"
               :value="start.date"
               :error-messages="startDateError"
-              placeholder="yyyy-MM-dd"
+              placeholder="yyyy-MM-DD"
               v-bind="attrs"
               v-on="on"
             />
@@ -134,11 +134,11 @@ export default class AppDateTimePicker2 extends Vue {
     this.value?.forEach((iso, index) => {
       const miso = iso ? moment(iso) : null
       if (index === 0 && miso !== null) {
-        this.start.date = miso.format('yyyy-MM-dd')
+        this.start.date = miso.format('yyyy-MM-DD')
         this.start.time = miso.format('HH:mm')
       }
       if (index === 1 && miso !== null) {
-        this.end.date = miso.format('yyyy-MM-dd')
+        this.end.date = miso.format('yyyy-MM-DD')
         this.end.time = miso.format('HH:mm')
       }
     })
@@ -186,19 +186,19 @@ export default class AppDateTimePicker2 extends Vue {
     if (!this.mt.start) return ''
 
     if (this.mtMin?.isAfter(this.mt.start)) {
-      return `Must be after ${this.mtMin.format('yyyy-MM-dd HH:mm')}`
+      return `Must be after ${this.mtMin.format('yyyy-MM-DD HH:mm')}`
     }
 
     if (this.mtMax?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mtMax.format('yyyy-MM-dd HH:mm')}`
+      return `Must be before ${this.mtMax.format('yyyy-MM-DD HH:mm')}`
     }
 
     if (this.mtCurrent.isAfter(this.mt.start)) {
-      return `Must be after ${this.mtCurrent.format('yyyy-MM-dd HH:mm')}`
+      return `Must be after ${this.mtCurrent.format('yyyy-MM-DD HH:mm')}`
     }
 
     if (this.mt.end?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mt.end.format('yyyy-MM-dd HH:mm')}`
+      return `Must be before ${this.mt.end.format('yyyy-MM-DD HH:mm')}`
     }
     return ''
   }
