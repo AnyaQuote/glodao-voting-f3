@@ -55,9 +55,10 @@
           </div>
           <div class="px-3" />
           <app-text-field
+            v-model="priorityRatio"
             class="flex-grow"
             placeholder="(ex: 30)"
-            :rules="[$rules.required, $rules.integer, $rules.max(100), $rules.min(1)]"
+            :rules="[$rules.required, $rules.integer, $rules.max(100)]"
             :value="vm.missionInfo.priorityRatio"
             @input="vm.changeMissionInfo('priorityRatio', $event)"
           />
@@ -78,6 +79,7 @@
             <app-text-field
               class="mt-2"
               type="number"
+              :disabled="vm.missionInfo.priorityRatio === '0'"
               :rules="[$rules.required, $rules.integer, $rules.min(0)]"
               :value="$_get(vm.missionInfo, 'maxPriorityParticipants')"
               @change="vm.changeMissionInfo('maxPriorityParticipants', $event)"
