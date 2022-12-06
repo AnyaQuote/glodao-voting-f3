@@ -178,7 +178,6 @@ export default class MissionInfoForm extends Vue {
   valid = true
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   next() {
-    console.log(this.vm.missionInfo)
     this.vm.changeStep(2)
   }
   back() {
