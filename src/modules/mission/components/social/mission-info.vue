@@ -117,8 +117,8 @@
       <!-- -------------------------------------- MISSION TIME START ------------------------------------------------- -->
       <div class="mt-7">
         <div>
-          <span class="title font-weight-bold blue-diversity--text">Mision time</span>
-          <i class="neutral-10--text ml-2">(Locale time)</i>
+          <span class="title font-weight-bold blue-diversity--text">Mission time</span>
+          <i class="neutral-10--text ml-2">(Local time)</i>
         </div>
         <app-datetime-picker2
           class="font-18 mt-4"
