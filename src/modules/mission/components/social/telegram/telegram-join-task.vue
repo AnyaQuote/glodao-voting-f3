@@ -28,8 +28,8 @@
     <div class="font-18 text-subtitle-2 font-weight-regular red--text">
       <i
         >*For telegram mission, you need to add
-        <a class="blue-diversity--text text-decoration-underline" href="https://t.me/glodao_mission_bot"
-          >@glodao_mission_bot
+        <a class="blue-diversity--text text-decoration-underline" :href="`https://t.me/${telegramBot}`"
+          >@{{ telegramBot }}
         </a>
         to your channel/group
       </i>
@@ -62,6 +62,7 @@ export default class TelegramJoinTask extends Vue {
 
   taskConfig = this.inputConfig
   isChecking = false
+  telegramBot = process.env.VUE_APP_TELEGRAM_BOT_NAME
 
   updateSetting(property: string, value: string) {
     this.taskConfig = set(this.taskConfig!, property, value)

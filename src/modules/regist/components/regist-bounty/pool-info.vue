@@ -82,7 +82,7 @@
       <!-- ------------------------------------ CAMPAIGN INFORMATION --------------------------------------- -->
       <div class="mt-7">
         <span class="font-18 font-weight-bold blue-diversity--text">Campaign Information</span>
-        <i class="neutral-10--text ml-2">(Locale time)</i>
+        <i class="neutral-10--text ml-2">(Local time)</i>
       </div>
 
       <app-datetime-picker2

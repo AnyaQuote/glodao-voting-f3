@@ -212,6 +212,9 @@ export class EditSocialMissionViewModel {
       this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
       return
     }
+    if (property === 'priorityRatio' && value === '0') {
+      this.missionInfo = { ...this.missionInfo, maxPriorityParticipants: '0' }
+    }
     this.missionInfo = set(this.missionInfo, property, value)
   }
 

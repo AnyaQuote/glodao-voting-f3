@@ -11,7 +11,7 @@
               :rules="rules"
               :value="start.date"
               :error-messages="startDateError"
-              placeholder="DD/MM/YYYY"
+              placeholder="yyyy-MM-DD"
               v-bind="attrs"
               v-on="on"
             />
@@ -62,7 +62,7 @@
               :rules="rules"
               :value="end.date"
               :error-messages="endDateError"
-              placeholder="DD/MM/YYYY"
+              placeholder="yyyy-MM-dd"
               v-bind="attrs"
               v-on="on"
             />
@@ -186,19 +186,19 @@ export default class AppDateTimePicker2 extends Vue {
     if (!this.mt.start) return ''
 
     if (this.mtMin?.isAfter(this.mt.start)) {
-      return `Must be after ${this.mtMin.format('DD/MM/yyyy HH:mm')}`
+      return `Must be after ${this.mtMin.format('yyyy-MM-DD HH:mm')}`
     }
 
     if (this.mtMax?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
+      return `Must be before ${this.mtMax.format('yyyy-MM-DD HH:mm')}`
     }
 
     if (this.mtCurrent.isAfter(this.mt.start)) {
-      return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
+      return `Must be after ${this.mtCurrent.format('yyyy-MM-DD HH:mm')}`
     }
 
     if (this.mt.end?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mt.end.format('DD/MM/yyyy HH:mm')}`
+      return `Must be before ${this.mt.end.format('yyyy-MM-DD HH:mm')}`
     }
     return ''
   }
@@ -207,19 +207,19 @@ export default class AppDateTimePicker2 extends Vue {
     if (!this.mt.end) return ''
 
     if (this.mtMin?.isAfter(this.mt.end)) {
-      return `Must be after ${this.mtMin.format('DD/MM/yyyy HH:mm')}`
+      return `Must be after ${this.mtMin.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mtMax?.isBefore(this.mt.start)) {
-      return `Must be before ${this.mtMax.format('DD/MM/yyyy HH:mm')}`
+      return `Must be before ${this.mtMax.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mtCurrent.isAfter(this.mt.end)) {
-      return `Must be after ${this.mtCurrent.format('DD/MM/yyyy HH:mm')}`
+      return `Must be after ${this.mtCurrent.format('yyyy-MM-dd HH:mm')}`
     }
 
     if (this.mt.start?.isAfter(this.mt.end)) {
-      return `Must be after ${this.mt.start.format('DD/MM/yyyy HH:mm')}`
+      return `Must be after ${this.mt.start.format('yyyy-MM-dd HH:mm')}`
     }
     return ''
   }
