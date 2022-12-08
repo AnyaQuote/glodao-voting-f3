@@ -9,10 +9,12 @@ const validateRegex = /^(.+?(?<=\|)){1}(.+?(?<=\|)){2,6}\s*\d$/
 
 export const getApiFileUrl = (model: any) => {
   if (typeof model === 'string') {
+    if (model.startsWith('http:') || model.startsWith('https:')) return model
     if (model.length && model[0] === '/') model = model.substring(1)
     return API_ENDPOINT + model
   } else if (get(model, 'url')) {
     let url = get(model, 'url')
+    if (url.startsWith('https:') || url.startsWith('http:')) return url
     if (url.length && url[0] === '/') url = url.substring(1)
     return API_ENDPOINT + url
   } else {
