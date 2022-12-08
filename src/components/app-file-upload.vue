@@ -58,7 +58,13 @@ export default class AppUploadField extends Vue {
   async onChange(event: any) {
     let value = (this.data = event)
     if (this.isQuizFile) {
-      this.config.error = await checkQuizFile(value)
+      const res = await checkQuizFile(value)
+      if (typeof res == 'string') {
+        this.config.error = res
+      } else {
+        this.config.error = undefined
+        this.$emit('count:quiz', res.count)
+      }
       value = this.config.error ? null : value
     }
     this.$emit('change', value)

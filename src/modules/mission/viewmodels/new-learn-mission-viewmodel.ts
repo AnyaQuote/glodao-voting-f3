@@ -13,7 +13,7 @@ import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants
 
 export class NewLearnMissionViewModel {
   @observable step = 1
-
+  @observable quizLength = 0
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
   @observable learnToEarn: LearnToEarn = {
@@ -71,6 +71,10 @@ export class NewLearnMissionViewModel {
 
   @action changeStep(step: number) {
     this.step = step
+  }
+
+  @action.bound getQuizLength(value: number) {
+    this.quizLength = value
   }
 
   async getImageSource(imageFile: File) {
