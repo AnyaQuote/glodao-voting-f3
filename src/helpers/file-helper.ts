@@ -143,7 +143,7 @@ export const checkQuizFile = async (file?: File | null) => {
       return errorMessage(file.name, index + 1, 'Number of answers do not match')
     }
   }
-  return ''
+  return { count: lines.length }
 }
 
 /**
