@@ -40,7 +40,7 @@
         <a
           class="blue-diversity--text text-decoration-underline"
           href="https://discord.com/oauth2/authorize?client_id=986822287258947624&scope=bot&permissions=0"
-          >@glodao_mission_bot
+          >@bounty_mission_bot
         </a>
         to your server
       </i>
