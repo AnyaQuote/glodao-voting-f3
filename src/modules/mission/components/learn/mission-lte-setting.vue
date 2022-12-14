@@ -112,7 +112,7 @@
       <app-text-field
         type="number"
         :value="vm.learnToEarn.setting.correctAnswersPerQuiz"
-        :rules="[$rules.required, $rules.max(vm.learnToEarn.setting.questionsPerQuiz), $rules.integer, $rules.min(1)]"
+        :rules="[$rules.required, $rules.max(vm.quizLength), $rules.integer, $rules.min(1)]"
         @change="vm.changeLearnToEarnInfo('setting.correctAnswersPerQuiz', $event)"
       />
 
