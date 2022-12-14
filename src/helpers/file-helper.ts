@@ -173,7 +173,12 @@ export const downloadFile = (url: string, fileName: string) => {
  * @returns File object
  */
 export const generateFileFromUrl = async (url: string) => {
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    mode: 'cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  })
   const extension = url.split('.').pop()
   const blob = await response.blob()
   const file = new File([blob], `file.${extension}`, { type: `image/${extension}` })
