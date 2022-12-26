@@ -55,7 +55,6 @@
           </div>
           <div class="px-3" />
           <app-text-field
-            v-model="priorityRatio"
             class="flex-grow"
             placeholder="(ex: 30)"
             :rules="[$rules.required, $rules.integer, $rules.max(100)]"
