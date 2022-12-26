@@ -102,6 +102,7 @@ export enum MissionType {
   LEARN = 'learn',
   SOCIAL = 'bounty',
   APP_TRIAL = 'iat',
+  MIX = 'mix',
 }
 
 export interface DisplayIatData extends IatData {
