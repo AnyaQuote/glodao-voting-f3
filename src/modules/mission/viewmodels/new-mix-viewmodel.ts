@@ -34,6 +34,7 @@ import { getDefaultSettingConfig, extractTaskSettings, generateRandomString } fr
 import { BaseNewMissionViewModel } from './base-new-viewmodel'
 import { IBaseHandler } from '../handlers/base.handler'
 import { MissionInfoHandler } from '../handlers/mission-info/mission-info.handler'
+import { SocialHandler } from '../handlers/social/social.handler'
 
 enum AppPlatform {
   MOBILE = 'mobile',
@@ -52,11 +53,16 @@ export class NewMixMissionVIewModel extends BaseNewMissionViewModel {
 
   @asyncAction *initData(unicodeName) {
     yield this.loadPageData(unicodeName)
-    this.handlers = [new MissionInfoHandler(this.pool, this.appliedMission)]
+    this.handlers = [new MissionInfoHandler(this.pool, this.appliedMission), new SocialHandler()]
+  }
+
+  @action nextStep(): void {
+    console.log(this.currentHandler?.getData());
+    super.nextStep();
   }
 
   @computed get currentHandler() {
-    if (!this.handlers.length) return null
+    if (this.handlers.length === 0) return null
     return this.handlers[this.step]
   }
 

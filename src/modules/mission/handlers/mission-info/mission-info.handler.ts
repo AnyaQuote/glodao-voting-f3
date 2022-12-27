@@ -1,10 +1,13 @@
 import { action, computed, observable } from 'mobx'
 import { HandlerName, HandlerType, IBaseHandler } from '../base.handler'
 import { VotingPool } from '@/models/VotingModel'
-import { EMPTY_OBJECT, EMPTY_STRING, HUNDRED, Zero } from '@/constants'
+import { EMPTY_ARRAY, EMPTY_OBJECT, EMPTY_STRING, HUNDRED, Zero } from '@/constants'
 import { MissionInfo } from '@/models/QuizModel'
 import { get, set } from 'lodash-es'
 import { FixedNumber } from '@ethersproject/bignumber'
+import { getApiFileUrl } from '@/helpers/file-helper'
+import { appProvider } from '@/app-providers'
+import { Mission } from '@/models/MissionModel'
 
 export class MissionInfoHandler implements IBaseHandler {
   type: HandlerType = HandlerType.missionInfo
@@ -15,6 +18,9 @@ export class MissionInfoHandler implements IBaseHandler {
   @observable pool: VotingPool = EMPTY_OBJECT
   @observable appliedMission = 0
   @observable missionInfo: MissionInfo = EMPTY_OBJECT
+
+  private api = appProvider.api
+  private auth = appProvider.authStore
 
   constructor(pool, appliedMission) {
     this.pool = pool
@@ -32,8 +38,59 @@ export class MissionInfoHandler implements IBaseHandler {
     this.missionInfo = set(this.missionInfo, property, value)
   }
 
+  async getMissionModel(missionInfo: MissionInfo, pool: VotingPool) {
+    const status = 'upcomming'
+    const { website, ...socialLinks } = pool.data?.socialLinks
+    const rewardAmount = this.rewardPerMission._value
+    const maxParticipants = missionInfo.maxParticipants ? +missionInfo.maxParticipants : 0
+    const maxPriorityParticipants = +missionInfo.maxPriorityParticipants!
+    const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
+    const priorityRatio = +(missionInfo.priorityRatio ?? 0)
+    const coverImage = await this.getImageSource(missionInfo.missionCover!)
+    const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
+    const optTokenAddress = pool.data!.optionalTokenAddress
+    const optTokenLogo = pool.data!.optionalTokenLogo
+    const optTokenBasePrice = this.tokenBasePrice
+    const mission: Mission = {
+      rewardAmount,
+      maxParticipants,
+      maxPriorityParticipants,
+      priorityRewardAmount,
+      tokenBasePrice: optTokenBasePrice,
+      startTime: missionInfo.startDate,
+      endTime: missionInfo.endDate,
+      name: missionInfo.name,
+      chainId: pool.chain,
+      poolId: pool.id,
+      status,
+      priorityRatio: priorityRatio,
+      optionalTokens: EMPTY_ARRAY,
+      ownerAddress: this.auth.attachedAddress,
+      metadata: {
+        shortDescription: missionInfo.shortDescription,
+        projectLogo: pool.data!.projectLogo,
+        caption: missionInfo.shortDescription,
+        decimals: +optTokenDecimal!,
+        rewardToken: this.tokenName,
+        tokenLogo: optTokenLogo,
+        tokenContractAddress: optTokenAddress,
+        socialLinks: socialLinks,
+        website: website,
+        coverImage,
+      },
+    }
+    return mission
+  }
+
+  async getImageSource(imageFile: File) {
+    const media = new FormData()
+    media.append('files', imageFile)
+    const imageResult = await this.api.uploadFile(media)
+    return getApiFileUrl(imageResult[0])
+  }
+
   getData() {
-    throw new Error('Method not implemented.')
+    return this.missionInfo
   }
 
   @computed get priorityAmount() {

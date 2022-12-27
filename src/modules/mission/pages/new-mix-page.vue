@@ -21,12 +21,7 @@
             <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
           </div>
           <v-divider />
-          <component
-            v-for="(handler, index) in vm.handlers"
-            :is="handler.name"
-            :key="handler.name + index"
-            :handler="handler"
-          />
+          <component v-if="vm.currentHandler !== null" :is="vm.currentHandler.name" :handler="vm.currentHandler" />
           <v-divider class="dashed-border" />
 
           <!-- ----------------------------------------- BUTTONS START ---------------------------------------------------- -->
@@ -68,6 +63,7 @@ import { HandlerName } from '../handlers/base.handler'
     'mission-info': () => import('../components/common/base-mission-info.vue'),
     'mission-skeleton-form': () => import('../components/common/mission-skeleton-form.vue'),
     [HandlerName.missionInfo]: () => import('../handlers/mission-info/mission-info.handler.vue'),
+    [HandlerName.social]: () => import('../handlers/social/social.handler.vue'),
   },
 })
 export default class NewMixMissionForm extends Vue {

@@ -64,13 +64,13 @@ export class BaseNewMissionViewModel {
   }
 
   @action backStep() {
-    if (this.step > 0) this.changeStep(this.step - 1)
     if (this.step === 0) this.router.go(-1)
+    else if (this.step > 0) this.changeStep(this.step - 1)
   }
 
   @action nextStep() {
-    if (this.step < this.handlers.length - 1) this.changeStep(this.step + 1)
     if (this.step === this.handlers.length - 1) this.submit()
+    else if (this.step < this.handlers.length - 1) this.changeStep(this.step + 1)
   }
 
   @computed get priorityAmount() {
