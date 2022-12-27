@@ -7,17 +7,19 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import { get, isEmpty, set, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
+import { IBaseHandler } from '../handlers/base.handler'
 
 export class BaseNewMissionViewModel {
   @observable loading = false
   @observable btnLoading = false
 
-  @observable step = 1
-  @observable unlocked = 1
+  @observable step = 0
 
   @observable pool: VotingPool = EMPTY_OBJECT
   @observable appliedMission = 0
   @observable missionInfo: MissionInfo = EMPTY_OBJECT
+
+  @observable handlers: IBaseHandler[] = []
 
   auth = appProvider.authStore
   api = appProvider.api
@@ -25,7 +27,7 @@ export class BaseNewMissionViewModel {
   router = appProvider.router
 
   constructor(unicodeName: string) {
-    this.loadPageData(unicodeName)
+    // this.loadPageData(unicodeName)
   }
 
   @asyncAction *loadPageData(unicodeName: string) {
@@ -57,24 +59,18 @@ export class BaseNewMissionViewModel {
     //
   }
 
-  @action.bound changeMissionInfo(property: string, value: any) {
-    if (property === 'missionDates') {
-      this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
-      return
-    }
-    if (property === 'priorityRatio' && value === '0') {
-      this.missionInfo = { ...this.missionInfo, maxPriorityParticipants: '0' }
-    }
-    this.missionInfo = set(this.missionInfo, property, value)
-  }
-  ƒ
-
   @action changeStep(step: number) {
     this.step = step
   }
 
-  goBack() {
-    this.router.go(-1)
+  @action backStep() {
+    if (this.step > 0) this.changeStep(this.step - 1)
+    if (this.step === 0) this.router.go(-1)
+  }
+
+  @action nextStep() {
+    if (this.step < this.handlers.length - 1) this.changeStep(this.step + 1)
+    if (this.step === this.handlers.length - 1) this.submit()
   }
 
   @computed get priorityAmount() {

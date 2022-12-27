@@ -32,6 +32,8 @@ import { waitForGlobalLoadingFinished } from '@/helpers/promise-helper'
 import { ERROR_MSG_COULD_NOT_GET_AVG_COMMUNITY_REWARD, HUNDRED, PRIORITY_AMOUNT_RATIO } from '@/constants'
 import { getDefaultSettingConfig, extractTaskSettings, generateRandomString } from '@/helpers'
 import { BaseNewMissionViewModel } from './base-new-viewmodel'
+import { IBaseHandler } from '../handlers/base.handler'
+import { MissionInfoHandler } from '../handlers/mission-info/mission-info.handler'
 
 enum AppPlatform {
   MOBILE = 'mobile',
@@ -41,8 +43,24 @@ enum AppPlatform {
 export class NewMixMissionVIewModel extends BaseNewMissionViewModel {
   @observable quizLength = 0
   @observable pool: VotingPool = EMPTY_OBJECT
+  @observable handlers: IBaseHandler[] = []
 
   constructor(unicodeName: string) {
     super(unicodeName)
+    this.initData(unicodeName)
+  }
+
+  @asyncAction *initData(unicodeName) {
+    yield this.loadPageData(unicodeName)
+    this.handlers = [new MissionInfoHandler(this.pool, this.appliedMission)]
+  }
+
+  @computed get currentHandler() {
+    if (!this.handlers.length) return null
+    return this.handlers[this.step]
+  }
+
+  @computed get isCurrentHandlerValid() {
+    return this.currentHandler?.valid ?? false
   }
 }

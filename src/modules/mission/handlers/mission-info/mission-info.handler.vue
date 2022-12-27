@@ -1,25 +1,21 @@
 <template>
-  <v-sheet class="rounded-lg" outlined>
-    <div class="py-6 text-center rounded-lg rounded-b-0 blue-2">
-      <span class="text-h5 font-weight-bold text-uppercase">Create mission</span>
-    </div>
-    <v-divider />
-    <v-form v-model="valid" class="pa-7">
+  <v-sheet>
+    <v-form v-model="handler.valid" class="pa-7">
       <!-- ------------------------------------ MISSION INFORMATION START ------------------------------------------- -->
       <div class="d-flex flex-column">
         <div class="title font-weight-bold bluePrimary--text mt-4">Mission information</div>
         <div class="font-18 font-weight-bold mt-3 mb-1">Mission name<span class="app-red--text">*</span></div>
         <app-text-field
           :rules="[$rules.required]"
-          :value="$_get(vm.missionInfo, 'name')"
-          @change="vm.changeMissionInfo('name', $event)"
+          :value="$_get(handler.missionInfo, 'name')"
+          @change="handler.changeMissionInfo('name', $event)"
           placeholder="Enter name of mission"
         />
         <span class="font-18 font-weight-bold mt-3 mb-1">Short description<span class="app-red--text">*</span></span>
         <app-textarea
           :rules="[$rules.required]"
-          :value="$_get(vm.missionInfo, 'shortDescription')"
-          @change="vm.changeMissionInfo('shortDescription', $event)"
+          :value="$_get(handler.missionInfo, 'shortDescription')"
+          @change="handler.changeMissionInfo('shortDescription', $event)"
           placeholder="Enter short description to describe the mission"
         />
 
@@ -33,8 +29,8 @@
         <app-file-upload
           isImageFile
           :rules="[$rules.required, $rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage]"
-          :value="$_get(vm.missionInfo, 'missionCover', null)"
-          @change="vm.changeMissionInfo('missionCover', $event)"
+          :value="$_get(handler.missionInfo, 'missionCover', null)"
+          @change="handler.changeMissionInfo('missionCover', $event)"
           class="mt-2"
         />
       </div>
@@ -46,7 +42,7 @@
       <div class="d-flex flex-column">
         <div class="title font-weight-bold blue-diversity--text">Reward information</div>
         <div class="font-18 font-weight-bold mt-6">
-          <span>Reward mission: {{ vm.rewardPerMission | formatNumber(2) }} {{ vm.tokenName }}</span>
+          <span>Reward mission: {{ handler.rewardPerMission | formatNumber(2) }} {{ handler.tokenName }}</span>
         </div>
         <div class="mt-6 d-flex">
           <div class="flex-grow">
@@ -58,15 +54,17 @@
             class="flex-grow"
             placeholder="(ex: 30)"
             :rules="[$rules.required, $rules.integer, $rules.max(100)]"
-            :value="vm.missionInfo.priorityRatio"
-            @input="vm.changeMissionInfo('priorityRatio', $event)"
+            :value="handler.missionInfo.priorityRatio"
+            @input="handler.changeMissionInfo('priorityRatio', $event)"
           />
         </div>
         <div class="d-flex flex-column flex-sm-row mt-4">
           <div class="flex-grow">
             <span class="font-18 font-weight-bold">Priority amount</span>
             <v-sheet class="rounded px-3 d-flex align-center mt-2 py-14px" height="56" outlined>
-              <span class="font-weight-600">{{ vm.priorityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+              <span class="font-weight-600"
+                >{{ handler.priorityAmount | formatNumber(2) }} {{ handler.tokenName }}</span
+              >
             </v-sheet>
           </div>
           <div class="mx-sm-3 my-3 my-sm-0" />
@@ -78,10 +76,10 @@
             <app-text-field
               class="mt-2"
               type="number"
-              :disabled="vm.missionInfo.priorityRatio === '0'"
+              :disabled="handler.missionInfo.priorityRatio === '0'"
               :rules="[$rules.required, $rules.integer, $rules.min(0)]"
-              :value="$_get(vm.missionInfo, 'maxPriorityParticipants')"
-              @change="vm.changeMissionInfo('maxPriorityParticipants', $event)"
+              :value="$_get(handler.missionInfo, 'maxPriorityParticipants')"
+              @change="handler.changeMissionInfo('maxPriorityParticipants', $event)"
               placeholder="Enter participants"
             />
           </div>
@@ -92,12 +90,14 @@
         <div class="d-flex flex-column flex-sm-row">
           <v-sheet min-height="56" class="flex-grow rounded px-3 d-flex justify-space-between align-center" outlined>
             <span>Community amount:</span>
-            <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+            <span class="font-weight-600">{{ handler.communityAmount | formatNumber(2) }} {{ handler.tokenName }}</span>
           </v-sheet>
           <div class="mx-sm-3 my-3 my-sm-0" />
           <v-sheet class="flex-grow rounded px-3 d-flex justify-space-between align-center" min-height="56" outlined>
             <span>Personal priority reward:</span>
-            <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
+            <span class="font-weight-600">
+              {{ handler.personalReward | formatNumber(2) }} {{ handler.tokenName }}
+            </span>
           </v-sheet>
         </div>
       </div>
@@ -105,10 +105,10 @@
       <v-divider class="mt-10 my-5 dashed-border" />
       <!-- ------------------------------------- TOKEN BASE PRICE INFO START ------------------------------------------ -->
       <app-token-converter
-        :value="vm.tokenBasePrice"
-        :tokenName="vm.tokenBName"
-        :tokenAddress="vm.tokenBAddress"
-        @change="vm.changeMissionInfo('tokenBasePrice', $event)"
+        :value="handler.tokenBasePrice"
+        :tokenName="handler.tokenBName"
+        :tokenAddress="handler.tokenBAddress"
+        @change="handler.changeMissionInfo('tokenBasePrice', $event)"
       />
       <!-- ------------------------------------- TOKEN BASE PRICE INFO END -------------------------------------------- -->
       <v-divider class="my-5 dashed-border" />
@@ -122,47 +122,22 @@
         <app-datetime-picker2
           class="font-18 mt-4"
           :rules="[$rules.required]"
-          :min="vm.pool.startDate"
-          :max="vm.pool.endDate"
-          :value="[vm.missionInfo.startDate, vm.missionInfo.endDate]"
-          @change="vm.changeMissionInfo('missionDates', $event)"
+          :min="handler.pool.startDate"
+          :max="handler.pool.endDate"
+          :value="[handler.missionInfo.startDate, handler.missionInfo.endDate]"
+          @change="handler.changeMissionInfo('missionDates', $event)"
         />
       </div>
       <!-- -------------------------------------- MISSION TIME END --------------------------------------------------- -->
-
-      <v-divider class="dashed-border" />
-
-      <!-- ----------------------------------------- BUTTONS START ---------------------------------------------------- -->
-      <div class="d-flex mt-7">
-        <div class="flex-grow">
-          <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Cancel </v-btn>
-        </div>
-        <div class="px-4" />
-        <div class="flex-grow">
-          <v-btn
-            class="text-none"
-            :class="{ 'linear-blue--bg white--text': valid }"
-            :loading="vm.btnLoading"
-            :disabled="!valid"
-            @click="next"
-            height="40"
-            depressed
-            block
-          >
-            Next
-          </v-btn>
-        </div>
-      </div>
-      <!-- ------------------------------------------------------------------------------------------------------------ -->
     </v-form>
   </v-sheet>
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Prop, Vue } from 'vue-property-decorator'
 import { Observer } from 'mobx-vue'
 import { MAX_IMAGE_FILE_SIZE } from '@/constants'
-import { BaseNewMissionViewModel } from '../../viewmodels/base-new-viewmodel'
+import { MissionInfoHandler } from './mission-info.handler'
 
 @Observer
 @Component({
@@ -173,17 +148,8 @@ import { BaseNewMissionViewModel } from '../../viewmodels/base-new-viewmodel'
   },
 })
 export default class MissionInfoForm extends Vue {
-  @Inject() vm!: BaseNewMissionViewModel
-  valid = true
+  @Prop() handler!: MissionInfoHandler
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
-
-  next() {
-    this.valid && this.vm.changeStep(2)
-  }
-
-  back() {
-    this.vm.backStep()
-  }
 }
 </script>
 
