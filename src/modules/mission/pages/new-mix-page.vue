@@ -10,7 +10,7 @@
       </v-col>
 
       <!-- ---------------- SKELETON LOADER ---------------- -->
-      <v-col v-if="vm.pageLoading" cols="10">
+      <v-col v-if="vm.loading" cols="10">
         <mission-skeleton-form />
       </v-col>
 
@@ -41,7 +41,7 @@
                 depressed
                 block
               >
-                Next
+                {{ vm.isLastStep ? 'Submit' : 'Next' }}
               </v-btn>
             </div>
           </div>
@@ -64,6 +64,7 @@ import { HandlerName } from '../handlers/base.handler'
     'mission-skeleton-form': () => import('../components/common/mission-skeleton-form.vue'),
     [HandlerName.missionInfo]: () => import('../handlers/mission-info/mission-info.handler.vue'),
     [HandlerName.social]: () => import('../handlers/social/social.handler.vue'),
+    [HandlerName.iat]: () => import('../handlers/iat/iat.handler.vue'),
   },
 })
 export default class NewMixMissionForm extends Vue {

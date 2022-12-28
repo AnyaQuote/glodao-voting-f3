@@ -55,7 +55,7 @@ export class BaseNewMissionViewModel {
     }
   }
 
-  @asyncAction *submit() {
+  submit() {
     //
   }
 
