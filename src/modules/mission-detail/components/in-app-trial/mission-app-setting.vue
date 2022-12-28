@@ -53,6 +53,7 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Vue, Inject } from 'vue-property-decorator'
+import { IDetailViewmodel } from '../../viewmodels/base-detail-viewmodel'
 import { InAppTrialDetailViewModel } from '../../viewmodels/iat-detail-viewmodel'
 
 @Observer
@@ -62,7 +63,7 @@ import { InAppTrialDetailViewModel } from '../../viewmodels/iat-detail-viewmodel
   },
 })
 export default class MissionAppSetting extends Vue {
-  @Inject() vm!: InAppTrialDetailViewModel
+  @Inject() vm!: IDetailViewmodel
 }
 </script>
 

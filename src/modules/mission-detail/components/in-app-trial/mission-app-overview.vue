@@ -22,12 +22,13 @@
 <script lang="ts">
 import { Observer } from 'mobx-vue'
 import { Component, Inject, Vue } from 'vue-property-decorator'
+import { IDetailViewmodel } from '../../viewmodels/base-detail-viewmodel'
 import { InAppTrialDetailViewModel } from '../../viewmodels/iat-detail-viewmodel'
 
 @Observer
 @Component
 export default class MissionAppOverview extends Vue {
-  @Inject() vm!: InAppTrialDetailViewModel
+  @Inject() vm!: IDetailViewmodel
 }
 </script>
 

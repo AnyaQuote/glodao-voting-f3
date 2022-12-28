@@ -11,8 +11,9 @@ import { isEmpty, find, has, get, toNumber } from 'lodash-es'
 import { action, computed, observable } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
+import { IDetailViewmodel } from './base-detail-viewmodel'
 
-export class SocialMissionDetailViewModel {
+export class SocialMissionDetailViewModel implements IDetailViewmodel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable loading = false

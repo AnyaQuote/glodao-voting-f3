@@ -46,6 +46,7 @@ export enum RouteName {
   MISSION_LEARN_DETAIL = 'learn-mission-detail',
   MISSION_SOCIAL_DETAIL = 'social-mission-detail',
   MISSION_IAT_DETAIL = 'iat-mission-detail',
+  MISSION_MIX_DETAIL = 'mix-mission-detail',
   MISSION_EDIT_LEARN = 'learn-mission-edit',
   MISSION_EDIT_SOCIAL = 'social-mission-edit',
   MISSION_EDIT_IAT = 'iat-mission-edit',
@@ -206,6 +207,16 @@ const routes: Array<RouteConfig> = [
     path: '/projects/:unicodeName/app-trial/iat/:id',
     name: RouteName.MISSION_IAT_DETAIL,
     component: () => import('@/modules/mission-detail/pages/iat-detail-page.vue'),
+    meta: {
+      auth: true,
+      wallet: true,
+      title: 'In App Trial Mission detail',
+    },
+  },
+  {
+    path: '/projects/:unicodeName/mission/mix/:id',
+    name: RouteName.MISSION_MIX_DETAIL,
+    component: () => import('@/modules/mission-detail/pages/mix-detail-page.vue'),
     meta: {
       auth: true,
       wallet: true,

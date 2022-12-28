@@ -13,7 +13,7 @@ import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
 import { IDetailViewmodel } from './base-detail-viewmodel'
 
-export class InAppTrialDetailViewModel implements IDetailViewmodel {
+export class MixDetailViewModel implements IDetailViewmodel {
   @observable loading = false
 
   @observable mission: Mission = {}

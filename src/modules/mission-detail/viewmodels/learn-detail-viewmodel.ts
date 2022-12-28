@@ -10,8 +10,9 @@ import { promiseHelper } from '@/helpers/promise-helper'
 import { exportToCsvAndDownload } from '@/helpers/file-helper'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
+import { IDetailViewmodel } from './base-detail-viewmodel'
 
-export class LearnMissionDetailViewModel {
+export class LearnMissionDetailViewModel implements IDetailViewmodel {
   @observable mission: Mission = {}
   @observable pool: VotingPool = {}
   @observable quiz: Quiz = {}
