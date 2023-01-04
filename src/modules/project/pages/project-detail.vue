@@ -22,6 +22,8 @@
 
       <v-col cols="12" v-else-if="vm.poolStore.status === 'approved'">
         <project-ended-header class="mb-8" />
+        <funded-button-container :isFunded="true" />
+        <div class="mt-5"></div>
         <project-ended-content />
       </v-col>
 
@@ -50,6 +52,7 @@ import { EMPTY_STRING } from '@/constants'
     'voting-content': () => import('../components/project-detail-components/project-votings/content.vue'),
     'cancel-dialog': () => import('../components/project-detail-components/dialogs/cancel-dialog.vue'),
     'withdraw-dialog': () => import('../components/project-detail-components/dialogs/withdraw-dialog.vue'),
+    'funded-button-container': () => import('@/modules/project/components/funded-button-container.vue'),
   },
 })
 export default class ProjectDetailPage extends Vue {
