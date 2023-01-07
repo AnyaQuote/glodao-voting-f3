@@ -96,6 +96,10 @@ import { MixDetailViewModel } from '../viewmodels/mix-detail-viewmodel'
 export default class MixDetailPage extends Vue {
   @Provide() vm = new MixDetailViewModel(get(this.$route, 'params.unicodeName', ''), get(this.$route, 'params.id', ''))
   missionId = get(this.$route, 'params.id', '')
+
+  mounted() {
+    console.log('MixDetailPage')
+  }
 }
 </script>
 
