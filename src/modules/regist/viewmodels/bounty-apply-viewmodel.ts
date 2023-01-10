@@ -58,7 +58,6 @@ export class BountyApplyViewModel {
   @observable approving = false
   @observable optionalApproving = false
 
-  @observable bnbFee = Zero
   @observable feePerMission = Zero
   @observable rewardTokenBalance = Zero
   @observable rewardTokenDecimals = 18
@@ -91,7 +90,6 @@ export class BountyApplyViewModel {
       const votingHandler = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
-      this.bnbFee = this.votingHandler.poolType.creationFee!
       this.feePerMission = this.votingHandler.poolType.feePerMission!
 
       this._disposers.push(
@@ -394,5 +392,15 @@ export class BountyApplyViewModel {
 
   @computed get currentTime() {
     return appProvider.currentTime
+  }
+
+  @computed get bnbFee() {
+    try {
+      return this.votingHandler!.poolType.creationFee!.mulUnsafe(
+        FixedNumber.from(this.projectInfo.totalMissions!.toString())
+      )
+    } catch (error) {
+      return Zero
+    }
   }
 }
