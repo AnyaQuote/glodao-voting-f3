@@ -6,7 +6,7 @@
         <v-form ref="form">
           <div class="d-flex justify-space-between align-center">
             <div class="text-h5 font-weight-bold">Send your rewards</div>
-            <v-btn icon @click="cancel" small>
+            <v-btn icon @click="cancel" small :disabled="!canClose">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </div>
@@ -14,25 +14,36 @@
             <div class="font-weight-bold">Token address:</div>
             <div class="ml-2">{{ vm.pool.tokenAddress }}</div>
           </div>
-          <div class="d-flex mt-4">
+          <div class="d-flex mt-2">
             <div class="font-weight-bold">Send amount:</div>
             <div class="ml-2">{{ totalAmount | formatNumber(2) }} TOKEN</div>
           </div>
 
           <div>
+            <div v-if="lastTransactionsText">
+              <div v-html="lastTransactionsText"></div>
+            </div>
             <v-sheet outlined rounded="lg" v-for="(tx, index) of txs" :key="index" class="pa-2 my-2 text-caption">
               <v-row>
-                <v-col cols="1">{{ index + 1 }}</v-col>
+                <v-col cols="1" class="font-weight-bold">{{ index + 1 }}</v-col>
                 <v-col cols="9" class="d-flex flex-column">
                   <div class="d-flex flex-row">
-                    <div class="flex-grow-1">To: {{ tx.accounts.length }} users</div>
-                    <div class="flex-grow-1">Total: {{ tx.totalAmount | formatNumber(2) }} tokens</div>
+                    <div class="flex-grow-1">
+                      To: <span class="font-weight-bold">{{ tx.accounts.length }}</span> users
+                    </div>
+                    <div class="flex-grow-1">
+                      Total: <span class="font-weight-bold">{{ tx.totalAmount | formatNumber(2) }}</span> tokens
+                    </div>
                   </div>
-                  <div>Tx.Hash: {{ tx.hash }}</div>
+                  <div style="font-size: 10px">Hash: {{ tx.hash }}</div>
                   <div>
-                    <div v-if="tx.status === 'pending'">wait then click "Send" to distribute rewards</div>
+                    <div v-if="tx.status === 'pending'">
+                      Please wait then click <span class="text-body-1 font-weight-medium">"Send"</span> to distribute
+                      rewards
+                      <div v-if="tx.error" class="error--text">{{ tx.error }}</div>
+                    </div>
                     <div v-else-if="tx.status === 'loading'">mining</div>
-                    <div v-else-if="tx.status === 'error'">Error: {{ tx.error }}</div>
+                    <div v-else-if="tx.status === 'error'" class="error--text">{{ tx.error }}</div>
                     <div v-else-if="tx.status === 'success'">Completed</div>
                   </div>
                 </v-col>
@@ -63,8 +74,16 @@
             </v-btn>
           </div>
 
-          <div class="text-caption text-decoration-underline font-italic">
-            Please make sure your wallet has enough tokens so that the funding process won't go wrong
+          <div v-if="initing" class="my-4">
+            <v-progress-circular indeterminate size="16" width="3" />
+            calculating...
+          </div>
+
+          <div class="text-caption font-weight-medium">
+            <div>
+              There will be some transactions, just like the bulksender tool, plz complete all of them<br />
+              Do not <span class="error--text">REFRESH</span> the page.<br />
+            </div>
           </div>
         </v-form>
       </v-sheet>
@@ -88,6 +107,9 @@ import { FixedNumber } from '@ethersproject/bignumber'
 import { Erc20Contract, tokenHelper } from '@/blockchainHandlers/erc20-contract'
 import { bnHelper } from '@/helpers/bignumber-helper'
 import { promiseHelper } from '@/helpers/promise-helper'
+import { apiService } from '@/services/api-service'
+import { alertController } from './alert/alert-controller'
+import { nextTick } from 'vue/types/umd'
 
 interface RewardInfo {
   account: string
@@ -124,8 +146,11 @@ export default class CalculateRewardButtonContainer extends Vue {
 
   userRewards: RewardInfo[] = []
   txs: TransactionInfo[] = []
+  lastTransactions?: any
 
   tokenDecimals = 18
+
+  initing = false
 
   toggleDialog() {
     this.dialog = !this.dialog
@@ -139,17 +164,31 @@ export default class CalculateRewardButtonContainer extends Vue {
   }
 
   async loadRewards() {
-    this.erc20Contract = tokenHelper.getContract(this.vm.pool.tokenAddress!, process.env.VUE_APP_CHAIN_ID as any)
-    this.tokenDecimals = await this.erc20Contract!.decimals()
-    await claimerMasterEvm.initAsync()
-    await this.loadClaimerContract()
-    const result = await appProvider.api.getTaskUserReport(this.vm.mission.id!, 'rewards')
-    this.userRewards = result.map((x) => ({
-      account: x.walletAddress,
-      amount: FixedNumber.from(`${x.rewardAmount}`),
-      amountWithDecimals: bnHelper.toDecimalString(x.rewardAmount, this.tokenDecimals),
-    }))
-    this.setupTransactions()
+    try {
+      this.lastTransactions = this.vm.mission.transactions
+      this.initing = true
+
+      this.erc20Contract = tokenHelper.getContract(this.vm.pool.tokenAddress!, process.env.VUE_APP_CHAIN_ID as any)
+      this.tokenDecimals = await this.erc20Contract!.decimals()
+
+      await claimerMasterEvm.initAsync()
+      await this.loadClaimerContract()
+      const result = await appProvider.api.getTaskUserReport(this.vm.mission.id!, 'rewards')
+
+      result.forEach((e) => {
+        e.rewardAmount = `${20 * Math.random()}`
+      })
+
+      this.userRewards = result.map((x) => ({
+        account: x.walletAddress,
+        amount: FixedNumber.from(`${x.rewardAmount}`),
+        amountWithDecimals: bnHelper.toDecimalString(x.rewardAmount, this.tokenDecimals),
+      }))
+      this.setupTransactions()
+    } catch (error) {
+      console.error(error)
+    }
+    this.initing = false
   }
 
   setupTransactions() {
@@ -158,7 +197,7 @@ export default class CalculateRewardButtonContainer extends Vue {
       snackController.error('Reward list has problem, plz contact admin')
       throw new Error('Reward list has problem, plz contact admin')
     }
-    const chunks = chunk(this.userRewards, 1)
+    const chunks = chunk(this.userRewards, 2)
     this.txs = chunks.map((rewards, index) => {
       const totalUser = rewards.length
       // const totalAmount = Fixe
@@ -168,7 +207,7 @@ export default class CalculateRewardButtonContainer extends Vue {
         amountWithDeciamals: rewards.map((x) => x.amountWithDecimals),
         totalAmount: rewards.reduce((prev, cur) => prev.addUnsafe(cur.amount), Zero),
         totalAccount: rewards.length,
-        canSend: index === 0 && this.routerApproved && this.claimerCreated,
+        canSend: index === 0 && this.routerApproved && this.claimerCreated && !this.lastTransactionsText,
         status: 'pending',
       }
     })
@@ -179,7 +218,7 @@ export default class CalculateRewardButtonContainer extends Vue {
     this.claimerCreated = !!this.claimerContract
     this.routerApproved = await this.claimerContract.router.isApproved(this.vm.pool.tokenAddress!, walletStore.account)
     const firstTx = first(this.txs)
-    if (firstTx && !firstTx.nonce && !firstTx.canSend) {
+    if (firstTx && !firstTx.nonce && !firstTx.canSend && !this.lastTransactionsText) {
       firstTx.canSend = true
     }
   }
@@ -215,17 +254,27 @@ export default class CalculateRewardButtonContainer extends Vue {
 
   // Transaction ITEM START
   async sendTransaction(tx: TransactionInfo) {
+    if (tx.error) {
+      const result = await alertController.confirm(
+        'Confirm resend transaction!',
+        `
+Please make sure this transaction is not duplicated, or sent before.
+<br/>
+Contact admin if need.
+      `,
+        'confirm',
+        'cancel'
+      )
+      if (!result) return
+    }
     tx.canSend = false
     tx.status = 'loading'
     const index = this.txs.indexOf(tx)
     const web3 = walletStore.web3!
     const account = walletStore.account
+    console.log({ userNonce: this.userNonce, txNonce: tx.nonce })
     if (this.userNonce === -1) {
-      const [transCount, transPendingCount] = await Promise.all([
-        await web3.eth.getTransactionCount(account),
-        await web3.eth.getTransactionCount(account, 'pending'),
-      ])
-      this.userNonce = transPendingCount || transCount
+      await this.getUserNonce(web3, account)
     }
     tx.nonce = this.userNonce++
     const contract = this.claimerContract!
@@ -237,12 +286,46 @@ export default class CalculateRewardButtonContainer extends Vue {
         if (index < this.txs.length - 1) {
           this.txs[index + 1].canSend = true
         }
+        this.updateMissionTransaction()
         this.getTxStatus(tx)
       })
-      .once('error', (err) => {
+      .once('error', async (err) => {
         tx.status = 'error'
-        tx.error = 'Plz contact admin if need, error=' + err.msg || err.message || err
+        tx.error = 'Plz contact admin if need, error=' + (err.msg || err.message || err)
+        if (!tx.hash) {
+          await this.getUserNonce(web3, account)
+          tx.canSend = true
+          tx.status = 'pending'
+        }
       })
+  }
+
+  private async getUserNonce(web3, account: string) {
+    const [transCount, transPendingCount] = await Promise.all([
+      await web3.eth.getTransactionCount(account),
+      await web3.eth.getTransactionCount(account, 'pending'),
+    ])
+    this.userNonce = transPendingCount || transCount
+  }
+
+  updateMissionTransaction() {
+    const transactionInfos = this.txs
+      .filter((x) => x.hash)
+      .reduce(
+        (prev, cur, index) => ({
+          ...prev,
+          [index]: {
+            hash: cur.hash,
+            accounts: cur.accounts.length,
+            amounts: cur.totalAmount.toString(),
+          },
+        }),
+        {}
+      )
+    console.log(transactionInfos)
+    apiService.updateTask({ ...this.vm.mission, transactions: transactionInfos })
+    this.vm.mission.transactions = transactionInfos
+    this.lastTransactions = transactionInfos
   }
 
   async getTxStatus(tx: TransactionInfo) {
@@ -250,7 +333,6 @@ export default class CalculateRewardButtonContainer extends Vue {
     const account = walletStore.account
     try {
       const res = await web3.eth.getTransactionReceipt(tx.hash!)
-      console.log(tx.hash, res)
       if (res) {
         if (res.status) {
           tx.status = 'success'
@@ -272,6 +354,19 @@ export default class CalculateRewardButtonContainer extends Vue {
 
   get totalAmount() {
     return this.userRewards.reduce((prev, cur) => prev.addUnsafe(cur.amount), Zero)
+  }
+
+  get canClose() {
+    if (!this.txs.length) return true
+    if (this.txs.every((x) => x.status === 'pending')) return true
+    return this.txs.every((x) => x.status === 'success')
+  }
+
+  get lastTransactionsText() {
+    console.log('lastTransactionsText', this.lastTransactions)
+    return Object.values(this.lastTransactions || {})
+      .map((x: any) => x.hash)
+      .join('<br />')
   }
 }
 </script>

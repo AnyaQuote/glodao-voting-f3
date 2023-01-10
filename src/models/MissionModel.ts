@@ -57,6 +57,7 @@ export interface Mission {
   //
   optionalTokens?: OptionalTokenItem[]
   priorityRatio?: number
+  transactions?: any
 }
 
 export interface InAppTrialInfo {

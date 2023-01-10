@@ -58,6 +58,7 @@ export class Erc20Contract {
   async decimals() {
     const result = this._decimals || (await this.contract.methods.decimals().call())
     this._decimals = result
+    console.log('deciamls=', result)
     return result
   }
 

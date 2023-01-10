@@ -115,7 +115,6 @@ export class ClaimerMasterEvmContract {
   }
 
   async createClaimer(token: string, from: string) {
-    console.log({ token, from })
     const methods = this.contract.methods
     await sendRequest(methods.createClaimer(token), from)
     const claimer = await methods.claimerContracts(token)
