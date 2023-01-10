@@ -150,8 +150,7 @@ export class VotingHandlerV2 implements IVotingContract {
     }
 
     this._owner = (votingPoolInfo as any).owner
-    this._tokenAAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenAAmount, tokenADecimals)
-    this._tokenBAmount = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).tokenBAmount, tokenBDecimals)
+    this._tokenBAmount = FixedNumber.from((votingPoolInfo as PoolInfo).tokenBAmount)
     this._poolType = (votingPoolInfo as PoolInfo).poolType!
     this._votedYesPercent = bnHelper.fromDecimals((votingPoolInfo as PoolInfo).votedYesPercent).mulUnsafe(HUNDRED)
     this._votedYesWeight = votedYesWeight
