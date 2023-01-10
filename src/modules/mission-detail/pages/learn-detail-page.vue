@@ -162,7 +162,7 @@
               </v-btn>
             </div>
             <div class="mt-4">
-              <calculate-reward-button />
+              <calculate-reward-button :vm="vm" />
             </div>
           </v-col>
         </v-row>
