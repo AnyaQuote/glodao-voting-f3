@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-btn class="white--text linear-blue--bg" @click="toggleDialog"> Send rewards to users </v-btn>
+    <v-btn class="white--text linear-blue--bg" @click="toggleDialog" :disabled="!canSendReward">
+      Send rewards to users
+    </v-btn>
     <v-dialog v-model="dialog" max-width="600" class="overflow-hidden" persistent>
       <v-sheet color="neutral100" class="pa-4">
         <v-form ref="form">
@@ -20,8 +22,9 @@
           </div>
 
           <div>
-            <div v-if="lastTransactionsText">
-              <div v-html="lastTransactionsText"></div>
+            <div v-if="transactionSent">
+              <div class="mt-3 error--text">You have sent rewards with below transaction(s):</div>
+              <div style="font-size: 13px" class="mb-3" v-html="lastTransactionsText"></div>
             </div>
             <v-sheet outlined rounded="lg" v-for="(tx, index) of txs" :key="index" class="pa-2 my-2 text-caption">
               <v-row>
@@ -93,7 +96,7 @@
 
 <script lang="ts">
 import { Component, Vue, Provide, Prop, Ref } from 'vue-property-decorator'
-import { chunk, first, get, sumBy, uniq, uniqBy } from 'lodash-es'
+import { chunk, first, get, isEmpty, sumBy, uniq, uniqBy } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Observer } from 'mobx-vue'
 import { EMPTY_STRING, Zero } from '@/constants'
@@ -110,6 +113,7 @@ import { promiseHelper } from '@/helpers/promise-helper'
 import { apiService } from '@/services/api-service'
 import { alertController } from './alert/alert-controller'
 import { nextTick } from 'vue/types/umd'
+import moment from 'moment'
 
 interface RewardInfo {
   account: string
@@ -146,7 +150,8 @@ export default class CalculateRewardButtonContainer extends Vue {
 
   userRewards: RewardInfo[] = []
   txs: TransactionInfo[] = []
-  lastTransactions?: any
+  lastTransactions?: any = null
+  transactionSent = false
 
   tokenDecimals = 18
 
@@ -165,7 +170,8 @@ export default class CalculateRewardButtonContainer extends Vue {
 
   async loadRewards() {
     try {
-      this.lastTransactions = this.vm.mission.transactions
+      this.transactionSent = !isEmpty(this.vm.mission.transactions)
+      this.lastTransactions = toJS(this.vm.mission.transactions)
       this.initing = true
 
       this.erc20Contract = tokenHelper.getContract(this.vm.pool.tokenAddress!, process.env.VUE_APP_CHAIN_ID as any)
@@ -175,9 +181,9 @@ export default class CalculateRewardButtonContainer extends Vue {
       await this.loadClaimerContract()
       const result = await appProvider.api.getTaskUserReport(this.vm.mission.id!, 'rewards')
 
-      result.forEach((e) => {
-        e.rewardAmount = `${20 * Math.random()}`
-      })
+      // result.forEach((e) => {
+      //   e.rewardAmount = `${20 * Math.random()}`
+      // })
 
       this.userRewards = result.map((x) => ({
         account: x.walletAddress,
@@ -197,7 +203,7 @@ export default class CalculateRewardButtonContainer extends Vue {
       snackController.error('Reward list has problem, plz contact admin')
       throw new Error('Reward list has problem, plz contact admin')
     }
-    const chunks = chunk(this.userRewards, 2)
+    const chunks = chunk(this.userRewards, 1)
     this.txs = chunks.map((rewards, index) => {
       const totalUser = rewards.length
       // const totalAmount = Fixe
@@ -214,7 +220,7 @@ export default class CalculateRewardButtonContainer extends Vue {
   }
 
   async loadClaimerContract() {
-    this.claimerContract = await claimerMasterEvm.getClaimer(this.vm.pool.tokenAddress!)
+    this.claimerContract = await claimerMasterEvm.getClaimer(this.vm.pool.tokenAddress!, true)
     this.claimerCreated = !!this.claimerContract
     this.routerApproved = await this.claimerContract.router.isApproved(this.vm.pool.tokenAddress!, walletStore.account)
     const firstTx = first(this.txs)
@@ -246,10 +252,6 @@ export default class CalculateRewardButtonContainer extends Vue {
     this.loading = false
   }
 
-  mounted() {
-    claimerMasterEvm.initAsync()
-  }
-
   userNonce = -1
 
   // Transaction ITEM START
@@ -272,7 +274,6 @@ Contact admin if need.
     const index = this.txs.indexOf(tx)
     const web3 = walletStore.web3!
     const account = walletStore.account
-    console.log({ userNonce: this.userNonce, txNonce: tx.nonce })
     if (this.userNonce === -1) {
       await this.getUserNonce(web3, account)
     }
@@ -322,10 +323,9 @@ Contact admin if need.
         }),
         {}
       )
-    console.log(transactionInfos)
     apiService.updateTask({ ...this.vm.mission, transactions: transactionInfos })
     this.vm.mission.transactions = transactionInfos
-    this.lastTransactions = transactionInfos
+    this.lastTransactions = toJS(transactionInfos)
   }
 
   async getTxStatus(tx: TransactionInfo) {
@@ -363,10 +363,15 @@ Contact admin if need.
   }
 
   get lastTransactionsText() {
-    console.log('lastTransactionsText', this.lastTransactions)
     return Object.values(this.lastTransactions || {})
       .map((x: any) => x.hash)
       .join('<br />')
+  }
+
+  get canSendReward() {
+    const pool = this.vm.pool
+    const mission = this.vm.mission
+    return pool.tokenAddress && mission.endTime && moment().isAfter(mission.endTime)
   }
 }
 </script>

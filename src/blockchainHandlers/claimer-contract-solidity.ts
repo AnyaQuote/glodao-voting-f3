@@ -9,8 +9,6 @@ import claimerAbi from './abis/claimer.abi.json'
 import { Erc20Contract } from './erc20-contract'
 import { RouterContract } from './router-contract-solidity'
 
-const MASTER_ADDRESS = '0x8E358Ff175fDBB51e95aff903A65412aD8189C64' // process.env.VUE_APP_CHAIN_ID === '97'
-
 export class ClaimerEvmContract {
   contract: any
   web3: Web3
@@ -66,7 +64,7 @@ export class ClaimerMasterEvmContract {
 
   constructor() {
     this.web3 = blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!
-    this.contract = new this.web3.eth.Contract(claimerMasterAbi as any, MASTER_ADDRESS)
+    this.contract = new this.web3.eth.Contract(claimerMasterAbi as any, process.env.VUE_APP_MASTER_ADDRESS)
     reaction(
       () => walletStore.web3,
       () => {
@@ -109,7 +107,7 @@ export class ClaimerMasterEvmContract {
   injectProvider(web3?: Web3) {
     if (web3 && `${(web3 as any).chainId}` === `${(this.web3 as any).chainId}`) {
       this.web3 = web3
-      this.contract = new this.web3.eth.Contract(claimerMasterAbi as any, MASTER_ADDRESS)
+      this.contract = new this.web3.eth.Contract(claimerMasterAbi as any, process.env.VUE_APP_MASTER_ADDRESS)
       Object.values(this.claimers).forEach((x) => x.injectProvider(web3))
     }
   }
@@ -122,9 +120,11 @@ export class ClaimerMasterEvmContract {
     return this.claimers[token]
   }
 
-  async getClaimer(token: string) {
+  async getClaimer(token: string, force = false) {
     await this.initAsync()
     token = Web3.utils.toChecksumAddress(token)
+    if (this.claimers[token]) return this.claimers[token]
+    if (force) await this._initAsync()
     return this.claimers[token]
   }
 
