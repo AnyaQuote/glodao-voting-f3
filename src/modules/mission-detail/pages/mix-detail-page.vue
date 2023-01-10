@@ -64,6 +64,9 @@
               Export rewards
             </v-btn>
           </div>
+          <div class="mt-4">
+            <calculate-reward-button />
+          </div>
         </v-col>
       </template>
       <!-- ------------------------------ MISSION DETAIL END --------------------------------------- -->
@@ -87,11 +90,16 @@ import { MixDetailViewModel } from '../viewmodels/mix-detail-viewmodel'
     'mission-app-setting': () => import('../components/in-app-trial/mission-app-setting.vue'),
     'mission-app-link': () => import('../components/in-app-trial/mission-app-link.vue'),
     'mission-app-overview': () => import('../components/in-app-trial/mission-app-overview.vue'),
+    'calculate-reward-button': () => import('@/components/calculate-reward-button.vue'),
   },
 })
 export default class MixDetailPage extends Vue {
   @Provide() vm = new MixDetailViewModel(get(this.$route, 'params.unicodeName', ''), get(this.$route, 'params.id', ''))
   missionId = get(this.$route, 'params.id', '')
+
+  mounted() {
+    console.log('MixDetailPage')
+  }
 }
 </script>
 

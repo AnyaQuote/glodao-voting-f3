@@ -64,6 +64,9 @@
               Export rewards
             </v-btn>
           </div>
+          <div class="mt-4">
+            <calculate-reward-button />
+          </div>
         </v-col>
       </template>
       <!-- ------------------------------ MISSION DETAIL END --------------------------------------- -->
@@ -87,6 +90,7 @@ import { InAppTrialDetailViewModel } from '../viewmodels/iat-detail-viewmodel'
     'mission-app-setting': () => import('../components/in-app-trial/mission-app-setting.vue'),
     'mission-app-link': () => import('../components/in-app-trial/mission-app-link.vue'),
     'mission-app-overview': () => import('../components/in-app-trial/mission-app-overview.vue'),
+    'calculate-reward-button': () => import('@/components/calculate-reward-button.vue'),
   },
 })
 export default class InAppTrialDetailPage extends Vue {

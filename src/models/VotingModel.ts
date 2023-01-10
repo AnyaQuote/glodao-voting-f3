@@ -35,6 +35,7 @@ export interface VotingPool {
   votingEnd?: string
   data?: Metadata
   projectOwner?: ProjectOwner
+  version?: string
 }
 
 export class Voter {

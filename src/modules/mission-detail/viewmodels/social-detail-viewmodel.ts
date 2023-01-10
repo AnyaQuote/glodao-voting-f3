@@ -8,7 +8,7 @@ import { VotingPool } from '@/models/VotingModel'
 import { RouteName } from '@/router'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { isEmpty, find, has, get, toNumber } from 'lodash-es'
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, toJS } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import moment from 'moment'
 import { IDetailViewmodel } from './base-detail-viewmodel'
@@ -28,7 +28,7 @@ export class SocialMissionDetailViewModel implements IDetailViewmodel {
     this.fetchMissionDetail(unicodeName, missionId)
   }
 
-  @action async export(type: string) {
+  @action async export(type: string, sendReward = false) {
     const start = moment()
     const missionEnd = moment(this.mission.endTime)
     if (start.isBefore(missionEnd) && type === 'reward') {
@@ -43,7 +43,8 @@ export class SocialMissionDetailViewModel implements IDetailViewmodel {
         exportToCsvAndDownload(data, this.mission.name!)
       } else {
         data = await this._api.getTaskUserReport(this.mission.id!, 'rewards')
-        exportToCsvAndDownload(data, this.mission.name!)
+        console.log(data)
+        if (!sendReward) exportToCsvAndDownload(data, this.mission.name!)
       }
     } catch (error) {
       snackController.commonError(error)
@@ -71,6 +72,7 @@ export class SocialMissionDetailViewModel implements IDetailViewmodel {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
       this.mission = missions[0]
+      console.log(toJS(this.pool), toJS(this.mission))
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {

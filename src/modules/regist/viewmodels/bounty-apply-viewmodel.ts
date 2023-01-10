@@ -19,6 +19,7 @@ import { promiseHelper } from '@/helpers/promise-helper'
 import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
 import { get } from 'lodash-es'
 import { bnHelper } from '@/helpers/bignumber-helper'
+import { VotingHandlerV2 } from '@/blockchainHandlers/voting-contract-solidity-v2'
 
 export class BountyApplyViewModel {
   private _auth = appProvider.authStore
@@ -67,7 +68,7 @@ export class BountyApplyViewModel {
   @observable tokenInfoLoading = false
   @observable approveChecking = false
 
-  @observable votingHandler?: VotingHandler
+  @observable votingHandler?: VotingHandlerV2
   // @observable rewardType = RewardDistributionType.TOKEN
 
   @observable formState = false
@@ -86,8 +87,8 @@ export class BountyApplyViewModel {
     if (walletStore.chainType === 'sol') {
       //
     } else {
-      const address = process.env.VUE_APP_VOTING_SOLIDITY
-      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
+      const address = process.env.VUE_APP_VOTING_V2_SOLIDITY
+      const votingHandler = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
       this.bnbFee = this.votingHandler.poolType.creationFee!
@@ -228,6 +229,7 @@ export class BountyApplyViewModel {
 
     // update voting pool
     const data: VotingPool = {
+      version: 'v2',
       ownerAddress,
       projectOwner: this._auth.projectOwnerId,
       projectName: this.projectInfo.projectName?.trim(),

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-sheet class="rounded-lg pa-6 row dense no-gutters" v-if="!isFunded" outlined elevation="3" color="neutral100">
+    <v-sheet class="rounded-lg pa-6 row dense no-gutters" v-if="!vm.isFunded" outlined elevation="3" color="neutral100">
       <v-col class="d-flex align-center">
         <div class="red--text font-italic text-decoration-underline" style="font-size: 14px">
           You have not funded your reward yet! Please fund your rewards for users
@@ -10,22 +10,23 @@
         <v-btn class="white--text linear-blue--bg" @click="toggleDialog"> Fund rewards </v-btn>
       </v-col>
     </v-sheet>
-    <v-dialog v-model="dialog" max-width="600" class="overflow-hidden">
+    <v-dialog v-model="dialog" max-width="600" class="overflow-hidden" :persistent="vm.funding">
       <v-sheet color="neutral100" class="pa-4">
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid">
           <div class="text-h5 font-weight-bold d-flex justify-center">Fund your rewards</div>
           <div class="d-flex mt-4">
             <div class="font-weight-bold">Fund amount:</div>
-            <div class="ml-2">300 TOKEN</div>
+            <div class="ml-2">{{ vm.tokenBAmount }} {{ vm.tokenBName }}</div>
           </div>
 
           <div class="font-weight-bold mt-4">Token address</div>
           <app-text-field
-            v-model="tokenAddress"
+            v-model="vm.tokenBAddress"
             height="40"
-            :rules="[$rules.required]"
+            :rules="[$rules.required, $rules.isAddress]"
+            :disabled="vm.funding || vm.approving"
             placeholder="Enter your token address"
-            @input="onTokenAddressChange"
+            @input="vm.onTokenAddressChange($event)"
           >
           </app-text-field>
 
@@ -35,12 +36,25 @@
 
           <div class="mt-4 d-flex justify-center">
             <v-btn
+              v-if="!valid || !vm.approved"
               class="white--text"
               :class="{
                 'linear-blue--bg': valid,
               }"
-              @click="onSubmit"
+              @click="vm.approve()"
               :disabled="!valid"
+              :loading="vm.approvedChecking || vm.approving"
+              >Approve</v-btn
+            >
+            <v-btn
+              v-else
+              class="white--text"
+              :class="{
+                'linear-blue--bg': valid,
+              }"
+              @click="fund"
+              :disabled="!valid"
+              :loading="vm.funding"
               >Fund rewards</v-btn
             >
           </div>
@@ -51,15 +65,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Provide, Prop, Ref } from 'vue-property-decorator'
+import { Component, Vue, Provide, Prop, Ref, Inject } from 'vue-property-decorator'
 import { get } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Observer } from 'mobx-vue'
 import { EMPTY_STRING } from '@/constants'
+import { ProjectDetailViewModel } from '../viewmodels/project-detail-viewmodel'
 
+@Observer
 @Component
 export default class FundedButtonContainer extends Vue {
-  @Prop({ required: true }) isFunded!: boolean
+  @Inject() vm!: ProjectDetailViewModel
+
   @Ref('form') readonly form!: HTMLFormElement
   dialog = false
   tokenAddress = EMPTY_STRING
@@ -67,18 +84,13 @@ export default class FundedButtonContainer extends Vue {
 
   toggleDialog() {
     this.dialog = !this.dialog
+    this.form && this.form.reset()
+    this.form && this.form.resetValidation()
   }
 
-  onTokenAddressChange() {
-    if (this.form.validate()) {
-      this.valid = true
-    } else {
-      this.valid = false
-    }
-  }
-
-  onSubmit() {
-    this.form.validate()
+  async fund() {
+    await this.vm.fund()
+    this.dialog = false
   }
 }
 </script>

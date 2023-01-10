@@ -22,7 +22,7 @@
 
       <v-col cols="12" v-else-if="vm.poolStore.status === 'approved'">
         <project-ended-header class="mb-8" />
-        <funded-button-container :isFunded="true" />
+        <funded-button-container />
         <div class="mt-5"></div>
         <project-ended-content />
       </v-col>
