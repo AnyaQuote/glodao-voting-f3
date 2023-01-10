@@ -34,7 +34,7 @@ export class PoolStore {
   constructor(pool: VotingPool) {
     this.poolData = pool
     try {
-      this.contract = blockchainHandler.votingContractFactory()
+      this.contract = blockchainHandler.votingContractFactory(pool)
       this.contract?.init()
       this.loadData()
     } catch (error) {
