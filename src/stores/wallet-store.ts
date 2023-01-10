@@ -136,7 +136,7 @@ export class WalletStore {
       this.web3 = this.app?.web3
       if (ok && this.web3) {
         this.chainId = +(yield this.web3.eth.getChainId())
-        ;(this.web3 as any).chainId = this.chainId
+          ; (this.web3 as any).chainId = this.chainId
         switch (this.chainId) {
           case 1:
           case 3:
@@ -154,7 +154,7 @@ export class WalletStore {
         this.ethereum.once('accountsChanged', this.ethereumConfigChanged)
         this.ethereum.once('chainChanged', this.ethereumConfigChanged)
         this._bnbBalanceSubscription?.unsubscribe()
-        this._bnbBalanceSubscription = timer(0, 5000).subscribe(() => {
+        this._bnbBalanceSubscription = timer(0, 60000).subscribe(() => {
           this.getBnbBalance()
         })
       }
@@ -199,7 +199,7 @@ export class WalletStore {
       this.chainId = walletConnectParsed.chainId
 
       this._bnbBalanceSubscription?.unsubscribe()
-      this._bnbBalanceSubscription = timer(0, 5000).subscribe(() => {
+      this._bnbBalanceSubscription = timer(0, 60000).subscribe(() => {
         this.getBnbBalance()
       })
 
@@ -278,8 +278,8 @@ export class WalletStore {
       this.chainType = 'sol'
       this.chainId = CLUSTER_SLUGS[this.network]
       this.account = adapter.publicKey?.toString() || ''
-      ;(adapter as any).on('disconnect', () => this.disconnectSolana())
-      ;(adapter as any).on('error', (err) => snackController.error(`${err.name} ${err.message}`))
+        ; (adapter as any).on('disconnect', () => this.disconnectSolana())
+        ; (adapter as any).on('error', (err) => snackController.error(`${err.name} ${err.message}`))
       this.changeShowConnectDialog(false)
       return true
     } catch (error) {

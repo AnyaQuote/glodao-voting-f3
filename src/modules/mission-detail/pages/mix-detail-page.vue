@@ -65,7 +65,7 @@
             </v-btn>
           </div>
           <div class="mt-4">
-            <calculate-reward-button />
+            <calculate-reward-button :vm="vm" />
           </div>
         </v-col>
       </template>
@@ -96,6 +96,10 @@ import { MixDetailViewModel } from '../viewmodels/mix-detail-viewmodel'
 export default class MixDetailPage extends Vue {
   @Provide() vm = new MixDetailViewModel(get(this.$route, 'params.unicodeName', ''), get(this.$route, 'params.id', ''))
   missionId = get(this.$route, 'params.id', '')
+
+  mounted() {
+    console.log('MixDetailPage')
+  }
 }
 </script>
 

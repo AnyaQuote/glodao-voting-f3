@@ -48,7 +48,7 @@ const getChainConfig = (chainId: any) => {
       break
     case 97:
       name = 'BSC TestNET'
-      rpc = 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+      rpc = 'https://data-seed-prebsc-2-s3.binance.org:8545/'
       explorer = 'https://testnet.bscscan.com/'
       break
     case 103:
@@ -79,7 +79,7 @@ const getWeb3 = (chainId: any) => {
   const { rpc } = getChainConfig(chainId)
   if (rpc) {
     const web3 = new Web3(new Web3.providers.HttpProvider(rpc))
-    ;(web3 as any).chainId = chainId
+      ; (web3 as any).chainId = chainId
     return web3
   } else return null
 }
