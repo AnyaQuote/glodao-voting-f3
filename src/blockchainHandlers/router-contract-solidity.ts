@@ -6,7 +6,7 @@ import { blockchainHandler } from '.'
 import { tokenHelper } from './erc20-contract'
 
 const contractAddresses = {
-  '97': '0x5940e3894A155a5accE2e22A68376c88f60947d5',
+  '97': '0x1647FfFb7D6460291E7E6A7d1D9efc9eb8dEC92B',
 }
 const cacheds: { [chainId: string]: RouterContract } = {}
 
