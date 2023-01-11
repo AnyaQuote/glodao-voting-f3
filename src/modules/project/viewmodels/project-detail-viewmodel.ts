@@ -13,7 +13,7 @@ import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { Zero, ZERO_NUM } from '@/constants'
+import { HUNDRED, Zero, ZERO_NUM } from '@/constants'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { VotingPool } from '@/models/VotingModel'
 import { VotingHandlerV2 } from '@/blockchainHandlers/voting-contract-solidity-v2'
@@ -335,7 +335,7 @@ export class ProjectDetailViewModel {
 
   @observable funding = false;
   @asyncAction *fund() {
-    if (bnHelper.lt(this.tokenBBalance, this.tokenBAmount)) {
+    if (bnHelper.lt(this.tokenBBalance, this.totalToFund)) {
       snackController.error(`Balance Insufficient`)
       return
     }
@@ -383,5 +383,17 @@ export class ProjectDetailViewModel {
     } catch (_) {
       return Zero
     }
+  }
+
+  @computed get platformFee() {
+    try {
+      return this.tokenBAmount.mulUnsafe(FixedNumber.from(process.env.VUE_APP_FEE_PERCENT)).divUnsafe(HUNDRED)
+    } catch (error) {
+      return Zero
+    }
+  }
+
+  @computed get totalToFund() {
+    return this.tokenBAmount.addUnsafe(this.platformFee)
   }
 }

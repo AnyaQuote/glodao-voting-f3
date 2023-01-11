@@ -8,7 +8,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { ALLOW_PASS_THROUGH, Zero } from '@/constants'
+import { ALLOW_PASS_THROUGH, HUNDRED, Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
@@ -399,6 +399,16 @@ export class BountyApplyViewModel {
       return this.votingHandler!.poolType.creationFee!.mulUnsafe(
         FixedNumber.from(this.projectInfo.totalMissions!.toString())
       )
+    } catch (error) {
+      return Zero
+    }
+  }
+
+  @computed get platformFee() {
+    try {
+      return FixedNumber.from(this.projectInfo.optionalRewardAmount)
+        .mulUnsafe(FixedNumber.from(process.env.VUE_APP_FEE_PERCENT))
+        .divUnsafe(HUNDRED)
     } catch (error) {
       return Zero
     }
