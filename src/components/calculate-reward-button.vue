@@ -279,7 +279,11 @@ Contact admin if need.
     }
     tx.nonce = this.userNonce++
     const contract = this.claimerContract!
-    const func = contract.contract.methods.addRewardsFromVoting(tx.accounts, tx.amountWithDeciamals)
+    const func = contract.contract.methods.addRewardsFromVoting(
+      this.vm.pool.poolId,
+      tx.accounts,
+      tx.amountWithDeciamals
+    )
     func
       .send({ from: account, nonce: tx.nonce })
       .once('transactionHash', (hash) => {
