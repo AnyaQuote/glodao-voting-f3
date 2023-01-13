@@ -49,9 +49,9 @@ export default class App extends Vue {
 }
 </script>
 <style lang="scss">
-a {
-  text-decoration: none;
-}
+// a {
+//   text-decoration: none;
+// }
 .container {
   padding: 0 16px !important;
   max-width: 1123px !important;

@@ -1,7 +1,10 @@
 <template>
   <v-container class="fill-height">
-    <div class="d-flex justify-center align-center fill-height fill-width text-center">
-      <div class="text-center">
+    <v-row>
+      <v-col>
+        <app-editor :controller="controller" />
+      </v-col>
+      <!-- <div class="text-center">
         <div class="text-h1">401</div>
         <div class="primary--text font-weight-bold text-h6 mt-2">You are not authenticated to enter this page</div>
         <div class="mx-auto mt-2">
@@ -12,16 +15,28 @@
         </v-btn>
       </div>
     </div>
+    <div> -->
+      <v-col>123{{ controller.content }}</v-col>
+      <div><strong>Test</strong></div>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
+import { AppEditorController } from '@/components/editor/app-editor.controller'
 import { RoutePaths } from '@/router'
 import { Observer } from 'mobx-vue'
 import { Component, Vue } from 'vue-property-decorator'
+
 @Observer
-@Component
+@Component({
+  components: {
+    'app-editor': () => import('@/components/editor/app-editor.component.vue'),
+  },
+})
 export default class NotAuthenticated extends Vue {
+  controller = new AppEditorController()
+
   goToVotingList() {
     this.$router.replace(RoutePaths.voting_list)
   }
