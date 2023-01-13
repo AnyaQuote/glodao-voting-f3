@@ -1,12 +1,13 @@
 
 /* 
-Lưu ý không thêm đoạn được gói trong /* ... */ vào file câu hỏi
+Note: do not add paragraphs wrapped in /* ... */ to the question file
 
-Giải thích vị trí các câu trong hàng được ngăn cách bởi ký tự " | " :
-Nôi dụng câu hỏi | Nội dung đáp án 1 | Nội dung đáp án 2 | Nội dung đáp án 3 | Nội dung đáp án 4 | Vị trí đáp án đúng trong hàng
+Explain the position of sentences in rows separated by the character " | " :
+Question content | Content of answer 1 | Content of answer 2 | Content of answer 3 | Content of answer 4 | Position the correct answer in the row
 
-Dưới đây là câu hỏi mẫu:
+Here is a sample question:
 */
 
-Thủ đô của Việt Nam là ?  | Hạ Long | Hà Nội | Đà Nẵng |  | 3
-Đèo nào được UNESCO ghi nhận là một trong đèo nguy hiểm bậc nhất ở Việt Nam ?  | Mã Pí Lèng | Pá Pí Lang | Đèo Hải Vân | 1
+What is the capital of Vietnam?  | Halong | Hanoi | Danang | 2
+Which pass is recognized by UNESCO as one of the most dangerous passed in Vietnam? | Ma Pi Leng | Pe Pi Lang |  Hai Van Pass | 1
+

@@ -5,6 +5,7 @@
       <v-img v-else :src="require('@/assets/icons/file-logo.svg')" max-height="42" max-width="42" />
     </div>
     <v-file-input
+      ref="file-input"
       class="py-5"
       show-size
       prepend-icon=""
@@ -22,7 +23,7 @@
         <span class="font-weight-600"> {{ text }} </span>
       </template>
     </v-file-input>
-    <div class="pl-5 py-5">
+    <div @click="openFileInput()" class="pl-5 py-5 cursor-pointer">
       <span v-if="config.isEdit" class="app-blue--text text-subtite-1 font-weight-600">Change</span>
       <v-icon v-else>mdi-upload</v-icon>
     </div>
@@ -31,7 +32,7 @@
 
 <script lang="ts">
 import { checkQuizFile } from '@/helpers/file-helper'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
 
 @Component
 export default class AppUploadField extends Vue {
@@ -39,6 +40,7 @@ export default class AppUploadField extends Vue {
   @Prop(Boolean) isImageFile!: boolean
   @Prop(Boolean) isQuizFile!: boolean
   @Prop({ default: () => [] }) rules!: any
+  @Ref('file-input') fileInput: any
 
   data = this.value
   config: FileConfig = {
@@ -49,10 +51,20 @@ export default class AppUploadField extends Vue {
     error: '',
   }
 
+  openFileInput() {
+    this.fileInput.$refs.input.click()
+  }
+
   async onChange(event: any) {
     let value = (this.data = event)
     if (this.isQuizFile) {
-      this.config.error = await checkQuizFile(value)
+      const res = await checkQuizFile(value)
+      if (typeof res == 'string') {
+        this.config.error = res
+      } else {
+        this.config.error = undefined
+        this.$emit('count:quiz', res.count)
+      }
       value = this.config.error ? null : value
     }
     this.$emit('change', value)

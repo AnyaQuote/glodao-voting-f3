@@ -8,7 +8,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { ALLOW_PASS_THROUGH, Zero } from '@/constants'
+import { ALLOW_PASS_THROUGH, HUNDRED, Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
@@ -19,6 +19,7 @@ import { promiseHelper } from '@/helpers/promise-helper'
 import { VotingPool, VotingPoolStatus } from '@/models/VotingModel'
 import { get } from 'lodash-es'
 import { bnHelper } from '@/helpers/bignumber-helper'
+import { VotingHandlerV2 } from '@/blockchainHandlers/voting-contract-solidity-v2'
 
 export class BountyApplyViewModel {
   private _auth = appProvider.authStore
@@ -57,7 +58,6 @@ export class BountyApplyViewModel {
   @observable approving = false
   @observable optionalApproving = false
 
-  @observable bnbFee = Zero
   @observable feePerMission = Zero
   @observable rewardTokenBalance = Zero
   @observable rewardTokenDecimals = 18
@@ -67,7 +67,7 @@ export class BountyApplyViewModel {
   @observable tokenInfoLoading = false
   @observable approveChecking = false
 
-  @observable votingHandler?: VotingHandler
+  @observable votingHandler?: VotingHandlerV2
   // @observable rewardType = RewardDistributionType.TOKEN
 
   @observable formState = false
@@ -86,11 +86,10 @@ export class BountyApplyViewModel {
     if (walletStore.chainType === 'sol') {
       //
     } else {
-      const address = process.env.VUE_APP_VOTING_SOLIDITY
-      const votingHandler = new VotingHandler(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
+      const address = process.env.VUE_APP_VOTING_V2_SOLIDITY
+      const votingHandler = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
-      this.bnbFee = this.votingHandler.poolType.creationFee!
       this.feePerMission = this.votingHandler.poolType.feePerMission!
 
       this._disposers.push(
@@ -228,6 +227,7 @@ export class BountyApplyViewModel {
 
     // update voting pool
     const data: VotingPool = {
+      version: 'v2',
       ownerAddress,
       projectOwner: this._auth.projectOwnerId,
       projectName: this.projectInfo.projectName?.trim(),
@@ -392,5 +392,25 @@ export class BountyApplyViewModel {
 
   @computed get currentTime() {
     return appProvider.currentTime
+  }
+
+  @computed get bnbFee() {
+    try {
+      return this.votingHandler!.poolType.creationFee!.mulUnsafe(
+        FixedNumber.from(this.projectInfo.totalMissions!.toString())
+      )
+    } catch (error) {
+      return Zero
+    }
+  }
+
+  @computed get platformFee() {
+    try {
+      return FixedNumber.from(this.projectInfo.optionalRewardAmount)
+        .mulUnsafe(FixedNumber.from(process.env.VUE_APP_FEE_PERCENT))
+        .divUnsafe(HUNDRED)
+    } catch (error) {
+      return Zero
+    }
   }
 }

@@ -9,10 +9,12 @@ const validateRegex = /^(.+?(?<=\|)){1}(.+?(?<=\|)){2,6}\s*\d$/
 
 export const getApiFileUrl = (model: any) => {
   if (typeof model === 'string') {
+    if (model.startsWith('http:') || model.startsWith('https:')) return model
     if (model.length && model[0] === '/') model = model.substring(1)
     return API_ENDPOINT + model
   } else if (get(model, 'url')) {
     let url = get(model, 'url')
+    if (url.startsWith('https:') || url.startsWith('http:')) return url
     if (url.length && url[0] === '/') url = url.substring(1)
     return API_ENDPOINT + url
   } else {
@@ -143,7 +145,7 @@ export const checkQuizFile = async (file?: File | null) => {
       return errorMessage(file.name, index + 1, 'Number of answers do not match')
     }
   }
-  return ''
+  return { count: lines.length }
 }
 
 /**
@@ -171,7 +173,12 @@ export const downloadFile = (url: string, fileName: string) => {
  * @returns File object
  */
 export const generateFileFromUrl = async (url: string) => {
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    mode: 'cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  })
   const extension = url.split('.').pop()
   const blob = await response.blob()
   const file = new File([blob], `file.${extension}`, { type: `image/${extension}` })

@@ -39,6 +39,17 @@
               <div class="text-subtitle-2 font-weight-regular">Setting tasks</div>
             </v-sheet>
             <!-- ==================================================================================================================== -->
+            <v-sheet class="rounded pa-5 fill-heigh mt-4" outlined :class="isActive('mix')">
+              <v-radio color="blue-diversity" value="mix">
+                <template #label>
+                  <span class="font-18 font-weight-bold" :class="isActive('mix')">
+                    <span>Mix app (Beta)</span>
+                  </span>
+                </template>
+              </v-radio>
+              <div class="text-subtitle-2 font-weight-regular">Mix all of the above tasks</div>
+            </v-sheet>
+            <!-- ==================================================================================================================== -->
           </div>
         </v-radio-group>
         <div class="d-flex">
@@ -91,6 +102,14 @@ export default class SelectMissionTypeDialog extends Vue {
       case 'iat':
         this.$router.push({
           name: RouteName.NEW_IAT_MISSION,
+          params: {
+            unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
+          },
+        })
+        break
+      case 'mix':
+        this.$router.push({
+          name: RouteName.NEW_MIX_MISSION,
           params: {
             unicodeName: get(this.vm.poolStore, 'unicodeName', EMPTY_STRING),
           },

@@ -13,7 +13,7 @@ import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants
 
 export class NewLearnMissionViewModel {
   @observable step = 1
-
+  @observable quizLength = 0
   @observable pool: VotingPool = {}
   @observable missionInfo: MissionInfo = {}
   @observable learnToEarn: LearnToEarn = {
@@ -73,6 +73,10 @@ export class NewLearnMissionViewModel {
     this.step = step
   }
 
+  @action.bound getQuizLength(value: number) {
+    this.quizLength = value
+  }
+
   async getImageSource(imageFile: File) {
     const media = new FormData()
     media.append('files', imageFile)
@@ -115,7 +119,8 @@ export class NewLearnMissionViewModel {
   }
 
   async getMissionSetting() {
-    const { canRepeat, questionsPerQuiz, correctAnswersPerQuiz } = this.learnToEarn.setting!
+    const { canRepeat, correctAnswersPerQuiz } = this.learnToEarn.setting!
+    const questionsPerQuiz = parseInt(this.learnToEarn.setting!.questionsPerQuiz!)
     let passingCriteria = 1.0
     if (questionsPerQuiz && correctAnswersPerQuiz) {
       passingCriteria = round(+correctAnswersPerQuiz / +questionsPerQuiz, 2)
@@ -182,8 +187,21 @@ export class NewLearnMissionViewModel {
   @asyncAction *submit() {
     try {
       this.btnLoading = true
+
+      const { canRepeat, correctAnswersPerQuiz, questionsPerQuiz } = this.learnToEarn.setting!
+      if (parseInt(questionsPerQuiz!) < parseInt(correctAnswersPerQuiz || questionsPerQuiz!)) {
+        this._snackbar.commonError('Correct answer need to be equal or smaller than question per quiz')
+        return
+      }
+
+      if (parseInt(questionsPerQuiz!) > this.quizLength) {
+        this._snackbar.commonError('Question per quiz need to be equal or smaller than total question of quiz')
+        return
+      }
+
       const missionSetting = yield this.getMissionSetting()
       const model = yield this.getMissionModel(missionSetting, this.missionInfo, this.pool)
+      //
       yield this._api.createTask(model)
       this._snackbar.addSuccess()
       this._router.push({

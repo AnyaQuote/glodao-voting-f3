@@ -1,6 +1,6 @@
 import { RouteName } from './../../../router/index'
 import { appProvider } from '@/app-providers'
-import { observable, computed, action, IReactionDisposer, reaction } from 'mobx'
+import { observable, computed, action, IReactionDisposer, reaction, when } from 'mobx'
 import { asyncAction } from 'mobx-utils'
 import { get, isEmpty, kebabCase } from 'lodash-es'
 import { RoutePaths } from '@/router'
@@ -13,9 +13,13 @@ import { Mission } from '@/models/MissionModel'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import moment from 'moment'
 import { promiseHelper } from '@/helpers/promise-helper'
-import { Zero, ZERO_NUM } from '@/constants'
+import { HUNDRED, Zero, ZERO_NUM } from '@/constants'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { VotingPool } from '@/models/VotingModel'
+import { VotingHandlerV2 } from '@/blockchainHandlers/voting-contract-solidity-v2'
+import { blockchainHandler } from '@/blockchainHandlers'
+import web3 from 'web3'
+import { bnHelper } from '@/helpers/bignumber-helper'
 
 export class ProjectDetailViewModel {
   private _auth = appProvider.authStore
@@ -46,9 +50,33 @@ export class ProjectDetailViewModel {
     this._disposers.forEach((d) => d())
   }
 
+  @observable votingHandlerV2?: VotingHandlerV2;
   @asyncAction *fetchProjectDetail(unicodeName: string) {
     try {
       this.loading = true
+
+      const address = process.env.VUE_APP_VOTING_V2_SOLIDITY
+      const votingHandlerV2 = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
+      this.votingHandlerV2 = votingHandlerV2
+
+      this._disposers.push(
+        when(
+          () => walletStore.walletConnected,
+          async () => {
+            votingHandlerV2.injectProvider()
+          }
+        )
+      )
+
+      this._disposers.push(
+        reaction(
+          () => walletStore.account,
+          async () => {
+            votingHandlerV2.injectProvider()
+          }
+        )
+      )
+
       let res
       if (!unicodeName) {
         this._router.replace({
@@ -72,11 +100,18 @@ export class ProjectDetailViewModel {
         res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1, _sort: 'startTime:asc' })
         this.missions = res || []
       }
+      yield this.checkPoolFunded()
     } catch (error) {
       appProvider.snackbar.commonError(error)
     } finally {
       this.loading = false
     }
+  }
+
+  @observable isFunded = false;
+  @asyncAction *checkPoolFunded() {
+    const isFunded = yield this.votingHandlerV2?.isPoolFunded(this.poolInfo.poolId)
+    this.isFunded = isFunded
   }
 
   @asyncAction *cancelAndWithdraw() {
@@ -253,9 +288,93 @@ export class ProjectDetailViewModel {
     }
   }
 
+  @observable approved = false
+  @observable approving = false
+  @observable approvedChecking = false;
+  @asyncAction *checkTokenBApproved() {
+    this.approvedChecking = true
+    try {
+      const approved = yield this.votingHandlerV2!.approved(this.tokenBAddress, walletStore.account)
+      this.approved = approved
+    } catch (error) {
+      this.approved = false
+      snackController.commonError(error)
+    } finally {
+      this.approvedChecking = false
+    }
+  }
+  @asyncAction *approve() {
+    this.approving = true
+    try {
+      yield this.votingHandlerV2?.approve(this.tokenBAddress, walletStore.account)
+      this.approved = true
+    } catch (error) {
+      this.approving = false
+      snackController.commonError(error)
+    } finally {
+      this.approving = false
+    }
+  }
+
+  @observable tokenBAddress = ''
+  @observable tokenBDecimals = 18
+  @observable tokenBBalance = Zero;
+  @asyncAction *onTokenAddressChange(tokenAddress) {
+    this.tokenBAddress = tokenAddress
+    if (this.tokenBAddress && web3.utils.isAddress(this.tokenBAddress)) {
+      yield this.checkTokenBApproved()
+      const { decimals, balance } = yield this.votingHandlerV2?.getTokenInfo(
+        walletStore.web3,
+        this.tokenBAddress,
+        walletStore.account
+      )
+      this.tokenBDecimals = decimals
+      this.tokenBBalance = balance
+    }
+  }
+
+  @observable funding = false;
+  @asyncAction *fund() {
+    if (bnHelper.lt(this.tokenBBalance, this.totalToFund)) {
+      snackController.error(`Balance Insufficient`)
+      return
+    }
+
+    this.funding = true
+    try {
+      yield this.votingHandlerV2?.fundTokenB(
+        this.poolInfo.poolId,
+        this.tokenBAddress,
+        bnHelper.toDecimalString(this.tokenBAmount, this.tokenBDecimals.toString()),
+        walletStore.account
+      )
+      this.checkPoolFunded()
+
+      // update votingpool on server
+      yield appProvider.api.updateTokenBVotingPool({
+        id: this.poolInfo.id,
+        data: {
+          ...this.poolInfo.data,
+          optionalRewardTokenDecimals: +this.tokenBDecimals.toString(),
+          optionalTokenAddress: this.tokenBAddress,
+        },
+      })
+
+      snackController.success('Fund successfully')
+    } catch (error) {
+      snackController.commonError(error)
+    } finally {
+      this.funding = false
+    }
+  }
+
   @computed get tokenBAmount() {
     const value = get(this.poolInfo, 'data.optionalRewardAmount', ZERO_NUM)
     return FixedNumber.from(value)
+  }
+
+  @computed get tokenBName() {
+    return get(this.poolInfo, 'data.optionalTokenName')
   }
 
   @computed get tokenBSingleMissionAmount() {
@@ -264,5 +383,17 @@ export class ProjectDetailViewModel {
     } catch (_) {
       return Zero
     }
+  }
+
+  @computed get platformFee() {
+    try {
+      return this.tokenBAmount.mulUnsafe(FixedNumber.from(process.env.VUE_APP_FEE_PERCENT)).divUnsafe(HUNDRED)
+    } catch (error) {
+      return Zero
+    }
+  }
+
+  @computed get totalToFund() {
+    return this.tokenBAmount.addUnsafe(this.platformFee)
   }
 }

@@ -263,6 +263,22 @@ export class ApiService {
     return res.data
   }
 
+  async updateTokenBVotingPool(data) {
+    const res = await this.axios.post(
+      'voting-pools/updateTokenBVotingPool',
+      {
+        ...data,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.jwt}`,
+        },
+      }
+    )
+
+    return res.data
+  }
+
   async updateStatusToApproved(data) {
     const res = await this.axios.put('updateStatusToApproved', data)
     return res.data

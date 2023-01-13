@@ -56,6 +56,8 @@ export interface Mission {
   projectOwner?: string
   //
   optionalTokens?: OptionalTokenItem[]
+  priorityRatio?: number
+  transactions?: any
 }
 
 export interface InAppTrialInfo {
@@ -101,6 +103,7 @@ export enum MissionType {
   LEARN = 'learn',
   SOCIAL = 'bounty',
   APP_TRIAL = 'iat',
+  MIX = 'mix',
 }
 
 export interface DisplayIatData extends IatData {

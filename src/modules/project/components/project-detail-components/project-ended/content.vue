@@ -153,6 +153,11 @@ export default class ProjectEndedContent extends Vue {
           name: RouteName.MISSION_IAT_DETAIL,
           params: { unicodeName, id },
         })
+      case MissionType.MIX:
+        return this.$router.push({
+          name: RouteName.MISSION_MIX_DETAIL,
+          params: { unicodeName, id },
+        })
     }
   }
 }

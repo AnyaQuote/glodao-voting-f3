@@ -63,6 +63,7 @@
         :rules="[$rules.required, $rules.maxSize(1000000)]"
         :value="$_get(vm.learnToEarn, 'setting.quizFile', null)"
         @change="vm.changeLearnToEarnInfo('setting.quizFile', $event)"
+        @count:quiz="vm.getQuizLength($event)"
       />
       <v-btn
         v-if="!!$_get(vm.learnToEarn, 'setting.quizFile')"
@@ -96,7 +97,7 @@
       </div>
       <app-text-field
         type="number"
-        :rules="[$rules.required, $rules.min(1), $rules.integer]"
+        :rules="[$rules.required, $rules.min(1), $rules.integer, $rules.max(vm.quizLength)]"
         :value="vm.learnToEarn.setting.questionsPerQuiz"
         @change="vm.changeLearnToEarnInfo('setting.questionsPerQuiz', $event)"
       />
@@ -111,13 +112,13 @@
       <app-text-field
         type="number"
         :value="vm.learnToEarn.setting.correctAnswersPerQuiz"
-        :rules="[$rules.required, $rules.max(vm.learnToEarn.setting.questionsPerQuiz), $rules.integer, $rules.min(1)]"
+        :rules="[$rules.required, $rules.max(vm.quizLength), $rules.integer, $rules.min(1)]"
         @change="vm.changeLearnToEarnInfo('setting.correctAnswersPerQuiz', $event)"
       />
 
       <v-checkbox
         color="app-blue"
-        label="Allow to repeat the quiz"
+        label="Allow record the highest score"
         :input-value="vm.learnToEarn.setting.canRepeat"
         @input="vm.changeLearnToEarn('setting.canRepeat', $event)"
       />

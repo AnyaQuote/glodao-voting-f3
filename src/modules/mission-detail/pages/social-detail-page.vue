@@ -155,6 +155,9 @@
                 Export rewards
               </v-btn>
             </div>
+            <div class="mt-4">
+              <calculate-reward-button :vm="vm" />
+            </div>
           </v-col>
         </v-row>
       </template>
@@ -173,6 +176,7 @@ import { SocialMissionDetailViewModel } from '../viewmodels/social-detail-viewmo
 @Component({
   components: {
     'mission-social-setting-viewer': () => import('../components/social/mission-social-setting-viewer.vue'),
+    'calculate-reward-button': () => import('@/components/calculate-reward-button.vue'),
   },
 })
 export default class MissionDetailPage extends Vue {

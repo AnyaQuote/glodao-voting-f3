@@ -57,14 +57,14 @@
           <app-text-field
             class="flex-grow"
             placeholder="(ex: 30)"
-            :rules="[$rules.required, $rules.integer, $rules.max(100), $rules.min(1)]"
+            :rules="[$rules.required, $rules.integer, $rules.max(100)]"
             :value="vm.missionInfo.priorityRatio"
             @input="vm.changeMissionInfo('priorityRatio', $event)"
           />
         </div>
         <div class="d-flex flex-column flex-sm-row mt-4">
           <div class="flex-grow">
-            <span class="font-18 font-weight-bold">Priority amount (30%)</span>
+            <span class="font-18 font-weight-bold">Priority amount</span>
             <v-sheet class="rounded px-3 d-flex justify-space-between mt-2 py-14px" height="56" outlined>
               <span class="font-weight-600">{{ vm.priorityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
             </v-sheet>
@@ -78,6 +78,7 @@
             <app-text-field
               class="mt-2"
               type="number"
+              :disabled="vm.missionInfo.priorityRatio === '0'"
               :rules="[$rules.required, $rules.integer, $rules.min(0)]"
               :value="$_get(vm.missionInfo, 'maxPriorityParticipants')"
               @change="vm.changeMissionInfo('maxPriorityParticipants', $event)"
@@ -115,8 +116,8 @@
       <!-- -------------------------------------- MISSION TIME START ------------------------------------------------- -->
       <div class="mt-7">
         <div>
-          <span class="title font-weight-bold blue-diversity--text">Mision time</span>
-          <i class="neutral-10--text ml-2">(Locale time)</i>
+          <span class="title font-weight-bold blue-diversity--text">Mission time</span>
+          <i class="neutral-10--text ml-2">(Local time)</i>
         </div>
         <app-datetime-picker2
           class="font-18 mt-4"

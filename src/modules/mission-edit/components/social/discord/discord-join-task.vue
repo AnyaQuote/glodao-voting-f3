@@ -34,6 +34,20 @@
       @change="updateSetting('setting.guildId', $event)"
       placeholder="884467360076013588"
     />
+    <div class="font-18 text-subtitle-2 font-weight-regular red--text">
+      <i
+        >*For discord mission, you need to add
+        <a
+          class="blue-diversity--text text-decoration-underline"
+          href="https://discord.com/oauth2/authorize?client_id=986822287258947624&scope=bot&permissions=0"
+          >@bounty_mission_bot
+        </a>
+        to your server
+      </i>
+    </div>
+    <!-- <v-btn class="linear-blue--bg white--text mt-2" depressed :loading="isChecking" @click="handleValidation"
+      >Check bot is added</v-btn
+    > -->
     <div class="text-subtitle-2">How to get discord server ID:</div>
     <div class="text-subtitle-2 font-weight-regular">
       1. Go to discord <v-icon size="18">mdi-cog</v-icon> <strong>User Settings</strong> > <strong>Advanced</strong> and

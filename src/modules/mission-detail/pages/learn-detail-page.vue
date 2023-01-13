@@ -161,6 +161,9 @@
                 Export rewards
               </v-btn>
             </div>
+            <div class="mt-4">
+              <calculate-reward-button :vm="vm" />
+            </div>
           </v-col>
         </v-row>
       </template>
@@ -181,6 +184,7 @@ import { LearnMissionDetailViewModel } from '../viewmodels/learn-detail-viewmode
     'mission-document-viewer': () => import('../components/learn-to-earn/mission-document-viewer.vue'),
     'mission-lte-overview': () => import('../components/learn-to-earn/mission-lte-overview.vue'),
     'mission-quiz-viewer': () => import('../components/learn-to-earn/mission-quiz-viewer.vue'),
+    'calculate-reward-button': () => import('@/components/calculate-reward-button.vue'),
   },
 })
 export default class MissionDetailPage extends Vue {
