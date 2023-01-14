@@ -1,81 +1,11 @@
 @import "./breakpoint-custom.scss";
 @import "./button-custom.scss";
 @import "./utils.scss";
+@import "./progress-circular-custom.scss";
 
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Black.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-BlackIt.ttf") format("truetype");
-  font-weight: 900;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-BoldIt.ttf") format("truetype");
-  font-weight: 700;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Semibold.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-SemiboldIt.ttf") format("truetype");
-  font-weight: 500;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-RegularIt.ttf") format("truetype");
-  font-weight: 400;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-LightIt.ttf") format("truetype");
-  font-weight: 300;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-Thin.ttf") format("truetype");
-  font-weight: 100;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Proxima Nova";
-  src: local("Proxima Nova"), url("~@/assets/fonts/proximanova/ProximaNovaA-ThinIt.ttf") format("truetype");
-  font-weight: 100;
-  font-style: italic;
-}
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
 
-$body-font-family: 'Proxima Nova', sans-serif;
+$body-font-family: 'Montserrat', sans-serif;
 
 $typoOptions: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6, text-subtitle-1, text-subtitle-2, text-body-1,
   text-body-2, text-button, text-caption, text-overline, caption, overline;
@@ -89,15 +19,8 @@ $typoOptions: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6, text-subtitl
 }
 
 .v-application {
+  font-family: $body-font-family, sans-serif !important;
   [class*='text-'] {
     font-family: $body-font-family, sans-serif !important;
   }
-  font-family: $body-font-family, sans-serif !important;
 }
-.v-btn {
-  text-transform: initial;
-  letter-spacing: 0px;
-}
-// ---------------------------------------------------------------------------------------------------------------------------------------
-
-$progress-circular-underlay-stroke: white;
