@@ -1,10 +1,14 @@
 import web3 from 'web3'
 import moment from 'moment'
 import { formatFileSize } from '@/helpers'
+import isArray from 'lodash-es/isArray'
 
 export const rules = {
   required: (v: any) =>
-    (!!v && (typeof v !== 'string' || !!v.trim())) || (!!v && v instanceof File) || v === 0 || 'This is required field',
+    (!!v && (typeof v !== 'string' || !!v.trim())) ||
+    (!!v && v instanceof File && v.size > 0) ||
+    v === 0 ||
+    'This is required field',
   maxLength: (length: number) => (v: string) => (v && v.length <= length) || !v || `Max ${length} characters`,
   minLength: (length: number) => (v: string) => (v && v.length >= length) || !v || `Min ${length} characters`,
   max: (number: number) => (v: number) => v <= number || `Must be lower than or equal to ${number}`,
@@ -39,10 +43,40 @@ export const rules = {
     'Invalid time ',
   isAddress: (v: string) => !v || web3.utils.isAddress(v.trim()) || 'Address not valid',
   maxSize: (size: number) => (value: any) =>
-    !value || value.size < size || `File size should be less than ${formatFileSize(size)}`,
-  isImage: (v: File) => !v || (v instanceof File && /^(image)\/.*$/.test(v.type)) || 'File is not an image.',
+    !!value === true || value.size < size || `File size should be less than ${formatFileSize(size)}`,
+  maxSize2: (size: number) => (value: File | File[]) => {
+    if (isArray(value)) {
+      return (
+        value.every((v) => !!v === true || v.size < size) || `File size should be less than ${formatFileSize(size)}`
+      )
+    } else return !!value === true || value.size < size || `File size should be less than ${formatFileSize(size)}`
+  },
+  isImage: (v: File) =>
+    !!v === true || (v instanceof File && /^(image)\/.*$/.test(v.type) === true) || 'File is not an image.',
+  isImage2: (value: File | File[]) => {
+    if (isArray(value)) {
+      console.log('here')
+      return (
+        value.every((v) => !!value === true || (value instanceof File && /^(image)\/.*$/.test(value.type) === true)) ||
+        'File is not an image'
+      )
+    } else console.log('no here')
+    return (
+      !!value === true ||
+      (value instanceof File && /^(image)\/.*$/.test(value.type) === true) ||
+      'File is not an image.'
+    )
+  },
   isTextFile: (v: File) =>
     !v || (v instanceof File && /\.(csv|te?xt)$/i.test(v.name)) || 'File is not plain text file.',
+  // eslint-disable-next-line no-useless-escape
+  youtubeUrl: (v: string) => /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/gm.test(v) || 'Invalid youtube url',
+  maxFiles: (max: number) => (obj: File | File[]) => {
+    if (isArray(obj)) {
+      if (obj.length <= max) return true
+      else return `Can only upload up to ${max} files at the moment`
+    } else return true
+  },
 }
 
 export const appRules = {}

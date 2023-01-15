@@ -1,10 +1,22 @@
 import { Editor } from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
-// import Underline from '@tiptap/extension-underline'
-import { Command } from './commands/command.abstract.base'
-import { BoldCommand } from './commands/bold.command'
-import { action, observable, runInAction } from 'mobx'
+import Underline from '@tiptap/extension-underline'
+import Youtube from '@tiptap/extension-youtube'
+import Image from '@tiptap/extension-image'
+import { action, observable } from 'mobx'
 import { EditorView } from 'prosemirror-view'
+import {
+  BoldHandler,
+  EmbedImageHandler,
+  EmbedYoutubeHandler,
+  HandlerBase,
+  HeadingOneHandler,
+  HeadingThreeHandler,
+  HeadingTwoHandler,
+  ItalicHandler,
+  StrikeHandler,
+  UnderlineHandler,
+} from './commands'
 
 EditorView.prototype.updateState = function updateState(state) {
   const self = this as any
@@ -15,38 +27,78 @@ EditorView.prototype.updateState = function updateState(state) {
 }
 
 export class AppEditorController {
-  editor?: Editor
+  editor: Editor
 
-  @observable content = ''
+  @observable private _content = ''
 
-  @observable commands: Command[] = []
+  @observable commands: HandlerBase[] = []
 
   constructor() {
-    const editor = new Editor({
+    this.editor = new Editor({
       extensions: [
-        // Underline,
+        Underline,
+        Youtube.configure({
+          width: 480,
+          height: 320,
+          nocookie: true,
+          autoplay: false,
+          disableKBcontrols: true,
+        }),
+        Image,
         StarterKit.configure({
-          // dropcursor: false,
-          // gapcursor: false,
-          // blockquote: false,
-          // codeBlock: false,
-          // code: false,
+          dropcursor: false,
+          gapcursor: false,
+          blockquote: false,
+          codeBlock: false,
+          code: false,
           // listItem: false,
-          // horizontalRule: false,
+          horizontalRule: false,
           // hardBreak: false,
-          // heading: { levels: [1, 2, 3] },
+          heading: { levels: [1, 2, 3] },
         }),
       ],
-      onUpdate: ({ editor }) => {
-        this.sync(editor.getHTML())
+      onUpdate: (props) => {
+        this.edit(props.editor.getHTML())
       },
     })
 
-    this.editor = editor
-    this.commands.push(new BoldCommand(editor))
+    this.commands.push(new BoldHandler(this.editor))
+    this.commands.push(new ItalicHandler(this.editor))
+    this.commands.push(new StrikeHandler(this.editor))
+    this.commands.push(new UnderlineHandler(this.editor))
+    this.commands.push(new HeadingOneHandler(this.editor))
+    this.commands.push(new HeadingTwoHandler(this.editor))
+    this.commands.push(new HeadingThreeHandler(this.editor))
+    this.commands.push(new EmbedYoutubeHandler(this.editor))
+    this.commands.push(new EmbedImageHandler(this.editor))
   }
 
-  @action.bound sync(value: string) {
-    this.content = value
+  @action.bound edit(value: string) {
+    this._content = value
+  }
+
+  @action setContent(value: string) {
+    this.editor.commands.setContent(value, false)
+    this.edit(value)
+  }
+
+  get content(): string {
+    return this._content
+  }
+
+  redo(): void {
+    this.editor.chain().focus().redo().run()
+  }
+
+  undo(): void {
+    this.editor.chain().focus().undo().run()
+  }
+
+  get redoable(): boolean {
+    return this.editor.can().redo()
+  }
+
+  get undoable(): boolean {
+    return this.editor.can().undo()
   }
 }
