@@ -18,6 +18,7 @@ export interface Answer {
 }
 
 export interface Quiz {
+  id?: string
   name?: string
   learningInformation?: string
   description?: string
