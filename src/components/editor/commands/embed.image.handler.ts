@@ -23,8 +23,10 @@ export class EmbedImageHandler extends HandlerBase {
     super(editor)
   }
 
-  @action add(file: File): any {
-    this.locals = [...this.locals, new Image(file)]
+  @action add(files: File[]): any {
+    if (files.length) {
+      this.locals = [...this.locals, ...files.map((file) => new Image(file))]
+    } else this.locals = []
   }
 
   async upload() {
@@ -37,24 +39,21 @@ export class EmbedImageHandler extends HandlerBase {
 
   @action
   execute(): void {
-    const locals = this.locals.filter((image) => !!image.url)
+    const imgs = this.locals
+      .filter((image) => !!image.url)
+      .map((image) => ({
+        type: 'image',
+        attrs: {
+          src: image.url,
+        },
+      }))
 
-    this.editor
-      .chain()
-      .focus()
-      .insertContent(
-        locals.map((image) => ({
-          type: 'image',
-          attrs: {
-            src: image.url,
-          },
-        }))
-      )
-      .run()
+    this.editor.chain().focus().insertContent(imgs).run()
 
     this.close()
   }
 
+  @computed
   get files(): File[] {
     return this.locals.map((image) => image.local)
   }
@@ -69,7 +68,6 @@ export class EmbedImageHandler extends HandlerBase {
 }
 
 class Image {
-  key = moment().unix()
   local: File
   @observable server: any
 

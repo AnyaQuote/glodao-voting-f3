@@ -1,6 +1,6 @@
 <template>
   <div v-if="editor">
-    <v-card rounded="lg">
+    <v-card rounded="lg" outlined>
       <v-card-title>
         <commands v-for="(command, index) in controller.commands" :key="index" :command="command" />
         <v-btn icon :disabled="!controller.undoable" @click="controller.undo()" class="ml-2">
@@ -12,7 +12,7 @@
       </v-card-title>
       <editor-content
         class="editor pa-4"
-        :class="{ 'grey darken-3': $vuetify.theme.dark, 'grey lighten-3': !$vuetify.theme.dark }"
+        :class="{ 'grey lighten-1': $vuetify.theme.dark, 'grey lighten-3': !$vuetify.theme.dark }"
         :editor="editor"
       ></editor-content>
     </v-card>
@@ -49,14 +49,14 @@ export default class AppEditor extends Vue {
       margin-top: 0.75em;
     }
 
-    // img {
-    //   max-width: 20%;
-    //   height: auto;
+    img {
+      max-width: 60%;
+      height: auto;
 
-    //   &.ProseMirror-selectednode {
-    //     outline: 2px solid var(--v-primary-base);
-    //   }
-    // }
+      &.ProseMirror-selectednode {
+        outline: 2px solid var(--v-primary-base);
+      }
+    }
   }
 }
 </style>

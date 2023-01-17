@@ -85,11 +85,12 @@
           <span class="font-18 font-weight-bold">Document<span class="app-red--text">*</span></span>
           <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .md, .me, .readme file)</span> -->
         </div>
-        <app-file-upload
+        <!-- <app-file-upload
           :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
           :value="$_get(vm.learnToEarn, 'setting.learningFile', null)"
           @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
-        />
+        /> -->
+        <app-editor :controller="vm.editorController" />
       </switch-field>
 
       <!-- ---------------------------------------------------------------------------------------------------- -->
@@ -130,6 +131,7 @@ import { EditLearnMissionViewModel } from '../../viewmodels/edit-learn-mission-v
     'switch-field': () => import('../common/switch-field.vue'),
     'quiz-preview-dialog': () => import('./quiz-preview-dialog.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
+    'app-editor': () => import('@/components/editor/app-editor.vue'),
   },
 })
 export default class MissionLearnToEarnSetting extends Vue {

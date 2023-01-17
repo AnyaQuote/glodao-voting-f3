@@ -17,6 +17,7 @@ import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants'
+import { AppEditorController } from '@/components/editor/app-editor.controller'
 
 export class EditLearnMissionViewModel {
   @observable step = 1
@@ -32,6 +33,7 @@ export class EditLearnMissionViewModel {
   // PREVIEW QUIZ VARIABLES
   @observable previewQuiz: PreviewQuiz[] = []
   previewSampleSize = 10
+  editorController = new AppEditorController()
 
   private _snackbar = appProvider.snackbar
   private _router = appProvider.router
@@ -75,7 +77,7 @@ export class EditLearnMissionViewModel {
       this.missionInfo = {
         name: this.mission.name,
         shortDescription: this.mission.metadata?.shortDescription,
-        // missionCover:this.mission.metadata?.projectLogo,
+        // missionCover: this.mission.metadata?.projectLogo as any,
         priorityAmount: this.mission.priorityRewardAmount,
         maxParticipants: this.mission.maxParticipants?.toString(),
         maxPriorityParticipants: this.mission.maxPriorityParticipants?.toString(),
@@ -84,8 +86,9 @@ export class EditLearnMissionViewModel {
         type: this.mission.type,
         tokenBasePrice: this.mission.tokenBasePrice,
       }
-      if (this.mission.metadata?.projectLogo)
-        this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata?.projectLogo)
+
+      if (this.mission.metadata?.coverImage)
+        this.missionInfo.missionCover = yield generateFileFromUrl(this.mission.metadata.coverImage)
 
       this.learnToEarn = {
         enabled: true,
@@ -97,8 +100,10 @@ export class EditLearnMissionViewModel {
       if (this.quiz.metadata?.coverImage)
         this.learnToEarn.setting!.imageCover = yield generateFileFromUrl(this.quiz.metadata?.coverImage)
 
-      if (this.quiz.learningInformation)
-        this.learnToEarn.setting!.learningFile = generateTextFileFromData(this.quiz.learningInformation, 'learning.txt')
+      if (this.quiz.learningInformation) {
+        // this.learnToEarn.setting!.learningFile = generateTextFileFromData(this.quiz.learningInformation, 'learning.txt')
+        this.editorController.setContent(this.quiz.learningInformation)
+      }
 
       this.generateQuizFile()
     } catch (error) {
@@ -152,7 +157,7 @@ export class EditLearnMissionViewModel {
     }
 
     const [data, answer] = await getDataFromQuizFile(quizFile!)
-    const learningInformation = await getTextData(learningFile!)
+    const learningInformation = this.editorController.content
     const projectOwnerId = this._auth.projectOwnerId
 
     const quiz: Quiz = {

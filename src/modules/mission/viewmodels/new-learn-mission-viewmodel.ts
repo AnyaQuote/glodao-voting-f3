@@ -10,6 +10,7 @@ import { RouteName, RoutePaths } from '@/router'
 import { VotingPool } from '@/models/VotingModel'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { ALLOW_PASS_THROUGH, EMPTY_ARRAY, EMPTY_STRING, Zero } from '@/constants'
+import { AppEditorController } from '@/components/editor/app-editor.controller'
 
 export class NewLearnMissionViewModel {
   @observable step = 1
@@ -30,6 +31,7 @@ export class NewLearnMissionViewModel {
   // PREVIEW QUIZ VARIABLES
   @observable previewQuiz: PreviewQuiz[] = []
   previewSampleSize = 10
+  editorController = new AppEditorController()
 
   private _snackbar = appProvider.snackbar
   private _router = appProvider.router
@@ -96,7 +98,7 @@ export class NewLearnMissionViewModel {
     }
 
     const [data, answer] = await getDataFromQuizFile(quizFile!)
-    const learningInformation = await getTextData(learningFile!)
+    const learningInformation = this.editorController.content
     const projectOwnerId = this._auth.projectOwnerId
 
     const quiz: Quiz = {

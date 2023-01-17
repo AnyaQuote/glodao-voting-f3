@@ -4,7 +4,7 @@
       <v-icon>mdi-file-image-plus</v-icon>
     </v-btn>
 
-    <v-dialog :value="command.dialog" max-width="600" height="200">
+    <v-dialog :value="command.dialog" persistent max-width="600" height="200">
       <v-card>
         <v-card-title>
           <span>Upload your images</span>
@@ -19,22 +19,22 @@
               placeholder="Press to select image"
               dense
               outlined
-              :clearable="false"
+              multiple
               :value="command.files"
               prepend-icon="mdi-file-image-plus"
               :loading="command.loading"
-              :rules="[$rules.required, $rules.isImage, $rules.maxSize(5000000)]"
+              :rules="rules"
               @change="change"
             />
           </v-form>
           <v-sheet class="mb-8">
             <v-row>
-              <v-col cols="4" v-for="image in command.locals" :key="image.key">
+              <v-col cols="4" v-for="(image, index) in command.locals" :key="index">
                 <v-img class="rounded-lg" :src="image.path" contain />
               </v-col>
             </v-row>
           </v-sheet>
-          <v-btn block :disabled="!valid" :loading="command.loading" @click="execute">Add</v-btn>
+          <v-btn block :disabled="!valid" color="neutral15" :loading="command.loading" @click="execute">Add</v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -42,6 +42,7 @@
 </template>
 
 <script lang="ts">
+import { isArray } from 'lodash'
 import { Observer } from 'mobx-vue'
 import { Component, Prop, Ref, Vue } from 'vue-property-decorator'
 import { EmbedImageHandler } from '../commands'
@@ -66,9 +67,17 @@ export default class EmbedImageButton extends Vue {
     this.command.execute()
   }
 
-  change(file: File) {
-    this.command.add(file)
+  change(files: File[]) {
+    this.command.add(files)
     this.unique++
+  }
+
+  get rules() {
+    const required = (files: File[]) => !!files.length || 'This field is required'
+    const limitSize = (files: File[]) =>
+      !!files.length || files.every((file) => file.size < 5000000) || 'Max file size is 5MB'
+
+    return [required, limitSize]
   }
 }
 </script>

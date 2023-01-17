@@ -78,15 +78,16 @@
         <span class="font-18 font-weight-bold">Document<span class="app-red--text">*</span></span>
         <!-- <span class="text-subtitle-2 font-weight-regular">&nbsp;(Recommend .md, .me, .readme file)</span> -->
         <v-spacer />
-        <span class="app-blue--text cursor-pointer text-subtitle-2" @click="downloadTemplateMarkdown"
+        <!-- <span class="app-blue--text cursor-pointer text-subtitle-2" @click="downloadTemplateMarkdown"
           >Download the markdown template</span
-        >
+        > -->
       </div>
-      <app-file-upload
+      <!-- <app-file-upload
         :rules="[$rules.required, $rules.maxSize(1000000), $rules.isTextFile]"
         :value="$_get(vm.learnToEarn, 'setting.learningFile', null)"
         @change="vm.changeLearnToEarnInfo('setting.learningFile', $event)"
-      />
+      /> -->
+      <app-editor :controller="vm.editorController" />
 
       <div class="font-18 mt-6 d-flex flex-sm-row flex-column align-start align-sm-end mb-2">
         <span class="font-18 font-weight-bold">Question per quiz<span class="app-red--text">*</span></span>
@@ -161,6 +162,7 @@ import { NewLearnMissionViewModel } from '../../viewmodels/new-learn-mission-vie
   components: {
     'quiz-preview-dialog': () => import('./quiz-preview-dialog.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
+    'app-editor': () => import('@/components/editor/app-editor.vue'),
   },
 })
 export default class MissionLearnToEarnSetting extends Vue {

@@ -4,7 +4,7 @@
       <v-icon>mdi-youtube</v-icon>
     </v-btn>
 
-    <v-dialog :value="command.dialog" width="400" height="200">
+    <v-dialog :value="command.dialog" persistent width="400" height="200">
       <v-card>
         <v-card-title>
           <v-icon>mdi-youtube</v-icon>
