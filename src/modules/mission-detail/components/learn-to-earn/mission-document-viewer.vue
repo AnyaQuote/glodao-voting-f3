@@ -34,6 +34,17 @@ export default class MissionLearningDocument extends Vue {
     }
   }
 
+  getIndent(depth: string) {
+    switch (depth) {
+      case '2':
+        return 'pl-2'
+      case '3':
+        return 'pl-3'
+      default:
+        return ''
+    }
+  }
+
   /**
    * Generate links for markdown aside from content headings
    * @param headings
@@ -47,7 +58,7 @@ export default class MissionLearningDocument extends Vue {
     const dataTags = mappedHeadingData.map(
       (heading) =>
         `
-        <li class="${heading.depth > 1 ? 'pl-2 custom-link-item' : 'custom-link-item'}">
+        <li class="${this.getIndent(heading.depth) + ' custom-link-item'}">
           	<a headingTag="#${heading.id}">${heading.title}</a>
           </li>
         `
@@ -95,11 +106,14 @@ export default class MissionLearningDocument extends Vue {
     const $main = document.querySelector('#markdown-content')
     const $aside = document.querySelector('#markdown-aside')
 
-    const htmlContent = marked(this.document)
+    $main!.innerHTML = this.document
 
-    $main!.innerHTML = htmlContent
+    let id = 0
+    $main!.querySelectorAll('h1, h2, h3').forEach((el) => {
+      el.setAttribute('id', `${id++}`)
+    })
 
-    const $headings = [...$main!.querySelectorAll('h1, h2')]
+    const $headings = [...$main!.querySelectorAll('h1, h2, h3')]
     const linkHtml = this.generateMarkupLinks($headings)
     $aside!.innerHTML = linkHtml
 
