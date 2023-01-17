@@ -1,6 +1,7 @@
 import web3 from 'web3'
 import moment from 'moment'
 import { formatFileSize } from '@/helpers'
+import isArray from 'lodash-es/isArray'
 
 export const rules = {
   required: (v: any) =>
@@ -38,11 +39,15 @@ export const rules = {
     (/^[0-9]{2}:[0-9]{2}$/.test(v.trim()) && (moment(v, 'hh:mm').isValid() || moment(v, 'HH:mm').isValid())) ||
     'Invalid time ',
   isAddress: (v: string) => !v || web3.utils.isAddress(v.trim()) || 'Address not valid',
-  maxSize: (size: number) => (value: any) =>
-    !value || value.size < size || `File size should be less than ${formatFileSize(size)}`,
-  isImage: (v: File) => !v || (v instanceof File && /^(image)\/.*$/.test(v.type)) || 'File is not an image.',
+  maxSize: (size: number) => (value: File) => {
+    return !value || value.size < size || `File size should be less than ${formatFileSize(size)}`
+  },
+  isImage: (v: File) =>
+    !!v === true || (v instanceof File && /^(image)\/.*$/.test(v.type) === true) || 'File is not an image.',
   isTextFile: (v: File) =>
     !v || (v instanceof File && /\.(csv|te?xt)$/i.test(v.name)) || 'File is not plain text file.',
+  // eslint-disable-next-line no-useless-escape
+  youtubeUrl: (v: string) => /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/gm.test(v) || 'Invalid youtube url',
 }
 
 export const appRules = {}

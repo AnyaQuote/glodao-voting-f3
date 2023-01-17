@@ -14,7 +14,7 @@
           </div>
           <div class="d-flex mt-4">
             <div class="font-weight-bold">Token address:</div>
-            <div class="ml-2">{{ vm.pool.tokenAddress }}</div>
+            <div class="ml-2">{{ tokenBAddress }}</div>
           </div>
           <div class="d-flex mt-2">
             <div class="font-weight-bold">Send amount:</div>
@@ -174,7 +174,7 @@ export default class CalculateRewardButtonContainer extends Vue {
       this.lastTransactions = toJS(this.vm.mission.transactions)
       this.initing = true
 
-      this.erc20Contract = tokenHelper.getContract(this.vm.pool.tokenAddress!, process.env.VUE_APP_CHAIN_ID as any)
+      this.erc20Contract = tokenHelper.getContract(this.tokenBAddress!, process.env.VUE_APP_CHAIN_ID as any)
       this.tokenDecimals = await this.erc20Contract!.decimals()
 
       await claimerMasterEvm.initAsync()
@@ -220,9 +220,9 @@ export default class CalculateRewardButtonContainer extends Vue {
   }
 
   async loadClaimerContract() {
-    this.claimerContract = await claimerMasterEvm.getClaimer(this.vm.pool.tokenAddress!, true)
+    this.claimerContract = await claimerMasterEvm.getClaimer(this.tokenBAddress!, true)
     this.claimerCreated = !!this.claimerContract
-    this.routerApproved = await this.claimerContract.router.isApproved(this.vm.pool.tokenAddress!, walletStore.account)
+    this.routerApproved = await this.claimerContract.router.isApproved(this.tokenBAddress!, walletStore.account)
     const firstTx = first(this.txs)
     if (firstTx && !firstTx.nonce && !firstTx.canSend && !this.lastTransactionsText) {
       firstTx.canSend = true
@@ -232,7 +232,7 @@ export default class CalculateRewardButtonContainer extends Vue {
   async createClaimer() {
     try {
       this.loading = true
-      await claimerMasterEvm.createClaimer(this.vm.pool.tokenAddress!, walletStore.account)
+      await claimerMasterEvm.createClaimer(this.tokenBAddress!, walletStore.account)
       this.loadClaimerContract()
     } catch (error) {
       snackController.blockchainError(error)
@@ -243,7 +243,7 @@ export default class CalculateRewardButtonContainer extends Vue {
   async approveRouter() {
     try {
       this.loading = true
-      await this.claimerContract!.router.approve(this.vm.pool.tokenAddress!, walletStore.account)
+      await this.claimerContract!.router.approve(this.tokenBAddress!, walletStore.account)
       this.routerApproved = true
       this.loadClaimerContract()
     } catch (error) {
@@ -279,7 +279,11 @@ Contact admin if need.
     }
     tx.nonce = this.userNonce++
     const contract = this.claimerContract!
-    const func = contract.contract.methods.addRewardsFromRouter(tx.accounts, tx.amountWithDeciamals)
+    const func = contract.contract.methods.addRewardsFromVoting(
+      this.vm.pool.poolId,
+      tx.accounts,
+      tx.amountWithDeciamals
+    )
     func
       .send({ from: account, nonce: tx.nonce })
       .once('transactionHash', (hash) => {
@@ -372,6 +376,10 @@ Contact admin if need.
     const pool = this.vm.pool
     const mission = this.vm.mission
     return pool.tokenAddress && mission.endTime && moment().isAfter(mission.endTime)
+  }
+
+  get tokenBAddress() {
+    return this.vm.pool.data?.optionalTokenAddress ?? ''
   }
 }
 </script>

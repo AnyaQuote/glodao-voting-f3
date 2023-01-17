@@ -130,7 +130,7 @@ export const checkQuizFile = async (file?: File | null) => {
   for (let index = 0; index < lines.length; index++) {
     const line = lines[index]
     if (!line) continue
-    if (!validateRegex.test(line)) {
+    if (!validateRegex.test(line.trim())) {
       return errorMessage(file.name, index + 1, 'Format not match')
     }
     const extractedArr = line.match(extractRegex)
@@ -173,6 +173,7 @@ export const downloadFile = (url: string, fileName: string) => {
  * @returns File object
  */
 export const generateFileFromUrl = async (url: string) => {
+  console.log(url)
   const response = await fetch(url, {
     mode: 'cors',
     headers: {

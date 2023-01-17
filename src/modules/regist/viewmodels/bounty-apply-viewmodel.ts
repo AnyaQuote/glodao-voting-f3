@@ -8,7 +8,7 @@ import { getApiFileUrl } from '@/helpers/file-helper'
 import { walletStore } from '@/stores/wallet-store'
 import { Subject } from 'rxjs'
 import { VotingHandler } from '@/blockchainHandlers/voting-contract-solidity'
-import { ALLOW_PASS_THROUGH, Zero } from '@/constants'
+import { ALLOW_PASS_THROUGH, HUNDRED, Zero } from '@/constants'
 import { appProvider } from '@/app-providers'
 import { RouteName } from '@/router'
 import { blockchainHandler } from '@/blockchainHandlers'
@@ -58,7 +58,6 @@ export class BountyApplyViewModel {
   @observable approving = false
   @observable optionalApproving = false
 
-  @observable bnbFee = Zero
   @observable feePerMission = Zero
   @observable rewardTokenBalance = Zero
   @observable rewardTokenDecimals = 18
@@ -91,7 +90,6 @@ export class BountyApplyViewModel {
       const votingHandler = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
       this.votingHandler = votingHandler
       yield this.votingHandler.getPoolType()
-      this.bnbFee = this.votingHandler.poolType.creationFee!
       this.feePerMission = this.votingHandler.poolType.feePerMission!
 
       this._disposers.push(
@@ -394,5 +392,25 @@ export class BountyApplyViewModel {
 
   @computed get currentTime() {
     return appProvider.currentTime
+  }
+
+  @computed get bnbFee() {
+    try {
+      return this.votingHandler!.poolType.creationFee!.mulUnsafe(
+        FixedNumber.from(this.projectInfo.totalMissions!.toString())
+      )
+    } catch (error) {
+      return Zero
+    }
+  }
+
+  @computed get platformFee() {
+    try {
+      return FixedNumber.from(this.projectInfo.optionalRewardAmount)
+        .mulUnsafe(FixedNumber.from(process.env.VUE_APP_FEE_PERCENT))
+        .divUnsafe(HUNDRED)
+    } catch (error) {
+      return Zero
+    }
   }
 }

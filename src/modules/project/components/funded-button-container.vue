@@ -18,6 +18,14 @@
             <div class="font-weight-bold">Fund amount:</div>
             <div class="ml-2">{{ vm.tokenBAmount }} {{ vm.tokenBName }}</div>
           </div>
+          <div class="d-flex mt-4">
+            <div class="font-weight-bold">Platform Fee ({{ platformFeePercent }}%):</div>
+            <div class="ml-2">{{ vm.platformFee }} {{ vm.tokenBName }}</div>
+          </div>
+          <div class="d-flex mt-4">
+            <div class="font-weight-bold">Total:</div>
+            <div class="ml-2">{{ vm.totalToFund }} {{ vm.tokenBName }}</div>
+          </div>
 
           <div class="font-weight-bold mt-4">Token address</div>
           <app-text-field
@@ -81,6 +89,7 @@ export default class FundedButtonContainer extends Vue {
   dialog = false
   tokenAddress = EMPTY_STRING
   valid = false
+  platformFeePercent = process.env.VUE_APP_FEE_PERCENT
 
   toggleDialog() {
     this.dialog = !this.dialog

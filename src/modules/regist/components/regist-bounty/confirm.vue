@@ -57,6 +57,10 @@
             >
           </div>
           <div class="mb-3 d-flex">
+            <span class="neutral10--text">Platform fee ({{ platformFeePercent }}%):</span>
+            <span class="flex-grow-1 text-end">{{ vm.platformFee }} {{ vm.projectInfo.optionalTokenName }}</span>
+          </div>
+          <div class="mb-3 d-flex">
             <span class="neutral10--text">Total mission fee:</span>
             <span class="app-blue--text flex-grow-1 text-end">
               {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
@@ -131,6 +135,7 @@ export default class ConfirmPayment extends Vue {
   @Inject() vm!: BountyApplyViewModel
   @Ref('payment-form') form
   walletStore = walletStore
+  platformFeePercent = process.env.VUE_APP_FEE_PERCENT
 
   mounted() {
     this.vm.loadConfirmData()
