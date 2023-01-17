@@ -172,10 +172,14 @@ export class EditLearnMissionViewModel {
         tags: get(this.pool, 'data.fields', []),
       },
     }
-    const res = await this._api.createQuiz({
-      ownerAddress: this._auth.attachedAddress,
-      ...quiz,
-    })
+    console.log(this.quiz.id)
+    const [res, _] = await Promise.all([
+      await this._api.createQuiz({
+        ownerAddress: this._auth.attachedAddress,
+        ...quiz,
+      }),
+      await this._api.quizzes.delete(this.quiz.id),
+    ])
     return res.id
   }
 
