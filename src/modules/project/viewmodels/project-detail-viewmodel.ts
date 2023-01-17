@@ -55,28 +55,6 @@ export class ProjectDetailViewModel {
     try {
       this.loading = true
 
-      const address = process.env.VUE_APP_VOTING_V2_SOLIDITY
-      const votingHandlerV2 = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
-      this.votingHandlerV2 = votingHandlerV2
-
-      this._disposers.push(
-        when(
-          () => walletStore.walletConnected,
-          async () => {
-            votingHandlerV2.injectProvider()
-          }
-        )
-      )
-
-      this._disposers.push(
-        reaction(
-          () => walletStore.account,
-          async () => {
-            votingHandlerV2.injectProvider()
-          }
-        )
-      )
-
       let res
       if (!unicodeName) {
         this._router.replace({
@@ -94,6 +72,34 @@ export class ProjectDetailViewModel {
         appProvider.router.replace(RoutePaths.not_found)
       }
       const votingPool = get(res, '[0]')
+
+      const address = process.env.VUE_APP_VOTING_V2_SOLIDITY
+      let votingHandlerV2
+
+      if (votingPool.version === 'v2') {
+        votingHandlerV2 = new VotingHandlerV2(address!, blockchainHandler.getWeb3(process.env.VUE_APP_CHAIN_ID)!)
+      }
+
+      this.votingHandlerV2 = votingHandlerV2
+
+      this._disposers.push(
+        when(
+          () => walletStore.walletConnected,
+          async () => {
+            votingHandlerV2?.injectProvider()
+          }
+        )
+      )
+
+      this._disposers.push(
+        reaction(
+          () => walletStore.account,
+          async () => {
+            votingHandlerV2?.injectProvider()
+          }
+        )
+      )
+
       this.poolStore = new PoolStore(votingPool)
       this.poolInfo = this.poolStore.poolData
       if (votingPool.status === 'approved') {
@@ -294,7 +300,7 @@ export class ProjectDetailViewModel {
   @asyncAction *checkTokenBApproved() {
     this.approvedChecking = true
     try {
-      const approved = yield this.votingHandlerV2!.approved(this.tokenBAddress, walletStore.account)
+      const approved = yield this.votingHandlerV2?.approved(this.tokenBAddress, walletStore.account)
       this.approved = approved
     } catch (error) {
       this.approved = false
@@ -395,5 +401,9 @@ export class ProjectDetailViewModel {
 
   @computed get totalToFund() {
     return this.tokenBAmount.addUnsafe(this.platformFee)
+  }
+
+  @computed get poolVersion() {
+    return this.poolInfo.version
   }
 }

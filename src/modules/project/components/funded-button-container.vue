@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-sheet class="rounded-lg pa-6 row dense no-gutters" v-if="!vm.isFunded" outlined elevation="3" color="neutral100">
+    <v-sheet
+      class="rounded-lg pa-6 row dense no-gutters"
+      v-if="!vm.isFunded && vm.poolVersion === 'v2'"
+      outlined
+      elevation="3"
+      color="neutral100"
+    >
       <v-col class="d-flex align-center">
         <div class="red--text font-italic text-decoration-underline" style="font-size: 14px">
           You have not funded your reward yet! Please fund your rewards for users
