@@ -203,7 +203,8 @@ export default class CalculateRewardButtonContainer extends Vue {
       snackController.error('Reward list has problem, plz contact admin')
       throw new Error('Reward list has problem, plz contact admin')
     }
-    const chunks = chunk(this.userRewards, 1)
+    //TODO: check total amount
+    const chunks = chunk(this.userRewards, 255)
     this.txs = chunks.map((rewards, index) => {
       const totalUser = rewards.length
       // const totalAmount = Fixe

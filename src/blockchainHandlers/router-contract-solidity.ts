@@ -7,6 +7,7 @@ import { tokenHelper } from './erc20-contract'
 
 const contractAddresses = {
   '97': '0x1647FfFb7D6460291E7E6A7d1D9efc9eb8dEC92B',
+  '56': '0x5f566E49acb8E754e3414627d47873d0Dd6029C5',
 }
 const cacheds: { [chainId: string]: RouterContract } = {}
 
