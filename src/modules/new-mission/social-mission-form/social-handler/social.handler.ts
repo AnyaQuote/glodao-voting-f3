@@ -1,5 +1,5 @@
 import { action, observable, set } from 'mobx'
-import { HandlerName, HandlerType, IBaseHandler } from '../base.handler'
+import { HandlerName, HandlerType, IBaseHandler } from '../social-handler/base.handler'
 import { SocialType, TaskConfig } from '@/models/MissionModel'
 import { EMPTY_ARRAY, EMPTY_STRING } from '@/constants'
 import { appProvider } from '@/app-providers'

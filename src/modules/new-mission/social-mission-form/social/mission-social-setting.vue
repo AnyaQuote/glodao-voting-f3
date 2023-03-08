@@ -1,17 +1,5 @@
 <template>
-  <v-sheet class="rounded-lg" outlined>
-    <div
-      class="pa-6 text-center rounded-lg rounded-b-0 blue-2 d-flex flex-column flex-sm-row align-center justify-space-between"
-    >
-      <div class="d-flex align-self-start align-self-sm-center cursor-pointer" @click="back">
-        <v-icon class="mr-2" size="20">mdi-arrow-left</v-icon>
-        <span class="text-subtitle-2">Create mission</span>
-      </div>
-      <div class="my-2 my-sm-0" />
-      <div class="text-h5 font-weight-bold blue-diversity--text">Social mission</div>
-    </div>
-    <v-divider />
-
+  <v-sheet class="rounded-lg mt-3" outlined>
     <v-form v-model="valid" class="pa-7">
       <div class="title font-weight-bold blue-diversity--text">Mission settings</div>
 
@@ -122,30 +110,8 @@
         />
       </template>
       <!-- ================================================================================================== -->
-
+      <v-btn depressed class="mt-3" @click="vm.getData()">Get data</v-btn>
       <v-divider class="my-7 dashed-border" />
-
-      <div class="d-flex">
-        <div class="flex-grow">
-          <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Back </v-btn>
-        </div>
-        <div class="px-4" />
-        <div class="flex-grow">
-          <v-btn
-            class="text-none"
-            :class="{ 'linear-blue--bg white--text': valid && vm.hasSettings }"
-            :disabled="!(valid && vm.hasSettings)"
-            :loading="vm.btnLoading"
-            @click="submit"
-            height="40"
-            depressed
-            block
-          >
-            Create
-          </v-btn>
-        </div>
-        <!-- ---------------------------------------------------------------------------------------------------- -->
-      </div>
     </v-form>
     <social-task-select-dialog />
   </v-sheet>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <project-list-banner />
-    <general-information />
+    <learn-page />
   </div>
 </template>
 
@@ -19,6 +19,7 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
     'project-card': () => import('../components/project-list-components/project-card.vue'),
     'general-information': () => import('@/modules/new-mission/general-information/general-information.vue'),
     'social-page': () => import('@/modules/new-mission/social-mission-form/new-social-page.vue'),
+    'learn-page': () => import('@/modules/new-mission/learn-mission-form/new-learn-page.vue'),
   },
 })
 export default class ProjectListPage extends Vue {

@@ -118,7 +118,69 @@
         @change="vm.changeProjectInfo('projectDates', $event)"
         :value="[vm.projectInfo.startDate, vm.projectInfo.endDate]"
       />
-      <v-btn @click="vm.getData()"></v-btn>
+      <div class="title font-weight-bold blue-diversity--text">Reward information</div>
+      <div class="mt-6 d-flex">
+        <div class="flex-grow">
+          <div class="font-18 font-weight-bold">Priority ratio (%)<span class="red--text">*</span></div>
+          <div class="text-caption">*Adjust priority amount with ratio</div>
+        </div>
+        <div class="px-3" />
+        <app-text-field
+          class="flex-grow"
+          placeholder="(ex: 30)"
+          :rules="[$rules.required, $rules.integer, $rules.max(100)]"
+          :value="$_get(vm.projectInfo, 'priorityRatio')"
+          @input="vm.changeProjectInfo('priorityRatio', $event)"
+        />
+      </div>
+      <div class="d-flex flex-column flex-sm-row mt-4">
+        <div class="flex-grow">
+          <span class="font-18 font-weight-bold">Priority amount</span>
+          <v-sheet class="rounded px-3 d-flex align-center mt-2 py-14px" height="56" outlined>
+            <span class="font-weight-600">{{ vm.priorityAmount }}</span>
+          </v-sheet>
+        </div>
+        <div class="mx-sm-3 my-3 my-sm-0" />
+        <!-- ---------------- MAX PRIORITY PARTICIPANTS FIELD START ----------------- -->
+        <div class="flex-grow">
+          <span class="font-18 font-weight-bold text-truncate">
+            Max participant in priority pool<span class="app-red--text">*</span>
+          </span>
+          <app-text-field
+            class="mt-2"
+            type="number"
+            :disabled="vm.projectInfo.priorityRatio === '0'"
+            :rules="[$rules.required, $rules.integer, $rules.min(0)]"
+            :value="$_get(vm.projectInfo, 'maxPriorityParticipants')"
+            @change="vm.changeProjectInfo('maxPriorityParticipants', $event)"
+            placeholder="Enter participants"
+          />
+        </div>
+      </div>
+
+      <!-- ---------------- MAX PRIORITY PARTICIPANTS FIELD END ------------------ -->
+
+      <div class="d-flex flex-column flex-sm-row">
+        <v-sheet min-height="56" class="flex-grow rounded px-3 d-flex justify-space-between align-center" outlined>
+          <span>Community amount:</span>
+          <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+        </v-sheet>
+        <div class="mx-sm-3 my-3 my-sm-0" />
+        <v-sheet class="flex-grow rounded px-3 d-flex justify-space-between align-center" min-height="56" outlined>
+          <span>Personal priority reward:</span>
+          <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
+        </v-sheet>
+      </div>
+
+      <!-- ------------------------------------- REWARD INFORMATION END ---------------------------------------------- -->
+      <v-divider class="mt-10 my-5 dashed-border" />
+      <!-- ------------------------------------- TOKEN BASE PRICE INFO START ------------------------------------------ -->
+      <app-token-converter
+        :value="vm.tokenBasePrice"
+        :tokenName="vm.tokenBName"
+        :tokenAddress="vm.tokenBAddress"
+        @change="vm.changeProjectInfo('tokenBasePrice', $event)"
+      />
       <!-- ------------------------------------------------------------------------------------------------- -->
     </v-form>
     <confirm-campaign-dialog ref="confirm-dialog" />
@@ -129,7 +191,9 @@
 import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
 import { GeneralInformationViewModel } from '@/modules/new-mission/viewmodels/general-information-viewmodel'
+import { Observer } from 'mobx-vue'
 
+@Observer
 @Component({
   components: {
     'image-upload-field': () => import('@/components/image-upload-field.vue'),
@@ -139,6 +203,7 @@ import { GeneralInformationViewModel } from '@/modules/new-mission/viewmodels/ge
     'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
     'app-datetime-picker2': () => import('@/components/app-datetime-picker2.vue'),
     'reward-distribution-info': () => import('./reward-distribution-info.vue'),
+    'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
   },
 })
 export default class ProjectInfo extends Vue {

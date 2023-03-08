@@ -55,17 +55,6 @@ export class NewSocialMissionViewModel {
     this.showSelectDialog = shown
   }
 
-  @action.bound changeMissionInfo(property: string, value: any) {
-    if (property === 'missionDates') {
-      this.missionInfo = { ...this.missionInfo, startDate: value[0], endDate: value[1] }
-      return
-    }
-    if (property === 'priorityRatio' && value === '0') {
-      this.missionInfo = { ...this.missionInfo, maxPriorityParticipants: '0' }
-    }
-    this.missionInfo = set(this.missionInfo, property, value)
-  }
-
   @action.bound updateSetting(socialType: SocialType, key: number, value: any) {
     this[socialType] = this[socialType].map((setting) => {
       return setting.key === key ? value : setting
@@ -119,23 +108,23 @@ export class NewSocialMissionViewModel {
   async getMissionModel(setting: Data, missionInfo: MissionInfo, pool: VotingPool) {
     const status = 'upcomming'
     const { website, ...socialLinks } = pool.data?.socialLinks
-    const rewardAmount = this.rewardPerMission._value
+    // const rewardAmount = this.rewardPerMission._value
     const maxParticipants = missionInfo.maxParticipants ? +missionInfo.maxParticipants : 0
     const maxPriorityParticipants = +missionInfo.maxPriorityParticipants!
-    const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
+    // const priorityRewardAmount = maxPriorityParticipants !== 0 ? this.priorityAmount._value : '0'
     const priorityRatio = +(missionInfo.priorityRatio ?? 0)
     const coverImage = await this.getImageSource(missionInfo.missionCover!)
     const optTokenDecimal = pool.data!.optionalRewardTokenDecimals
     const optTokenAddress = pool.data!.optionalTokenAddress
     const optTokenLogo = pool.data!.optionalTokenLogo
-    const optTokenBasePrice = this.tokenBasePrice
+    // const optTokenBasePrice = this.tokenBasePrice
     const mission: Mission = {
       type: MissionType.SOCIAL,
-      rewardAmount,
+      // rewardAmount,
       maxParticipants,
       maxPriorityParticipants,
-      priorityRewardAmount,
-      tokenBasePrice: optTokenBasePrice,
+      // priorityRewardAmount,
+      // tokenBasePrice: optTokenBasePrice,
       startTime: missionInfo.startDate,
       endTime: missionInfo.endDate,
       name: missionInfo.name,
@@ -151,7 +140,7 @@ export class NewSocialMissionViewModel {
         projectLogo: pool.data!.projectLogo,
         caption: missionInfo.shortDescription,
         decimals: +optTokenDecimal!,
-        rewardToken: this.tokenName,
+        // rewardToken: this.tokenName,
         tokenLogo: optTokenLogo,
         tokenContractAddress: optTokenAddress,
         socialLinks: socialLinks,
@@ -218,39 +207,10 @@ export class NewSocialMissionViewModel {
       return Zero
     }
   }
+  @asyncAction *getData() {
+    const missionSetting = yield this.getSocialMissionSettings()
+    console.log(missionSetting)
 
-  @computed get tokenName() {
-    return get(this.pool, 'data.optionalTokenName', '')
-  }
-
-  // @computed get maxPriorityParticipantsLimit() {
-  //   try {
-  //     const fxPotentialPriorityReward = this.fxAvgCommunityReward.mulUnsafe(FixedNumber.from('2'))
-  //     const fxparticipantLimit = this.priorityAmount.divUnsafe(fxPotentialPriorityReward)
-  //     const limit = ceil(toNumber(fxparticipantLimit._value))
-  //     if (limit === 0) {
-  //       throw null
-  //     } else return limit
-  //   } catch (_) {
-  //     return 200
-  //   }
-  // }
-
-  @computed get hasSettings() {
-    return (
-      this.telegram.length || this.twitter.length || this.discord.length || this.facebook.length || this.custom.length
-    )
-  }
-
-  @computed get tokenBasePrice() {
-    return get(this.missionInfo, 'tokenBasePrice', EMPTY_STRING)
-  }
-
-  @computed get tokenBAddress() {
-    return this.pool.data?.optionalTokenAddress || EMPTY_STRING
-  }
-
-  @computed get tokenBName() {
-    return this.pool.data?.optionalTokenName || EMPTY_STRING
+    return missionSetting
   }
 }
