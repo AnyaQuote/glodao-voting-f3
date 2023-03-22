@@ -375,7 +375,7 @@ Contact admin if need.
   get canSendReward() {
     const pool = this.vm.pool
     const mission = this.vm.mission
-    return pool.tokenAddress && mission.endTime && moment().isAfter(mission.endTime)
+    return this.tokenBAddress && mission.endTime && moment().isAfter(mission.endTime)
   }
 
   get tokenBAddress() {
