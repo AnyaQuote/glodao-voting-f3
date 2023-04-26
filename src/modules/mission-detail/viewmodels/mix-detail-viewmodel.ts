@@ -59,10 +59,7 @@ export class MixDetailViewModel implements IDetailViewmodel {
       this.loading = true
 
       // Get pool
-      const pools = await this._api.voting.find<VotingPool>(
-        { unicodeName, projectOwner: this._auth.projectOwnerId },
-        { _limit: 1 }
-      )
+      const pools = await this._api.voting.find<VotingPool>({ unicodeName }, { _limit: 1 })
       if (isEmpty(pools)) {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }

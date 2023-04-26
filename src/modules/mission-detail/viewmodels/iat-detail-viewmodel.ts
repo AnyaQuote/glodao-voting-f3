@@ -59,10 +59,7 @@ export class InAppTrialDetailViewModel implements IDetailViewmodel {
       this.loading = true
 
       // Get pool
-      const pools = await this._api.voting.find<VotingPool>(
-        { unicodeName, projectOwner: this._auth.projectOwnerId },
-        { _limit: 1 }
-      )
+      const pools = await this._api.voting.find<VotingPool>({ unicodeName }, { _limit: 1 })
       if (isEmpty(pools)) {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }
@@ -76,9 +73,10 @@ export class InAppTrialDetailViewModel implements IDetailViewmodel {
       this.mission = missions[0]
       const apiKey = await this._api.apiKey.find<APIKey>({ projectOwner: this._auth.projectOwnerId }, { _limit: 1 })
       if (isEmpty(apiKey)) {
-        this._router.replace({ name: RouteName.NOT_FOUND })
-      }
-      this.apiKey = apiKey[0]
+        this.apiKey = {}
+
+        // this._router.replace({ name: RouteName.NOT_FOUND })
+      } else this.apiKey = apiKey[0]
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
