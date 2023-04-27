@@ -15,7 +15,7 @@
         <v-col cols="12">
           <div class="mb-6">
             <v-slide-y-transition leave-absolute>
-              <project-info />
+              <project-info :handler="handler" />
             </v-slide-y-transition>
           </div>
         </v-col>
@@ -25,18 +25,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Provide } from 'vue-property-decorator'
-import { GeneralInformationViewModel } from '../viewmodels/general-information-viewmodel'
+import { Component, Vue, Provide, Prop, Watch } from 'vue-property-decorator'
+import { GeneralInformationHandler } from '../general-information/general-information-handler'
 
 @Component({
   components: {
-    'pool-info': () => import('../components/regist-bounty/pool-info.vue'),
-    'project-info': () => import('../components/regist-bounty/project-info.vue'),
-    banner: () => import('../components/common/banner.vue'),
+    'project-info': () => import('@/modules/new-mission/components/regist-bounty/project-info.vue'),
+    banner: () => import('@/modules/new-mission/components/common/banner.vue'),
   },
 })
 export default class ProjectRegistDetail extends Vue {
-  @Provide() vm = new GeneralInformationViewModel()
+  @Prop() handler!: GeneralInformationHandler
 }
 </script>
 

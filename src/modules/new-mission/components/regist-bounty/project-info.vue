@@ -9,20 +9,20 @@
       Project information
     </v-chip>
 
-    <v-form ref="project-info-form" class="form pa-6">
+    <v-form v-model="handler.valid" :valid="handler.valid" class="form pa-6">
       <div class="font-18 font-weight-bold">Project name<span class="app-red--text">*</span></div>
       <app-text-field
         :rules="[$rules.required]"
-        :value="$_get(vm.projectInfo, 'projectName')"
-        @input="vm.changeProjectInfo('projectName', $event)"
+        :value="$_get(handler.projectInfo, 'projectName')"
+        @change="handler.changeProjectInfo('projectName', $event)"
         placeholder="Enter name of project"
       ></app-text-field>
 
       <div class="font-18 font-weight-bold">Short description<span class="app-red--text">*</span></div>
       <app-textarea
         :rules="[$rules.required]"
-        :value="$_get(vm.projectInfo, 'shortDescription')"
-        @input="vm.changeProjectInfo('shortDescription', $event)"
+        :value="$_get(handler.projectInfo, 'shortDescription')"
+        @input="handler.changeProjectInfo('shortDescription', $event)"
         placeholder="Enter project's short description"
       ></app-textarea>
 
@@ -36,8 +36,8 @@
       <app-file-upload
         isImageFile
         :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
-        :value="$_get(vm.projectInfo, 'projectLogo', null)"
-        @change="vm.changeProjectInfo('projectLogo', $event)"
+        :value="$_get(handler.projectInfo, 'projectLogo', null)"
+        @change="handler.changeProjectInfo('projectLogo', $event)"
       />
 
       <div class="d-flex mt-6 mb-2 align-end">
@@ -50,16 +50,16 @@
       <app-file-upload
         isImageFile
         :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
-        :value="$_get(vm.projectInfo, 'projectCover', null)"
-        @change="vm.changeProjectInfo('projectCover', $event)"
+        :value="$_get(handler.projectInfo, 'projectCover', null)"
+        @change="handler.changeProjectInfo('projectCover', $event)"
       />
 
       <div class="font-18 font-weight-bold mt-6">Field of project</div>
       <app-autocomplete
         limit="5"
         :items="['NFT', 'Finance', 'Gaming']"
-        :value="$_get(vm.projectInfo, 'fields')"
-        @onChange="vm.changeProjectInfo('fields', $event)"
+        :value="$_get(handler.projectInfo, 'fields')"
+        @onChange="handler.changeProjectInfo('fields', $event)"
       />
 
       <!-- ===== SOCIAL LINKS FIELDS ===== -->
@@ -68,8 +68,8 @@
         <i class="text-subtitle-2 font-weight-regular">*Website link is required</i>
       </div>
       <app-socials-field
-        :value="$_get(vm.projectInfo, 'socialLinks')"
-        @change="vm.changeProjectInfo('socialLinks', $event)"
+        :value="$_get(handler.projectInfo, 'socialLinks')"
+        @change="handler.changeProjectInfo('socialLinks', $event)"
         class="mt-3"
       />
 
@@ -78,8 +78,8 @@
       <!-- <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div> -->
       <!-- <app-text-field
         :rules="[$rules.required, $rules.isAddress]"
-        :value="$_get(vm.projectInfo, 'tokenAddress')"
-        @change="vm.changeProjectInfo('tokenAddress', $event)"
+        :value="$_get(handler.projectInfo, 'tokenAddress')"
+        @change="handler.changeProjectInfo('tokenAddress', $event)"
         placeholder="Enter address"
       ></app-text-field> -->
 
@@ -94,15 +94,15 @@
       </div>
       <div class="mb-1 font-18">
         <span class="font-weight-bold">Your project voting will start in: </span>
-        <span>{{ $_get(vm.projectInfo, 'votingStart') | ddmmyyyy }}</span>
+        <span>{{ $_get(handler.projectInfo, 'votingStart') | ddmmyyyy }}</span>
       </div>
       <div class="font-18">
         <span class="font-weight-bold">Your project voting will end in: </span>
-        <span>{{ $_get(vm.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
+        <span>{{ $_get(handler.projectInfo, 'votingEnd') | ddmmyyyy }}</span>
       </div> -->
 
       <!-- ----------------------------------- PROJECT REWARD ---------------------------------------------- -->
-      <reward-distribution-info />
+      <reward-distribution-info :handler="handler" />
       <!-- ------------------------------------------------------------------------------------------------- -->
 
       <!-- ------------------------------------ CAMPAIGN INFORMATION --------------------------------------- -->
@@ -113,10 +113,10 @@
 
       <app-datetime-picker2
         class="font-18"
-        :min="vm.currentTime.toISOString()"
+        :min="handler.currentTime.toISOString()"
         :rules="[$rules.required]"
-        @change="vm.changeProjectInfo('projectDates', $event)"
-        :value="[vm.projectInfo.startDate, vm.projectInfo.endDate]"
+        @change="handler.changeProjectInfo('projectDates', $event)"
+        :value="[handler.projectInfo.startDate, handler.projectInfo.endDate]"
       />
       <div class="title font-weight-bold blue-diversity--text">Reward information</div>
       <div class="mt-6 d-flex">
@@ -129,15 +129,15 @@
           class="flex-grow"
           placeholder="(ex: 30)"
           :rules="[$rules.required, $rules.integer, $rules.max(100)]"
-          :value="$_get(vm.projectInfo, 'priorityRatio')"
-          @input="vm.changeProjectInfo('priorityRatio', $event)"
+          :value="$_get(handler.projectInfo, 'priorityRatio')"
+          @input="handler.changeProjectInfo('priorityRatio', $event)"
         />
       </div>
       <div class="d-flex flex-column flex-sm-row mt-4">
         <div class="flex-grow">
           <span class="font-18 font-weight-bold">Priority amount</span>
           <v-sheet class="rounded px-3 d-flex align-center mt-2 py-14px" height="56" outlined>
-            <span class="font-weight-600">{{ vm.priorityAmount }}</span>
+            <span class="font-weight-600">{{ handler.priorityAmount }}</span>
           </v-sheet>
         </div>
         <div class="mx-sm-3 my-3 my-sm-0" />
@@ -149,10 +149,9 @@
           <app-text-field
             class="mt-2"
             type="number"
-            :disabled="vm.projectInfo.priorityRatio === '0'"
             :rules="[$rules.required, $rules.integer, $rules.min(0)]"
-            :value="$_get(vm.projectInfo, 'maxPriorityParticipants')"
-            @change="vm.changeProjectInfo('maxPriorityParticipants', $event)"
+            :value="$_get(handler.projectInfo, 'maxPriorityParticipants')"
+            @change="handler.changeProjectInfo('maxPriorityParticipants', $event)"
             placeholder="Enter participants"
           />
         </div>
@@ -163,34 +162,27 @@
       <div class="d-flex flex-column flex-sm-row">
         <v-sheet min-height="56" class="flex-grow rounded px-3 d-flex justify-space-between align-center" outlined>
           <span>Community amount:</span>
-          <span class="font-weight-600">{{ vm.communityAmount | formatNumber(2) }} {{ vm.tokenName }}</span>
+          <span class="font-weight-600">{{ handler.communityAmount | formatNumber(2) }} {{ handler.tokenName }}</span>
         </v-sheet>
         <div class="mx-sm-3 my-3 my-sm-0" />
         <v-sheet class="flex-grow rounded px-3 d-flex justify-space-between align-center" min-height="56" outlined>
           <span>Personal priority reward:</span>
-          <span class="font-weight-600"> {{ vm.personalReward | formatNumber(2) }} {{ vm.tokenName }} </span>
+          <span class="font-weight-600"> {{ handler.personalReward | formatNumber(2) }} {{ handler.tokenName }} </span>
         </v-sheet>
       </div>
 
       <!-- ------------------------------------- REWARD INFORMATION END ---------------------------------------------- -->
       <v-divider class="mt-10 my-5 dashed-border" />
       <!-- ------------------------------------- TOKEN BASE PRICE INFO START ------------------------------------------ -->
-      <app-token-converter
-        :value="vm.tokenBasePrice"
-        :tokenName="vm.tokenBName"
-        :tokenAddress="vm.tokenBAddress"
-        @change="vm.changeProjectInfo('tokenBasePrice', $event)"
-      />
       <!-- ------------------------------------------------------------------------------------------------- -->
     </v-form>
-    <confirm-campaign-dialog ref="confirm-dialog" />
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { MAX_IMAGE_FILE_SIZE } from '@/constants'
-import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
-import { GeneralInformationViewModel } from '@/modules/new-mission/viewmodels/general-information-viewmodel'
+import { Component, Inject, Prop, Ref, Vue } from 'vue-property-decorator'
+import { GeneralInformationHandler } from '@/modules/new-mission/handlers/general-information/general-information-handler'
 import { Observer } from 'mobx-vue'
 
 @Observer
@@ -200,15 +192,13 @@ import { Observer } from 'mobx-vue'
     'app-socials-field': () => import('@/components/app-socials-field.vue'),
     'app-file-upload': () => import('@/components/app-file-upload.vue'),
     'app-autocomplete': () => import('../common/app-autocomplete.vue'),
-    'confirm-campaign-dialog': () => import('../regist-bounty/confirm-campaign-dialog.vue'),
     'app-datetime-picker2': () => import('@/components/app-datetime-picker2.vue'),
     'reward-distribution-info': () => import('./reward-distribution-info.vue'),
     'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
   },
 })
 export default class ProjectInfo extends Vue {
-  @Inject() vm!: GeneralInformationViewModel
-  @Ref('project-info-form') form
+  @Prop() handler!: GeneralInformationHandler
   @Ref('confirm-dialog') dialog
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
 }

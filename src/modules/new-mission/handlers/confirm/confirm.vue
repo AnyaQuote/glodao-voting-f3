@@ -10,15 +10,23 @@
     </v-chip>
 
     <v-form ref="payment-form" class="pa-6">
+      <app-token-converter
+        :value="handler.tokenBasePrice"
+        :tokenName="handler.tokenBName"
+        :tokenAddress="handler.tokenBAddress"
+        @change="handler.changeProjectInfo('tokenBasePrice', $event)"
+      />
       <div class="d-flex align-center">
         <img src="@/assets/icons/mock-crypto.svg" alt="currency" width="36" height="36" />
         <div class="text-h5 font-weight-bold text-capitalize line-height-1 ml-3" height="fit-content">
-          {{ vm.projectInfo.projectName }}
+          {{ handler.projectInfo.projectName }}
         </div>
         <!-- <v-icon color="neutral10">mdi-circle-small</v-icon>
         <div class="neutral10--text text-h5 font-weight-bold">$HWD</div> -->
         <v-icon color="neutral-10">mdi-circle-small</v-icon>
-        <div class="neutral10--text text-h5 font-weight-bold">{{ vm.rewardAmount }} {{ vm.projectInfo.tokenName }}</div>
+        <div class="neutral10--text text-h5 font-weight-bold">
+          {{ handler.projectInfo.optionalRewardAmount }} {{ handler.projectInfo.tokenName }}
+        </div>
       </div>
 
       <div class="ma-7">
@@ -36,16 +44,16 @@
         </div>
 
         <div class="font-18 mb-2">
-          <span class="mr-2">{{ vm.projectInfo.tokenName }} Balance:</span>
+          <span class="mr-2">{{ handler.projectInfo.tokenName }} Balance:</span>
           <span class="font-weight-medium">
-            {{ vm.rewardTokenBalance | formatNumber }} {{ vm.projectInfo.tokenName }}
+            {{ handler.rewardTokenBalance | formatNumber }} {{ handler.projectInfo.tokenName }}
           </span>
         </div>
 
-        <div v-if="vm.generateWithTokenAddress" class="font-18">
+        <div v-if="handler.generateWithTokenAddress" class="font-18">
           <span class="mr-2">Project reward token Balance:</span>
           <span class="font-weight-medium">
-            {{ vm.optionalRewardTokenBalance | formatNumber }} {{ vm.projectInfo.optionalTokenName }}
+            {{ handler.optionalRewardTokenBalance | formatNumber }} {{ handler.projectInfo.optionalTokenName }}
           </span>
         </div>
 
@@ -53,22 +61,24 @@
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total campaign reward:</span>
             <span class="flex-grow-1 text-end"
-              >{{ vm.projectInfo.optionalRewardAmount }} {{ vm.projectInfo.optionalTokenName }}</span
+              >{{ handler.projectInfo.optionalRewardAmount }} {{ handler.projectInfo.optionalTokenName }}</span
             >
           </div>
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Platform fee ({{ platformFeePercent }}%):</span>
-            <span class="flex-grow-1 text-end">{{ vm.platformFee }} {{ vm.projectInfo.optionalTokenName }}</span>
+            <span class="flex-grow-1 text-end"
+              >{{ handler.platformFee }} {{ handler.projectInfo.optionalTokenName }}</span
+            >
           </div>
           <div class="mb-3 d-flex">
             <span class="neutral10--text">Total mission fee:</span>
             <span class="app-blue--text flex-grow-1 text-end">
-              {{ vm.projectInfo.rewardAmount }} {{ vm.projectInfo.tokenName }}
+              {{ handler.feePerMission }} {{ handler.projectInfo.tokenName }}
             </span>
           </div>
           <div class="d-flex">
             <span class="neutral10--text">Creating pool fee:</span>
-            <span class="app-blue--text flex-grow-1 text-end">{{ vm.bnbFee | formatNumber }} BNB</span>
+            <span class="app-blue--text flex-grow-1 text-end">{{ handler.bnbFee | formatNumber }} BNB</span>
           </div>
         </v-sheet>
 
@@ -76,49 +86,39 @@
           <li class="mb-2 font-weight-600"></li>
           <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
         </ul> -->
-        <div class="d-flex">
-          <v-btn
-            class="font-weight-bold text-none text-subtitle-1 mt-6 flex-grow"
-            depressed
-            outlined
-            width="100%"
-            height="40"
-            @click.prevent="goBackPreviousStep"
-            :loading="vm.approving || vm.approveChecking || vm.optionalApproving || vm.approveChecking || vm.creating"
-          >
-            Back
-          </v-btn>
+        <!-- <div class="d-flex">
           <div class="mx-3" />
           <v-btn
-            v-if="!vm.approved"
+            v-if="!handler.approved"
             class="linear-blue--bg white--text font-weight-bold text-none mt-6 flex-grow"
             height="40"
             depressed
-            :loading="vm.approving || vm.approveChecking"
-            @click="vm.approve()"
+            :loading="handler.approving || handler.approveChecking"
+            @click="handler.approve()"
           >
-            <span class="btn-font">{{ vm.projectInfo.tokenName }} approve contract</span>
+            <span class="btn-font">{{ handler.projectInfo.tokenName }} approve contract</span>
           </v-btn>
           <v-btn
-            v-else-if="$_get(vm.projectInfo, 'optionalTokenAddress') && !vm.optionalApproved"
+            v-else-if="$_get(handler.projectInfo, 'optionalTokenAddress') && !handler.optionalApproved"
             class="linear-blue--bg white--text font-weight-bold text-none mt-6 flex-grow"
             height="40"
             depressed
-            :loading="vm.optionalApproving || vm.approveChecking"
-            @click="vm.optionalApprove()"
+            :loading="handler.optionalApproving || handler.approveChecking"
+            @click="handler.optionalApprove()"
           >
-            <span class="btn-font">{{ vm.projectInfo.optionalTokenName }} approve contract</span>
+            <span class="btn-font">{{ handler.projectInfo.optionalTokenName }} approve contract</span>
           </v-btn>
           <v-btn
             v-else
             class="linear-blue--bg white--text font-weight-bold text-none mt-6 text-subtitle-1 flex-grow"
             height="40"
             depressed
-            :loading="vm.creating"
+            @click="submit"
+            :loading="handler.creating"
           >
             Confirm and pay fee
           </v-btn>
-        </div>
+        </div> -->
       </div>
     </v-form>
   </v-sheet>
@@ -126,15 +126,23 @@
 
 <script lang="ts">
 import { walletStore } from '@/stores/wallet-store'
-import { Component, Inject, Ref, Vue } from 'vue-property-decorator'
-import { GeneralInformationViewModel } from '@/modules/new-mission/viewmodels/general-information-viewmodel'
-
-@Component
+import { Component, Inject, Prop, Ref, Vue } from 'vue-property-decorator'
+import { ConfirmHandler } from '../confirm/confirm-handler'
+import { Observer } from 'mobx-vue/esm/observer'
+@Observer
+@Component({
+  components: {
+    'app-token-converter': () => import('@/components/app-token-price-converter.vue'),
+  },
+})
 export default class ConfirmPayment extends Vue {
-  @Inject() vm!: GeneralInformationViewModel
+  @Prop() handler!: ConfirmHandler
   @Ref('payment-form') form
   walletStore = walletStore
   platformFeePercent = process.env.VUE_APP_FEE_PERCENT
+  mounted() {
+    this.handler.loadConfirmData()
+  }
 }
 </script>
 

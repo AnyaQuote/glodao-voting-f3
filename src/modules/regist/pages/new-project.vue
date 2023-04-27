@@ -37,10 +37,9 @@
                 :cols="$vuetify.breakpoint.mobile ? '12' : '6'"
                 :class="$vuetify.breakpoint.mobile ? 'mb-4' : 'pl-3'"
               >
-                <router-link
-                  tag="div"
+                <div
                   class="d-flex flex-column align-center pa-6 neutral-100 rounded-lg elevation-3 cursor-pointer"
-                  to="/new-project/launchpad"
+                  @click="openSelectMissionDialog"
                 >
                   <v-img
                     :max-height="$vuetify.breakpoint.mobile ? '26' : '48'"
@@ -48,13 +47,13 @@
                     :src="require('@/assets/icons/new-project-rocket-icon.svg')"
                   />
                   <div class="font-18 my-3 font-weight-bold" :class="!$vuetify.breakpoint.mobile && 'text-h5 my-5'">
-                    Launchpad Hunter
+                    Quick mission
                   </div>
                   <!-- <div class="font-weight-regular" :class="$vuetify.breakpoint.mobile && 'text-subtitle-2'">
                     Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
                     duis enim velit mollit.
                   </div> -->
-                </router-link></v-col
+                </div></v-col
               >
             </v-row>
           </div>
@@ -62,6 +61,7 @@
         <!-- --------------------------------------------------------------------------------------------------- -->
       </v-row>
     </v-container>
+    <select-mission-type-dialog ref="select-dialog" />
   </div>
 </template>
 
@@ -70,19 +70,25 @@ import { AppProvider } from '@/app-providers'
 import { snackController } from '@/components/snack-bar/snack-bar-controller'
 import { RoutePaths } from '@/router'
 import { walletStore } from '@/stores/wallet-store'
-import { Component, Vue, Inject, Provide } from 'vue-property-decorator'
+import { Component, Vue, Inject, Provide, Ref } from 'vue-property-decorator'
 import { NewProjectViewModel } from '../viewmodels/new-project-viewmodel'
 
 @Component({
   components: {
     banner: () => import('../components/common/banner.vue'),
+    'select-mission-type-dialog': () => import('@/modules/regist/components/dialogs/select-mission-type-dialog.vue'),
   },
 })
 export default class ProjectRegist extends Vue {
   @Inject() providers!: AppProvider
+  @Ref('select-dialog') dialog
   @Provide() vm = new NewProjectViewModel()
 
   walletStore = walletStore
+  openSelectMissionDialog() {
+    // this.$router.push(RoutePaths.project_detail + get(this.vm.poolStore, 'unicodeName', null) + RoutePaths.new_mission)
+    this.dialog.open()
+  }
 
   // openBountyForm() {
   //   try {

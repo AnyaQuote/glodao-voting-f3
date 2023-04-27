@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div class="mt-10">
+    <div class="mt-2">
       <span class="font-18 font-weight-bold blue-diversity--text">Project reward</span>
       <!-- <i class="neutral-10--text ml-2">(optional)</i> -->
     </div>
     <!-- <div class="neutral-10--text text-subtitle-1">I want to distribute project reward with:</div> -->
-    <!-- <distribution-type :value="vm.rewardType" @change="vm.switchType" /> -->
+    <!-- <distribution-type :value="handler.rewardType" @change="handler.switchType" /> -->
     <!-- --------------------------------------- PROJECT TOKEN FORM START --------------------------------------- -->
 
-    <!-- <div v-if="vm.rewardType === tokenType"> -->
-    <div class="font-18 font-weight-bold mb-2 mt-3">Token contract address</div>
+    <!-- <div v-if="handler.rewardType === tokenType"> -->
+    <div class="font-18 font-weight-bold mb-2">Token contract address</div>
     <app-text-field
       :rules="[$rules.isAddress]"
-      :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
-      @input="vm.changeProjectInfo('optionalTokenAddress', $event)"
+      :value="$_get(handler.projectInfo, 'optionalTokenAddress')"
+      @change="handler.changeProjectInfo('optionalTokenAddress', $event)"
       placeholder="Enter address"
     ></app-text-field>
     <div class="d-flex flex-column flex-sm-row">
@@ -22,8 +22,8 @@
         <app-text-field
           type="number"
           :rules="[$rules.floatNumberOnly, $rules.required, $rules.gt(0)]"
-          :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
-          @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
+          :value="$_get(handler.projectInfo, 'optionalRewardAmount')"
+          @input="handler.changeProjectInfo('optionalRewardAmount', $event)"
           placeholder="Enter amount"
         ></app-text-field>
       </div>
@@ -32,10 +32,10 @@
         <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
         <app-text-field
           :rules="[$rules.required]"
-          :loading="vm.tokenInfoLoading"
-          :disabled="vm.generateWithTokenAddress"
-          :value="$_get(vm.projectInfo, 'optionalTokenName')"
-          @change="vm.changeProjectInfo('optionalTokenName', $event)"
+          :loading="handler.tokenInfoLoading"
+          :disabled="handler.generateWithTokenAddress"
+          :value="$_get(handler.projectInfo, 'optionalTokenName')"
+          @change="handler.changeProjectInfo('optionalTokenName', $event)"
           placeholder="Token symbol"
         />
       </div>
@@ -44,8 +44,8 @@
     <app-file-upload
       isImageFile
       :rules="[$rules.maxSize(MAX_IMAGE_FILE_SIZE), $rules.isImage, $rules.required]"
-      :value="$_get(vm.projectInfo, 'optionalTokenLogo', null)"
-      @change="vm.changeProjectInfo('optionalTokenLogo', $event)"
+      :value="$_get(handler.projectInfo, 'optionalTokenLogo', null)"
+      @change="handler.changeProjectInfo('optionalTokenLogo', $event)"
     />
   </div>
   <!-- --------------------------------------- PROJECT TOKEN FORM END --------------------------------------- -->
@@ -55,8 +55,8 @@
       <div class="font-18 font-weight-bold mb-2">Token reward address<span class="app-red--text">*</span></div>
       <app-text-field
         :rules="[$rules.required, $rules.isAddress]"
-        :value="$_get(vm.projectInfo, 'optionalTokenAddress')"
-        @change="vm.changeProjectInfo('optionalTokenAddress', $event)"
+        :value="$_get(handler.projectInfo, 'optionalTokenAddress')"
+        @change="handler.changeProjectInfo('optionalTokenAddress', $event)"
         disabled
         placeholder="Enter address"
       ></app-text-field>
@@ -66,15 +66,15 @@
           <app-text-field
             type="number"
             :rules="[$rules.floatNumberOnly, $rules.required]"
-            :value="$_get(vm.projectInfo, 'optionalRewardAmount')"
-            @input="vm.changeProjectInfo('optionalRewardAmount', $event)"
+            :value="$_get(handler.projectInfo, 'optionalRewardAmount')"
+            @input="handler.changeProjectInfo('optionalRewardAmount', $event)"
             placeholder="Enter amount"
           ></app-text-field>
         </div>
         <div class="mx-3" />
         <div class="flex-grow">
           <div class="font-18 font-weight-bold mb-2">Reward token symbol<span class="app-red--text">*</span></div>
-          <app-text-field :value="$_get(vm.projectInfo, 'optionalTokenName')" disabled placeholder="Token symbol" />
+          <app-text-field :value="$_get(handler.projectInfo, 'optionalTokenName')" disabled placeholder="Token symbol" />
         </div>
       </div>
     </div> -->
@@ -87,8 +87,8 @@
 import { MAX_IMAGE_FILE_SIZE } from '@/constants'
 import { RewardDistributionType } from '@/models/VotingModel'
 import { Observer } from 'mobx-vue'
-import { Component, Vue, Inject, Ref } from 'vue-property-decorator'
-import { GeneralInformationViewModel } from '@/modules/new-mission/viewmodels/general-information-viewmodel'
+import { Component, Vue, Inject, Ref, Prop } from 'vue-property-decorator'
+import { GeneralInformationHandler } from '@/modules/new-mission/handlers/general-information/general-information-handler'
 
 @Observer
 @Component({
@@ -98,7 +98,7 @@ import { GeneralInformationViewModel } from '@/modules/new-mission/viewmodels/ge
   },
 })
 export default class RewardDistributionInfo extends Vue {
-  @Inject() vm!: GeneralInformationViewModel
+  @Prop() handler!: GeneralInformationHandler
   MAX_IMAGE_FILE_SIZE = MAX_IMAGE_FILE_SIZE
   readonly tokenType = RewardDistributionType.TOKEN
 }
