@@ -202,8 +202,6 @@ export class NewLearnMissionViewModel {
 
   @asyncAction *getData() {
     const missionSetting = yield this.getMissionSetting()
-    console.log(missionSetting)
-
     return missionSetting
   }
 }

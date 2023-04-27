@@ -83,7 +83,7 @@ export class ConfirmHandler implements IBaseHandler {
     throw new Error('Method not implemented.')
   }
   @action setProjectInfo(projectInfo: ProjectInfo) {
-    this.projectInfo = projectInfo
+    this.projectInfo = { ...projectInfo, feePerMission: this.feePerMission.toString() }
   }
 
   destroy() {
@@ -125,7 +125,12 @@ export class ConfirmHandler implements IBaseHandler {
   @asyncAction *loadConfirmData() {
     try {
       this.approveChecking = true
-      yield Promise.all([this.getRewardTokenInfo(), this.checkApproved(), this.checkOptionalApproved()])
+      yield Promise.all([
+        this.getRewardTokenInfo(),
+        this.getOptionalTokenInfo(),
+        this.checkApproved(),
+        this.checkOptionalApproved(),
+      ])
     } catch (error) {
       console.error(error)
       snackController.commonError(error)
@@ -137,11 +142,21 @@ export class ConfirmHandler implements IBaseHandler {
   @asyncAction *getRewardTokenInfo() {
     const tokenInfo = yield this.votingHandler!.getTokenInfo(
       walletStore.web3,
-      this.projectInfo.optionalTokenAddress,
+      this.projectInfo.tokenAddress,
       walletStore.account
     )
     this.rewardTokenBalance = tokenInfo.balance
-    console.log(tokenInfo)
+  }
+
+  @asyncAction *getOptionalTokenInfo() {
+    if (this.projectInfo.optionalTokenAddress) {
+      const tokenInfo = yield this.votingHandler!.getTokenInfo(
+        walletStore.web3,
+        this.projectInfo.optionalTokenAddress,
+        walletStore.account
+      )
+      this.optionalRewardTokenBalance = tokenInfo.balance
+    }
   }
 
   @asyncAction *checkApproved() {

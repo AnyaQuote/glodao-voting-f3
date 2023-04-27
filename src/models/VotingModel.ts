@@ -89,6 +89,10 @@ export class ProjectInfo {
   startDate?: string
   endDate?: string
   totalMissions?: string
+
+  feePerMission?: string
+  rewardTokenDecimals?: number
+  optionalRewardTokenDecimals?: number
 }
 
 export enum RewardDistributionType {

@@ -66,7 +66,13 @@ export class GeneralInformationHandler implements IBaseHandler {
   }
   @observable valid = false
   getData() {
-    return { ...this.projectInfo, totalMissions: '1' }
+    return {
+      ...this.projectInfo,
+      totalMissions: '1',
+      feePerMission: this.feePerMission.toString(),
+      rewardTokenDecimals: this.rewardTokenDecimals,
+      optionalRewardTokenDecimals: this.optionalRewardTokenDecimals,
+    }
   }
 
   destroy() {
