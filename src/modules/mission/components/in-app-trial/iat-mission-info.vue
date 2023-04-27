@@ -29,7 +29,7 @@
           class="font-weight-bold"
           :value="vm.maxParticipants"
           @change="vm.updateIatInfo('maxParticipants', $event)"
-          :rules="[$rules.required, $rules.integer, $rules.min(1), $rules.max(100)]"
+          :rules="[$rules.required, $rules.integer, $rules.min(1)]"
           placeholder="Enter max participants"
         />
       </div>

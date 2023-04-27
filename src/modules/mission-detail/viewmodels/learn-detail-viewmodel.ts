@@ -56,10 +56,8 @@ export class LearnMissionDetailViewModel implements IDetailViewmodel {
     try {
       this.loading = true
       // Get pool
-      const pools = yield this._api.voting.find<VotingPool>(
-        { unicodeName, projectOwner: this._auth.projectOwnerId },
-        { _limit: 1 }
-      )
+      //TODO: this need to implement admin
+      const pools = yield this._api.voting.find<VotingPool>({ unicodeName }, { _limit: 1 })
       if (isEmpty(pools)) {
         this._router.replace({ name: RouteName.NOT_FOUND })
       }

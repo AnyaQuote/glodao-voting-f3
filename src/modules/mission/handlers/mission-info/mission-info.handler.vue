@@ -53,7 +53,7 @@
           <app-text-field
             class="flex-grow"
             placeholder="(ex: 30)"
-            :rules="[$rules.required, $rules.integer, $rules.max(100)]"
+            :rules="[$rules.required, $rules.integer]"
             :value="handler.missionInfo.priorityRatio"
             @input="handler.changeMissionInfo('priorityRatio', $event)"
           />
