@@ -20,6 +20,7 @@ import { blockchainHandler } from '@/blockchainHandlers'
 import web3 from 'web3'
 
 import { NewSocialMissionViewModel } from '@/modules/new-mission/viewmodels/new-social-mission-viewmodel'
+import { loadingController } from '@/components/global-loading/global-loading-controller'
 
 export class ConfirmHandler implements IBaseHandler {
   type: HandlerType = HandlerType.confirm
@@ -54,6 +55,7 @@ export class ConfirmHandler implements IBaseHandler {
   @observable step = 1.1
   @observable unlockedStep = 1.1
   @observable projectInfo: ProjectInfo = {}
+  @observable data = {}
   @observable creating = false
 
   @observable approved = false
@@ -84,6 +86,10 @@ export class ConfirmHandler implements IBaseHandler {
   }
   @action setProjectInfo(projectInfo: ProjectInfo) {
     this.projectInfo = { ...projectInfo, feePerMission: this.feePerMission.toString() }
+  }
+
+  @action setProjectData(projectData) {
+    this.data = projectData
   }
 
   destroy() {
@@ -318,22 +324,39 @@ export class ConfirmHandler implements IBaseHandler {
 
     this.creating = true
     try {
+      loadingController.increaseRequest()
       const projectInfo = this.projectInfo
       // const socialInfo = this.handlers[1].getData()
+
+      const pool = yield this.votingHandler?.createPool(
+        projectInfo,
+        walletStore.account,
+        projectInfo.rewardTokenDecimals,
+        projectInfo.optionalRewardTokenDecimals,
+        projectInfo.totalMissions
+      )
+
+      const [projectLogo, coverImage, tokenLogo] = yield this.getImageSources(
+        projectInfo.projectLogo,
+        projectInfo.projectCover,
+        projectInfo.optionalTokenLogo
+      )
+
       const mission = {
         endTime: projectInfo.endDate,
         startTime: projectInfo.startDate,
         name: projectInfo.projectName,
-        tokenBasePrice: projectInfo.tokenBasePrice,
+        // tokenBasePrice: projectInfo.tokenBasePrice,
+        tokenBasePrice: `${projectInfo.tokenBasePrice}`,
         rewardAmount: projectInfo.optionalRewardAmount,
         maxPriorityParticipant: projectInfo.maxPriorityParticipants,
-        // data: socialInfo,
+        data: this.data,
         metadata: {
           shortDescription: projectInfo.shortDescription,
           decimals: 0,
-          projectLogo: projectInfo.projectLogo,
-          tokenLogo: projectInfo.optionalTokenLogo,
-          coverImage: projectInfo.projectCover,
+          projectLogo: projectLogo,
+          tokenLogo: tokenLogo,
+          coverImage: coverImage,
           caption: projectInfo.shortDescription,
           tokenContractAddress: projectInfo.optionalTokenAddress,
           rewardToken: projectInfo.optionalTokenName,
@@ -343,24 +366,22 @@ export class ConfirmHandler implements IBaseHandler {
         tokenAddress: projectInfo.optionalTokenAddress,
         tokenName: projectInfo.optionalTokenName,
         feeTokenName: 'BUSD',
-        feeTokenAmout: +(projectInfo.feePerMission || 0),
+        feeTokenAmount: `${+(projectInfo.feePerMission || 0)}`,
         feeTokenAddress: process.env.VUE_APP_BUSD_ADDRESS,
         version: 'v2',
-        poolId: 19,
+        poolId: pool.poolId,
+        maxPriorityParticipants: projectInfo.maxPriorityParticipants,
       }
-
-      const pool = yield this.votingHandler?.createPool(
-        projectInfo,
-        walletStore.account,
-        projectInfo.rewardTokenDecimals,
-        projectInfo.optionalRewardTokenDecimals,
-        projectInfo.totalMissions
-      )
       console.log('pool: ', pool)
+      const res = yield apiService.createIndividualSocialTask(mission)
+      this._router.push({
+        name: RouteName.PROJECT_LIST,
+      })
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
       this.creating = false
+      loadingController.decreaseRequest()
     }
   }
 
@@ -440,5 +461,12 @@ export class ConfirmHandler implements IBaseHandler {
 
   @computed get tokenBName() {
     return this.projectInfo?.optionalTokenName || EMPTY_STRING
+  }
+
+  async getImageSource(imageFile: File) {
+    const media = new FormData()
+    media.append('files', imageFile)
+    const imageResult = await this._api.uploadFile(media)
+    return getApiFileUrl(imageResult[0])
   }
 }

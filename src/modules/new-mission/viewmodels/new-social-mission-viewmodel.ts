@@ -22,6 +22,7 @@ import { IReactionDisposer, reaction, runInAction, when } from 'mobx'
 import { walletStore } from '@/stores/wallet-store'
 import { VotingHandlerV2 } from '@/blockchainHandlers/voting-contract-solidity-v2'
 import { blockchainHandler } from '@/blockchainHandlers'
+import { apiService } from '@/services/api-service'
 
 export class NewSocialMissionViewModel {
   @observable loading = false
@@ -85,10 +86,8 @@ export class NewSocialMissionViewModel {
       if (this.step == 1) {
         let projectInfo = this.handlers[0].getData()
         projectInfo = { ...projectInfo, tokenName: 'BUSD', tokenAddress: process.env.VUE_APP_BUSD_ADDRESS }
-        ;(this.handlers[2] as ConfirmHandler).setProjectInfo({
-          ...projectInfo,
-          data: this.handlers[1].getData(),
-        })
+        ;(this.handlers[2] as ConfirmHandler).setProjectInfo(projectInfo)
+        ;(this.handlers[2] as ConfirmHandler).setProjectData(this.handlers[1].getData())
       }
       this.changeStep(this.step + 1)
     }
@@ -110,11 +109,13 @@ export class NewSocialMissionViewModel {
   async submit() {
     const projectInfo: ProjectInfo = this.handlers[0].getData()
     const socialInfo = this.handlers[1].getData()
+    console.log(projectInfo.projectCover)
     const mission = {
       endTime: projectInfo.endDate,
       startTime: projectInfo.startDate,
       name: projectInfo.projectName,
-      tokenBasePrice: projectInfo.tokenBasePrice,
+      // tokenBasePrice: projectInfo.tokenBasePrice,
+      tokenBasePrice: '1',
       rewardAmount: projectInfo.optionalRewardAmount,
       maxPriorityParticipant: projectInfo.maxPriorityParticipants,
       data: socialInfo,
@@ -133,20 +134,22 @@ export class NewSocialMissionViewModel {
       tokenAddress: projectInfo.optionalTokenAddress,
       tokenName: projectInfo.optionalTokenName,
       feeTokenName: 'BUSD',
-      feeTokenAmout: +(projectInfo.feePerMission || 0),
+      feeTokenAmount: `${+(projectInfo.feePerMission || 0)}`,
       feeTokenAddress: process.env.VUE_APP_BUSD_ADDRESS,
       version: 'v2',
-      poolId: 19,
+      poolId: 103,
+      maxPriorityParticipants: projectInfo.maxPriorityParticipants,
     }
-    console.log(mission)
 
-    const pool = await this.votingHandler?.createPool(
-      projectInfo,
-      walletStore.account,
-      projectInfo.rewardTokenDecimals,
-      projectInfo.optionalRewardTokenDecimals,
-      projectInfo.totalMissions
-    )
-    console.log('pool: ', pool)
+    console.log((this.handlers[2] as ConfirmHandler).projectInfo.tokenBasePrice)
+    const res = await apiService.createIndividualSocialTask(mission)
+    // const pool = await this.votingHandler?.createPool(
+    //   projectInfo,
+    //   walletStore.account,
+    //   projectInfo.rewardTokenDecimals,
+    //   projectInfo.optionalRewardTokenDecimals,
+    //   projectInfo.totalMissions
+    // )
+    console.log('pool: ', res)
   }
 }
