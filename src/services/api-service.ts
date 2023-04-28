@@ -413,5 +413,14 @@ export class ApiService {
     })
     return response.data
   }
+
+  async createIndividualSocialTask(model) {
+    const res = await this.axios.post('tasks-individual/createIndividualSocialTask', model, {
+      headers: {
+        Authorization: `Bearer ${authStore.jwt}`,
+      },
+    })
+    return res.data
+  }
 }
 export const apiService = new ApiService()

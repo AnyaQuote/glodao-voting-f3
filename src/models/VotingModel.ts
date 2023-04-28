@@ -70,10 +70,13 @@ export class ProjectInfo {
   projectLogo?: any
   fields?: any[]
   socialLinks?: any
-
+  tokenBasePrice?: string
+  priorityRatio?: string
   tokenName?: string
   rewardAmount?: string
   tokenAddress?: string
+  maxParticipants?: string
+  maxPriorityParticipants?: string
 
   optionalTokenName?: string
   optionalRewardAmount?: string
@@ -86,6 +89,10 @@ export class ProjectInfo {
   startDate?: string
   endDate?: string
   totalMissions?: string
+
+  feePerMission?: string
+  rewardTokenDecimals?: number
+  optionalRewardTokenDecimals?: number
 }
 
 export enum RewardDistributionType {

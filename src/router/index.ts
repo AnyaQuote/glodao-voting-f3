@@ -140,9 +140,9 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
-    path: '/projects/:unicodeName/new/social',
+    path: '/projects/new/social',
     name: RouteName.NEW_SOCIAL_MISSION,
-    component: () => import('@/modules/mission/pages/new-social-page.vue'),
+    component: () => import('@/modules/new-mission/pages/new-social-page.vue'),
     meta: {
       auth: true,
       wallet: true,

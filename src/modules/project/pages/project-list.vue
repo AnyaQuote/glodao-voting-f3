@@ -1,7 +1,6 @@
 <template>
   <div>
     <project-list-banner />
-
     <div class="spacing mx-auto">
       <div v-if="vm.loading" class="px-3 py-3">
         <div class="d-flex mb-3">
@@ -98,6 +97,8 @@ import { ProjectListViewModel } from '../viewmodels/project-list-viewmodel'
     'project-list-banner': () => import('../components/project-list-components/project-list-banner.vue'),
     'empty-list': () => import('../components/project-list-components/empty-project.vue'),
     'project-card': () => import('../components/project-list-components/project-card.vue'),
+    'social-page': () => import('@/modules/new-mission/social-mission-form/new-social-page.vue'),
+    'learn-page': () => import('@/modules/new-mission/learn-mission-form/new-learn-page.vue'),
   },
 })
 export default class ProjectListPage extends Vue {
