@@ -85,7 +85,10 @@ export class NewSocialMissionViewModel {
       if (this.step == 1) {
         let projectInfo = this.handlers[0].getData()
         projectInfo = { ...projectInfo, tokenName: 'BUSD', tokenAddress: process.env.VUE_APP_BUSD_ADDRESS }
-        ;(this.handlers[2] as ConfirmHandler).setProjectInfo(projectInfo)
+        ;(this.handlers[2] as ConfirmHandler).setProjectInfo({
+          ...projectInfo,
+          data: this.handlers[1].getData(),
+        })
       }
       this.changeStep(this.step + 1)
     }
