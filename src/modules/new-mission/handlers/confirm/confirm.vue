@@ -81,12 +81,11 @@
             <span class="app-blue--text flex-grow-1 text-end">{{ handler.bnbFee | formatNumber }} BNB</span>
           </div>
         </v-sheet>
-
         <!-- <ul class="mt-6">
           <li class="mb-2 font-weight-600"></li>
           <li class="font-weight-600">Project will be voted within 72 hours from creating time!</li>
         </ul> -->
-        <!-- <div class="d-flex">
+        <div class="d-flex">
           <div class="mx-3" />
           <v-btn
             v-if="!handler.approved"
@@ -113,12 +112,12 @@
             class="linear-blue--bg white--text font-weight-bold text-none mt-6 text-subtitle-1 flex-grow"
             height="40"
             depressed
-            @click="submit"
+            @click="handler.submit()"
             :loading="handler.creating"
           >
             Confirm and pay fee
           </v-btn>
-        </div> -->
+        </div>
       </div>
     </v-form>
   </v-sheet>
