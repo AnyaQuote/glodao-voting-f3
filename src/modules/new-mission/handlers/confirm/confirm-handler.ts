@@ -376,6 +376,9 @@ export class ConfirmHandler implements IBaseHandler {
       const res = yield apiService.createIndividualSocialTask(mission)
       this._router.push({
         name: RouteName.PROJECT_LIST,
+        params: {
+          passThrough: ALLOW_PASS_THROUGH,
+        },
       })
     } catch (error) {
       this._snackbar.commonError(error)
