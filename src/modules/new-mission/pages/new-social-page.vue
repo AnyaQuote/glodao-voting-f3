@@ -10,12 +10,12 @@
       <social-setting v-else-if="vm.step === 1" :handler="vm.handlers[1]" />
       <confirm v-else-if="vm.step === 2" :handler="vm.handlers[2]" />
       <div class="d-flex mt-7">
-        <div class="flex-grow">
+        <div class="flex-grow" v-if="!vm.isLastStep">
           <v-btn depressed outlined height="40" color="neutral-10" block @click="back"> Cancel </v-btn>
         </div>
         <div class="px-4" />
 
-        <div class="flex-grow">
+        <div class="flex-grow" v-if="!vm.isLastStep">
           <v-btn
             class="text-none"
             :class="{ 'linear-blue--bg white--text': vm.isCurrentHandlerValid }"
@@ -26,7 +26,7 @@
             depressed
             block
           >
-            {{ vm.isLastStep ? 'Submit' : 'Next' }}
+            Next
           </v-btn>
         </div>
       </div>

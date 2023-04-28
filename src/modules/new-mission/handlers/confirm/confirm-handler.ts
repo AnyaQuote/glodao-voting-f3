@@ -301,10 +301,10 @@ export class ConfirmHandler implements IBaseHandler {
       snackController.error('BNB - Balance Insufficient')
       return
     }
-    if (bnHelper.lt(this.rewardTokenBalance, FixedNumber.from(this.projectInfo.rewardAmount))) {
-      snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
-      return
-    }
+    // if (bnHelper.lt(this.rewardTokenBalance, FixedNumber.from(this.projectInfo.rewardAmount))) {
+    //   snackController.error(`${this.projectInfo.tokenName} - Balance Insufficient`)
+    //   return
+    // }
     // If token address is not input, don't check balance
     // Because the system will get tokenAddress to check balance
     if (
@@ -318,16 +318,45 @@ export class ConfirmHandler implements IBaseHandler {
 
     this.creating = true
     try {
-      const votingPoolModel = yield this.getVotingPoolModel()
-      yield this._api.createOrUpdateVotingPool(votingPoolModel)
-      this._snackbar.addSuccess()
-      promiseHelper.delay(500)
-      this._router.push({
-        name: RouteName.PROJECT_LIST,
-        params: {
-          passThrough: ALLOW_PASS_THROUGH,
+      const projectInfo = this.projectInfo
+      // const socialInfo = this.handlers[1].getData()
+      const mission = {
+        endTime: projectInfo.endDate,
+        startTime: projectInfo.startDate,
+        name: projectInfo.projectName,
+        tokenBasePrice: projectInfo.tokenBasePrice,
+        rewardAmount: projectInfo.optionalRewardAmount,
+        maxPriorityParticipant: projectInfo.maxPriorityParticipants,
+        // data: socialInfo,
+        metadata: {
+          shortDescription: projectInfo.shortDescription,
+          decimals: 0,
+          projectLogo: projectInfo.projectLogo,
+          tokenLogo: projectInfo.optionalTokenLogo,
+          coverImage: projectInfo.projectCover,
+          caption: projectInfo.shortDescription,
+          tokenContractAddress: projectInfo.optionalTokenAddress,
+          rewardToken: projectInfo.optionalTokenName,
+          socialLink: projectInfo.socialLinks,
         },
-      })
+        priorityRatio: projectInfo.priorityRatio,
+        tokenAddress: projectInfo.optionalTokenAddress,
+        tokenName: projectInfo.optionalTokenName,
+        feeTokenName: 'BUSD',
+        feeTokenAmout: +(projectInfo.feePerMission || 0),
+        feeTokenAddress: process.env.VUE_APP_BUSD_ADDRESS,
+        version: 'v2',
+        poolId: 19,
+      }
+
+      const pool = yield this.votingHandler?.createPool(
+        projectInfo,
+        walletStore.account,
+        projectInfo.rewardTokenDecimals,
+        projectInfo.optionalRewardTokenDecimals,
+        projectInfo.totalMissions
+      )
+      console.log('pool: ', pool)
     } catch (error) {
       this._snackbar.commonError(error)
     } finally {
