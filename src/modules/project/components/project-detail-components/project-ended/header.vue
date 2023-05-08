@@ -47,20 +47,20 @@
       <v-col cols="6" sm="4" md="2">
         <div class="text-subtitle-1 neutral-10--text">Created</div>
         <div class="text-h6 font-weight-bold">
-          {{ $_get(vm, 'missions.length') }} {{ $_get(vm, 'missions.length') > 0 ? 'missions' : 'mission' }}
+          {{ $_get(vm, 'usedMission') }} {{ $_get(vm, 'usedMission') > 0 ? 'missions' : 'mission' }}
         </div>
       </v-col>
       <v-col cols="6" sm="4" md="2">
         <div class="text-subtitle-1 neutral-10--text">Remaining</div>
         <div class="text-h6 font-weight-bold">
-          {{ remainingMission }} {{ remainingMission > 1 ? 'missions' : 'mission' }}
+          {{ vm.remainingMission }} {{ vm.remainingMission > 1 ? 'missions' : 'mission' }}
         </div>
       </v-col>
       <v-col cols="6" sm="4" md="2" align-self="center">
         <v-btn
           class="text-none white--text text-subtitle-1"
-          :class="remainingMission > 0 && 'linear-blue--bg'"
-          :disabled="remainingMission === 0"
+          :class="vm.remainingMission > 0 && 'linear-blue--bg'"
+          :disabled="vm.remainingMission === 0"
           @click="openSelectMissionDialog"
           height="48"
           depressed
@@ -94,10 +94,6 @@ export default class ProjectEndedHeader extends Vue {
   openSelectMissionDialog() {
     // this.$router.push(RoutePaths.project_detail + get(this.vm.poolStore, 'unicodeName', null) + RoutePaths.new_mission)
     this.dialog.open()
-  }
-
-  get remainingMission() {
-    return toNumber(get(this.vm.poolStore, 'totalMission')) - toNumber(get(this.vm, 'missions.length')) || 0
   }
 }
 </script>

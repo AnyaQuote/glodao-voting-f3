@@ -2,7 +2,7 @@ import { RouteName } from './../../../router/index'
 import { appProvider } from '@/app-providers'
 import { observable, computed, action, IReactionDisposer, reaction, when } from 'mobx'
 import { asyncAction } from 'mobx-utils'
-import { get, isEmpty, kebabCase } from 'lodash-es'
+import { get, isEmpty, kebabCase, toNumber } from 'lodash-es'
 import { RoutePaths } from '@/router'
 import { Subject } from 'rxjs'
 import { walletStore } from '@/stores/wallet-store'
@@ -103,7 +103,7 @@ export class ProjectDetailViewModel {
       this.poolStore = new PoolStore(votingPool)
       this.poolInfo = this.poolStore.poolData
       if (votingPool.status === 'approved') {
-        res = yield appProvider.api.tasks.find({ poolId: votingPool.id }, { _limit: -1, _sort: 'startTime:asc' })
+        res = yield appProvider.api.tasks.find({ poolId: votingPool.poolId }, { _limit: -1, _sort: 'startTime:asc' })
         this.missions = res || []
       }
       yield this.checkPoolFunded()
@@ -405,5 +405,18 @@ export class ProjectDetailViewModel {
 
   @computed get poolVersion() {
     return this.poolInfo.version
+  }
+
+  @computed get usedMission() {
+    return this.poolInfo.usedMission
+  }
+
+  @computed get totalMission() {
+    return this.poolInfo.totalMission
+  }
+
+  @computed get remainingMission() {
+    const result = toNumber(this.totalMission) - toNumber(this.usedMission)
+    return result > 0 ? result : 0
   }
 }

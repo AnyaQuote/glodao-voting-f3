@@ -43,7 +43,9 @@ export class ProjectListViewModel {
   }
 
   @computed get filteredTypeProjects() {
-    return this.votingPools.filter((item) => item.managementType === this.filterType)
+    return this.votingPools.filter((item) =>
+      this.filterType === 'individual' ? item.managementType === 'individual' : item.managementType !== 'individual'
+    )
   }
 
   @computed get filteredStatusProjects() {
