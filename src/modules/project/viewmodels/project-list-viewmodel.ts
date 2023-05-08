@@ -5,7 +5,7 @@ export class ProjectListViewModel {
   _disposers: IReactionDisposer[] = []
 
   @observable filterRejected = false
-  @observable filterType = 'bounty'
+  @observable filterType = 'group'
   @observable votingPools: PoolStore[] = []
   @observable loading = false
 
@@ -34,7 +34,7 @@ export class ProjectListViewModel {
     }
   }
 
-  @action.bound changeFilterdType(value: 'bounty' | 'launchpad') {
+  @action.bound changeFilterdType(value: 'group' | 'individual') {
     this.filterType = value
   }
 
@@ -43,7 +43,7 @@ export class ProjectListViewModel {
   }
 
   @computed get filteredTypeProjects() {
-    return this.votingPools.filter((item) => item.type === this.filterType)
+    return this.votingPools.filter((item) => item.managementType === this.filterType)
   }
 
   @computed get filteredStatusProjects() {

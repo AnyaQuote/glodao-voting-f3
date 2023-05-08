@@ -32,17 +32,17 @@
           <div class="d-flex fill-height cursor-pointer">
             <div
               class="tab-item d-flex justify-center align-center"
-              :class="activeClass('bounty')"
-              @click="vm.changeFilterdType('bounty')"
+              :class="activeClass('group')"
+              @click="vm.changeFilterdType('group')"
             >
-              Bounty project
+              Group mission
             </div>
             <div
               class="tab-item d-flex justify-center align-center"
-              :class="activeClass('launchpad')"
-              @click="vm.changeFilterdType('launchpad')"
+              :class="activeClass('individual')"
+              @click="vm.changeFilterdType('individual')"
             >
-              Lauchpad project
+              Individual mission
             </div>
           </div>
 

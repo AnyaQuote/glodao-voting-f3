@@ -211,4 +211,7 @@ export class PoolStore {
       ...(this.rejectedUsers || []).map((address) => new Voter(address, 'no')),
     ]
   }
+  @computed get managementType() {
+    return this.poolData.managementType
+  }
 }
